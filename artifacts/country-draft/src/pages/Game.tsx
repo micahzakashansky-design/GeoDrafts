@@ -35,6 +35,200 @@ import {
   type Category,
 } from "@/data/countries";
 
+// ─── Canvas PNG export ────────────────────────────────────────────────────────
+
+const PNG_COLORS = {
+  bg:       "#08111e",
+  cardBg:   "#0d1a2a",
+  cardBg2:  "#0f1e30",
+  border:   "#1b2d40",
+  gold:     "#d4a420",
+  fg:       "#ccd9e8",
+  fgDim:    "#8099b0",
+  muted:    "#4a6278",
+  barTrack: "#192736",
+  scoreColors: ["#ef4444","#ef4444","#ef4444","#f97316","#f97316","#eab308","#eab308","#22c55e","#22c55e","#10b981","#10b981"],
+  ratingColors: { superpower: "#facc15", major: "#60a5fa", regional: "#4ade80", developing: "#fb923c", struggling: "#f87171" },
+};
+
+function canvasRoundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.arcTo(x + w, y, x + w, y + r, r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+  ctx.lineTo(x + r, y + h);
+  ctx.arcTo(x, y + h, x, y + h - r, r);
+  ctx.lineTo(x, y + r);
+  ctx.arcTo(x, y, x + r, y, r);
+  ctx.closePath();
+}
+
+function pngScoreBar(score: number): string {
+  return PNG_COLORS.scoreColors[Math.max(0, Math.min(10, score)) - 1] ?? "#eab308";
+}
+
+function pngRatingColor(total: number): string {
+  if (total >= 100) return PNG_COLORS.ratingColors.superpower;
+  if (total >= 85)  return PNG_COLORS.ratingColors.major;
+  if (total >= 70)  return PNG_COLORS.ratingColors.regional;
+  if (total >= 55)  return PNG_COLORS.ratingColors.developing;
+  return PNG_COLORS.ratingColors.struggling;
+}
+
+function pngScoreLabel(score: number): string {
+  if (score >= 9) return "World-Class";
+  if (score >= 7) return "Strong";
+  if (score >= 5) return "Moderate";
+  if (score >= 3) return "Weak";
+  return "Critical";
+}
+
+function pngRatingLabel(total: number): string {
+  if (total >= 100) return "Superpower";
+  if (total >= 85)  return "Major Power";
+  if (total >= 70)  return "Regional Power";
+  if (total >= 55)  return "Developing Nation";
+  return "Struggling State";
+}
+
+async function drawRosterPng(
+  roster: Partial<Record<Category, Country>>,
+  totalScore: number
+): Promise<void> {
+  const DPR    = 2;
+  const W      = 1180;
+  const HDR    = 80;
+  const PAD    = 20;
+  const GAP    = 10;
+  const COLS   = 2;
+  const CARD_W = (W - PAD * 3) / COLS;   // ~570
+  const CARD_H = 112;
+  const ROWS   = Math.ceil(CATEGORIES.length / COLS);
+  const H      = HDR + PAD + ROWS * (CARD_H + GAP) - GAP + PAD;
+
+  const canvas = document.createElement("canvas");
+  canvas.width  = W  * DPR;
+  canvas.height = H  * DPR;
+  const ctx = canvas.getContext("2d")!;
+  ctx.scale(DPR, DPR);
+
+  const C = PNG_COLORS;
+
+  // ── Background ──
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, W, H);
+
+  // ── Header ──
+  ctx.fillStyle = C.cardBg;
+  ctx.fillRect(0, 0, W, HDR);
+  ctx.strokeStyle = C.border;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, HDR); ctx.lineTo(W, HDR); ctx.stroke();
+
+  ctx.fillStyle = C.gold;
+  ctx.font = "bold 18px 'Georgia', serif";
+  ctx.fillText("Country Draft — My Ideal Nation", PAD, 32);
+
+  ctx.fillStyle = C.fgDim;
+  ctx.font = "13px sans-serif";
+  ctx.fillText("Final Roster · Score:", PAD, 60);
+
+  ctx.fillStyle = C.gold;
+  ctx.font = "bold 15px sans-serif";
+  ctx.fillText(`${totalScore} / 120`, PAD + 138, 60);
+
+  const rLabel = pngRatingLabel(totalScore);
+  const rColor = pngRatingColor(totalScore);
+  ctx.fillStyle = rColor;
+  ctx.font = "bold 15px sans-serif";
+  ctx.fillText(`· ${rLabel}`, PAD + 138 + ctx.measureText(`${totalScore} / 120`).width + 8, 60);
+
+  // ── Cards ──
+  CATEGORIES.forEach((category, i) => {
+    const col = i % COLS;
+    const row = Math.floor(i / COLS);
+    const cx  = PAD + col * (CARD_W + PAD);
+    const cy  = HDR + PAD + row * (CARD_H + GAP);
+
+    const country  = roster[category];
+    const catKey   = getCategoryKey(category);
+    const score    = country ? country.stats[catKey].score : null;
+
+    // Card background
+    ctx.fillStyle = C.cardBg2;
+    canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8);
+    ctx.fill();
+    ctx.strokeStyle = C.border;
+    ctx.lineWidth = 1;
+    canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8);
+    ctx.stroke();
+
+    // Category label
+    ctx.fillStyle = C.muted;
+    ctx.font = "bold 10px sans-serif";
+    ctx.fillText(category.toUpperCase(), cx + 12, cy + 20);
+
+    if (country && score !== null) {
+      // Flag + name
+      ctx.font = "22px sans-serif";
+      ctx.fillText(country.flag, cx + 12, cy + 55);
+
+      ctx.fillStyle = C.fg;
+      ctx.font = "bold 14px sans-serif";
+      ctx.fillText(country.name, cx + 46, cy + 47);
+
+      // Score bar track
+      const barX = cx + 46;
+      const barY = cy + 56;
+      const barW = CARD_W - 58;
+      const barH = 6;
+
+      ctx.fillStyle = C.barTrack;
+      canvasRoundRect(ctx, barX, barY, barW, barH, 3);
+      ctx.fill();
+
+      // Score bar fill
+      ctx.fillStyle = pngScoreBar(score);
+      canvasRoundRect(ctx, barX, barY, barW * (score / 10), barH, 3);
+      ctx.fill();
+
+      // Score label
+      ctx.fillStyle = pngScoreBar(score);
+      ctx.font = "bold 11px sans-serif";
+      ctx.fillText(pngScoreLabel(score), cx + 46, cy + 80);
+
+      // Short description (truncated)
+      const desc = country.stats[catKey].description;
+      const maxDescW = CARD_W - 60;
+      ctx.fillStyle = C.fgDim;
+      ctx.font = "11px sans-serif";
+      let truncated = desc;
+      while (ctx.measureText(truncated).width > maxDescW && truncated.length > 0) {
+        truncated = truncated.slice(0, -1);
+      }
+      if (truncated !== desc) truncated = truncated.slice(0, -3) + "...";
+      ctx.fillText(truncated, cx + 46, cy + 97);
+    } else {
+      ctx.fillStyle = C.muted;
+      ctx.font = "italic 13px sans-serif";
+      ctx.fillText("Not assigned", cx + 12, cy + 62);
+    }
+  });
+
+  // ── Download ──
+  canvas.toBlob((blob) => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "my-ideal-country.png";
+    a.click();
+    URL.revokeObjectURL(url);
+  }, "image/png");
+}
+
 // ─── Constants & icons ──────────────────────────────────────────────────────
 
 const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
@@ -209,25 +403,15 @@ export default function Game() {
     setInfoModal(null);
   }, []);
 
-  const downloadPng = useCallback(async () => {
-    if (!rosterRef.current) return;
-    const html2canvas = (await import("html2canvas")).default;
-    const canvas = await html2canvas(rosterRef.current, {
-      backgroundColor: "#0a0f1e",
-      scale: 2,
-      useCORS: true,
-    });
-    const link = document.createElement("a");
-    link.download = "my-ideal-country.png";
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-  }, []);
-
   const filledCount = CATEGORIES.filter((c) => state.roster[c]).length;
   const totalScore = CATEGORIES.reduce((sum, cat) => {
     const c = state.roster[cat];
     return c ? sum + c.stats[getCategoryKey(cat)].score : sum;
   }, 0);
+
+  const downloadPng = useCallback(async () => {
+    await drawRosterPng(state.roster, totalScore);
+  }, [state.roster, totalScore]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col" data-testid="game-container">
