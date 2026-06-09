@@ -24,6 +24,7 @@ import {
   X,
   Info,
   ArrowLeftRight,
+  List,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -241,7 +242,7 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Climate: <Sun className="w-4 h-4" />,
   Technology: <Cpu className="w-4 h-4" />,
   Size: <Map className="w-4 h-4" />,
-  Population: <Users className="w-4 h-4" />,
+  "Population Density": <Users className="w-4 h-4" />,
   History: <BookOpen className="w-4 h-4" />,
   "Cities/Landmarks": <Landmark className="w-4 h-4" />,
 };
@@ -316,6 +317,13 @@ function getRating(total: number): { label: string; color: string; icon: React.R
   return { label: "Struggling State", color: "text-red-400", icon: <Shield className="w-5 h-5" /> };
 }
 
+function hasSynergy(roster: Partial<Record<Category, Country>>): boolean {
+  const sizeCountry = roster["Size"];
+  const densityCountry = roster["Population Density"];
+  if (!sizeCountry || !densityCountry) return false;
+  return Math.abs(sizeCountry.stats.size.score - densityCountry.stats.populationDensity.score) >= 6;
+}
+
 function computeHints(country: Country, roster: Partial<Record<Category, Country>>): HintResult[] {
   const empty = CATEGORIES.filter((c) => !roster[c]);
   return empty
@@ -338,6 +346,7 @@ export default function Game() {
   const [hintResults, setHintResults] = useState<HintResult[]>([]);
   const [wildcardPhase, setWildcardPhase] = useState(false);
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
+  const [rosterOpen, setRosterOpen] = useState(false);
   const rosterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => { saveGameState(state); }, [state]);
@@ -404,10 +413,11 @@ export default function Game() {
   }, []);
 
   const filledCount = CATEGORIES.filter((c) => state.roster[c]).length;
+  const synergyActive = hasSynergy(state.roster);
   const totalScore = CATEGORIES.reduce((sum, cat) => {
     const c = state.roster[cat];
     return c ? sum + c.stats[getCategoryKey(cat)].score : sum;
-  }, 0);
+  }, 0) + (synergyActive ? 2 : 0);
 
   const downloadPng = useCallback(async () => {
     await drawRosterPng(state.roster, totalScore);
@@ -459,13 +469,34 @@ export default function Game() {
         </div>
       </header>
 
-      <div className="flex flex-1 overflow-hidden">
-        {/* Left: Category Slots */}
-        <div className="w-72 shrink-0 border-r border-border flex flex-col bg-card/30 overflow-y-auto">
-          <div className="px-4 py-3 border-b border-border">
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Mobile overlay */}
+        {rosterOpen && (
+          <div
+            className="fixed inset-0 bg-black/60 z-20 md:hidden"
+            onClick={() => setRosterOpen(false)}
+          />
+        )}
+
+        {/* Left: Category Slots — mobile drawer */}
+        <div className={`
+          fixed md:relative inset-y-0 left-0 z-30
+          transition-transform duration-300 ease-in-out
+          md:translate-x-0 md:transition-none
+          ${rosterOpen ? "translate-x-0" : "-translate-x-full"}
+          w-72 shrink-0 border-r border-border flex flex-col
+          bg-[#0a1520]/95 md:bg-card/30 backdrop-blur-sm md:backdrop-blur-none overflow-y-auto
+        `}>
+          <div className="px-4 py-3 border-b border-border flex items-center justify-between">
             <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Your Nation's Roster
             </h2>
+            <button
+              className="md:hidden p-1 rounded text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => setRosterOpen(false)}
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
           <div className="flex-1 p-3 space-y-1.5">
             {CATEGORIES.map((category) => {
@@ -476,6 +507,7 @@ export default function Game() {
               const isWildcardTarget = wildcardPhase && !!assigned;
               const score = assigned ? assigned.stats[catKey].score : null;
               const isLastAssigned = lastAssigned === category;
+              const isSynergySlot = synergyActive && (category === "Size" || category === "Population Density");
 
               return (
                 <motion.button
@@ -483,13 +515,15 @@ export default function Game() {
                   data-testid={`slot-${category.toLowerCase().replace(/\s+/g, "-")}`}
                   onClick={() => {
                     if (isWildcardTarget) applyWildcard(category);
-                    else if (isAssignable) assignCountry(category);
+                    else if (isAssignable) { assignCountry(category); setRosterOpen(false); }
                   }}
                   onMouseEnter={() => setHoveredCategory(category)}
                   onMouseLeave={() => setHoveredCategory(null)}
                   disabled={!isAssignable && !isWildcardTarget}
                   className={`w-full rounded-lg border text-left transition-all duration-200 ${
-                    isWildcardTarget
+                    isSynergySlot
+                      ? `border-yellow-500/50 bg-yellow-500/5 ${isLastAssigned ? "slot-fill" : ""}`
+                      : isWildcardTarget
                       ? "border-blue-500/50 bg-blue-500/10 hover:bg-blue-500/20 hover:border-blue-400/70 cursor-pointer"
                       : assigned
                       ? `border-border/50 bg-card/60 ${isLastAssigned ? "slot-fill" : ""}`
@@ -503,7 +537,8 @@ export default function Game() {
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
                         <span className={`${
-                          isWildcardTarget ? "text-blue-400"
+                          isSynergySlot ? "text-yellow-400"
+                          : isWildcardTarget ? "text-blue-400"
                           : assigned ? "text-primary"
                           : isHovered && isAssignable ? "text-primary"
                           : "text-muted-foreground"
@@ -511,14 +546,19 @@ export default function Game() {
                           {CATEGORY_ICONS[category]}
                         </span>
                         <span className={`text-xs font-semibold uppercase tracking-wide ${
-                          assigned ? "text-foreground/70" : "text-muted-foreground"
+                          isSynergySlot ? "text-yellow-300/80"
+                          : assigned ? "text-foreground/70" : "text-muted-foreground"
                         }`}>
                           {category}
                         </span>
                       </div>
-                      {isWildcardTarget && (
+                      {isSynergySlot ? (
+                        <span className="text-xs font-bold text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 rounded px-1.5 py-0.5 shrink-0">
+                          ⚡ +1
+                        </span>
+                      ) : isWildcardTarget ? (
                         <ArrowLeftRight className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                      )}
+                      ) : null}
                     </div>
 
                     {assigned ? (
@@ -643,6 +683,7 @@ export default function Game() {
             <GameOver
               roster={state.roster}
               totalScore={totalScore}
+              synergyActive={synergyActive}
               onReset={resetGame}
               onDownload={downloadPng}
               onWildcard={startWildcard}
@@ -716,6 +757,16 @@ export default function Game() {
           )}
         </AnimatePresence>
       </div>
+
+      {/* Mobile floating roster toggle */}
+      <button
+        className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full shadow-lg text-sm font-semibold text-foreground hover:bg-secondary transition-colors"
+        onClick={() => setRosterOpen(!rosterOpen)}
+      >
+        <List className="w-4 h-4 text-primary" />
+        <span>Roster</span>
+        <span className="text-primary font-bold">{filledCount}/12</span>
+      </button>
 
       {/* Info modal */}
       <AnimatePresence>
@@ -927,6 +978,7 @@ function CountryCard({
 function GameOver({
   roster,
   totalScore,
+  synergyActive,
   onReset,
   onDownload,
   onWildcard,
@@ -937,12 +989,13 @@ function GameOver({
 }: {
   roster: Partial<Record<Category, Country>>;
   totalScore: number;
+  synergyActive: boolean;
   onReset: () => void;
   onDownload: () => void;
   onWildcard: () => void;
   wildcardUsed: boolean;
   wildcardPhase: boolean;
-  rosterRef: React.RefObject<HTMLDivElement>;
+  rosterRef: React.RefObject<HTMLDivElement | null>;
   onInfoClick: (cat: Category, country: Country) => void;
 }) {
   const rating = getRating(totalScore);
@@ -971,6 +1024,16 @@ function GameOver({
               <div className="text-sm text-muted-foreground">Your nation's ranking</div>
             </div>
           </div>
+          {synergyActive && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 text-sm font-semibold"
+            >
+              ⚡ Size + Density Synergy — +2 bonus points!
+            </motion.div>
+          )}
         </motion.div>
       </div>
 
