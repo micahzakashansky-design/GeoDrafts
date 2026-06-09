@@ -19,6 +19,11 @@ import {
   Star,
   Zap,
   Lock,
+  Lightbulb,
+  Shuffle,
+  X,
+  Info,
+  ArrowLeftRight,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -29,6 +34,8 @@ import {
   type Country,
   type Category,
 } from "@/data/countries";
+
+// ─── Constants & icons ──────────────────────────────────────────────────────
 
 const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Military: <Shield className="w-4 h-4" />,
@@ -45,29 +52,36 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   "Cities/Landmarks": <Landmark className="w-4 h-4" />,
 };
 
+const MAX_HINTS = 5;
+
+// ─── Types ───────────────────────────────────────────────────────────────────
+
 type GameState = {
   pool: Country[];
   currentCountry: Country | null;
   roster: Partial<Record<Category, Country>>;
   gameOver: boolean;
+  hintsRemaining: number;
+  wildcardUsed: boolean;
 };
+
+type InfoModal = { category: Category; country: Country } | null;
+type HintResult = { category: Category; score: number; reason: string };
+
+// ─── Persistence ─────────────────────────────────────────────────────────────
 
 function loadGameState(): GameState | null {
   try {
-    const saved = localStorage.getItem("countryDraftState");
+    const saved = localStorage.getItem("countryDraftState_v2");
     if (saved) return JSON.parse(saved) as GameState;
-  } catch {
-    // ignore
-  }
+  } catch { /* ignore */ }
   return null;
 }
 
 function saveGameState(state: GameState) {
   try {
-    localStorage.setItem("countryDraftState", JSON.stringify(state));
-  } catch {
-    // ignore
-  }
+    localStorage.setItem("countryDraftState_v2", JSON.stringify(state));
+  } catch { /* ignore */ }
 }
 
 function freshGame(): GameState {
@@ -77,16 +91,12 @@ function freshGame(): GameState {
     currentCountry: pool[0],
     roster: {},
     gameOver: false,
+    hintsRemaining: MAX_HINTS,
+    wildcardUsed: false,
   };
 }
 
-function getScoreColor(score: number): string {
-  if (score >= 9) return "text-emerald-400";
-  if (score >= 7) return "text-green-400";
-  if (score >= 5) return "text-yellow-400";
-  if (score >= 3) return "text-orange-400";
-  return "text-red-400";
-}
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function getScoreBarColor(score: number): string {
   if (score >= 9) return "bg-emerald-500";
@@ -94,6 +104,14 @@ function getScoreBarColor(score: number): string {
   if (score >= 5) return "bg-yellow-500";
   if (score >= 3) return "bg-orange-500";
   return "bg-red-500";
+}
+
+function getScoreLabel(score: number): { label: string; color: string } {
+  if (score >= 9) return { label: "World-Class", color: "text-emerald-400" };
+  if (score >= 7) return { label: "Strong", color: "text-green-400" };
+  if (score >= 5) return { label: "Moderate", color: "text-yellow-400" };
+  if (score >= 3) return { label: "Weak", color: "text-orange-400" };
+  return { label: "Critical", color: "text-red-400" };
 }
 
 function getRating(total: number): { label: string; color: string; icon: React.ReactNode } {
@@ -104,45 +122,91 @@ function getRating(total: number): { label: string; color: string; icon: React.R
   return { label: "Struggling State", color: "text-red-400", icon: <Shield className="w-5 h-5" /> };
 }
 
+function computeHints(country: Country, roster: Partial<Record<Category, Country>>): HintResult[] {
+  const empty = CATEGORIES.filter((c) => !roster[c]);
+  return empty
+    .map((cat) => {
+      const catKey = getCategoryKey(cat);
+      const stat = country.stats[catKey];
+      return { category: cat, score: stat.score, reason: stat.description };
+    })
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+}
+
+// ─── Main component ───────────────────────────────────────────────────────────
+
 export default function Game() {
-  const [state, setState] = useState<GameState>(() => {
-    return loadGameState() || freshGame();
-  });
+  const [state, setState] = useState<GameState>(() => loadGameState() || freshGame());
   const [hoveredCategory, setHoveredCategory] = useState<Category | null>(null);
   const [lastAssigned, setLastAssigned] = useState<Category | null>(null);
+  const [showHints, setShowHints] = useState(false);
+  const [hintResults, setHintResults] = useState<HintResult[]>([]);
+  const [wildcardPhase, setWildcardPhase] = useState(false);
+  const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const rosterRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    saveGameState(state);
+  useEffect(() => { saveGameState(state); }, [state]);
+
+  // Normal assign
+  const assignCountry = useCallback((category: Category) => {
+    if (!state.currentCountry || state.roster[category] || state.gameOver) return;
+    const newRoster = { ...state.roster, [category]: state.currentCountry };
+    const allFilled = CATEGORIES.every((c) => newRoster[c]);
+    const newPool = state.pool.slice(1);
+    setLastAssigned(category);
+    setTimeout(() => setLastAssigned(null), 600);
+    setShowHints(false);
+    setState((prev) => ({
+      ...prev,
+      pool: newPool,
+      currentCountry: allFilled ? null : state.pool[0] ?? null,
+      roster: newRoster,
+      gameOver: allFilled,
+    }));
   }, [state]);
 
-  const assignCountry = useCallback(
-    (category: Category) => {
-      if (!state.currentCountry) return;
-      if (state.roster[category]) return;
+  // Use hint
+  const useHint = useCallback(() => {
+    if (!state.currentCountry || state.hintsRemaining <= 0) return;
+    const results = computeHints(state.currentCountry, state.roster);
+    setHintResults(results);
+    setShowHints(true);
+    setState((prev) => ({ ...prev, hintsRemaining: prev.hintsRemaining - 1 }));
+  }, [state]);
 
-      const newRoster = { ...state.roster, [category]: state.currentCountry };
-      const allFilled = CATEGORIES.every((c) => newRoster[c]);
-      const nextCountry = state.pool[0] ?? null;
-      const newPool = state.pool.slice(1);
+  // Enter wildcard phase
+  const startWildcard = useCallback(() => {
+    if (state.wildcardUsed || !state.gameOver) return;
+    setWildcardPhase(true);
+  }, [state]);
 
-      setLastAssigned(category);
-      setTimeout(() => setLastAssigned(null), 600);
-
-      setState({
-        pool: newPool,
-        currentCountry: allFilled ? null : nextCountry,
-        roster: newRoster,
-        gameOver: allFilled,
-      });
-    },
-    [state]
-  );
+  // Wildcard: replace a slot
+  const applyWildcard = useCallback((category: Category) => {
+    if (!state.gameOver || !wildcardPhase || state.wildcardUsed) return;
+    if (state.pool.length === 0) return;
+    const newCountry = state.pool[0];
+    const newPool = state.pool.slice(1);
+    const newRoster = { ...state.roster, [category]: newCountry };
+    setWildcardPhase(false);
+    setLastAssigned(category);
+    setTimeout(() => setLastAssigned(null), 600);
+    setState((prev) => ({
+      ...prev,
+      pool: newPool,
+      roster: newRoster,
+      wildcardUsed: true,
+    }));
+  }, [state, wildcardPhase]);
 
   const resetGame = useCallback(() => {
-    localStorage.removeItem("countryDraftState");
+    localStorage.removeItem("countryDraftState_v2");
     setState(freshGame());
     setHoveredCategory(null);
+    setShowHints(false);
+    setHintResults([]);
+    setWildcardPhase(false);
+    setInfoModal(null);
   }, []);
 
   const downloadPng = useCallback(async () => {
@@ -161,33 +225,45 @@ export default function Game() {
 
   const filledCount = CATEGORIES.filter((c) => state.roster[c]).length;
   const totalScore = CATEGORIES.reduce((sum, cat) => {
-    const country = state.roster[cat];
-    if (!country) return sum;
-    return sum + country.stats[getCategoryKey(cat)].score;
+    const c = state.roster[cat];
+    return c ? sum + c.stats[getCategoryKey(cat)].score : sum;
   }, 0);
-
-  const currentStats = state.currentCountry ? state.currentCountry.stats : null;
 
   return (
     <div className="min-h-screen bg-background flex flex-col" data-testid="game-container">
       {/* Header */}
       <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Globe className="w-6 h-6 text-primary" />
-            <span className="font-serif text-xl font-bold text-foreground tracking-tight">
-              Country Draft
-            </span>
-          </div>
-          <span className="text-muted-foreground text-sm hidden sm:block">
-            Build the ideal nation
-          </span>
+          <Globe className="w-6 h-6 text-primary" />
+          <span className="font-serif text-xl font-bold text-foreground tracking-tight">Country Draft</span>
+          <span className="text-muted-foreground text-sm hidden sm:block">Build the ideal nation</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="text-sm text-muted-foreground">
             <span className="text-primary font-semibold">{filledCount}</span>
-            <span className="text-muted-foreground">/12 slots filled</span>
+            <span>/12 slots filled</span>
           </div>
+          {/* Hints button */}
+          {!state.gameOver && (
+            <button
+              data-testid="button-hint"
+              onClick={useHint}
+              disabled={state.hintsRemaining <= 0 || !state.currentCountry}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors ${
+                state.hintsRemaining > 0 && state.currentCountry
+                  ? "text-yellow-400 hover:bg-yellow-400/10 hover:text-yellow-300"
+                  : "text-muted-foreground/40 cursor-not-allowed"
+              }`}
+            >
+              <Lightbulb className="w-3.5 h-3.5" />
+              Hint
+              <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
+                state.hintsRemaining > 0 ? "bg-yellow-400/15 text-yellow-400" : "bg-secondary text-muted-foreground"
+              }`}>
+                {state.hintsRemaining}
+              </span>
+            </button>
+          )}
           <button
             data-testid="button-reset"
             onClick={resetGame}
@@ -213,6 +289,7 @@ export default function Game() {
               const catKey = getCategoryKey(category);
               const isHovered = hoveredCategory === category;
               const isAssignable = !assigned && !!state.currentCountry && !state.gameOver;
+              const isWildcardTarget = wildcardPhase && !!assigned;
               const score = assigned ? assigned.stats[catKey].score : null;
               const isLastAssigned = lastAssigned === category;
 
@@ -220,57 +297,53 @@ export default function Game() {
                 <motion.button
                   key={category}
                   data-testid={`slot-${category.toLowerCase().replace(/\s+/g, "-")}`}
-                  onClick={() => isAssignable && assignCountry(category)}
+                  onClick={() => {
+                    if (isWildcardTarget) applyWildcard(category);
+                    else if (isAssignable) assignCountry(category);
+                  }}
                   onMouseEnter={() => setHoveredCategory(category)}
                   onMouseLeave={() => setHoveredCategory(null)}
-                  disabled={!!assigned || !state.currentCountry || state.gameOver}
+                  disabled={!isAssignable && !isWildcardTarget}
                   className={`w-full rounded-lg border text-left transition-all duration-200 ${
-                    assigned
+                    isWildcardTarget
+                      ? "border-blue-500/50 bg-blue-500/10 hover:bg-blue-500/20 hover:border-blue-400/70 cursor-pointer"
+                      : assigned
                       ? `border-border/50 bg-card/60 ${isLastAssigned ? "slot-fill" : ""}`
                       : isAssignable
                       ? "border-primary/30 bg-secondary/30 hover:bg-secondary/60 hover:border-primary/60 cursor-pointer pulse-gold"
                       : "border-border/30 bg-card/20 cursor-default"
                   }`}
-                  whileTap={isAssignable ? { scale: 0.97 } : {}}
+                  whileTap={isAssignable || isWildcardTarget ? { scale: 0.97 } : {}}
                 >
                   <div className="px-3 py-2.5">
                     <div className="flex items-center justify-between mb-1">
                       <div className="flex items-center gap-2">
-                        <span
-                          className={`${
-                            assigned
-                              ? "text-primary"
-                              : isHovered && isAssignable
-                              ? "text-primary"
-                              : "text-muted-foreground"
-                          }`}
-                        >
+                        <span className={`${
+                          isWildcardTarget ? "text-blue-400"
+                          : assigned ? "text-primary"
+                          : isHovered && isAssignable ? "text-primary"
+                          : "text-muted-foreground"
+                        }`}>
                           {CATEGORY_ICONS[category]}
                         </span>
-                        <span
-                          className={`text-xs font-semibold uppercase tracking-wide ${
-                            assigned ? "text-foreground/70" : "text-muted-foreground"
-                          }`}
-                        >
+                        <span className={`text-xs font-semibold uppercase tracking-wide ${
+                          assigned ? "text-foreground/70" : "text-muted-foreground"
+                        }`}>
                           {category}
                         </span>
                       </div>
-                      {assigned && score !== null && (
-                        <span className={`text-sm font-bold ${getScoreColor(score)}`}>
-                          {score}/10
-                        </span>
+                      {isWildcardTarget && (
+                        <ArrowLeftRight className="w-3.5 h-3.5 text-blue-400 shrink-0" />
                       )}
                     </div>
 
                     {assigned ? (
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-xl leading-none">{assigned.flag}</span>
-                        <div className="min-w-0">
-                          <div className="text-sm font-semibold text-foreground truncate">
-                            {assigned.name}
-                          </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-sm font-semibold text-foreground truncate">{assigned.name}</div>
                           {score !== null && (
-                            <div className="mt-1 h-1 bg-secondary rounded-full overflow-hidden w-full">
+                            <div className="mt-1 h-1 bg-secondary rounded-full overflow-hidden">
                               <div
                                 className={`h-full rounded-full score-bar-fill ${getScoreBarColor(score)}`}
                                 style={{ width: `${(score / 10) * 100}%` }}
@@ -278,15 +351,17 @@ export default function Game() {
                             </div>
                           )}
                         </div>
-                        <Lock className="w-3 h-3 text-muted-foreground shrink-0" />
+                        {isWildcardTarget ? (
+                          <Shuffle className="w-3 h-3 text-blue-400 shrink-0" />
+                        ) : (
+                          <Lock className="w-3 h-3 text-muted-foreground/40 shrink-0" />
+                        )}
                       </div>
                     ) : isAssignable ? (
                       <div className="flex items-center gap-1.5 mt-1">
                         <ChevronRight className="w-3 h-3 text-primary/60" />
                         <span className="text-xs text-primary/70">
-                          {isHovered
-                            ? `Assign ${state.currentCountry?.name}`
-                            : "Click to assign current country"}
+                          {isHovered ? `Assign ${state.currentCountry?.name}` : "Click to assign"}
                         </span>
                       </div>
                     ) : (
@@ -297,23 +372,107 @@ export default function Game() {
               );
             })}
           </div>
+
+          {/* Wildcard cancel */}
+          {wildcardPhase && (
+            <div className="p-3 border-t border-border">
+              <button
+                onClick={() => setWildcardPhase(false)}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+                Cancel Wildcard
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Center: Country Card or Game Over */}
         <div className="flex-1 flex flex-col overflow-y-auto">
+          {/* Hints panel */}
+          <AnimatePresence>
+            {showHints && hintResults.length > 0 && !state.gameOver && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="mx-6 mt-4 rounded-xl border border-yellow-500/30 bg-yellow-500/5 overflow-hidden"
+              >
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-yellow-500/20">
+                  <div className="flex items-center gap-2">
+                    <Lightbulb className="w-4 h-4 text-yellow-400" />
+                    <span className="text-sm font-semibold text-yellow-400">
+                      Top 3 Recommended Categories
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setShowHints(false)}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+                <div className="p-3 grid grid-cols-3 gap-3">
+                  {hintResults.map(({ category, score, reason }, i) => {
+                    const { label, color } = getScoreLabel(score);
+                    return (
+                      <div key={category} className="rounded-lg bg-card border border-border p-3">
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                          <span className="text-yellow-400/70 text-xs font-bold">#{i + 1}</span>
+                          <span className="text-primary/70">{CATEGORY_ICONS[category]}</span>
+                          <span className="text-xs font-semibold uppercase tracking-wide text-foreground/80">{category}</span>
+                        </div>
+                        <div className="h-1.5 bg-secondary rounded-full overflow-hidden mb-1.5">
+                          <div className={`h-full rounded-full ${getScoreBarColor(score)}`} style={{ width: `${score * 10}%` }} />
+                        </div>
+                        <span className={`text-xs font-semibold ${color}`}>{label}</span>
+                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{reason}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Wildcard banner */}
+          <AnimatePresence>
+            {wildcardPhase && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="mx-6 mt-4 rounded-xl border border-blue-500/40 bg-blue-500/10 px-4 py-3 flex items-center gap-3"
+              >
+                <Shuffle className="w-5 h-5 text-blue-400 shrink-0" />
+                <div>
+                  <div className="text-sm font-semibold text-blue-300">Wildcard Active</div>
+                  <div className="text-xs text-blue-400/70">
+                    Select any filled slot on the left to replace it with a random country from the remaining pool.
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
           {state.gameOver ? (
             <GameOver
               roster={state.roster}
               totalScore={totalScore}
               onReset={resetGame}
               onDownload={downloadPng}
+              onWildcard={startWildcard}
+              wildcardUsed={state.wildcardUsed}
+              wildcardPhase={wildcardPhase}
               rosterRef={rosterRef}
+              onInfoClick={(cat, country) => setInfoModal({ category: cat, country })}
             />
           ) : state.currentCountry ? (
             <CountryCard
               country={state.currentCountry}
               hoveredCategory={hoveredCategory}
               poolRemaining={state.pool.length}
+              onInfoClick={(cat) => state.currentCountry && setInfoModal({ category: cat, country: state.currentCountry })}
             />
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
@@ -327,68 +486,153 @@ export default function Game() {
 
         {/* Right: Stats panel for hovered category */}
         <AnimatePresence>
-          {hoveredCategory && currentStats && !state.roster[hoveredCategory] && (
+          {hoveredCategory && state.currentCountry && !state.roster[hoveredCategory] && !state.gameOver && (
             <motion.div
               key="stats-panel"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              className="w-64 shrink-0 border-l border-border bg-card/30 flex flex-col overflow-y-auto"
+              className="w-60 shrink-0 border-l border-border bg-card/30 flex flex-col overflow-y-auto"
             >
-              <div className="px-4 py-3 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <span className="text-primary">{CATEGORY_ICONS[hoveredCategory]}</span>
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    {hoveredCategory} Preview
-                  </h3>
-                </div>
+              <div className="px-4 py-3 border-b border-border flex items-center gap-2">
+                <span className="text-primary">{CATEGORY_ICONS[hoveredCategory]}</span>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {hoveredCategory}
+                </h3>
               </div>
               <div className="p-4">
-                {state.currentCountry && (
-                  <>
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-3xl">{state.currentCountry.flag}</span>
-                      <div>
-                        <div className="font-semibold text-foreground">{state.currentCountry.name}</div>
-                        <div className="text-xs text-muted-foreground">{state.currentCountry.region}</div>
-                      </div>
-                    </div>
-                    <div className="space-y-1">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-3xl">{state.currentCountry.flag}</span>
+                  <div>
+                    <div className="font-semibold text-foreground text-sm">{state.currentCountry.name}</div>
+                    <div className="text-xs text-muted-foreground">{state.currentCountry.region}</div>
+                  </div>
+                </div>
+                {(() => {
+                  const stat = state.currentCountry.stats[getCategoryKey(hoveredCategory)];
+                  const { label, color } = getScoreLabel(stat.score);
+                  return (
+                    <>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-muted-foreground">Score</span>
-                        <span className={`text-2xl font-bold ${getScoreColor(currentStats[getCategoryKey(hoveredCategory)].score)}`}>
-                          {currentStats[getCategoryKey(hoveredCategory)].score}/10
-                        </span>
+                        <span className="text-xs text-muted-foreground uppercase tracking-wider">Rating</span>
+                        <span className={`text-sm font-bold ${color}`}>{label}</span>
                       </div>
-                      <div className="h-2 bg-secondary rounded-full overflow-hidden mb-4">
+                      <div className="h-2.5 bg-secondary rounded-full overflow-hidden mb-4">
                         <div
-                          className={`h-full rounded-full score-bar-fill ${getScoreBarColor(currentStats[getCategoryKey(hoveredCategory)].score)}`}
-                          style={{ width: `${(currentStats[getCategoryKey(hoveredCategory)].score / 10) * 100}%` }}
+                          className={`h-full rounded-full score-bar-fill ${getScoreBarColor(stat.score)}`}
+                          style={{ width: `${stat.score * 10}%` }}
                         />
                       </div>
-                      <p className="text-sm text-foreground/80 leading-relaxed">
-                        {currentStats[getCategoryKey(hoveredCategory)].description}
-                      </p>
-                    </div>
-                  </>
-                )}
+                      <p className="text-sm text-foreground/80 leading-relaxed">{stat.description}</p>
+                    </>
+                  );
+                })()}
               </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+
+      {/* Info modal */}
+      <AnimatePresence>
+        {infoModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+            onClick={() => setInfoModal(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.92, y: 16 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.92, y: 16 }}
+              transition={{ duration: 0.2, ease: [0.34, 1.56, 0.64, 1] }}
+              className="bg-card border border-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal header */}
+              <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">{infoModal.country.flag}</span>
+                  <div>
+                    <div className="font-serif font-bold text-foreground text-lg">{infoModal.country.name}</div>
+                    <div className="text-xs text-muted-foreground">{infoModal.country.capital} · {infoModal.country.region}</div>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setInfoModal(null)}
+                  className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Category info */}
+              <div className="px-5 py-4">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-primary">{CATEGORY_ICONS[infoModal.category]}</span>
+                  <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+                    {infoModal.category}
+                  </span>
+                </div>
+
+                {(() => {
+                  const stat = infoModal.country.stats[getCategoryKey(infoModal.category)];
+                  const { label, color } = getScoreLabel(stat.score);
+                  return (
+                    <>
+                      {/* Rating + bar */}
+                      <div className="bg-secondary/50 rounded-xl p-4 mb-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-xs text-muted-foreground uppercase tracking-wider">Overall Rating</span>
+                          <span className={`text-lg font-bold ${color}`}>{label}</span>
+                        </div>
+                        <div className="h-3 bg-secondary rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${stat.score * 10}%` }}
+                            transition={{ duration: 0.6, ease: "easeOut" }}
+                            className={`h-full rounded-full ${getScoreBarColor(stat.score)}`}
+                          />
+                        </div>
+                        <div className="flex justify-between mt-1.5 text-xs text-muted-foreground/60">
+                          <span>Critical</span>
+                          <span>World-Class</span>
+                        </div>
+                      </div>
+
+                      {/* Full description */}
+                      <div>
+                        <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+                          Analysis
+                        </div>
+                        <p className="text-sm text-foreground/85 leading-relaxed">{stat.description}</p>
+                      </div>
+                    </>
+                  );
+                })()}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+
+// ─── CountryCard ──────────────────────────────────────────────────────────────
 
 function CountryCard({
   country,
   hoveredCategory,
   poolRemaining,
+  onInfoClick,
 }: {
   country: Country;
   hoveredCategory: Category | null;
   poolRemaining: number;
+  onInfoClick: (cat: Category) => void;
 }) {
   return (
     <AnimatePresence mode="wait">
@@ -398,7 +642,7 @@ function CountryCard({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: -20, scale: 0.97 }}
         transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
-        className="p-6 flex flex-col gap-6"
+        className="p-6 flex flex-col gap-5"
         data-testid="country-card"
       >
         {/* Country Header */}
@@ -407,13 +651,11 @@ function CountryCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-1 flex-wrap">
               <h1 className="font-serif text-3xl font-bold text-foreground">{country.name}</h1>
-              <span
-                className={`px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ${
-                  country.tier === "first"
-                    ? "bg-primary/20 text-primary border border-primary/30"
-                    : "bg-secondary text-muted-foreground border border-border"
-                }`}
-              >
+              <span className={`px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ${
+                country.tier === "first"
+                  ? "bg-primary/20 text-primary border border-primary/30"
+                  : "bg-secondary text-muted-foreground border border-border"
+              }`}>
                 {country.tier === "first" ? "1st World" : "2nd World"}
               </span>
             </div>
@@ -435,16 +677,21 @@ function CountryCard({
         <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-2.5 flex items-center gap-3">
           <ChevronRight className="w-4 h-4 text-primary shrink-0" />
           <p className="text-sm text-foreground/80">
-            <span className="text-primary font-semibold">Hover a category slot</span> on the left to preview this country's score, then click to assign it.
+            <span className="text-primary font-semibold">Hover a slot</span> on the left to preview this country's rating, then click to assign. Click{" "}
+            <span className="inline-flex items-center gap-0.5 text-muted-foreground">
+              <Info className="w-3 h-3" />
+            </span>{" "}
+            on any stat for full details.
           </p>
         </div>
 
-        {/* All Stats Grid */}
+        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {CATEGORIES.map((category) => {
             const catKey = getCategoryKey(category);
             const stat = country.stats[catKey];
             const isHighlighted = hoveredCategory === category;
+            const { label, color } = getScoreLabel(stat.score);
 
             return (
               <motion.div
@@ -458,27 +705,30 @@ function CountryCard({
                 data-testid={`stat-${catKey}`}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <span className={`${isHighlighted ? "text-primary" : "text-muted-foreground"}`}>
+                  <div className="flex items-center gap-1.5">
+                    <span className={isHighlighted ? "text-primary" : "text-muted-foreground"}>
                       {CATEGORY_ICONS[category]}
                     </span>
                     <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                       {category}
                     </span>
                   </div>
-                  <span className={`text-sm font-bold ${getScoreColor(stat.score)}`}>
-                    {stat.score}
-                  </span>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onInfoClick(category); }}
+                    className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors shrink-0"
+                    title={`Details for ${category}`}
+                  >
+                    <Info className="w-3 h-3" />
+                  </button>
                 </div>
-                <div className="h-1.5 bg-secondary rounded-full overflow-hidden mb-2">
+                <div className="h-1.5 bg-secondary rounded-full overflow-hidden mb-1.5">
                   <div
                     className={`h-full rounded-full score-bar-fill ${getScoreBarColor(stat.score)}`}
-                    style={{ width: `${(stat.score / 10) * 100}%` }}
+                    style={{ width: `${stat.score * 10}%` }}
                   />
                 </div>
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-                  {stat.description}
-                </p>
+                <div className={`text-xs font-semibold mb-1 ${color}`}>{label}</div>
+                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{stat.description}</p>
               </motion.div>
             );
           })}
@@ -488,18 +738,28 @@ function CountryCard({
   );
 }
 
+// ─── GameOver ─────────────────────────────────────────────────────────────────
+
 function GameOver({
   roster,
   totalScore,
   onReset,
   onDownload,
+  onWildcard,
+  wildcardUsed,
+  wildcardPhase,
   rosterRef,
+  onInfoClick,
 }: {
   roster: Partial<Record<Category, Country>>;
   totalScore: number;
   onReset: () => void;
   onDownload: () => void;
+  onWildcard: () => void;
+  wildcardUsed: boolean;
+  wildcardPhase: boolean;
   rosterRef: React.RefObject<HTMLDivElement>;
+  onInfoClick: (cat: Category, country: Country) => void;
 }) {
   const rating = getRating(totalScore);
 
@@ -531,7 +791,7 @@ function GameOver({
       </div>
 
       {/* Actions */}
-      <div className="flex justify-center gap-3">
+      <div className="flex justify-center gap-3 flex-wrap">
         <button
           data-testid="button-download"
           onClick={onDownload}
@@ -540,6 +800,22 @@ function GameOver({
           <Download className="w-4 h-4" />
           Download as PNG
         </button>
+        {!wildcardUsed && !wildcardPhase && (
+          <button
+            data-testid="button-wildcard"
+            onClick={onWildcard}
+            className="flex items-center gap-2 px-5 py-2.5 bg-blue-600/20 text-blue-300 border border-blue-500/40 rounded-lg font-semibold text-sm hover:bg-blue-600/30 transition-colors"
+          >
+            <Shuffle className="w-4 h-4" />
+            Use Wildcard
+          </button>
+        )}
+        {wildcardUsed && (
+          <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-lg text-xs text-muted-foreground border border-border">
+            <Shuffle className="w-3.5 h-3.5" />
+            Wildcard used
+          </div>
+        )}
         <button
           data-testid="button-new-draft"
           onClick={onReset}
@@ -550,9 +826,8 @@ function GameOver({
         </button>
       </div>
 
-      {/* Final Roster for PNG export */}
+      {/* Final Roster */}
       <div ref={rosterRef} className="rounded-xl overflow-hidden border border-border bg-background">
-        {/* PNG Header */}
         <div className="bg-card px-6 py-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Globe className="w-5 h-5 text-primary" />
@@ -564,13 +839,12 @@ function GameOver({
             <span className={`font-semibold ${rating.color}`}>{rating.label}</span>
           </div>
         </div>
-
-        {/* 2-column grid */}
         <div className="grid grid-cols-2 gap-px bg-border">
           {CATEGORIES.map((category) => {
             const country = roster[category];
             const catKey = getCategoryKey(category);
             const score = country ? country.stats[catKey].score : null;
+            const scoreInfo = score !== null ? getScoreLabel(score) : null;
 
             return (
               <div key={category} className="bg-card p-4">
@@ -581,24 +855,27 @@ function GameOver({
                       {category}
                     </span>
                   </div>
-                  {score !== null && (
-                    <span className={`text-sm font-bold ${getScoreColor(score)}`}>{score}/10</span>
+                  {country && (
+                    <button
+                      onClick={() => country && onInfoClick(category, country)}
+                      className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors"
+                    >
+                      <Info className="w-3 h-3" />
+                    </button>
                   )}
                 </div>
-                {country && score !== null ? (
+                {country && score !== null && scoreInfo ? (
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{country.flag}</span>
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-foreground text-sm">{country.name}</div>
-                      <div className="h-1.5 bg-secondary rounded-full overflow-hidden mt-1">
+                      <div className="h-1.5 bg-secondary rounded-full overflow-hidden mt-1 mb-1">
                         <div
                           className={`h-full rounded-full ${getScoreBarColor(score)}`}
                           style={{ width: `${(score / 10) * 100}%` }}
                         />
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">
-                        {country.stats[catKey].description}
-                      </p>
+                      <span className={`text-xs font-semibold ${scoreInfo.color}`}>{scoreInfo.label}</span>
                     </div>
                   </div>
                 ) : (
