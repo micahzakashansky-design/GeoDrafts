@@ -3,6 +3,7 @@ import {
   Shield, TrendingUp, Palette, Heart, Globe, Landmark, Sun, Cpu, Map, Users,
   BookOpen, Building, ChevronRight, ChevronDown, Download, RotateCcw, Trophy,
   Star, Zap, Lock, Lightbulb, Shuffle, X, Info, ArrowLeftRight, List, Medal,
+  GraduationCap, MapPin, Mountain,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -32,10 +33,10 @@ function pngScoreBar(score: number): string {
   return PNG_COLORS.scoreColors[Math.max(0, Math.min(10, score)) - 1] ?? "#eab308";
 }
 function pngRatingColor(total: number): string {
-  if (total >= 120) return PNG_COLORS.ratingColors.superpower;
-  if (total >= 100) return PNG_COLORS.ratingColors.major;
-  if (total >= 80)  return PNG_COLORS.ratingColors.regional;
-  if (total >= 62)  return PNG_COLORS.ratingColors.developing;
+  if (total >= 148) return PNG_COLORS.ratingColors.superpower;
+  if (total >= 120) return PNG_COLORS.ratingColors.major;
+  if (total >= 95)  return PNG_COLORS.ratingColors.regional;
+  if (total >= 72)  return PNG_COLORS.ratingColors.developing;
   return PNG_COLORS.ratingColors.struggling;
 }
 function pngScoreLabel(score: number): string {
@@ -43,8 +44,8 @@ function pngScoreLabel(score: number): string {
   if (score >= 5) return "Moderate"; if (score >= 3) return "Weak"; return "Critical";
 }
 function pngRatingLabel(total: number): string {
-  if (total >= 120) return "Superpower"; if (total >= 100) return "Major Power";
-  if (total >= 80) return "Regional Power"; if (total >= 62) return "Developing Nation";
+  if (total >= 148) return "Superpower"; if (total >= 120) return "Major Power";
+  if (total >= 95) return "Regional Power"; if (total >= 72) return "Developing Nation";
   return "Struggling State";
 }
 
@@ -140,19 +141,26 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Population: <Users className="w-4 h-4" />,
   History: <BookOpen className="w-4 h-4" />,
   "Cities/Landmarks": <Landmark className="w-4 h-4" />,
+  Education: <GraduationCap className="w-4 h-4" />,
+  Location: <MapPin className="w-4 h-4" />,
+  "Natural Resources": <Mountain className="w-4 h-4" />,
 };
 
 // Weight multipliers for scoring (Size/Population use bonus formula, not weights)
 const CATEGORY_WEIGHTS: Partial<Record<Category, number>> = {
   Military: 1.5, Economy: 1.5, Government: 1.5,
   "International Relationships": 1.2, Technology: 1.2,
+  Education: 1.2, Location: 1.2, "Natural Resources": 1.2, Healthcare: 1.2,
 };
 
 // Star display for each category
 function getCategoryStars(cat: Category): string {
   if (cat === "Military" || cat === "Economy" || cat === "Government") return "★★★";
-  if (cat === "International Relationships" || cat === "Technology") return "★★";
-  if (cat === "Size" || cat === "Population") return "★★";
+  if (
+    cat === "International Relationships" || cat === "Technology" ||
+    cat === "Education" || cat === "Location" || cat === "Natural Resources" ||
+    cat === "Healthcare" || cat === "Size" || cat === "Population"
+  ) return "★★";
   return "★";
 }
 
@@ -247,35 +255,51 @@ function getScoreLabel(score: number): { label: string; color: string } {
 }
 
 function getRating(total: number): { label: string; color: string; icon: React.ReactNode } {
-  if (total >= 120) return { label: "Superpower",      color: "text-yellow-400",  icon: <Trophy className="w-5 h-5" /> };
-  if (total >= 100) return { label: "Major Power",     color: "text-blue-400",    icon: <Star className="w-5 h-5" /> };
-  if (total >= 80)  return { label: "Regional Power",  color: "text-green-400",   icon: <Zap className="w-5 h-5" /> };
-  if (total >= 62)  return { label: "Developing Nation", color: "text-orange-400", icon: <Globe className="w-5 h-5" /> };
+  if (total >= 148) return { label: "Superpower",       color: "text-yellow-400",  icon: <Trophy className="w-5 h-5" /> };
+  if (total >= 120) return { label: "Major Power",      color: "text-blue-400",    icon: <Star className="w-5 h-5" /> };
+  if (total >= 95)  return { label: "Regional Power",   color: "text-green-400",   icon: <Zap className="w-5 h-5" /> };
+  if (total >= 72)  return { label: "Developing Nation",color: "text-orange-400",  icon: <Globe className="w-5 h-5" /> };
   return { label: "Struggling State", color: "text-red-400", icon: <Shield className="w-5 h-5" /> };
 }
 
-/** Computes size+population bonus (0-25 max). Uses density-fit formula. */
+/** Computes size+population bonus (0-25 max). Penalises overcrowding and extreme sparsity. */
 function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
   const sc = roster["Size"];
   const pc = roster["Population"];
   if (!sc || !pc) return 0;
-  const sz      = sc.stats.size.score;
-  const pop     = pc.stats.population.score;
+  const sz  = sc.stats.size.score;   // 1-10: higher = larger land
+  const pop = pc.stats.population.score; // 1-10: higher = more people
+
+  // Density fit: idealDiff = sz - pop
+  // Positive → underpopulated relative to land (mild penalty only for extreme)
+  // Negative → overcrowded; steep penalty when pop >> sz
+  // e.g. China (pop=10) in Turkey (sz=4): diff=-6 → severe overcrowding
+  const idealDiff = sz - pop;
+  let fitMultiplier: number;
+  if (idealDiff < -2) {
+    // Overcrowded: each point beyond -2 applies a 40% penalty
+    const overcrowding = -idealDiff - 2;
+    fitMultiplier = Math.max(0, 1.0 - overcrowding * 0.4);
+  } else if (idealDiff > 6) {
+    // Very underpopulated: land is wasted
+    fitMultiplier = Math.max(0.3, 1.0 - (idealDiff - 6) * 0.15);
+  } else {
+    // Good fit (-2 to +6): near-optimal range
+    fitMultiplier = 1.0;
+  }
+
   const climate = roster["Climate"]?.stats.climate.score ?? 5;
   const tech    = roster["Technology"]?.stats.technology.score ?? 5;
   const eco     = roster["Economy"]?.stats.economy.score ?? 5;
 
-  // Effective density ratio: how dense is this combination
-  const ratio = pop / (sz + 1);
+  // Best economic path (agricultural or urban)
+  const agFactor  = (sz / 10) * (climate / 10);
+  const urbFactor = (tech / 10) * (eco / 10);
+  const densityBonus = Math.min(20, Math.round(fitMultiplier * Math.max(agFactor, urbFactor) * 22));
 
-  // Agricultural path: large land + good climate + low density → max 20
-  const agBonus  = (sz / 10) * (climate / 10) * Math.max(0, 1.2 - ratio) * 20;
-  // Urban path: tech + economy + high density → max 20
-  const urbBonus = (tech / 10) * (eco / 10) * Math.min(1, ratio * 0.8) * 20;
-
-  const densityBonus = Math.min(20, Math.round(Math.max(agBonus, urbBonus)));
-  // Combo: both large size AND large population → max 5
-  const comboBonus   = Math.min(5, Math.round((sz * pop) / 20));
+  // Combo: large size + large matched population → max 5 (capped to avoid rewarding overcrowding)
+  const matchedPop = Math.min(pop, sz + 2);
+  const comboBonus = Math.min(5, Math.round((sz * matchedPop) / 20));
   return densityBonus + comboBonus;
 }
 
@@ -312,20 +336,25 @@ function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archet
   const intl = s("International Relationships"), tech = s("Technology");
   const cult = s("Culture"), health = s("Healthcare"), climate = s("Climate");
   const hist = s("History"), cities = s("Cities/Landmarks");
+  const edu = s("Education"), nat = s("Natural Resources"), loc = s("Location");
 
-  if (mil >= 9 && eco >= 8) return { title: "Military Superpower",  emoji: "⚔️", description: "A dominant force projecting military might backed by formidable economic power." };
-  if (mil >= 9)             return { title: "Military Power",        emoji: "🛡️", description: "An imposing military force built for security and strategic dominance." };
-  if (eco >= 9 && gov >= 8) return { title: "Economic Powerhouse",   emoji: "📈", description: "A well-governed nation driving global economic growth and innovation." };
-  if (gov >= 9 && health >= 8) return { title: "Stable Democracy",   emoji: "🏛️", description: "A model of governance — transparent, effective, and caring for its citizens." };
-  if (tech >= 9 && eco >= 7)   return { title: "Tech Nation",        emoji: "💻", description: "A forward-thinking nation built on innovation and digital infrastructure." };
-  if (intl >= 9)               return { title: "Diplomatic Power",   emoji: "🌐", description: "A skilled navigator of global politics with allies on every continent." };
-  if (climate >= 9 && cities >= 8) return { title: "Tourist Paradise", emoji: "🏖️", description: "Blessed with breathtaking scenery and world-famous landmarks." };
-  if (hist >= 9 && cult >= 8)  return { title: "Cultural Empire",    emoji: "🎭", description: "A civilization with deep cultural roots and an enduring historical legacy." };
-  if (health >= 9 && gov >= 7) return { title: "Welfare State",      emoji: "❤️", description: "A nation that puts its people first with world-class healthcare and governance." };
-  if (cult >= 9)               return { title: "Cultural Giant",     emoji: "🎨", description: "A vibrant nation with rich traditions, arts, and cultural influence worldwide." };
-  if (climate >= 9)            return { title: "Natural Paradise",   emoji: "🌿", description: "Blessed with exceptional climate and natural beauty." };
+  if (mil >= 9 && eco >= 8)    return { title: "Military Superpower",  emoji: "⚔️",  description: "A dominant force projecting military might backed by formidable economic power." };
+  if (mil >= 9)                return { title: "Military Power",        emoji: "🛡️",  description: "An imposing military force built for security and strategic dominance." };
+  if (eco >= 9 && gov >= 8)    return { title: "Economic Powerhouse",   emoji: "📈",  description: "A well-governed nation driving global economic growth and innovation." };
+  if (edu >= 9 && tech >= 8)   return { title: "Knowledge Economy",     emoji: "🎓",  description: "Innovation powered by world-class education and cutting-edge technology." };
+  if (gov >= 9 && health >= 8) return { title: "Stable Democracy",      emoji: "🏛️",  description: "A model of governance — transparent, effective, and caring for its citizens." };
+  if (tech >= 9 && eco >= 7)   return { title: "Tech Nation",           emoji: "💻",  description: "A forward-thinking nation built on innovation and digital infrastructure." };
+  if (nat >= 9 && eco >= 7)    return { title: "Resource Giant",        emoji: "⛏️",  description: "A nation whose natural wealth fuels economic dominance and global leverage." };
+  if (intl >= 9 && loc >= 7)   return { title: "Diplomatic Powerhouse", emoji: "🌐",  description: "Strategically positioned and globally connected — allies everywhere." };
+  if (intl >= 9)               return { title: "Diplomatic Power",      emoji: "🤝",  description: "A skilled navigator of global politics with allies on every continent." };
+  if (climate >= 9 && cities >= 8) return { title: "Tourist Paradise",  emoji: "🏖️",  description: "Blessed with breathtaking scenery and world-famous landmarks." };
+  if (hist >= 9 && cult >= 8)  return { title: "Cultural Empire",       emoji: "🎭",  description: "A civilization with deep cultural roots and an enduring historical legacy." };
+  if (health >= 9 && edu >= 8) return { title: "Welfare State",         emoji: "❤️",  description: "A nation that puts its people first with world-class healthcare and education." };
+  if (cult >= 9)               return { title: "Cultural Giant",        emoji: "🎨",  description: "A vibrant nation with rich traditions, arts, and cultural influence worldwide." };
+  if (climate >= 9)            return { title: "Natural Paradise",      emoji: "🌿",  description: "Blessed with exceptional climate and natural beauty." };
+  if (nat >= 8)                return { title: "Resource Rich",         emoji: "⛰️",  description: "Blessed with abundant natural resources powering growth and exports." };
 
-  const values = [mil, eco, gov, intl, tech, cult, health, climate, hist, cities].filter(x => x > 0);
+  const values = [mil, eco, gov, intl, tech, edu, nat, loc, cult, health, climate, hist, cities].filter(x => x > 0);
   const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
   if (avg >= 7.5) return { title: "World Power",      emoji: "🌍", description: "A well-rounded nation excelling across multiple domains." };
   if (avg >= 5.5) return { title: "Emerging Nation",  emoji: "🌱", description: "A country with clear strengths building toward global relevance." };
@@ -498,7 +527,7 @@ export default function Game() {
         <div className="flex items-center gap-3">
           <div className="text-sm text-muted-foreground">
             <span className="text-primary font-semibold">{filledCount}</span>
-            <span>/12 slots filled</span>
+            <span>/{CATEGORIES.length} slots filled</span>
           </div>
 
           {/* Hard mode toggle */}
@@ -847,7 +876,7 @@ export default function Game() {
       >
         <List className="w-4 h-4 text-primary" />
         <span>Roster</span>
-        <span className="text-primary font-bold">{filledCount}/12</span>
+        <span className="text-primary font-bold">{filledCount}/{CATEGORIES.length}</span>
       </button>
 
       {/* Info modal */}
