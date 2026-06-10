@@ -1,0 +1,2 @@
+- [Country Draft scoring system](country-draft-scoring.md) — weighted categories + size/population bonus formula; max ~144 pts
+- [Country Draft data scripts](country-draft-data-scripts.md) — line-by-line node script pattern for reliable bulk data updates in countries.ts

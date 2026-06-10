@@ -1,6 +1,6 @@
-# [Project name]
+# Country Draft
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A web game where players draw random first/second world countries one at a time and assign each to one of 12 category slots to build the "best possible nation."
 
 ## Run & Operate
 
