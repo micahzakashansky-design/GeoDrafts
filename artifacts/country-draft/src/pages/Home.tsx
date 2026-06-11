@@ -1,9 +1,15 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLocation } from "wouter";
-import { Globe, Trophy, BookOpen, Shield, TrendingUp, Palette, Heart, Sun, Cpu, Map, Users, BookOpen as BookIcon, GraduationCap, MapPin, Mountain, Camera, Building, X, ChevronRight } from "lucide-react";
+import {
+  Globe, Trophy, BookOpen, Shield, TrendingUp, Palette, Heart, Sun, Cpu, Map,
+  Users, BookOpen as BookIcon, GraduationCap, MapPin, Mountain, Camera,
+  Building, X, ChevronRight, CalendarDays,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { COUNTRIES, CATEGORIES, getCategoryKey, type Category } from "@/data/countries";
 import { useTheme } from "@/lib/theme-context";
+
+// ─── Icons ────────────────────────────────────────────────────────────────────
 
 const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Military: <Shield className="w-4 h-4" />,
@@ -23,29 +29,29 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   "Natural Resources": <Mountain className="w-4 h-4" />,
 };
 
+// ─── Scoring tiers / ranks (for guidebook) ────────────────────────────────────
+
 const SCORING_TIERS = [
-  { label: "★★★ Three-star categories", example: "Military, Economy, Government", max: "15 pts max", weight: "1.5×", color: "text-yellow-400" },
-  { label: "★★ Two-star categories", example: "Healthcare, Technology, Education, Location, Natural Resources, International Relationships", max: "12 pts max", weight: "1.2×", color: "text-yellow-400/70" },
-  { label: "★ One-star categories", example: "Culture, Climate, History, Tourism", max: "10 pts max", weight: "1.0×", color: "text-yellow-400/40" },
-  { label: "💡 Size + Population bonus", example: "Based on density fit with Climate, Tech & Economy", max: "Up to +25 pts", weight: "Formula", color: "text-blue-400" },
+  { label: "★★★ Three-star", example: "Military, Economy, Government", max: "15 pts max", weight: "1.5×", color: "text-yellow-400" },
+  { label: "★★ Two-star", example: "Healthcare, Technology, Education, Location, Natural Resources, International Relationships", max: "12 pts max", weight: "1.2×", color: "text-yellow-400/70" },
+  { label: "★ One-star", example: "Culture, Climate, History, Tourism", max: "10 pts max", weight: "1.0×", color: "text-yellow-400/40" },
+  { label: "💡 Size + Population", example: "Bonus formula based on density fit with Climate, Tech & Economy", max: "Up to +25 pts", weight: "Formula", color: "text-blue-400" },
 ];
 
 const NATION_RANKS = [
-  { label: "Superpower", range: "148+ pts", color: "text-yellow-400" },
-  { label: "Major Power", range: "120–147 pts", color: "text-blue-400" },
-  { label: "Regional Power", range: "95–119 pts", color: "text-green-400" },
-  { label: "Developing Nation", range: "72–94 pts", color: "text-orange-400" },
-  { label: "Struggling State", range: "< 72 pts", color: "text-red-400" },
+  { label: "Superpower",        range: "148+ pts",  color: "text-yellow-400" },
+  { label: "Major Power",       range: "120–147 pts", color: "text-blue-400" },
+  { label: "Regional Power",    range: "95–119 pts",  color: "text-green-400" },
+  { label: "Developing Nation", range: "72–94 pts",   color: "text-orange-400" },
+  { label: "Struggling State",  range: "< 72 pts",    color: "text-red-400" },
 ];
 
 function getTop3ForCategory(category: Category) {
   const catKey = getCategoryKey(category);
-  const bonusCategories = ["Size", "Population"];
-  if (bonusCategories.includes(category)) {
-    return [...COUNTRIES].sort((a, b) => b.stats[catKey].score - a.stats[catKey].score).slice(0, 3);
-  }
   return [...COUNTRIES].sort((a, b) => b.stats[catKey].score - a.stats[catKey].score).slice(0, 3);
 }
+
+// ─── Guidebook modal ──────────────────────────────────────────────────────────
 
 function GuidebookModal({ onClose }: { onClose: () => void }) {
   const [activeTab, setActiveTab] = useState<"top3" | "scoring">("top3");
@@ -170,10 +176,10 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                 <div className="grid grid-cols-2 gap-2">
                   {[
                     { label: "World-Class", range: "9–10", color: "text-emerald-400" },
-                    { label: "Strong", range: "7–8", color: "text-green-400" },
-                    { label: "Moderate", range: "5–6", color: "text-yellow-400" },
-                    { label: "Weak", range: "3–4", color: "text-orange-400" },
-                    { label: "Critical", range: "1–2", color: "text-red-400" },
+                    { label: "Strong",      range: "7–8",  color: "text-green-400" },
+                    { label: "Moderate",    range: "5–6",  color: "text-yellow-400" },
+                    { label: "Weak",        range: "3–4",  color: "text-orange-400" },
+                    { label: "Critical",    range: "1–2",  color: "text-red-400" },
                   ].map(r => (
                     <div key={r.label} className="flex items-center justify-between rounded-lg bg-secondary/30 px-3 py-2">
                       <span className={`text-sm font-semibold ${r.color}`}>{r.label}</span>
@@ -201,6 +207,133 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
   );
 }
 
+// ─── Country of the Day card ──────────────────────────────────────────────────
+
+function DailyCard() {
+  const [, navigate] = useLocation();
+
+  const todayKey  = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const todayLabel = useMemo(
+    () => new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }),
+    []
+  );
+
+  const dailyResult = useMemo<{ score: number; completed: boolean } | null>(() => {
+    try {
+      const raw = localStorage.getItem(`countryDraftDailyResult_${todayKey}`);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch { return null; }
+  }, [todayKey]);
+
+  const inProgress = useMemo(() => {
+    try {
+      const raw = localStorage.getItem(`countryDraftState_daily_${todayKey}`);
+      if (!raw) return false;
+      const s = JSON.parse(raw);
+      return s && !s.gameOver && s.isDailyMode;
+    } catch { return false; }
+  }, [todayKey]);
+
+  function playDaily() {
+    localStorage.setItem("countryDraftDailyMode", "true");
+    localStorage.setItem("countryDraftDailyDate", todayKey);
+    navigate("/game");
+  }
+
+  const alreadyCompleted = dailyResult?.completed === true;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.05, duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+      className="w-full max-w-xl mb-2"
+    >
+      <div className={`rounded-2xl border p-5 relative overflow-hidden ${
+        alreadyCompleted
+          ? "border-emerald-500/30 bg-emerald-500/5"
+          : "border-amber-400/40 bg-amber-400/5"
+      }`}>
+        {/* Subtle background glow */}
+        <div className={`absolute inset-0 pointer-events-none ${
+          alreadyCompleted
+            ? "bg-gradient-to-br from-emerald-500/5 to-transparent"
+            : "bg-gradient-to-br from-amber-400/8 to-transparent"
+        }`} />
+
+        <div className="relative">
+          <div className="flex items-start justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${
+                alreadyCompleted ? "bg-emerald-500/20" : "bg-amber-400/20"
+              }`}>
+                🗓️
+              </div>
+              <div>
+                <h2 className={`font-semibold text-base ${alreadyCompleted ? "text-emerald-300" : "text-amber-300"}`}>
+                  Country of the Day
+                </h2>
+                <p className="text-xs text-muted-foreground">{todayLabel}</p>
+              </div>
+            </div>
+            {alreadyCompleted && (
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
+                ✅ Completed
+              </span>
+            )}
+            {inProgress && !alreadyCompleted && (
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-400/20 text-amber-400 text-xs font-bold border border-amber-400/30 animate-pulse">
+                ⏳ In Progress
+              </span>
+            )}
+          </div>
+
+          <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+            Everyone drafts the <span className="text-foreground/80 font-medium">same shuffled pool</span> today.
+            Compare your score on the global leaderboard!
+          </p>
+
+          {alreadyCompleted ? (
+            <div className="flex items-center gap-3">
+              <div className="flex-1 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
+                <div className="text-2xl font-bold text-emerald-400">{dailyResult!.score} pts</div>
+                <div className="text-xs text-muted-foreground mt-0.5">Your score today</div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={playDaily}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors text-sm font-semibold"
+                >
+                  <CalendarDays className="w-3.5 h-3.5" />
+                  View Result
+                </button>
+                <button
+                  onClick={() => navigate("/leaderboard")}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary text-muted-foreground border border-border hover:text-foreground hover:bg-secondary/70 transition-colors text-sm font-semibold"
+                >
+                  <Trophy className="w-3.5 h-3.5 text-yellow-400" />
+                  Leaderboard
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={playDaily}
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-400/20 text-amber-300 border border-amber-400/40 hover:bg-amber-400/30 transition-colors font-semibold text-sm"
+            >
+              <CalendarDays className="w-4 h-4" />
+              {inProgress ? "Continue Daily Challenge" : "Play Today's Challenge"}
+            </button>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Home page ────────────────────────────────────────────────────────────────
+
 export default function Home() {
   const [, navigate] = useLocation();
   const [showGuidebook, setShowGuidebook] = useState(false);
@@ -208,7 +341,9 @@ export default function Home() {
 
   function startGame(hardMode: boolean) {
     localStorage.setItem("countryDraftHardMode", String(hardMode));
-    localStorage.removeItem("countryDraftState_v3");
+    localStorage.removeItem("countryDraftDailyMode");
+    localStorage.removeItem("countryDraftDailyDate");
+    localStorage.removeItem("countryDraftState_v4");
     navigate("/game");
   }
 
@@ -222,58 +357,61 @@ export default function Home() {
         <button
           onClick={toggleTheme}
           className="px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors"
-          title={isLight ? "Switch to dark mode" : "Switch to light mode"}
         >
           {isLight ? "🌙 Dark" : "☀️ Light"}
         </button>
       </header>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-6 py-16">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
-          className="text-center max-w-xl"
+          className="flex flex-col items-center w-full max-w-xl"
         >
-          <div className="text-7xl mb-6">🌍</div>
-          <h1 className="font-serif text-5xl font-bold text-foreground mb-3 tracking-tight">GeoDrafts</h1>
-          <p className="text-lg text-muted-foreground mb-2">
+          <div className="text-6xl mb-4">🌍</div>
+          <h1 className="font-serif text-5xl font-bold text-foreground mb-2 tracking-tight">GeoDrafts</h1>
+          <p className="text-base text-muted-foreground mb-1 text-center">
             Draft random countries one-by-one and build the ideal nation.
           </p>
-          <p className="text-sm text-muted-foreground/70 mb-10">
-            Assign each country to one of 15 category slots — Military, Economy, Culture, and more.
-            Score points based on each country's real-world stats.
+          <p className="text-sm text-muted-foreground/60 mb-8 text-center">
+            Assign each country to one of 15 category slots. Score points based on real-world stats.
           </p>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+          {/* Daily Challenge */}
+          <DailyCard />
+
+          {/* Easy / Hard mode */}
+          <div className="grid grid-cols-2 gap-3 w-full mb-4">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => startGame(false)}
-              className="flex flex-col items-center gap-2 px-6 py-5 rounded-xl bg-primary/20 border border-primary/40 text-primary hover:bg-primary/30 transition-colors font-semibold"
+              className="flex flex-col items-center gap-2 px-5 py-4 rounded-xl bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-colors font-semibold"
             >
-              <Globe className="w-7 h-7" />
-              <span className="text-lg">Easy Mode</span>
-              <span className="text-xs font-normal text-primary/70">See ratings & get hints</span>
+              <Globe className="w-6 h-6" />
+              <span className="text-base">Easy Mode</span>
+              <span className="text-xs font-normal text-primary/60">See ratings for each stat</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => startGame(true)}
-              className="flex flex-col items-center gap-2 px-6 py-5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-colors font-semibold"
+              className="flex flex-col items-center gap-2 px-5 py-4 rounded-xl bg-red-500/8 border border-red-500/25 text-red-400 hover:bg-red-500/15 transition-colors font-semibold"
             >
-              <Shield className="w-7 h-7" />
-              <span className="text-lg">Hard Mode</span>
-              <span className="text-xs font-normal text-red-400/70">No ratings or hints</span>
+              <Shield className="w-6 h-6" />
+              <span className="text-base">Hard Mode</span>
+              <span className="text-xs font-normal text-red-400/60">No ratings shown</span>
             </motion.button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* Secondary actions */}
+          <div className="grid grid-cols-2 gap-3 w-full">
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/leaderboard")}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm"
+              className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm"
             >
               <Trophy className="w-4 h-4 text-yellow-400" />
               View Leaderboard
@@ -282,7 +420,7 @@ export default function Home() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setShowGuidebook(true)}
-              className="flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm"
+              className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm"
             >
               <BookOpen className="w-4 h-4 text-blue-400" />
               Guidebook

@@ -2,8 +2,9 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import {
   Shield, TrendingUp, Palette, Heart, Globe, Sun, Cpu, Map, Users,
   BookOpen, Building, ChevronRight, ChevronDown, Download, RotateCcw, Trophy,
-  Star, Zap, Lock, Lightbulb, Shuffle, X, Info, ArrowLeftRight, List, Medal,
+  Star, Zap, Lock, Shuffle, X, Info, ArrowLeftRight, List, Medal,
   GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
+  CalendarDays,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
@@ -11,7 +12,6 @@ import {
   COUNTRIES, CATEGORIES, getCategoryKey, shuffleArray,
   type Country, type Category,
 } from "@/data/countries";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTheme } from "@/lib/theme-context";
 
 // ─── Canvas PNG export ────────────────────────────────────────────────────────
@@ -128,6 +128,41 @@ async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalSc
   }, "image/png");
 }
 
+// ─── Seeded shuffle for daily challenge ──────────────────────────────────────
+
+function seededRng(seed: number): () => number {
+  let s = seed | 0;
+  return () => {
+    s = Math.imul(s ^ (s >>> 16), 0x45d9f3b) | 0;
+    s = Math.imul(s ^ (s >>> 16), 0x45d9f3b) | 0;
+    s = (s ^ (s >>> 16)) | 0;
+    return (s >>> 0) / 0xffffffff;
+  };
+}
+
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+  const rng = seededRng(seed);
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function dateStrToSeed(dateStr: string): number {
+  let hash = 5381;
+  for (let i = 0; i < dateStr.length; i++) {
+    hash = ((hash << 5) + hash) ^ dateStr.charCodeAt(i);
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+}
+
+export function getTodayStr(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+
 // ─── Constants & icons ────────────────────────────────────────────────────────
 
 const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
@@ -161,7 +196,7 @@ function getCategoryStars(cat: Category): string {
     cat === "Education" || cat === "Location" || cat === "Natural Resources" ||
     cat === "Healthcare" || cat === "Size" || cat === "Population"
   ) return "★★";
-  return "★"; // Culture, Climate, History, Tourism
+  return "★";
 }
 
 function getPtsDisplay(score: number, cat: Category): string {
@@ -170,7 +205,6 @@ function getPtsDisplay(score: number, cat: Category): string {
 }
 
 const BONUS_CATEGORIES: Category[] = ["Size", "Population"];
-const MAX_HINTS = 3;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -179,11 +213,11 @@ type GameState = {
   currentCountry: Country | null;
   roster: Partial<Record<Category, Country>>;
   gameOver: boolean;
-  hintsRemaining: number;
   wildcardUsed: boolean;
+  isDailyMode: boolean;
+  dailyDate: string;
 };
 
-type HintResult = { category: Category; score: number; weightedScore: number; reason: string; betterInPool: number };
 type InfoModal = { category: Category; country: Country } | null;
 
 type LocalLeaderboardEntry = {
@@ -196,21 +230,28 @@ type Archetype = { title: string; emoji: string; description: string };
 
 // ─── Storage ──────────────────────────────────────────────────────────────────
 
-function freshGame(): GameState {
-  const pool = shuffleArray([...COUNTRIES]);
+function getStateKey(isDailyMode: boolean, dailyDate: string): string {
+  return isDailyMode ? `countryDraftState_daily_${dailyDate}` : "countryDraftState_v4";
+}
+
+function freshGame(isDailyMode = false, dailyDate = ""): GameState {
+  const pool = isDailyMode
+    ? seededShuffle([...COUNTRIES], dateStrToSeed(dailyDate))
+    : shuffleArray([...COUNTRIES]);
   return {
     pool: pool.slice(1),
     currentCountry: pool[0] ?? null,
     roster: {},
     gameOver: false,
-    hintsRemaining: MAX_HINTS,
     wildcardUsed: false,
+    isDailyMode,
+    dailyDate,
   };
 }
 
-function loadGameState(): GameState | null {
+function loadGameState(isDailyMode: boolean, dailyDate: string): GameState | null {
   try {
-    const raw = localStorage.getItem("countryDraftState_v4");
+    const raw = localStorage.getItem(getStateKey(isDailyMode, dailyDate));
     if (!raw) return null;
     const parsed = JSON.parse(raw) as GameState;
     if (!parsed.pool || !Array.isArray(parsed.pool)) return null;
@@ -219,7 +260,11 @@ function loadGameState(): GameState | null {
 }
 
 function saveGameState(state: GameState) {
-  localStorage.setItem("countryDraftState_v4", JSON.stringify(state));
+  localStorage.setItem(getStateKey(state.isDailyMode, state.dailyDate), JSON.stringify(state));
+}
+
+function saveDailyResult(dailyDate: string, score: number) {
+  localStorage.setItem(`countryDraftDailyResult_${dailyDate}`, JSON.stringify({ score, completed: true }));
 }
 
 function loadLocalLeaderboard(): LocalLeaderboardEntry[] {
@@ -307,7 +352,7 @@ function getBonusPath(roster: Partial<Record<Category, Country>>): "agricultural
   return agBonus >= urbBonus ? "agricultural" : "urban";
 }
 
-function computeTotalScore(roster: Partial<Record<Category, Country>>): number {
+export function computeTotalScore(roster: Partial<Record<Category, Country>>): number {
   const base = CATEGORIES.reduce((sum, cat) => {
     const c = roster[cat];
     if (!c || BONUS_CATEGORIES.includes(cat)) return sum;
@@ -348,20 +393,6 @@ function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archet
   if (avg >= 7.5) return { title: "World Power",      emoji: "🌍", description: "A well-rounded nation excelling across multiple domains." };
   if (avg >= 5.5) return { title: "Emerging Nation",  emoji: "🌱", description: "A country with clear strengths building toward global relevance." };
   return { title: "Developing State", emoji: "🏗️", description: "A nation still finding its footing on the world stage." };
-}
-
-function computeHints(country: Country, roster: Partial<Record<Category, Country>>, pool: Country[]): HintResult[] {
-  const empty = CATEGORIES.filter((c) => !roster[c] && !BONUS_CATEGORIES.includes(c));
-  return empty
-    .map((cat) => {
-      const catKey = getCategoryKey(cat);
-      const stat = country.stats[catKey];
-      const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
-      const betterInPool = pool.filter(c => c.stats[catKey].score > stat.score).length;
-      return { category: cat, score: stat.score, weightedScore: stat.score * weight, reason: stat.description, betterInPool };
-    })
-    .sort((a, b) => b.weightedScore - a.weightedScore)
-    .slice(0, 3);
 }
 
 // ─── Local leaderboard row ────────────────────────────────────────────────────
@@ -458,6 +489,8 @@ function SubmitDialog({
     }
   }
 
+  const modeLabel = mode === "daily" ? "🗓️ Daily" : mode === "hard" ? "⚠️ Hard" : "Easy";
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -503,7 +536,7 @@ function SubmitDialog({
           <div className="px-5 py-4 space-y-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Your score</span>
-              <span className="font-bold text-primary">{score} pts · {mode === "hard" ? "⚠️ Hard" : "Easy"} Mode</span>
+              <span className="font-bold text-primary">{score} pts · {modeLabel} Mode</span>
             </div>
             <div>
               <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
@@ -543,20 +576,24 @@ function SubmitDialog({
 // ─── Main Game component ──────────────────────────────────────────────────────
 
 export default function Game() {
-  const [state, setState] = useState<GameState>(() => loadGameState() || freshGame());
+  const isDailyMode = localStorage.getItem("countryDraftDailyMode") === "true";
+  const dailyDate   = localStorage.getItem("countryDraftDailyDate") || getTodayStr();
+
+  const [state, setState] = useState<GameState>(
+    () => loadGameState(isDailyMode, dailyDate) || freshGame(isDailyMode, dailyDate)
+  );
   const [hoveredCategory, setHoveredCategory] = useState<Category | null>(null);
   const [lastAssigned, setLastAssigned] = useState<Category | null>(null);
-  const [showHints, setShowHints] = useState(false);
-  const [hintResults, setHintResults] = useState<HintResult[]>([]);
   const [wildcardPhase, setWildcardPhase] = useState(false);
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [rosterOpen, setRosterOpen] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [isHardMode, setIsHardMode] = useState<boolean>(() =>
-    localStorage.getItem("countryDraftHardMode") === "true"
+    !isDailyMode && localStorage.getItem("countryDraftHardMode") === "true"
   );
   const rosterRef = useRef<HTMLDivElement>(null);
   const localLeaderboardSaved = useRef(false);
+  const dailyResultSaved = useRef(false);
   const { isLight, toggleTheme } = useTheme();
   const [, navigate] = useLocation();
 
@@ -567,30 +604,44 @@ export default function Game() {
   const bonus       = computeSizePopBonus(state.roster);
 
   useEffect(() => {
-    if (state.gameOver && !localLeaderboardSaved.current) {
-      addToLocalLeaderboard(totalScore, state.roster);
-      localLeaderboardSaved.current = true;
+    if (state.gameOver) {
+      if (!localLeaderboardSaved.current) {
+        addToLocalLeaderboard(totalScore, state.roster);
+        localLeaderboardSaved.current = true;
+      }
+      if (isDailyMode && !dailyResultSaved.current) {
+        saveDailyResult(dailyDate, totalScore);
+        dailyResultSaved.current = true;
+      }
     }
-    if (!state.gameOver) localLeaderboardSaved.current = false;
-  }, [state.gameOver, totalScore, state.roster]);
+    if (!state.gameOver) {
+      localLeaderboardSaved.current = false;
+      dailyResultSaved.current = false;
+    }
+  }, [state.gameOver, totalScore, state.roster, isDailyMode, dailyDate]);
 
   const doReset = useCallback(() => {
+    if (isDailyMode) {
+      // Clear daily mode and go home
+      localStorage.removeItem("countryDraftDailyMode");
+      localStorage.removeItem("countryDraftDailyDate");
+      navigate("/");
+      return;
+    }
     localStorage.removeItem("countryDraftState_v4");
-    setState(freshGame());
-    setHoveredCategory(null); setShowHints(false); setHintResults([]);
-    setWildcardPhase(false); setInfoModal(null);
-  }, []);
+    setState(freshGame(false, ""));
+    setHoveredCategory(null); setWildcardPhase(false); setInfoModal(null);
+  }, [isDailyMode, navigate]);
 
   const toggleHardMode = useCallback(() => {
+    if (isDailyMode) return; // can't switch modes in daily challenge
     const next = !isHardMode;
     setIsHardMode(next);
     localStorage.setItem("countryDraftHardMode", String(next));
-    // switching mode starts a fresh draft
     localStorage.removeItem("countryDraftState_v4");
-    setState(freshGame());
-    setHoveredCategory(null); setShowHints(false); setHintResults([]);
-    setWildcardPhase(false); setInfoModal(null);
-  }, [isHardMode]);
+    setState(freshGame(false, ""));
+    setHoveredCategory(null); setWildcardPhase(false); setInfoModal(null);
+  }, [isHardMode, isDailyMode]);
 
   const assignCountry = useCallback((category: Category) => {
     if (!state.currentCountry || state.roster[category] || state.gameOver) return;
@@ -599,20 +650,11 @@ export default function Game() {
     const newPool = state.pool.slice(1);
     setLastAssigned(category);
     setTimeout(() => setLastAssigned(null), 600);
-    setShowHints(false);
     setState((prev) => ({
       ...prev, pool: newPool,
       currentCountry: allFilled ? null : state.pool[0] ?? null,
       roster: newRoster, gameOver: allFilled,
     }));
-  }, [state]);
-
-  const useHint = useCallback(() => {
-    if (!state.currentCountry || state.hintsRemaining <= 0) return;
-    const results = computeHints(state.currentCountry, state.roster, state.pool);
-    setHintResults(results);
-    setShowHints(true);
-    setState((prev) => ({ ...prev, hintsRemaining: prev.hintsRemaining - 1 }));
   }, [state]);
 
   const startWildcard = useCallback(() => {
@@ -636,6 +678,8 @@ export default function Game() {
     await drawRosterPng(state.roster, totalScore, bonus);
   }, [state.roster, totalScore, bonus]);
 
+  const gameMode = isDailyMode ? "daily" : isHardMode ? "hard" : "easy";
+
   return (
     <div className="min-h-screen bg-background flex flex-col" data-testid="game-container">
       {/* Header */}
@@ -650,7 +694,14 @@ export default function Game() {
           </button>
           <Globe className="w-5 h-5 text-primary" />
           <span className="font-serif text-lg font-bold text-foreground tracking-tight">GeoDrafts</span>
-          <span className="text-muted-foreground text-xs hidden sm:block">Build the ideal nation</span>
+          {isDailyMode ? (
+            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-400 text-xs font-bold">
+              <CalendarDays className="w-3 h-3" />
+              Daily
+            </span>
+          ) : (
+            <span className="text-muted-foreground text-xs hidden sm:block">Build the ideal nation</span>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <div className="text-sm text-muted-foreground hidden sm:block">
@@ -658,58 +709,25 @@ export default function Game() {
             <span>/{CATEGORIES.length}</span>
           </div>
 
-          {/* Mode toggle */}
-          <button
-            onClick={toggleHardMode}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-colors ${
-              isHardMode
-                ? "bg-red-500/20 text-red-400 border-red-500/40 hover:bg-red-500/30"
-                : "bg-secondary/50 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
-            }`}
-            title={isHardMode ? "Hard Mode — click to switch to Easy (starts new draft)" : "Easy Mode — click to switch to Hard (starts new draft)"}
-          >
-            {isHardMode ? "⚠️ Hard" : "Easy"}
-          </button>
-
-          {/* Hint button with (i) tooltip */}
-          {!isHardMode && !state.gameOver && (
-            <div className="flex items-center gap-1">
-              <button
-                data-testid="button-hint"
-                onClick={useHint}
-                disabled={state.hintsRemaining <= 0 || !state.currentCountry}
-                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors ${
-                  state.hintsRemaining > 0 && state.currentCountry
-                    ? "text-yellow-400 hover:bg-yellow-400/10 hover:text-yellow-300"
-                    : "text-muted-foreground/40 cursor-not-allowed"
-                }`}
-              >
-                <Lightbulb className="w-3.5 h-3.5" />
-                Hint
-                <span className={`text-[10px] px-1 py-0.5 rounded-full font-bold ${
-                  state.hintsRemaining > 0 ? "bg-yellow-400/15 text-yellow-400" : "bg-secondary text-muted-foreground"
-                }`}>
-                  {state.hintsRemaining}
-                </span>
-              </button>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="w-4 h-4 flex items-center justify-center rounded-full border border-border/60 text-muted-foreground/50 hover:text-muted-foreground transition-colors">
-                    <Info className="w-2.5 h-2.5" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="max-w-56 text-center">
-                  <p>Shows the top 3 categories for the current country + how many countries still in the pool score higher in each. You get {MAX_HINTS} hints per draft.</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
+          {/* Mode toggle — hidden in daily mode */}
+          {!isDailyMode && (
+            <button
+              onClick={toggleHardMode}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-colors ${
+                isHardMode
+                  ? "bg-red-500/20 text-red-400 border-red-500/40 hover:bg-red-500/30"
+                  : "bg-secondary/50 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
+              }`}
+              title={isHardMode ? "Hard Mode — click to switch to Easy" : "Easy Mode — click to switch to Hard"}
+            >
+              {isHardMode ? "⚠️ Hard" : "Easy"}
+            </button>
           )}
 
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors"
-            title={isLight ? "Switch to dark mode" : "Switch to light mode"}
           >
             {isLight ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
             <span className="hidden sm:inline">{isLight ? "Dark" : "Light"}</span>
@@ -721,7 +739,7 @@ export default function Game() {
             className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">New Draft</span>
+            <span className="hidden sm:inline">{isDailyMode ? "Exit" : "New Draft"}</span>
           </button>
         </div>
       </header>
@@ -867,54 +885,8 @@ export default function Game() {
           )}
         </div>
 
-        {/* Center: Country Card or Game Over */}
+        {/* Center */}
         <div className="flex-1 flex flex-col overflow-y-auto">
-          {/* Hints panel */}
-          <AnimatePresence>
-            {showHints && hintResults.length > 0 && !state.gameOver && !isHardMode && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="mx-6 mt-4 rounded-xl border border-yellow-500/30 bg-yellow-500/5 overflow-hidden"
-              >
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-yellow-500/20">
-                  <div className="flex items-center gap-2">
-                    <Lightbulb className="w-4 h-4 text-yellow-400" />
-                    <span className="text-sm font-semibold text-yellow-400">Top 3 Recommended Categories</span>
-                  </div>
-                  <button onClick={() => setShowHints(false)} className="text-muted-foreground hover:text-foreground transition-colors">
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-                <div className="p-3 grid grid-cols-3 gap-3">
-                  {hintResults.map(({ category, score, reason, betterInPool }, i) => {
-                    const { label, color } = getScoreLabel(score);
-                    return (
-                      <div key={category} className="rounded-lg bg-card border border-border p-3">
-                        <div className="flex items-center gap-1.5 mb-1.5">
-                          <span className="text-yellow-400/70 text-xs font-bold">#{i + 1}</span>
-                          <span className="text-primary/70">{CATEGORY_ICONS[category]}</span>
-                          <span className="text-xs font-semibold uppercase tracking-wide text-foreground/80">{category}</span>
-                        </div>
-                        <div className="flex items-center justify-between mb-1">
-                          <span className={`text-xs font-semibold ${color}`}>{label}</span>
-                          <span className={`text-xs font-bold ${color}`}>{getPtsDisplay(score, category)}</span>
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{reason}</p>
-                        <div className="mt-1.5 text-[10px] text-muted-foreground/70 italic">
-                          {betterInPool === 0
-                            ? "✅ No remaining country scores higher"
-                            : `⚠️ ${betterInPool} remaining ${betterInPool === 1 ? "country" : "countries"} score higher`}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           {/* Wildcard banner */}
           <AnimatePresence>
             {wildcardPhase && !isHardMode && (
@@ -946,7 +918,9 @@ export default function Game() {
               rosterRef={rosterRef}
               onInfoClick={(cat, country) => setInfoModal({ category: cat, country })}
               isHardMode={isHardMode}
+              isDailyMode={isDailyMode}
               onSubmitLeaderboard={() => setShowSubmitDialog(true)}
+              gameMode={gameMode}
             />
           ) : state.currentCountry ? (
             <CountryCard
@@ -1118,7 +1092,7 @@ export default function Game() {
         {showSubmitDialog && (
           <SubmitDialog
             score={totalScore}
-            mode={isHardMode ? "hard" : "easy"}
+            mode={gameMode}
             roster={state.roster}
             onClose={() => setShowSubmitDialog(false)}
           />
@@ -1151,7 +1125,6 @@ function CountryCard({
         className="p-6 flex flex-col gap-5"
         data-testid="country-card"
       >
-        {/* Country Header */}
         <div className="flex items-start gap-4 pb-4 border-b border-border">
           <div className="text-6xl leading-none">{country.flag}</div>
           <div className="flex-1 min-w-0">
@@ -1172,14 +1145,13 @@ function CountryCard({
           </div>
         </div>
 
-        {/* Instruction */}
         <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-2.5 flex items-center gap-3">
           <ChevronRight className="w-4 h-4 text-primary shrink-0" />
           <p className="text-sm text-foreground/80">
             {isHardMode ? (
               <>
-                <span className="text-red-400 font-semibold">Hard Mode</span> — no ratings or hints.
-                {" "}<span className="text-primary font-semibold">Click a slot</span> to assign based on the objective stats below.
+                <span className="text-red-400 font-semibold">Hard Mode</span> — no ratings.
+                {" "}<span className="text-primary font-semibold">Click a slot</span> to assign based on objective stats.
               </>
             ) : (
               <>
@@ -1191,7 +1163,6 @@ function CountryCard({
           </p>
         </div>
 
-        {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {CATEGORIES.map((category) => {
             const catKey = getCategoryKey(category);
@@ -1213,7 +1184,7 @@ function CountryCard({
                   opacity: isFilled ? 0.45 : 1,
                 }}
                 transition={{ duration: 0.15 }}
-                className={`rounded-lg border p-3 ${isHighlighted ? "ring-1 ring-primary/30" : ""} ${isFilled ? "cursor-default" : ""}`}
+                className={`rounded-lg border p-3 ${isHighlighted ? "ring-1 ring-primary/30" : ""}`}
                 data-testid={`stat-${catKey}`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -1233,7 +1204,6 @@ function CountryCard({
                     <button
                       onClick={(e) => { e.stopPropagation(); onInfoClick(category); }}
                       className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors shrink-0"
-                      title={`Details for ${category}`}
                     >
                       <Info className="w-3 h-3" />
                     </button>
@@ -1265,7 +1235,8 @@ function CountryCard({
 
 function GameOver({
   roster, totalScore, bonus, onReset, onDownload, onWildcard,
-  wildcardUsed, wildcardPhase, rosterRef, onInfoClick, isHardMode, onSubmitLeaderboard,
+  wildcardUsed, wildcardPhase, rosterRef, onInfoClick, isHardMode, isDailyMode,
+  onSubmitLeaderboard, gameMode,
 }: {
   roster: Partial<Record<Category, Country>>;
   totalScore: number;
@@ -1278,18 +1249,20 @@ function GameOver({
   rosterRef: React.RefObject<HTMLDivElement | null>;
   onInfoClick: (cat: Category, country: Country) => void;
   isHardMode: boolean;
+  isDailyMode: boolean;
   onSubmitLeaderboard: () => void;
+  gameMode: string;
 }) {
   const [, navigate] = useLocation();
   const rating = getRating(totalScore);
   const archetype = getCountryArchetype(roster);
   const bonusPath = getBonusPath(roster);
   const leaderboard = loadLocalLeaderboard();
-  const currentRank = leaderboard.findIndex((e) => e.score === totalScore && e.date === new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }));
+  const todayStr = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const currentRank = leaderboard.findIndex((e) => e.score === totalScore && e.date === todayStr);
 
   return (
     <div className="flex-1 flex flex-col p-6 gap-6" data-testid="game-over-screen">
-      {/* Score header */}
       <div className="text-center pb-4 border-b border-border">
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
@@ -1298,8 +1271,16 @@ function GameOver({
         >
           <div className="flex items-center justify-center gap-2 mb-3">
             <span className={rating.color}>{rating.icon}</span>
-            <h1 className="font-serif text-3xl font-bold text-foreground">Draft Complete</h1>
+            <h1 className="font-serif text-3xl font-bold text-foreground">
+              {isDailyMode ? "Daily Challenge Complete!" : "Draft Complete"}
+            </h1>
           </div>
+          {isDailyMode && (
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-400 text-xs font-bold mb-3">
+              <CalendarDays className="w-3.5 h-3.5" />
+              {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+            </div>
+          )}
           <div className="flex items-center justify-center gap-6 flex-wrap">
             <div className="text-center">
               <div className="text-5xl font-bold text-primary">{totalScore}</div>
@@ -1360,7 +1341,7 @@ function GameOver({
           <Download className="w-4 h-4" />
           Download PNG
         </button>
-        {!wildcardUsed && !wildcardPhase && !isHardMode && (
+        {!isDailyMode && !wildcardUsed && !wildcardPhase && !isHardMode && (
           <button
             data-testid="button-wildcard"
             onClick={onWildcard}
@@ -1382,7 +1363,7 @@ function GameOver({
           className="flex items-center gap-2 px-5 py-2.5 bg-secondary text-foreground rounded-lg font-semibold text-sm hover:bg-secondary/70 transition-colors border border-border"
         >
           <RotateCcw className="w-4 h-4" />
-          New Draft
+          {isDailyMode ? "Back to Home" : "New Draft"}
         </button>
       </div>
 
