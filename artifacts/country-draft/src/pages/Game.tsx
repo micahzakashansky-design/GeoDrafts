@@ -1,22 +1,24 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import {
-  Shield, TrendingUp, Palette, Heart, Globe, Landmark, Sun, Cpu, Map, Users,
+  Shield, TrendingUp, Palette, Heart, Globe, Sun, Cpu, Map, Users,
   BookOpen, Building, ChevronRight, ChevronDown, Download, RotateCcw, Trophy,
   Star, Zap, Lock, Lightbulb, Shuffle, X, Info, ArrowLeftRight, List, Medal,
-  GraduationCap, MapPin, Mountain,
+  GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLocation } from "wouter";
 import {
   COUNTRIES, CATEGORIES, getCategoryKey, shuffleArray,
   type Country, type Category,
 } from "@/data/countries";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTheme } from "@/lib/theme-context";
 
 // ─── Canvas PNG export ────────────────────────────────────────────────────────
 
 const PNG_COLORS = {
   bg: "#08111e", cardBg: "#0d1a2a", cardBg2: "#0f1e30", border: "#1b2d40",
   gold: "#d4a420", fg: "#ccd9e8", fgDim: "#8099b0", muted: "#4a6278",
-  barTrack: "#192736",
   scoreColors: ["#ef4444","#ef4444","#ef4444","#f97316","#f97316","#eab308","#eab308","#22c55e","#22c55e","#10b981","#10b981"],
   ratingColors: { superpower: "#facc15", major: "#60a5fa", regional: "#4ade80", developing: "#fb923c", struggling: "#f87171" },
 };
@@ -67,7 +69,7 @@ async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalSc
   ctx.beginPath(); ctx.moveTo(0, HDR); ctx.lineTo(W, HDR); ctx.stroke();
 
   ctx.fillStyle = C.gold; ctx.font = "bold 18px 'Georgia', serif";
-  ctx.fillText("Country Draft — My Ideal Nation", PAD, 30);
+  ctx.fillText("GeoDrafts — My Ideal Nation", PAD, 30);
   ctx.fillStyle = C.fgDim; ctx.font = "13px sans-serif";
   ctx.fillText("Final Roster · Score:", PAD, 56);
   ctx.fillStyle = C.gold; ctx.font = "bold 15px sans-serif";
@@ -100,7 +102,7 @@ async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalSc
       ctx.fillStyle = C.fg; ctx.font = "bold 14px sans-serif"; ctx.fillText(country.name, cx + 46, cy + 47);
       if (score !== null) {
         const barX = cx + 46, barY = cy + 56, barW = CARD_W - 58, barH = 6;
-        ctx.fillStyle = C.barTrack; canvasRoundRect(ctx, barX, barY, barW, barH, 3); ctx.fill();
+        ctx.fillStyle = "#192736"; canvasRoundRect(ctx, barX, barY, barW, barH, 3); ctx.fill();
         ctx.fillStyle = pngScoreBar(score); canvasRoundRect(ctx, barX, barY, barW * (score / 10), barH, 3); ctx.fill();
         ctx.fillStyle = pngScoreBar(score); ctx.font = "bold 11px sans-serif"; ctx.fillText(pngScoreLabel(score), cx + 46, cy + 80);
         const desc = country.stats[catKey].description;
@@ -121,7 +123,7 @@ async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalSc
   canvas.toBlob((blob) => {
     if (!blob) return;
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = "my-ideal-country.png";
+    const a = document.createElement("a"); a.href = url; a.download = "geodrafts-nation.png";
     a.click(); URL.revokeObjectURL(url);
   }, "image/png");
 }
@@ -140,20 +142,18 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Size: <Map className="w-4 h-4" />,
   Population: <Users className="w-4 h-4" />,
   History: <BookOpen className="w-4 h-4" />,
-  "Cities/Landmarks": <Landmark className="w-4 h-4" />,
+  Tourism: <Camera className="w-4 h-4" />,
   Education: <GraduationCap className="w-4 h-4" />,
   Location: <MapPin className="w-4 h-4" />,
   "Natural Resources": <Mountain className="w-4 h-4" />,
 };
 
-// Weight multipliers for scoring (Size/Population use bonus formula, not weights)
 const CATEGORY_WEIGHTS: Partial<Record<Category, number>> = {
   Military: 1.5, Economy: 1.5, Government: 1.5,
   "International Relationships": 1.2, Technology: 1.2,
   Education: 1.2, Location: 1.2, "Natural Resources": 1.2, Healthcare: 1.2,
 };
 
-// Star display for each category
 function getCategoryStars(cat: Category): string {
   if (cat === "Military" || cat === "Economy" || cat === "Government") return "★★★";
   if (
@@ -161,11 +161,16 @@ function getCategoryStars(cat: Category): string {
     cat === "Education" || cat === "Location" || cat === "Natural Resources" ||
     cat === "Healthcare" || cat === "Size" || cat === "Population"
   ) return "★★";
-  return "★";
+  return "★"; // Culture, Climate, History, Tourism
+}
+
+function getPtsDisplay(score: number, cat: Category): string {
+  const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
+  return `${Math.round(score * weight)}/${Math.round(10 * weight)} pts`;
 }
 
 const BONUS_CATEGORIES: Category[] = ["Size", "Population"];
-const MAX_HINTS = 5;
+const MAX_HINTS = 3;
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -178,10 +183,10 @@ type GameState = {
   wildcardUsed: boolean;
 };
 
-type HintResult = { category: Category; score: number; weightedScore: number; reason: string };
+type HintResult = { category: Category; score: number; weightedScore: number; reason: string; betterInPool: number };
 type InfoModal = { category: Category; country: Country } | null;
 
-type LeaderboardEntry = {
+type LocalLeaderboardEntry = {
   score: number;
   date: string;
   roster: Partial<Record<string, string>>;
@@ -205,7 +210,7 @@ function freshGame(): GameState {
 
 function loadGameState(): GameState | null {
   try {
-    const raw = localStorage.getItem("countryDraftState_v3");
+    const raw = localStorage.getItem("countryDraftState_v4");
     if (!raw) return null;
     const parsed = JSON.parse(raw) as GameState;
     if (!parsed.pool || !Array.isArray(parsed.pool)) return null;
@@ -214,17 +219,17 @@ function loadGameState(): GameState | null {
 }
 
 function saveGameState(state: GameState) {
-  localStorage.setItem("countryDraftState_v3", JSON.stringify(state));
+  localStorage.setItem("countryDraftState_v4", JSON.stringify(state));
 }
 
-function loadLeaderboard(): LeaderboardEntry[] {
-  try { return JSON.parse(localStorage.getItem("countryDraftLeaderboard_v1") || "[]"); }
+function loadLocalLeaderboard(): LocalLeaderboardEntry[] {
+  try { return JSON.parse(localStorage.getItem("countryDraftLeaderboard_v2") || "[]"); }
   catch { return []; }
 }
 
-function addToLeaderboard(score: number, roster: Partial<Record<Category, Country>>) {
-  const board = loadLeaderboard();
-  const entry: LeaderboardEntry = {
+function addToLocalLeaderboard(score: number, roster: Partial<Record<Category, Country>>) {
+  const board = loadLocalLeaderboard();
+  const entry: LocalLeaderboardEntry = {
     score,
     date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
     roster: Object.fromEntries(
@@ -233,7 +238,7 @@ function addToLeaderboard(score: number, roster: Partial<Record<Category, Countr
   };
   board.push(entry);
   board.sort((a, b) => b.score - a.score);
-  localStorage.setItem("countryDraftLeaderboard_v1", JSON.stringify(board.slice(0, 10)));
+  localStorage.setItem("countryDraftLeaderboard_v2", JSON.stringify(board.slice(0, 10)));
 }
 
 // ─── Scoring helpers ──────────────────────────────────────────────────────────
@@ -255,55 +260,40 @@ function getScoreLabel(score: number): { label: string; color: string } {
 }
 
 function getRating(total: number): { label: string; color: string; icon: React.ReactNode } {
-  if (total >= 148) return { label: "Superpower",       color: "text-yellow-400",  icon: <Trophy className="w-5 h-5" /> };
-  if (total >= 120) return { label: "Major Power",      color: "text-blue-400",    icon: <Star className="w-5 h-5" /> };
-  if (total >= 95)  return { label: "Regional Power",   color: "text-green-400",   icon: <Zap className="w-5 h-5" /> };
-  if (total >= 72)  return { label: "Developing Nation",color: "text-orange-400",  icon: <Globe className="w-5 h-5" /> };
+  if (total >= 148) return { label: "Superpower",        color: "text-yellow-400", icon: <Trophy className="w-5 h-5" /> };
+  if (total >= 120) return { label: "Major Power",       color: "text-blue-400",   icon: <Star className="w-5 h-5" /> };
+  if (total >= 95)  return { label: "Regional Power",    color: "text-green-400",  icon: <Zap className="w-5 h-5" /> };
+  if (total >= 72)  return { label: "Developing Nation", color: "text-orange-400", icon: <Globe className="w-5 h-5" /> };
   return { label: "Struggling State", color: "text-red-400", icon: <Shield className="w-5 h-5" /> };
 }
 
-/** Computes size+population bonus (0-25 max). Penalises overcrowding and extreme sparsity. */
 function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
   const sc = roster["Size"];
   const pc = roster["Population"];
   if (!sc || !pc) return 0;
-  const sz  = sc.stats.size.score;   // 1-10: higher = larger land
-  const pop = pc.stats.population.score; // 1-10: higher = more people
-
-  // Density fit: idealDiff = sz - pop
-  // Positive → underpopulated relative to land (mild penalty only for extreme)
-  // Negative → overcrowded; steep penalty when pop >> sz
-  // e.g. China (pop=10) in Turkey (sz=4): diff=-6 → severe overcrowding
+  const sz  = sc.stats.size.score;
+  const pop = pc.stats.population.score;
   const idealDiff = sz - pop;
   let fitMultiplier: number;
   if (idealDiff < -2) {
-    // Overcrowded: each point beyond -2 applies a 40% penalty
     const overcrowding = -idealDiff - 2;
     fitMultiplier = Math.max(0, 1.0 - overcrowding * 0.4);
   } else if (idealDiff > 6) {
-    // Very underpopulated: land is wasted
     fitMultiplier = Math.max(0.3, 1.0 - (idealDiff - 6) * 0.15);
   } else {
-    // Good fit (-2 to +6): near-optimal range
     fitMultiplier = 1.0;
   }
-
   const climate = roster["Climate"]?.stats.climate.score ?? 5;
   const tech    = roster["Technology"]?.stats.technology.score ?? 5;
   const eco     = roster["Economy"]?.stats.economy.score ?? 5;
-
-  // Best economic path (agricultural or urban)
   const agFactor  = (sz / 10) * (climate / 10);
   const urbFactor = (tech / 10) * (eco / 10);
   const densityBonus = Math.min(20, Math.round(fitMultiplier * Math.max(agFactor, urbFactor) * 22));
-
-  // Combo: large size + large matched population → max 5 (capped to avoid rewarding overcrowding)
   const matchedPop = Math.min(pop, sz + 2);
   const comboBonus = Math.min(5, Math.round((sz * matchedPop) / 20));
   return densityBonus + comboBonus;
 }
 
-/** Returns which bonus path dominated (for display). */
 function getBonusPath(roster: Partial<Record<Category, Country>>): "agricultural" | "urban" | null {
   const sc = roster["Size"]; const pc = roster["Population"];
   if (!sc || !pc) return null;
@@ -317,7 +307,6 @@ function getBonusPath(roster: Partial<Record<Category, Country>>): "agricultural
   return agBonus >= urbBonus ? "agricultural" : "urban";
 }
 
-/** Computes total weighted score for a filled roster. */
 function computeTotalScore(roster: Partial<Record<Category, Country>>): number {
   const base = CATEGORIES.reduce((sum, cat) => {
     const c = roster[cat];
@@ -328,14 +317,13 @@ function computeTotalScore(roster: Partial<Record<Category, Country>>): number {
   return base + computeSizePopBonus(roster);
 }
 
-/** Determines the nation archetype from the roster. */
 function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archetype {
   const s = (cat: Category): number =>
     BONUS_CATEGORIES.includes(cat) ? 0 : (roster[cat]?.stats[getCategoryKey(cat)].score ?? 0);
   const mil = s("Military"), eco = s("Economy"), gov = s("Government");
   const intl = s("International Relationships"), tech = s("Technology");
   const cult = s("Culture"), health = s("Healthcare"), climate = s("Climate");
-  const hist = s("History"), cities = s("Cities/Landmarks");
+  const hist = s("History"), tour = s("Tourism");
   const edu = s("Education"), nat = s("Natural Resources"), loc = s("Location");
 
   if (mil >= 9 && eco >= 8)    return { title: "Military Superpower",  emoji: "⚔️",  description: "A dominant force projecting military might backed by formidable economic power." };
@@ -347,38 +335,40 @@ function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archet
   if (nat >= 9 && eco >= 7)    return { title: "Resource Giant",        emoji: "⛏️",  description: "A nation whose natural wealth fuels economic dominance and global leverage." };
   if (intl >= 9 && loc >= 7)   return { title: "Diplomatic Powerhouse", emoji: "🌐",  description: "Strategically positioned and globally connected — allies everywhere." };
   if (intl >= 9)               return { title: "Diplomatic Power",      emoji: "🤝",  description: "A skilled navigator of global politics with allies on every continent." };
-  if (climate >= 9 && cities >= 8) return { title: "Tourist Paradise",  emoji: "🏖️",  description: "Blessed with breathtaking scenery and world-famous landmarks." };
+  if (climate >= 9 && tour >= 8) return { title: "Tourist Paradise",    emoji: "🏖️",  description: "Blessed with breathtaking scenery and a world-famous tourism destination." };
   if (hist >= 9 && cult >= 8)  return { title: "Cultural Empire",       emoji: "🎭",  description: "A civilization with deep cultural roots and an enduring historical legacy." };
   if (health >= 9 && edu >= 8) return { title: "Welfare State",         emoji: "❤️",  description: "A nation that puts its people first with world-class healthcare and education." };
   if (cult >= 9)               return { title: "Cultural Giant",        emoji: "🎨",  description: "A vibrant nation with rich traditions, arts, and cultural influence worldwide." };
+  if (tour >= 9)               return { title: "Tourism Powerhouse",    emoji: "✈️",  description: "A destination the world dreams of visiting, with iconic landscapes and attractions." };
   if (climate >= 9)            return { title: "Natural Paradise",      emoji: "🌿",  description: "Blessed with exceptional climate and natural beauty." };
   if (nat >= 8)                return { title: "Resource Rich",         emoji: "⛰️",  description: "Blessed with abundant natural resources powering growth and exports." };
 
-  const values = [mil, eco, gov, intl, tech, edu, nat, loc, cult, health, climate, hist, cities].filter(x => x > 0);
+  const values = [mil, eco, gov, intl, tech, edu, nat, loc, cult, health, climate, hist, tour].filter(x => x > 0);
   const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
   if (avg >= 7.5) return { title: "World Power",      emoji: "🌍", description: "A well-rounded nation excelling across multiple domains." };
   if (avg >= 5.5) return { title: "Emerging Nation",  emoji: "🌱", description: "A country with clear strengths building toward global relevance." };
   return { title: "Developing State", emoji: "🏗️", description: "A nation still finding its footing on the world stage." };
 }
 
-function computeHints(country: Country, roster: Partial<Record<Category, Country>>): HintResult[] {
+function computeHints(country: Country, roster: Partial<Record<Category, Country>>, pool: Country[]): HintResult[] {
   const empty = CATEGORIES.filter((c) => !roster[c] && !BONUS_CATEGORIES.includes(c));
   return empty
     .map((cat) => {
       const catKey = getCategoryKey(cat);
       const stat = country.stats[catKey];
       const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
-      return { category: cat, score: stat.score, weightedScore: stat.score * weight, reason: stat.description };
+      const betterInPool = pool.filter(c => c.stats[catKey].score > stat.score).length;
+      return { category: cat, score: stat.score, weightedScore: stat.score * weight, reason: stat.description, betterInPool };
     })
     .sort((a, b) => b.weightedScore - a.weightedScore)
     .slice(0, 3);
 }
 
-// ─── LeaderboardRow ───────────────────────────────────────────────────────────
+// ─── Local leaderboard row ────────────────────────────────────────────────────
 
-function LeaderboardRow({
+function LocalLeaderboardRow({
   rank, entry, isCurrentGame,
-}: { rank: number; entry: LeaderboardEntry; isCurrentGame: boolean }) {
+}: { rank: number; entry: LocalLeaderboardEntry; isCurrentGame: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
   const rankColor = rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-muted-foreground";
@@ -394,7 +384,7 @@ function LeaderboardRow({
         <span className={`text-sm font-bold w-6 text-center shrink-0 ${rankColor}`}>
           {medal ?? `#${rank}`}
         </span>
-        <span className="font-bold text-foreground text-base flex-1">{entry.score}</span>
+        <span className="font-bold text-foreground text-base flex-1">{entry.score} pts</span>
         <span className="text-xs text-muted-foreground mr-1">{entry.date}</span>
         {isCurrentGame && (
           <span className="text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded font-semibold mr-1">This game</span>
@@ -426,6 +416,130 @@ function LeaderboardRow({
   );
 }
 
+// ─── Submit Dialog ────────────────────────────────────────────────────────────
+
+function SubmitDialog({
+  score, mode, roster, onClose,
+}: {
+  score: number;
+  mode: string;
+  roster: Partial<Record<Category, Country>>;
+  onClose: () => void;
+}) {
+  const [, navigate] = useLocation();
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleSubmit() {
+    if (!name.trim()) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/leaderboard", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          playerName: name.trim(),
+          score,
+          mode,
+          roster: Object.fromEntries(
+            Object.entries(roster).filter(([, c]) => c).map(([cat, c]) => [cat, c!.name])
+          ),
+        }),
+      });
+      if (!res.ok) throw new Error("Server error");
+      setDone(true);
+    } catch {
+      setError("Failed to submit. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.92, y: 16 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.92, y: 16 }}
+        transition={{ duration: 0.2, ease: [0.34, 1.56, 0.64, 1] }}
+        className="bg-card border border-border rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Trophy className="w-5 h-5 text-yellow-400" />
+            <span className="font-serif text-lg font-bold text-foreground">Submit Score</span>
+          </div>
+          <button onClick={onClose} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
+        {done ? (
+          <div className="px-5 py-8 text-center">
+            <div className="text-4xl mb-3">🎉</div>
+            <div className="font-semibold text-foreground mb-1">Score submitted!</div>
+            <div className="text-sm text-muted-foreground mb-5">
+              <span className="text-primary font-bold">{score} pts</span> posted to the leaderboard.
+            </div>
+            <button
+              onClick={() => navigate("/leaderboard")}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors"
+            >
+              <Trophy className="w-4 h-4" />
+              View Leaderboard
+            </button>
+          </div>
+        ) : (
+          <div className="px-5 py-4 space-y-4">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">Your score</span>
+              <span className="font-bold text-primary">{score} pts · {mode === "hard" ? "⚠️ Hard" : "Easy"} Mode</span>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
+                Enter your name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleSubmit()}
+                placeholder="Your name…"
+                maxLength={40}
+                autoFocus
+                className="w-full px-3 py-2.5 rounded-lg border border-border bg-secondary/40 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+              />
+            </div>
+            {error && <p className="text-xs text-red-400">{error}</p>}
+            <button
+              onClick={handleSubmit}
+              disabled={!name.trim() || loading}
+              className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
+                name.trim() && !loading
+                  ? "bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30"
+                  : "bg-secondary text-muted-foreground border border-border cursor-not-allowed"
+              }`}
+            >
+              <Send className="w-4 h-4" />
+              {loading ? "Submitting…" : "Submit to Leaderboard"}
+            </button>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
+
 // ─── Main Game component ──────────────────────────────────────────────────────
 
 export default function Game() {
@@ -437,11 +551,14 @@ export default function Game() {
   const [wildcardPhase, setWildcardPhase] = useState(false);
   const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [rosterOpen, setRosterOpen] = useState(false);
+  const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [isHardMode, setIsHardMode] = useState<boolean>(() =>
     localStorage.getItem("countryDraftHardMode") === "true"
   );
   const rosterRef = useRef<HTMLDivElement>(null);
-  const leaderboardSaved = useRef(false);
+  const localLeaderboardSaved = useRef(false);
+  const { isLight, toggleTheme } = useTheme();
+  const [, navigate] = useLocation();
 
   useEffect(() => { saveGameState(state); }, [state]);
 
@@ -449,19 +566,30 @@ export default function Game() {
   const totalScore  = computeTotalScore(state.roster);
   const bonus       = computeSizePopBonus(state.roster);
 
-  // Save to leaderboard once when game ends
   useEffect(() => {
-    if (state.gameOver && !leaderboardSaved.current) {
-      addToLeaderboard(totalScore, state.roster);
-      leaderboardSaved.current = true;
+    if (state.gameOver && !localLeaderboardSaved.current) {
+      addToLocalLeaderboard(totalScore, state.roster);
+      localLeaderboardSaved.current = true;
     }
-    if (!state.gameOver) leaderboardSaved.current = false;
+    if (!state.gameOver) localLeaderboardSaved.current = false;
   }, [state.gameOver, totalScore, state.roster]);
+
+  const doReset = useCallback(() => {
+    localStorage.removeItem("countryDraftState_v4");
+    setState(freshGame());
+    setHoveredCategory(null); setShowHints(false); setHintResults([]);
+    setWildcardPhase(false); setInfoModal(null);
+  }, []);
 
   const toggleHardMode = useCallback(() => {
     const next = !isHardMode;
     setIsHardMode(next);
     localStorage.setItem("countryDraftHardMode", String(next));
+    // switching mode starts a fresh draft
+    localStorage.removeItem("countryDraftState_v4");
+    setState(freshGame());
+    setHoveredCategory(null); setShowHints(false); setHintResults([]);
+    setWildcardPhase(false); setInfoModal(null);
   }, [isHardMode]);
 
   const assignCountry = useCallback((category: Category) => {
@@ -481,7 +609,7 @@ export default function Game() {
 
   const useHint = useCallback(() => {
     if (!state.currentCountry || state.hintsRemaining <= 0) return;
-    const results = computeHints(state.currentCountry, state.roster);
+    const results = computeHints(state.currentCountry, state.roster, state.pool);
     setHintResults(results);
     setShowHints(true);
     setState((prev) => ({ ...prev, hintsRemaining: prev.hintsRemaining - 1 }));
@@ -504,13 +632,6 @@ export default function Game() {
     setState((prev) => ({ ...prev, pool: newPool, roster: newRoster, wildcardUsed: true }));
   }, [state, wildcardPhase]);
 
-  const resetGame = useCallback(() => {
-    localStorage.removeItem("countryDraftState_v3");
-    setState(freshGame());
-    setHoveredCategory(null); setShowHints(false); setHintResults([]);
-    setWildcardPhase(false); setInfoModal(null);
-  }, []);
-
   const downloadPng = useCallback(async () => {
     await drawRosterPng(state.roster, totalScore, bonus);
   }, [state.roster, totalScore, bonus]);
@@ -518,59 +639,89 @@ export default function Game() {
   return (
     <div className="min-h-screen bg-background flex flex-col" data-testid="game-container">
       {/* Header */}
-      <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <Globe className="w-6 h-6 text-primary" />
-          <span className="font-serif text-xl font-bold text-foreground tracking-tight">Country Draft</span>
-          <span className="text-muted-foreground text-sm hidden sm:block">Build the ideal nation</span>
+      <header className="border-b border-border px-4 py-2.5 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => navigate("/")}
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            title="Home"
+          >
+            <HomeIcon className="w-4 h-4" />
+          </button>
+          <Globe className="w-5 h-5 text-primary" />
+          <span className="font-serif text-lg font-bold text-foreground tracking-tight">GeoDrafts</span>
+          <span className="text-muted-foreground text-xs hidden sm:block">Build the ideal nation</span>
         </div>
-        <div className="flex items-center gap-3">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-muted-foreground hidden sm:block">
             <span className="text-primary font-semibold">{filledCount}</span>
-            <span>/{CATEGORIES.length} slots filled</span>
+            <span>/{CATEGORIES.length}</span>
           </div>
 
-          {/* Hard mode toggle */}
+          {/* Mode toggle */}
           <button
             onClick={toggleHardMode}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-semibold border transition-colors ${
+            className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-colors ${
               isHardMode
                 ? "bg-red-500/20 text-red-400 border-red-500/40 hover:bg-red-500/30"
                 : "bg-secondary/50 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
             }`}
-            title={isHardMode ? "Hard Mode ON — click to disable" : "Click to enable Hard Mode"}
+            title={isHardMode ? "Hard Mode — click to switch to Easy (starts new draft)" : "Easy Mode — click to switch to Hard (starts new draft)"}
           >
-            {isHardMode ? "⚠️ Hard" : "Normal"}
+            {isHardMode ? "⚠️ Hard" : "Easy"}
           </button>
 
-          {/* Hints button (hidden in hard mode) */}
+          {/* Hint button with (i) tooltip */}
           {!isHardMode && !state.gameOver && (
-            <button
-              data-testid="button-hint"
-              onClick={useHint}
-              disabled={state.hintsRemaining <= 0 || !state.currentCountry}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors ${
-                state.hintsRemaining > 0 && state.currentCountry
-                  ? "text-yellow-400 hover:bg-yellow-400/10 hover:text-yellow-300"
-                  : "text-muted-foreground/40 cursor-not-allowed"
-              }`}
-            >
-              <Lightbulb className="w-3.5 h-3.5" />
-              Hint
-              <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
-                state.hintsRemaining > 0 ? "bg-yellow-400/15 text-yellow-400" : "bg-secondary text-muted-foreground"
-              }`}>
-                {state.hintsRemaining}
-              </span>
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                data-testid="button-hint"
+                onClick={useHint}
+                disabled={state.hintsRemaining <= 0 || !state.currentCountry}
+                className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs transition-colors ${
+                  state.hintsRemaining > 0 && state.currentCountry
+                    ? "text-yellow-400 hover:bg-yellow-400/10 hover:text-yellow-300"
+                    : "text-muted-foreground/40 cursor-not-allowed"
+                }`}
+              >
+                <Lightbulb className="w-3.5 h-3.5" />
+                Hint
+                <span className={`text-[10px] px-1 py-0.5 rounded-full font-bold ${
+                  state.hintsRemaining > 0 ? "bg-yellow-400/15 text-yellow-400" : "bg-secondary text-muted-foreground"
+                }`}>
+                  {state.hintsRemaining}
+                </span>
+              </button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button className="w-4 h-4 flex items-center justify-center rounded-full border border-border/60 text-muted-foreground/50 hover:text-muted-foreground transition-colors">
+                    <Info className="w-2.5 h-2.5" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="max-w-56 text-center">
+                  <p>Shows the top 3 categories for the current country + how many countries still in the pool score higher in each. You get {MAX_HINTS} hints per draft.</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           )}
+
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors"
+            title={isLight ? "Switch to dark mode" : "Switch to light mode"}
+          >
+            {isLight ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
+            <span className="hidden sm:inline">{isLight ? "Dark" : "Light"}</span>
+          </button>
+
           <button
             data-testid="button-reset"
-            onClick={resetGame}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            onClick={doReset}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
           >
             <RotateCcw className="w-3.5 h-3.5" />
-            New Draft
+            <span className="hidden sm:inline">New Draft</span>
           </button>
         </div>
       </header>
@@ -629,10 +780,10 @@ export default function Game() {
                     isWildcardTarget
                       ? "border-blue-500/50 bg-blue-500/10 hover:bg-blue-500/20 hover:border-blue-400/70 cursor-pointer"
                       : assigned
-                      ? `border-border/50 bg-card/60 ${isLastAssigned ? "slot-fill" : ""}`
+                      ? `border-border/25 bg-muted/20 cursor-default ${isLastAssigned ? "slot-fill" : "opacity-60"}`
                       : isAssignable
                       ? "border-primary/30 bg-secondary/30 hover:bg-secondary/60 hover:border-primary/60 cursor-pointer pulse-gold"
-                      : "border-border/30 bg-card/20 cursor-default"
+                      : "border-border/20 bg-card/10 cursor-default opacity-40"
                   }`}
                   whileTap={isAssignable || isWildcardTarget ? { scale: 0.97 } : {}}
                 >
@@ -641,13 +792,13 @@ export default function Game() {
                       <div className="flex items-center gap-1.5">
                         <span className={`${
                           isWildcardTarget ? "text-blue-400"
-                          : assigned ? "text-primary"
+                          : assigned ? "text-muted-foreground/60"
                           : isHovered && isAssignable ? "text-primary"
                           : "text-muted-foreground"
                         }`}>
                           {CATEGORY_ICONS[category]}
                         </span>
-                        <span className={`text-xs font-semibold uppercase tracking-wide ${assigned ? "text-foreground/70" : "text-muted-foreground"}`}>
+                        <span className={`text-xs font-semibold uppercase tracking-wide ${assigned ? "text-muted-foreground/60" : "text-muted-foreground"}`}>
                           {category}
                         </span>
                       </div>
@@ -665,27 +816,29 @@ export default function Game() {
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-xl leading-none">{assigned.flag}</span>
                         <div className="min-w-0 flex-1">
-                          <div className="text-sm font-semibold text-foreground truncate">{assigned.name}</div>
+                          <div className="text-sm font-semibold text-foreground/60 truncate">{assigned.name}</div>
                           {!isHardMode && score !== null && (
-                            <div className="mt-1 h-1 bg-secondary rounded-full overflow-hidden">
-                              <div className={`h-full rounded-full score-bar-fill ${getScoreBarColor(score)}`} style={{ width: `${(score / 10) * 100}%` }} />
+                            <div className="mt-0.5">
+                              <span className={`text-[10px] font-bold ${getScoreLabel(score).color}`}>
+                                {getPtsDisplay(score, category)}
+                              </span>
                             </div>
                           )}
                           {isBonus && bonusReady && !isHardMode && (
-                            <div className="mt-1 text-[10px] text-yellow-400/80 font-semibold">
+                            <div className="mt-0.5 text-[10px] text-yellow-400/80 font-semibold">
                               💡 +{bonus} bonus total
                             </div>
                           )}
                           {isBonus && assigned && !partnerFilled && !isHardMode && (
-                            <div className="mt-1 text-[10px] text-muted-foreground/60">
-                              Fill {category === "Size" ? "Population" : "Size"} to unlock bonus
+                            <div className="mt-0.5 text-[10px] text-muted-foreground/60">
+                              Fill {category === "Size" ? "Population" : "Size"} for bonus
                             </div>
                           )}
                         </div>
                         {isWildcardTarget ? (
                           <Shuffle className="w-3 h-3 text-blue-400 shrink-0" />
                         ) : (
-                          <Lock className="w-3 h-3 text-muted-foreground/40 shrink-0" />
+                          <Lock className="w-3 h-3 text-muted-foreground/30 shrink-0" />
                         )}
                       </div>
                     ) : isAssignable ? (
@@ -696,7 +849,7 @@ export default function Game() {
                         </span>
                       </div>
                     ) : (
-                      <div className="text-xs text-muted-foreground/40 mt-1">Empty</div>
+                      <div className="text-xs text-muted-foreground/30 mt-1">Empty</div>
                     )}
                   </div>
                 </motion.button>
@@ -735,7 +888,7 @@ export default function Game() {
                   </button>
                 </div>
                 <div className="p-3 grid grid-cols-3 gap-3">
-                  {hintResults.map(({ category, score, reason }, i) => {
+                  {hintResults.map(({ category, score, reason, betterInPool }, i) => {
                     const { label, color } = getScoreLabel(score);
                     return (
                       <div key={category} className="rounded-lg bg-card border border-border p-3">
@@ -744,11 +897,16 @@ export default function Game() {
                           <span className="text-primary/70">{CATEGORY_ICONS[category]}</span>
                           <span className="text-xs font-semibold uppercase tracking-wide text-foreground/80">{category}</span>
                         </div>
-                        <div className="h-1.5 bg-secondary rounded-full overflow-hidden mb-1.5">
-                          <div className={`h-full rounded-full ${getScoreBarColor(score)}`} style={{ width: `${score * 10}%` }} />
+                        <div className="flex items-center justify-between mb-1">
+                          <span className={`text-xs font-semibold ${color}`}>{label}</span>
+                          <span className={`text-xs font-bold ${color}`}>{getPtsDisplay(score, category)}</span>
                         </div>
-                        <span className={`text-xs font-semibold ${color}`}>{label}</span>
                         <p className="text-xs text-muted-foreground mt-1 leading-relaxed line-clamp-2">{reason}</p>
+                        <div className="mt-1.5 text-[10px] text-muted-foreground/70 italic">
+                          {betterInPool === 0
+                            ? "✅ No remaining country scores higher"
+                            : `⚠️ ${betterInPool} remaining ${betterInPool === 1 ? "country" : "countries"} score higher`}
+                        </div>
                       </div>
                     );
                   })}
@@ -757,7 +915,7 @@ export default function Game() {
             )}
           </AnimatePresence>
 
-          {/* Wildcard banner (hidden in hard mode) */}
+          {/* Wildcard banner */}
           <AnimatePresence>
             {wildcardPhase && !isHardMode && (
               <motion.div
@@ -780,7 +938,7 @@ export default function Game() {
               roster={state.roster}
               totalScore={totalScore}
               bonus={bonus}
-              onReset={resetGame}
+              onReset={doReset}
               onDownload={downloadPng}
               onWildcard={startWildcard}
               wildcardUsed={state.wildcardUsed}
@@ -788,6 +946,7 @@ export default function Game() {
               rosterRef={rosterRef}
               onInfoClick={(cat, country) => setInfoModal({ category: cat, country })}
               isHardMode={isHardMode}
+              onSubmitLeaderboard={() => setShowSubmitDialog(true)}
             />
           ) : state.currentCountry ? (
             <CountryCard
@@ -796,6 +955,7 @@ export default function Game() {
               poolRemaining={state.pool.length}
               onInfoClick={(cat) => state.currentCountry && setInfoModal({ category: cat, country: state.currentCountry })}
               isHardMode={isHardMode}
+              roster={state.roster}
             />
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
@@ -849,15 +1009,10 @@ export default function Game() {
                   return (
                     <>
                       {!isHardMode && (
-                        <>
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs text-muted-foreground uppercase tracking-wider">Rating</span>
-                            <span className={`text-sm font-bold ${color}`}>{label}</span>
-                          </div>
-                          <div className="h-2.5 bg-secondary rounded-full overflow-hidden mb-4">
-                            <div className={`h-full rounded-full score-bar-fill ${getScoreBarColor(stat.score)}`} style={{ width: `${stat.score * 10}%` }} />
-                          </div>
-                        </>
+                        <div className="flex items-center justify-between mb-4 bg-secondary/50 rounded-lg px-3 py-2">
+                          <span className={`text-sm font-bold ${color}`}>{label}</span>
+                          <span className={`text-sm font-bold ${color}`}>{getPtsDisplay(stat.score, hoveredCategory)}</span>
+                        </div>
                       )}
                       <p className="text-sm text-foreground/80 leading-relaxed">{stat.description}</p>
                     </>
@@ -935,20 +1090,13 @@ export default function Game() {
                     <>
                       {!isHardMode && (
                         <div className="bg-secondary/50 rounded-xl p-4 mb-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs text-muted-foreground uppercase tracking-wider">Overall Rating</span>
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs text-muted-foreground uppercase tracking-wider">Rating</span>
                             <span className={`text-lg font-bold ${color}`}>{label}</span>
                           </div>
-                          <div className="h-3 bg-secondary rounded-full overflow-hidden">
-                            <motion.div
-                              initial={{ width: 0 }}
-                              animate={{ width: `${stat.score * 10}%` }}
-                              transition={{ duration: 0.6, ease: "easeOut" }}
-                              className={`h-full rounded-full ${getScoreBarColor(stat.score)}`}
-                            />
-                          </div>
-                          <div className="flex justify-between mt-1.5 text-xs text-muted-foreground/60">
-                            <span>Critical</span><span>World-Class</span>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-muted-foreground">Points earned</span>
+                            <span className={`text-sm font-bold ${color}`}>{getPtsDisplay(stat.score, infoModal.category)}</span>
                           </div>
                         </div>
                       )}
@@ -964,6 +1112,18 @@ export default function Game() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Submit leaderboard dialog */}
+      <AnimatePresence>
+        {showSubmitDialog && (
+          <SubmitDialog
+            score={totalScore}
+            mode={isHardMode ? "hard" : "easy"}
+            roster={state.roster}
+            onClose={() => setShowSubmitDialog(false)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
@@ -971,13 +1131,14 @@ export default function Game() {
 // ─── CountryCard ──────────────────────────────────────────────────────────────
 
 function CountryCard({
-  country, hoveredCategory, poolRemaining, onInfoClick, isHardMode,
+  country, hoveredCategory, poolRemaining, onInfoClick, isHardMode, roster,
 }: {
   country: Country;
   hoveredCategory: Category | null;
   poolRemaining: number;
   onInfoClick: (cat: Category) => void;
   isHardMode: boolean;
+  roster: Partial<Record<Category, Country>>;
 }) {
   return (
     <AnimatePresence mode="wait">
@@ -996,13 +1157,6 @@ function CountryCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 mb-1 flex-wrap">
               <h1 className="font-serif text-3xl font-bold text-foreground">{country.name}</h1>
-              <span className={`px-2 py-0.5 rounded text-xs font-semibold uppercase tracking-wider ${
-                country.tier === "first"
-                  ? "bg-primary/20 text-primary border border-primary/30"
-                  : "bg-secondary text-muted-foreground border border-border"
-              }`}>
-                {country.tier === "first" ? "1st World" : "2nd World"}
-              </span>
             </div>
             <div className="flex items-center gap-3 text-sm text-muted-foreground mb-2">
               <span>{country.capital}</span>
@@ -1029,7 +1183,7 @@ function CountryCard({
               </>
             ) : (
               <>
-                <span className="text-primary font-semibold">Hover a slot</span> on the left to preview this country's rating, then click to assign. Click{" "}
+                <span className="text-primary font-semibold">Hover a slot</span> on the left to preview this country's score, then click to assign. Click{" "}
                 <span className="inline-flex items-center gap-0.5 text-muted-foreground"><Info className="w-3 h-3" /></span>{" "}
                 on any stat for full details.
               </>
@@ -1044,6 +1198,7 @@ function CountryCard({
             const stat = country.stats[catKey];
             const isHighlighted = hoveredCategory === category;
             const isBonus = BONUS_CATEGORIES.includes(category);
+            const isFilled = !!roster[category];
             const { label, color } = getScoreLabel(stat.score);
             const stars = getCategoryStars(category);
 
@@ -1052,10 +1207,13 @@ function CountryCard({
                 key={category}
                 animate={{
                   borderColor: isHighlighted ? "hsl(43 90% 55% / 0.6)" : "hsl(217 30% 18%)",
-                  backgroundColor: isHighlighted ? "hsl(43 90% 55% / 0.05)" : "hsl(222 40% 10%)",
+                  backgroundColor: isFilled
+                    ? "hsl(222 35% 12%)"
+                    : isHighlighted ? "hsl(43 90% 55% / 0.05)" : "hsl(222 40% 10%)",
+                  opacity: isFilled ? 0.45 : 1,
                 }}
                 transition={{ duration: 0.15 }}
-                className={`rounded-lg border p-3 ${isHighlighted ? "ring-1 ring-primary/30" : ""}`}
+                className={`rounded-lg border p-3 ${isHighlighted ? "ring-1 ring-primary/30" : ""} ${isFilled ? "cursor-default" : ""}`}
                 data-testid={`stat-${catKey}`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -1070,13 +1228,16 @@ function CountryCard({
                       : "text-yellow-400/25"
                     }`}>{stars}</span>
                   </div>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); onInfoClick(category); }}
-                    className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors shrink-0"
-                    title={`Details for ${category}`}
-                  >
-                    <Info className="w-3 h-3" />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    {isFilled && <Lock className="w-3 h-3 text-muted-foreground/40" />}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); onInfoClick(category); }}
+                      className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors shrink-0"
+                      title={`Details for ${category}`}
+                    >
+                      <Info className="w-3 h-3" />
+                    </button>
+                  </div>
                 </div>
 
                 {isBonus ? (
@@ -1084,12 +1245,10 @@ function CountryCard({
                     <div className="text-[10px] text-yellow-400/70 font-semibold mb-1">💡 Bonus formula stat</div>
                   </div>
                 ) : !isHardMode ? (
-                  <>
-                    <div className="h-1.5 bg-secondary rounded-full overflow-hidden mb-1.5">
-                      <div className={`h-full rounded-full score-bar-fill ${getScoreBarColor(stat.score)}`} style={{ width: `${stat.score * 10}%` }} />
-                    </div>
-                    <div className={`text-xs font-semibold mb-1 ${color}`}>{label}</div>
-                  </>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className={`text-xs font-semibold ${color}`}>{label}</span>
+                    <span className={`text-xs font-bold ${color}`}>{getPtsDisplay(stat.score, category)}</span>
+                  </div>
                 ) : null}
 
                 <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{stat.description}</p>
@@ -1106,7 +1265,7 @@ function CountryCard({
 
 function GameOver({
   roster, totalScore, bonus, onReset, onDownload, onWildcard,
-  wildcardUsed, wildcardPhase, rosterRef, onInfoClick, isHardMode,
+  wildcardUsed, wildcardPhase, rosterRef, onInfoClick, isHardMode, onSubmitLeaderboard,
 }: {
   roster: Partial<Record<Category, Country>>;
   totalScore: number;
@@ -1119,11 +1278,13 @@ function GameOver({
   rosterRef: React.RefObject<HTMLDivElement | null>;
   onInfoClick: (cat: Category, country: Country) => void;
   isHardMode: boolean;
+  onSubmitLeaderboard: () => void;
 }) {
+  const [, navigate] = useLocation();
   const rating = getRating(totalScore);
   const archetype = getCountryArchetype(roster);
   const bonusPath = getBonusPath(roster);
-  const leaderboard = loadLeaderboard();
+  const leaderboard = loadLocalLeaderboard();
   const currentRank = leaderboard.findIndex((e) => e.score === totalScore && e.date === new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }));
 
   return (
@@ -1158,7 +1319,6 @@ function GameOver({
           <p className="text-sm text-muted-foreground/70 mt-2 italic">{archetype.description}</p>
         </motion.div>
 
-        {/* Bonus display */}
         {bonus > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
@@ -1178,6 +1338,20 @@ function GameOver({
 
       {/* Actions */}
       <div className="flex justify-center gap-3 flex-wrap">
+        <button
+          onClick={onSubmitLeaderboard}
+          className="flex items-center gap-2 px-5 py-2.5 bg-yellow-400/20 text-yellow-400 border border-yellow-400/40 rounded-lg font-semibold text-sm hover:bg-yellow-400/30 transition-colors"
+        >
+          <Trophy className="w-4 h-4" />
+          Submit to Leaderboard
+        </button>
+        <button
+          onClick={() => navigate("/leaderboard")}
+          className="flex items-center gap-2 px-5 py-2.5 bg-card text-muted-foreground border border-border rounded-lg font-semibold text-sm hover:text-foreground hover:bg-secondary transition-colors"
+        >
+          <List className="w-4 h-4" />
+          View Leaderboard
+        </button>
         <button
           data-testid="button-download"
           onClick={onDownload}
@@ -1217,7 +1391,7 @@ function GameOver({
         <div className="bg-card px-6 py-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Globe className="w-5 h-5 text-primary" />
-            <span className="font-serif text-lg font-bold text-foreground">Country Draft — My Ideal Nation</span>
+            <span className="font-serif text-lg font-bold text-foreground">GeoDrafts — My Ideal Nation</span>
           </div>
           <div className="flex items-center gap-4 text-sm">
             <span className="text-muted-foreground">Score:</span>
@@ -1232,8 +1406,6 @@ function GameOver({
             const isBonus = BONUS_CATEGORIES.includes(category);
             const score = country && !isBonus ? country.stats[catKey].score : null;
             const scoreInfo = score !== null ? getScoreLabel(score) : null;
-            const weight = CATEGORY_WEIGHTS[category];
-            const maxPts = isBonus ? "Bonus" : weight ? (weight === 1.5 ? "15" : "12") : "10";
 
             return (
               <div key={category} className="bg-card p-4">
@@ -1242,17 +1414,14 @@ function GameOver({
                     <span className="text-primary">{CATEGORY_ICONS[category]}</span>
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{category}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] text-muted-foreground/50">{maxPts} max</span>
-                    {country && (
-                      <button
-                        onClick={() => country && onInfoClick(category, country)}
-                        className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors"
-                      >
-                        <Info className="w-3 h-3" />
-                      </button>
-                    )}
-                  </div>
+                  {country && (
+                    <button
+                      onClick={() => country && onInfoClick(category, country)}
+                      className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors"
+                    >
+                      <Info className="w-3 h-3" />
+                    </button>
+                  )}
                 </div>
                 {country ? (
                   isBonus ? (
@@ -1269,12 +1438,10 @@ function GameOver({
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-foreground text-sm">{country.name}</div>
                         {!isHardMode && score !== null && scoreInfo && (
-                          <>
-                            <div className="h-1.5 bg-secondary rounded-full overflow-hidden mt-1 mb-1">
-                              <div className={`h-full rounded-full ${getScoreBarColor(score)}`} style={{ width: `${(score / 10) * 100}%` }} />
-                            </div>
+                          <div className="flex items-center justify-between mt-0.5">
                             <span className={`text-xs font-semibold ${scoreInfo.color}`}>{scoreInfo.label}</span>
-                          </>
+                            <span className={`text-xs font-bold ${scoreInfo.color}`}>{getPtsDisplay(score, category)}</span>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -1288,19 +1455,19 @@ function GameOver({
         </div>
       </div>
 
-      {/* Leaderboard */}
+      {/* Local Leaderboard */}
       <div className="rounded-xl border border-border overflow-hidden">
         <div className="bg-card px-5 py-3.5 border-b border-border flex items-center gap-2">
           <Trophy className="w-4 h-4 text-yellow-400" />
-          <h2 className="text-sm font-semibold text-foreground">All-Time Top Scores</h2>
+          <h2 className="text-sm font-semibold text-foreground">Your Best Scores</h2>
           <span className="text-xs text-muted-foreground ml-1">— click any row to see full roster</span>
         </div>
         {leaderboard.length === 0 ? (
-          <div className="p-6 text-center text-sm text-muted-foreground/60 italic">No scores yet. Play more drafts to build your leaderboard!</div>
+          <div className="p-6 text-center text-sm text-muted-foreground/60 italic">No scores yet. Play more drafts!</div>
         ) : (
           <div className="p-3 space-y-2">
             {leaderboard.map((entry, i) => (
-              <LeaderboardRow
+              <LocalLeaderboardRow
                 key={i}
                 rank={i + 1}
                 entry={entry}
