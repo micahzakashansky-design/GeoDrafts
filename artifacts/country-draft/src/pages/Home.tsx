@@ -188,6 +188,65 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                   ))}
                 </div>
               </div>
+
+              {/* Size + Population Bonus — detailed formula */}
+              <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-lg">💡</span>
+                  <h3 className="text-sm font-semibold text-blue-300">Size + Population Bonus — Full Formula</h3>
+                </div>
+                <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+                  Size and Population don't contribute points directly. Instead, they unlock a <span className="text-blue-300 font-semibold">density bonus</span> based on how well the two scores pair with your other slots. Max total bonus ≈ <span className="text-primary font-bold">+25 pts</span>.
+                </p>
+
+                <div className="space-y-3 text-xs font-mono">
+                  <div className="bg-background/60 rounded-lg p-3 border border-border/50">
+                    <div className="text-muted-foreground mb-1 font-sans font-semibold not-italic">Step 1 — Overcrowding penalty</div>
+                    <div className="text-foreground">diff = size_score − population_score</div>
+                    <div className="text-foreground mt-1">
+                      if diff &lt; −2 → fitMult = max(0, 1.0 − (−diff − 2) × 0.4)<br />
+                      if diff &gt;  6 → fitMult = max(0.3, 1.0 − (diff − 6) × 0.15)<br />
+                      else            → fitMult = 1.0
+                    </div>
+                    <div className="text-muted-foreground mt-1 font-sans italic not-italic">
+                      Best fit: size ≥ population (sweet spot: diff 0–6). Overcrowded nations (diff &lt; −2) lose up to 100% bonus. Vast empty nations (diff &gt; 6) lose up to 70%.
+                    </div>
+                  </div>
+
+                  <div className="bg-background/60 rounded-lg p-3 border border-border/50">
+                    <div className="text-muted-foreground mb-1 font-sans font-semibold">Step 2 — Path multipliers</div>
+                    <div className="text-foreground">agFactor  = (size / 10) × (climate / 10)</div>
+                    <div className="text-foreground">urbFactor = (tech / 10) × (economy / 10)</div>
+                    <div className="text-muted-foreground mt-1 font-sans italic">
+                      Agricultural path: big land + good climate.<br />
+                      Urban path: high tech + strong economy.
+                    </div>
+                  </div>
+
+                  <div className="bg-background/60 rounded-lg p-3 border border-border/50">
+                    <div className="text-muted-foreground mb-1 font-sans font-semibold">Step 3 — Density bonus</div>
+                    <div className="text-foreground">densityBonus = min(20, round(fitMult × max(agFactor, urbFactor) × 22))</div>
+                  </div>
+
+                  <div className="bg-background/60 rounded-lg p-3 border border-border/50">
+                    <div className="text-muted-foreground mb-1 font-sans font-semibold">Step 4 — Combo bonus</div>
+                    <div className="text-foreground">matchedPop = min(population, size + 2)</div>
+                    <div className="text-foreground">comboBonus = min(5, round((size × matchedPop) / 20))</div>
+                    <div className="text-muted-foreground mt-1 font-sans italic">
+                      Rewards large, well-populated nations. Capped at +5.
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
+                    <div className="text-blue-300 font-sans font-semibold mb-1">Total bonus = densityBonus + comboBonus</div>
+                    <div className="text-muted-foreground font-sans italic">
+                      Example: USA (size 9) + China (pop 10) with Germany (tech 9) + USA (eco 9):<br />
+                      diff = −1 → fitMult ≈ 0.6; urbFactor = 0.81; densityBonus ≈ min(20, 11) = 11; comboBonus = 5 → <span className="text-primary font-bold">+16 pts</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-3">Nation Rankings</h3>
                 <div className="space-y-1.5">

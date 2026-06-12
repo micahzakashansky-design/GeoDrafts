@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Trophy, ChevronDown, ArrowLeft, Globe, Shield } from "lucide-react";
+import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme-context";
 
@@ -18,6 +18,7 @@ function LeaderboardRow({ rank, entry }: { rank: number; entry: LeaderboardEntry
   const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
   const rankColor = rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-muted-foreground";
   const date = new Date(entry.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const isDaily = entry.mode === "daily";
 
   return (
     <div className="rounded-lg border border-border/60 bg-card/30 overflow-hidden transition-colors">
@@ -31,11 +32,13 @@ function LeaderboardRow({ rank, entry }: { rank: number; entry: LeaderboardEntry
         <span className="font-bold text-foreground text-base flex-1">{entry.playerName}</span>
         <span className="text-primary font-bold text-sm">{entry.score} pts</span>
         <span className={`text-xs px-2 py-0.5 rounded font-semibold mr-1 ${
-          entry.mode === "hard"
+          isDaily
+            ? "bg-amber-400/20 text-amber-400"
+            : entry.mode === "hard"
             ? "bg-red-500/20 text-red-400"
             : "bg-primary/20 text-primary"
         }`}>
-          {entry.mode === "hard" ? "⚠️ Hard" : "Easy"}
+          {isDaily ? "🗓️ Daily" : entry.mode === "hard" ? "⚠️ Hard" : "Easy"}
         </span>
         <span className="text-xs text-muted-foreground mr-1 hidden sm:block">{date}</span>
         <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`} />
@@ -64,13 +67,17 @@ function LeaderboardRow({ rank, entry }: { rank: number; entry: LeaderboardEntry
   );
 }
 
+type ModeFilter = "all" | "easy" | "hard" | "daily";
+
 export default function Leaderboard() {
   const [, navigate] = useLocation();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [modeFilter, setModeFilter] = useState<"all" | "easy" | "hard">("all");
+  const [modeFilter, setModeFilter] = useState<ModeFilter>("all");
   const { isLight, toggleTheme } = useTheme();
+
+  const todayLabel = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
   useEffect(() => {
     setLoading(true);
@@ -81,6 +88,13 @@ export default function Leaderboard() {
       .then(data => { setEntries(data); setLoading(false); })
       .catch(() => { setError("Failed to load leaderboard."); setLoading(false); });
   }, [modeFilter]);
+
+  const tabs: { key: ModeFilter; label: string; activeClass: string }[] = [
+    { key: "all",    label: "All",          activeClass: "bg-primary/20 text-primary border-primary/40" },
+    { key: "daily",  label: `🗓️ Daily · ${todayLabel}`, activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40" },
+    { key: "easy",   label: "Easy",         activeClass: "bg-primary/20 text-primary border-primary/40" },
+    { key: "hard",   label: "⚠️ Hard",       activeClass: "bg-red-500/20 text-red-400 border-red-500/40" },
+  ];
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -104,7 +118,7 @@ export default function Leaderboard() {
             {isLight ? "🌙 Dark" : "☀️ Light"}
           </button>
           <button
-            onClick={() => navigate("/game")}
+            onClick={() => navigate("/")}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30 transition-colors font-semibold"
           >
             Play Now
@@ -118,20 +132,36 @@ export default function Leaderboard() {
           <h1 className="font-serif text-2xl font-bold text-foreground">Global Leaderboard</h1>
         </div>
 
-        <div className="flex gap-2 mb-6">
-          {(["all", "easy", "hard"] as const).map(m => (
+        {/* Daily challenge highlight */}
+        {modeFilter === "daily" && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 rounded-xl border border-amber-400/30 bg-amber-400/5 px-4 py-3 flex items-center gap-3"
+          >
+            <CalendarDays className="w-5 h-5 text-amber-400 shrink-0" />
+            <div>
+              <div className="text-sm font-semibold text-amber-300">Daily Challenge Leaderboard</div>
+              <div className="text-xs text-muted-foreground">
+                Everyone drafts the same pool today — {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Mode tabs */}
+        <div className="flex gap-2 mb-6 flex-wrap">
+          {tabs.map(tab => (
             <button
-              key={m}
-              onClick={() => setModeFilter(m)}
+              key={tab.key}
+              onClick={() => setModeFilter(tab.key)}
               className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors border ${
-                modeFilter === m
-                  ? m === "hard"
-                    ? "bg-red-500/20 text-red-400 border-red-500/40"
-                    : "bg-primary/20 text-primary border-primary/40"
+                modeFilter === tab.key
+                  ? tab.activeClass
                   : "text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
               }`}
             >
-              {m === "all" ? "All Modes" : m === "hard" ? "⚠️ Hard" : "Easy"}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -150,9 +180,11 @@ export default function Leaderboard() {
         ) : entries.length === 0 ? (
           <div className="text-center py-20">
             <Globe className="w-12 h-12 mx-auto mb-3 opacity-20" />
-            <p className="text-muted-foreground text-sm">No scores yet. Be the first!</p>
+            <p className="text-muted-foreground text-sm">
+              {modeFilter === "daily" ? "No daily scores yet — be the first today!" : "No scores yet. Be the first!"}
+            </p>
             <button
-              onClick={() => navigate("/game")}
+              onClick={() => navigate("/")}
               className="mt-4 px-4 py-2 rounded-lg bg-primary/20 text-primary border border-primary/40 text-sm font-semibold hover:bg-primary/30 transition-colors"
             >
               Play Now

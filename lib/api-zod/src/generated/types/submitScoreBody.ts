@@ -8,11 +8,6 @@
 import type { SubmitScoreBodyRoster } from './submitScoreBodyRoster';
 
 export interface SubmitScoreBody {
-  /**
-     * @minLength 1
-     * @maxLength 40
-     */
-  playerName: string;
   /** @minimum 0 */
   score: number;
   mode: string;

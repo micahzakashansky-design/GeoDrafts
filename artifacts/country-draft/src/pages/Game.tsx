@@ -4,8 +4,9 @@ import {
   BookOpen, Building, ChevronRight, ChevronDown, Download, RotateCcw, Trophy,
   Star, Zap, Lock, Shuffle, X, Info, ArrowLeftRight, List, Medal,
   GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
-  CalendarDays,
+  CalendarDays, LogIn,
 } from "lucide-react";
+import { useAuth } from "@workspace/replit-auth-web";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import {
@@ -216,6 +217,7 @@ type GameState = {
   wildcardUsed: boolean;
   isDailyMode: boolean;
   dailyDate: string;
+  leaderboardSubmitted: boolean;
 };
 
 type InfoModal = { category: Category; country: Country } | null;
@@ -246,6 +248,7 @@ function freshGame(isDailyMode = false, dailyDate = ""): GameState {
     wildcardUsed: false,
     isDailyMode,
     dailyDate,
+    leaderboardSubmitted: false,
   };
 }
 
@@ -450,29 +453,31 @@ function LocalLeaderboardRow({
 // ─── Submit Dialog ────────────────────────────────────────────────────────────
 
 function SubmitDialog({
-  score, mode, roster, onClose,
+  score, mode, roster, onClose, onSuccess,
 }: {
   score: number;
   mode: string;
   roster: Partial<Record<Category, Country>>;
   onClose: () => void;
+  onSuccess: () => void;
 }) {
   const [, navigate] = useLocation();
-  const [name, setName] = useState("");
+  const { user, isLoading: authLoading, isAuthenticated, login } = useAuth();
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const displayName = [user?.firstName, user?.lastName].filter(Boolean).join(" ").trim() || user?.email || "Anonymous";
+
   async function handleSubmit() {
-    if (!name.trim()) return;
     setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/leaderboard", {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          playerName: name.trim(),
           score,
           mode,
           roster: Object.fromEntries(
@@ -480,8 +485,13 @@ function SubmitDialog({
           ),
         }),
       });
-      if (!res.ok) throw new Error("Server error");
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Failed to submit. Please try again.");
+        return;
+      }
       setDone(true);
+      onSuccess();
     } catch {
       setError("Failed to submit. Please try again.");
     } finally {
@@ -522,7 +532,7 @@ function SubmitDialog({
             <div className="text-4xl mb-3">🎉</div>
             <div className="font-semibold text-foreground mb-1">Score submitted!</div>
             <div className="text-sm text-muted-foreground mb-5">
-              <span className="text-primary font-bold">{score} pts</span> posted to the leaderboard.
+              <span className="text-primary font-bold">{score} pts</span> posted as <span className="font-semibold text-foreground">{displayName}</span>.
             </div>
             <button
               onClick={() => navigate("/leaderboard")}
@@ -532,33 +542,48 @@ function SubmitDialog({
               View Leaderboard
             </button>
           </div>
+        ) : authLoading ? (
+          <div className="px-5 py-8 text-center text-sm text-muted-foreground animate-pulse">Checking account…</div>
+        ) : !isAuthenticated ? (
+          <div className="px-5 py-6 text-center space-y-4">
+            <div className="text-3xl mb-1">🔒</div>
+            <div className="font-semibold text-foreground">Sign in to submit</div>
+            <p className="text-sm text-muted-foreground">
+              You need to be signed in to post your score to the global leaderboard.
+            </p>
+            <div className="bg-secondary/40 rounded-lg px-3 py-2 text-sm">
+              <span className="text-muted-foreground">Your score: </span>
+              <span className="font-bold text-primary">{score} pts · {modeLabel} Mode</span>
+            </div>
+            <button
+              onClick={login}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors"
+            >
+              <LogIn className="w-4 h-4" />
+              Sign In
+            </button>
+          </div>
         ) : (
           <div className="px-5 py-4 space-y-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Your score</span>
               <span className="font-bold text-primary">{score} pts · {modeLabel} Mode</span>
             </div>
-            <div>
-              <label className="block text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1.5">
-                Enter your name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleSubmit()}
-                placeholder="Your name…"
-                maxLength={40}
-                autoFocus
-                className="w-full px-3 py-2.5 rounded-lg border border-border bg-secondary/40 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
-              />
+            <div className="bg-secondary/40 rounded-lg px-3 py-2.5 flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-xs font-bold text-primary">
+                {displayName[0]?.toUpperCase() ?? "?"}
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-foreground">{displayName}</div>
+                <div className="text-xs text-muted-foreground">Posting as your account name</div>
+              </div>
             </div>
             {error && <p className="text-xs text-red-400">{error}</p>}
             <button
               onClick={handleSubmit}
-              disabled={!name.trim() || loading}
+              disabled={loading}
               className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
-                name.trim() && !loading
+                !loading
                   ? "bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30"
                   : "bg-secondary text-muted-foreground border border-border cursor-not-allowed"
               }`}
@@ -921,6 +946,7 @@ export default function Game() {
               isDailyMode={isDailyMode}
               onSubmitLeaderboard={() => setShowSubmitDialog(true)}
               gameMode={gameMode}
+              leaderboardSubmitted={state.leaderboardSubmitted}
             />
           ) : state.currentCountry ? (
             <CountryCard
@@ -1095,6 +1121,7 @@ export default function Game() {
             mode={gameMode}
             roster={state.roster}
             onClose={() => setShowSubmitDialog(false)}
+            onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))}
           />
         )}
       </AnimatePresence>
@@ -1236,7 +1263,7 @@ function CountryCard({
 function GameOver({
   roster, totalScore, bonus, onReset, onDownload, onWildcard,
   wildcardUsed, wildcardPhase, rosterRef, onInfoClick, isHardMode, isDailyMode,
-  onSubmitLeaderboard, gameMode,
+  onSubmitLeaderboard, gameMode, leaderboardSubmitted,
 }: {
   roster: Partial<Record<Category, Country>>;
   totalScore: number;
@@ -1252,6 +1279,7 @@ function GameOver({
   isDailyMode: boolean;
   onSubmitLeaderboard: () => void;
   gameMode: string;
+  leaderboardSubmitted: boolean;
 }) {
   const [, navigate] = useLocation();
   const rating = getRating(totalScore);
@@ -1341,7 +1369,7 @@ function GameOver({
           <Download className="w-4 h-4" />
           Download PNG
         </button>
-        {!isDailyMode && !wildcardUsed && !wildcardPhase && !isHardMode && (
+        {!isDailyMode && !wildcardUsed && !wildcardPhase && !isHardMode && !leaderboardSubmitted && (
           <button
             data-testid="button-wildcard"
             onClick={onWildcard}
@@ -1350,6 +1378,12 @@ function GameOver({
             <Shuffle className="w-4 h-4" />
             Use Wildcard
           </button>
+        )}
+        {leaderboardSubmitted && !wildcardUsed && !isDailyMode && !isHardMode && (
+          <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-lg text-xs text-muted-foreground border border-border">
+            <Shuffle className="w-3.5 h-3.5" />
+            Wildcard locked after submission
+          </div>
         )}
         {wildcardUsed && (
           <div className="flex items-center gap-2 px-4 py-2.5 bg-secondary rounded-lg text-xs text-muted-foreground border border-border">
