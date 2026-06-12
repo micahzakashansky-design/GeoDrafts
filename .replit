@@ -30,3 +30,13 @@ externalPort = 8081
 [[ports]]
 localPort = 26097
 externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+VITE_FIREBASE_AUTH_DOMAIN = "geodrafts.firebaseapp.com"
+VITE_FIREBASE_PROJECT_ID = "geodrafts"
+VITE_FIREBASE_STORAGE_BUCKET = "geodrafts.firebasestorage.app"
+VITE_FIREBASE_MESSAGING_SENDER_ID = "603087956375"
+VITE_FIREBASE_APP_ID = "1:603087956375:web:3856ade90890193e8e7cd2"
+VITE_FIREBASE_MEASUREMENT_ID = "G-Z5FQW4TSL3"

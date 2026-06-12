@@ -3,21 +3,16 @@ import { useLocation } from "wouter";
 import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme-context";
-
-type LeaderboardEntry = {
-  id: number;
-  playerName: string;
-  score: number;
-  mode: string;
-  roster: Record<string, string>;
-  createdAt: string;
-};
+import { getTopScores, type LeaderboardEntry } from "@/lib/firestore";
 
 function LeaderboardRow({ rank, entry }: { rank: number; entry: LeaderboardEntry }) {
   const [expanded, setExpanded] = useState(false);
   const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
-  const rankColor = rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-muted-foreground";
-  const date = new Date(entry.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const rankColor =
+    rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-muted-foreground";
+  const date = entry.createdAt
+    ? new Date(entry.createdAt.toMillis()).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    : entry.date ?? "";
   const isDaily = entry.mode === "daily";
 
   return (
@@ -29,19 +24,23 @@ function LeaderboardRow({ rank, entry }: { rank: number; entry: LeaderboardEntry
         <span className={`text-sm font-bold w-6 text-center shrink-0 ${rankColor}`}>
           {medal ?? `#${rank}`}
         </span>
-        <span className="font-bold text-foreground text-base flex-1">{entry.playerName}</span>
+        <span className="font-bold text-foreground text-base flex-1">{entry.username}</span>
         <span className="text-primary font-bold text-sm">{entry.score} pts</span>
-        <span className={`text-xs px-2 py-0.5 rounded font-semibold mr-1 ${
-          isDaily
-            ? "bg-amber-400/20 text-amber-400"
-            : entry.mode === "hard"
-            ? "bg-red-500/20 text-red-400"
-            : "bg-primary/20 text-primary"
-        }`}>
+        <span
+          className={`text-xs px-2 py-0.5 rounded font-semibold mr-1 ${
+            isDaily
+              ? "bg-amber-400/20 text-amber-400"
+              : entry.mode === "hard"
+              ? "bg-red-500/20 text-red-400"
+              : "bg-primary/20 text-primary"
+          }`}
+        >
           {isDaily ? "🗓️ Daily" : entry.mode === "hard" ? "⚠️ Hard" : "Easy"}
         </span>
         <span className="text-xs text-muted-foreground mr-1 hidden sm:block">{date}</span>
-        <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`} />
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-muted-foreground transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`}
+        />
       </button>
       <AnimatePresence>
         {expanded && (
@@ -82,18 +81,16 @@ export default function Leaderboard() {
   useEffect(() => {
     setLoading(true);
     setError(null);
-    const url = modeFilter !== "all" ? `/api/leaderboard?mode=${modeFilter}` : "/api/leaderboard";
-    fetch(url)
-      .then(r => r.json())
-      .then(data => { setEntries(data); setLoading(false); })
+    getTopScores(modeFilter, 10)
+      .then((data) => { setEntries(data); setLoading(false); })
       .catch(() => { setError("Failed to load leaderboard."); setLoading(false); });
   }, [modeFilter]);
 
   const tabs: { key: ModeFilter; label: string; activeClass: string }[] = [
-    { key: "all",    label: "All",          activeClass: "bg-primary/20 text-primary border-primary/40" },
-    { key: "daily",  label: `🗓️ Daily · ${todayLabel}`, activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40" },
-    { key: "easy",   label: "Easy",         activeClass: "bg-primary/20 text-primary border-primary/40" },
-    { key: "hard",   label: "⚠️ Hard",       activeClass: "bg-red-500/20 text-red-400 border-red-500/40" },
+    { key: "all",   label: "All",                        activeClass: "bg-primary/20 text-primary border-primary/40" },
+    { key: "daily", label: `🗓️ Daily · ${todayLabel}`,   activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40" },
+    { key: "easy",  label: "Easy",                       activeClass: "bg-primary/20 text-primary border-primary/40" },
+    { key: "hard",  label: "⚠️ Hard",                    activeClass: "bg-red-500/20 text-red-400 border-red-500/40" },
   ];
 
   return (
@@ -132,7 +129,6 @@ export default function Leaderboard() {
           <h1 className="font-serif text-2xl font-bold text-foreground">Global Leaderboard</h1>
         </div>
 
-        {/* Daily challenge highlight */}
         {modeFilter === "daily" && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
@@ -143,15 +139,15 @@ export default function Leaderboard() {
             <div>
               <div className="text-sm font-semibold text-amber-300">Daily Challenge Leaderboard</div>
               <div className="text-xs text-muted-foreground">
-                Everyone drafts the same pool today — {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+                Everyone drafts the same pool today —{" "}
+                {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
               </div>
             </div>
           </motion.div>
         )}
 
-        {/* Mode tabs */}
         <div className="flex gap-2 mb-6 flex-wrap">
-          {tabs.map(tab => (
+          {tabs.map((tab) => (
             <button
               key={tab.key}
               onClick={() => setModeFilter(tab.key)}
@@ -181,7 +177,9 @@ export default function Leaderboard() {
           <div className="text-center py-20">
             <Globe className="w-12 h-12 mx-auto mb-3 opacity-20" />
             <p className="text-muted-foreground text-sm">
-              {modeFilter === "daily" ? "No daily scores yet — be the first today!" : "No scores yet. Be the first!"}
+              {modeFilter === "daily"
+                ? "No daily scores yet — be the first today!"
+                : "No scores yet. Be the first!"}
             </p>
             <button
               onClick={() => navigate("/")}
