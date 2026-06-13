@@ -33,8 +33,8 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
 
 const SCORING_TIERS = [
   { label: "★★★ Three-star", example: "Military, Economy, Government", max: "15 pts max", weight: "1.5×", color: "text-yellow-400" },
-  { label: "★★ Two-star", example: "Healthcare, Technology, Education, Location, Natural Resources, International Relationships", max: "12 pts max", weight: "1.2×", color: "text-yellow-400/70" },
-  { label: "★ One-star", example: "Culture, Climate, History, Tourism", max: "10 pts max", weight: "1.0×", color: "text-yellow-400/40" },
+  { label: "★★ Two-star", example: "Healthcare, Technology, Education, Natural Resources, International Relationships", max: "12 pts max", weight: "1.2×", color: "text-yellow-400/70" },
+  { label: "★ One-star", example: "Culture, Climate, History, Tourism, Location", max: "10 pts max", weight: "1.0×", color: "text-yellow-400/40" },
   { label: "💡 Size + Population", example: "Bonus formula based on density fit with Climate, Tech & Economy", max: "Up to +25 pts", weight: "Formula", color: "text-blue-400" },
 ];
 

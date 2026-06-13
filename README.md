@@ -13,8 +13,8 @@ GeoDrafts is a nation-building draft game where players build their ideal nation
 
 ## Tech Stack
 
-- **Frontend:** React 19, Vite, Tailwind CSS 4, Framer Motion, Wouter.
-- **Backend:** Express 5, Node.js.
+- **Frontend:** React 19, Vite 7, Tailwind CSS 4, Framer Motion 12, Wouter 3.
+- **Backend:** Express 5, Node.js 22.
 - **Database:** PostgreSQL with Drizzle ORM.
 - **Authentication:** Firebase Auth.
 - **API:** OpenAPI (Swagger) with Orval for client/Zod schema codegen.
@@ -34,7 +34,7 @@ GeoDrafts is a nation-building draft game where players build their ideal nation
 
 ### Prerequisites
 
-- Node.js (v24 recommended)
+- Node.js (v22+ recommended)
 - pnpm
 
 ### Development

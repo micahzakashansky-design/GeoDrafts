@@ -189,14 +189,14 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
 const CATEGORY_WEIGHTS: Partial<Record<Category, number>> = {
   Military: 1.5, Economy: 1.5, Government: 1.5,
   "International Relationships": 1.2, Technology: 1.2,
-  Education: 1.2, Location: 1.2, "Natural Resources": 1.2, Healthcare: 1.2,
+  Education: 1.2, "Natural Resources": 1.2, Healthcare: 1.2,
 };
 
 function getCategoryStars(cat: Category): string {
   if (cat === "Military" || cat === "Economy" || cat === "Government") return "★★★";
   if (
     cat === "International Relationships" || cat === "Technology" ||
-    cat === "Education" || cat === "Location" || cat === "Natural Resources" ||
+    cat === "Education" || cat === "Natural Resources" ||
     cat === "Healthcare" || cat === "Size" || cat === "Population"
   ) return "★★";
   return "★";
