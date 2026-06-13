@@ -1044,24 +1044,6 @@ export default function Game() {
 
         {/* Center */}
         <div className="flex-1 flex flex-col overflow-y-auto">
-          {/* Wildcard banner */}
-          <AnimatePresence>
-            {wildcardPhase && !isHardMode && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="mx-6 mt-4 rounded-xl border border-blue-500/40 bg-blue-500/10 px-4 py-3 flex items-center gap-3"
-              >
-                <Shuffle className="w-5 h-5 text-blue-400 shrink-0" />
-                <div>
-                  <div className="text-sm font-semibold text-blue-300">Wildcard Active</div>
-                  <div className="text-xs text-blue-400/70">Select any filled slot to replace it with a random country from the remaining pool.</div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           {state.gameOver ? (
             <GameOver
               roster={state.roster}
@@ -1397,26 +1379,6 @@ function GameOver({
 
       {/* Final Roster */}
       <div ref={rosterRef} className="rounded-xl overflow-hidden border border-border bg-background">
-        <div className="bg-card px-6 py-4 border-b border-border flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Globe className="w-5 h-5 text-primary" />
-            <span className="font-serif text-lg font-bold text-foreground">GeoDrafts — My Ideal Nation</span>
-          </div>
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-muted-foreground">Score:</span>
-            <span className="font-bold text-primary text-lg">{totalScore}</span>
-            <span className={`font-semibold ${rating.color}`}>{rating.label}</span>
-          </div>
-        </div>
-        {wildcardPhase && !isHardMode && (
-          <div className="bg-blue-500/10 border-b border-blue-500/30 px-6 py-3 flex items-center gap-3">
-            <Shuffle className="w-5 h-5 text-blue-400 shrink-0" />
-            <div>
-              <div className="text-sm font-semibold text-blue-300">Wildcard Active</div>
-              <div className="text-xs text-blue-400/70">Select any filled slot below to replace it with a random country from the remaining pool.</div>
-            </div>
-          </div>
-        )}
         <div className="grid grid-cols-2 gap-px bg-border">
           {CATEGORIES.map((category) => {
             const country = roster[category];
