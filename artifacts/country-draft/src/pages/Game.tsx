@@ -906,14 +906,15 @@ export default function Game() {
         )}
 
         {/* Left: Category Slots */}
-        <div className={`
-          fixed md:relative inset-y-0 left-0 z-30
-          transition-transform duration-300 ease-in-out
-          md:translate-x-0 md:transition-none
-          ${rosterOpen ? "translate-x-0" : "-translate-x-full"}
-          w-72 shrink-0 border-r border-border flex flex-col
-          bg-[#0a1520]/95 md:bg-card/30 backdrop-blur-sm md:backdrop-blur-none overflow-y-auto
-        `}>
+        {!state.gameOver && (
+          <div className={`
+            fixed md:relative inset-y-0 left-0 z-30
+            transition-transform duration-300 ease-in-out
+            md:translate-x-0 md:transition-none
+            ${rosterOpen ? "translate-x-0" : "-translate-x-full"}
+            w-72 shrink-0 border-r border-border flex flex-col
+            bg-[#0a1520]/95 md:bg-card/30 backdrop-blur-sm md:backdrop-blur-none overflow-y-auto
+          `}>
           <div className="px-4 py-3 border-b border-border flex items-center justify-between">
             <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Your Nation's Roster
@@ -1030,15 +1031,16 @@ export default function Game() {
             })}
           </div>
 
-          {wildcardPhase && (
-            <div className="p-3 border-t border-border">
-              <button onClick={() => setWildcardPhase(false)} className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
-                <X className="w-3.5 h-3.5" />
-                Cancel Wildcard
-              </button>
-            </div>
-          )}
-        </div>
+            {wildcardPhase && (
+              <div className="p-3 border-t border-border">
+                <button onClick={() => setWildcardPhase(false)} className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                  <X className="w-3.5 h-3.5" />
+                  Cancel Wildcard
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Center */}
         <div className="flex-1 flex flex-col overflow-y-auto">
@@ -1100,14 +1102,16 @@ export default function Game() {
       </div>
 
       {/* Mobile floating roster toggle */}
-      <button
-        className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full shadow-lg text-sm font-semibold text-foreground hover:bg-secondary transition-colors"
-        onClick={() => setRosterOpen(!rosterOpen)}
-      >
-        <List className="w-4 h-4 text-primary" />
-        <span>Roster</span>
-        <span className="text-primary font-bold">{filledCount}/{CATEGORIES.length}</span>
-      </button>
+      {!state.gameOver && (
+        <button
+          className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full shadow-lg text-sm font-semibold text-foreground hover:bg-secondary transition-colors"
+          onClick={() => setRosterOpen(!rosterOpen)}
+        >
+          <List className="w-4 h-4 text-primary" />
+          <span>Roster</span>
+          <span className="text-primary font-bold">{filledCount}/{CATEGORIES.length}</span>
+        </button>
+      )}
 
 
       {/* Submit leaderboard dialog */}
