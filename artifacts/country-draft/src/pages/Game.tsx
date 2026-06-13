@@ -1,8 +1,8 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import {
   Shield, TrendingUp, Palette, Heart, Globe, Sun, Cpu, Map, Users,
-  BookOpen, Building, ChevronRight, ChevronDown, Download, RotateCcw, Trophy,
-  Star, Zap, Lock, Shuffle, X, Info, ArrowLeftRight, List, Medal,
+  BookOpen, Building, ChevronRight, ChevronDown, ChevronUp, Download, RotateCcw, Trophy,
+  Star, Zap, Lock, Shuffle, X, ArrowLeftRight, List, Medal,
   GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
   CalendarDays, LogIn,
 } from "lucide-react";
@@ -189,14 +189,14 @@ const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
 const CATEGORY_WEIGHTS: Partial<Record<Category, number>> = {
   Military: 1.5, Economy: 1.5, Government: 1.5,
   "International Relationships": 1.2, Technology: 1.2,
-  Education: 1.2, Location: 1.2, "Natural Resources": 1.2, Healthcare: 1.2,
+  Education: 1.2, "Natural Resources": 1.2, Healthcare: 1.2,
 };
 
 function getCategoryStars(cat: Category): string {
   if (cat === "Military" || cat === "Economy" || cat === "Government") return "★★★";
   if (
     cat === "International Relationships" || cat === "Technology" ||
-    cat === "Education" || cat === "Location" || cat === "Natural Resources" ||
+    cat === "Education" || cat === "Natural Resources" ||
     cat === "Healthcare" || cat === "Size" || cat === "Population"
   ) return "★★";
   return "★";
@@ -208,6 +208,45 @@ function getPtsDisplay(score: number, cat: Category): string {
 }
 
 const BONUS_CATEGORIES: Category[] = ["Size", "Population"];
+
+function ExpandableDescription({ description }: { description: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) {
+      setIsTruncated(el.scrollHeight > el.offsetHeight);
+    }
+  }, [description]);
+
+  return (
+    <div className="relative">
+      <p
+        ref={textRef}
+        className={`text-xs text-muted-foreground leading-relaxed ${expanded ? "" : "line-clamp-2"}`}
+      >
+        {description}
+      </p>
+      {(isTruncated || expanded) && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setExpanded(!expanded);
+          }}
+          className="mt-1 flex items-center gap-0.5 text-[10px] font-bold text-primary/60 hover:text-primary transition-colors"
+        >
+          {expanded ? (
+            <><ChevronUp className="w-3 h-3" /> Show Less</>
+          ) : (
+            <><ChevronDown className="w-3 h-3" /> Show More</>
+          )}
+        </button>
+      )}
+    </div>
+  );
+}
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -222,7 +261,6 @@ type GameState = {
   leaderboardSubmitted: boolean;
 };
 
-type InfoModal = { category: Category; country: Country } | null;
 
 type LocalLeaderboardEntry = {
   score: number;
@@ -703,7 +741,6 @@ export default function Game() {
   const [hoveredCategory, setHoveredCategory] = useState<Category | null>(null);
   const [lastAssigned, setLastAssigned] = useState<Category | null>(null);
   const [wildcardPhase, setWildcardPhase] = useState(false);
-  const [infoModal, setInfoModal] = useState<InfoModal>(null);
   const [rosterOpen, setRosterOpen] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const [isHardMode, setIsHardMode] = useState<boolean>(() =>
@@ -748,7 +785,7 @@ export default function Game() {
     }
     localStorage.removeItem("countryDraftState_v4");
     setState(freshGame(false, ""));
-    setHoveredCategory(null); setWildcardPhase(false); setInfoModal(null);
+    setHoveredCategory(null); setWildcardPhase(false);
   }, [isDailyMode, navigate]);
 
   const toggleHardMode = useCallback(() => {
@@ -758,7 +795,7 @@ export default function Game() {
     localStorage.setItem("countryDraftHardMode", String(next));
     localStorage.removeItem("countryDraftState_v4");
     setState(freshGame(false, ""));
-    setHoveredCategory(null); setWildcardPhase(false); setInfoModal(null);
+    setHoveredCategory(null); setWildcardPhase(false);
   }, [isHardMode, isDailyMode]);
 
   const assignCountry = useCallback((category: Category) => {
@@ -869,14 +906,15 @@ export default function Game() {
         )}
 
         {/* Left: Category Slots */}
-        <div className={`
-          fixed md:relative inset-y-0 left-0 z-30
-          transition-transform duration-300 ease-in-out
-          md:translate-x-0 md:transition-none
-          ${rosterOpen ? "translate-x-0" : "-translate-x-full"}
-          w-72 shrink-0 border-r border-border flex flex-col
-          bg-[#0a1520]/95 md:bg-card/30 backdrop-blur-sm md:backdrop-blur-none overflow-y-auto
-        `}>
+        {!state.gameOver && (
+          <div className={`
+            fixed md:relative inset-y-0 left-0 z-30
+            transition-transform duration-300 ease-in-out
+            md:translate-x-0 md:transition-none
+            ${rosterOpen ? "translate-x-0" : "-translate-x-full"}
+            w-72 shrink-0 border-r border-border flex flex-col
+            bg-[#0a1520]/95 md:bg-card/30 backdrop-blur-sm md:backdrop-blur-none overflow-y-auto
+          `}>
           <div className="px-4 py-3 border-b border-border flex items-center justify-between">
             <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
               Your Nation's Roster
@@ -886,7 +924,7 @@ export default function Game() {
             </button>
           </div>
           <div className="flex-1 p-3 space-y-1.5">
-            {CATEGORIES.map((category) => {
+            {CATEGORIES.filter(c => state.roster[c]).map((category) => {
               const assigned = state.roster[category];
               const catKey = getCategoryKey(category);
               const isBonus = BONUS_CATEGORIES.includes(category);
@@ -993,15 +1031,16 @@ export default function Game() {
             })}
           </div>
 
-          {wildcardPhase && (
-            <div className="p-3 border-t border-border">
-              <button onClick={() => setWildcardPhase(false)} className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
-                <X className="w-3.5 h-3.5" />
-                Cancel Wildcard
-              </button>
-            </div>
-          )}
-        </div>
+            {wildcardPhase && (
+              <div className="p-3 border-t border-border">
+                <button onClick={() => setWildcardPhase(false)} className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-border text-sm text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                  <X className="w-3.5 h-3.5" />
+                  Cancel Wildcard
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Center */}
         <div className="flex-1 flex flex-col overflow-y-auto">
@@ -1031,10 +1070,10 @@ export default function Game() {
               onReset={doReset}
               onDownload={downloadPng}
               onWildcard={startWildcard}
+              onWildcardSelect={applyWildcard}
               wildcardUsed={state.wildcardUsed}
               wildcardPhase={wildcardPhase}
               rosterRef={rosterRef}
-              onInfoClick={(cat, country) => setInfoModal({ category: cat, country })}
               isHardMode={isHardMode}
               isDailyMode={isDailyMode}
               onSubmitLeaderboard={() => setShowSubmitDialog(true)}
@@ -1046,9 +1085,10 @@ export default function Game() {
               country={state.currentCountry}
               hoveredCategory={hoveredCategory}
               poolRemaining={state.pool.length}
-              onInfoClick={(cat) => state.currentCountry && setInfoModal({ category: cat, country: state.currentCountry })}
               isHardMode={isHardMode}
               roster={state.roster}
+              onAssign={assignCountry}
+              onHover={setHoveredCategory}
             />
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
@@ -1060,151 +1100,20 @@ export default function Game() {
           )}
         </div>
 
-        {/* Right: Hover stats panel */}
-        <AnimatePresence>
-          {hoveredCategory && state.currentCountry && !state.roster[hoveredCategory] && !state.gameOver && (
-            <motion.div
-              key="stats-panel"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 20 }}
-              className="w-60 shrink-0 border-l border-border bg-card/30 flex flex-col overflow-y-auto"
-            >
-              <div className="px-4 py-3 border-b border-border flex items-center gap-2">
-                <span className="text-primary">{CATEGORY_ICONS[hoveredCategory]}</span>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{hoveredCategory}</h3>
-                <span className={`text-[10px] ml-auto ${
-                  getCategoryStars(hoveredCategory) === "★★★" ? "text-yellow-400/70"
-                  : getCategoryStars(hoveredCategory) === "★★" ? "text-yellow-400/50"
-                  : "text-yellow-400/30"
-                }`}>{getCategoryStars(hoveredCategory)}</span>
-              </div>
-              <div className="p-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-3xl">{state.currentCountry.flag}</span>
-                  <div>
-                    <div className="font-semibold text-foreground text-sm">{state.currentCountry.name}</div>
-                    <div className="text-xs text-muted-foreground">{state.currentCountry.region}</div>
-                  </div>
-                </div>
-                {BONUS_CATEGORIES.includes(hoveredCategory) ? (
-                  <div>
-                    <div className="text-xs bg-yellow-400/10 border border-yellow-400/20 rounded-lg px-3 py-2 text-yellow-400/80 mb-3">
-                      💡 Contributes to the Size + Population bonus formula
-                    </div>
-                    <p className="text-sm text-foreground/80 leading-relaxed">
-                      {state.currentCountry.stats[getCategoryKey(hoveredCategory)].description}
-                    </p>
-                  </div>
-                ) : (() => {
-                  const stat = state.currentCountry.stats[getCategoryKey(hoveredCategory)];
-                  const { label, color } = getScoreLabel(stat.score);
-                  return (
-                    <>
-                      {!isHardMode && (
-                        <div className="flex items-center justify-between mb-4 bg-secondary/50 rounded-lg px-3 py-2">
-                          <span className={`text-sm font-bold ${color}`}>{label}</span>
-                          <span className={`text-sm font-bold ${color}`}>{getPtsDisplay(stat.score, hoveredCategory)}</span>
-                        </div>
-                      )}
-                      <p className="text-sm text-foreground/80 leading-relaxed">{stat.description}</p>
-                    </>
-                  );
-                })()}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
       {/* Mobile floating roster toggle */}
-      <button
-        className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full shadow-lg text-sm font-semibold text-foreground hover:bg-secondary transition-colors"
-        onClick={() => setRosterOpen(!rosterOpen)}
-      >
-        <List className="w-4 h-4 text-primary" />
-        <span>Roster</span>
-        <span className="text-primary font-bold">{filledCount}/{CATEGORIES.length}</span>
-      </button>
+      {!state.gameOver && (
+        <button
+          className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full shadow-lg text-sm font-semibold text-foreground hover:bg-secondary transition-colors"
+          onClick={() => setRosterOpen(!rosterOpen)}
+        >
+          <List className="w-4 h-4 text-primary" />
+          <span>Roster</span>
+          <span className="text-primary font-bold">{filledCount}/{CATEGORIES.length}</span>
+        </button>
+      )}
 
-      {/* Info modal */}
-      <AnimatePresence>
-        {infoModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-            onClick={() => setInfoModal(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.92, y: 16 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.92, y: 16 }}
-              transition={{ duration: 0.2, ease: [0.34, 1.56, 0.64, 1] }}
-              className="bg-card border border-border rounded-2xl w-full max-w-md overflow-hidden shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{infoModal.country.flag}</span>
-                  <div>
-                    <div className="font-serif font-bold text-foreground text-lg">{infoModal.country.name}</div>
-                    <div className="text-xs text-muted-foreground">{infoModal.country.capital} · {infoModal.country.region}</div>
-                  </div>
-                </div>
-                <button onClick={() => setInfoModal(null)} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="px-5 py-4">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="text-primary">{CATEGORY_ICONS[infoModal.category]}</span>
-                  <span className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">{infoModal.category}</span>
-                  <span className={`text-xs ml-auto ${
-                    getCategoryStars(infoModal.category) === "★★★" ? "text-yellow-400/70"
-                    : getCategoryStars(infoModal.category) === "★★" ? "text-yellow-400/50"
-                    : "text-yellow-400/30"
-                  }`}>{getCategoryStars(infoModal.category)}</span>
-                </div>
-                {BONUS_CATEGORIES.includes(infoModal.category) ? (
-                  <>
-                    <div className="bg-yellow-400/10 border border-yellow-400/20 rounded-xl p-4 mb-4 text-sm text-yellow-400/90">
-                      💡 Size and Population don't receive direct ratings — they contribute to a special bonus formula based on how well they pair with your Climate, Technology, and Economy slots.
-                    </div>
-                    <p className="text-sm text-foreground/85 leading-relaxed">
-                      {infoModal.country.stats[getCategoryKey(infoModal.category)].description}
-                    </p>
-                  </>
-                ) : (() => {
-                  const stat = infoModal.country.stats[getCategoryKey(infoModal.category)];
-                  const { label, color } = getScoreLabel(stat.score);
-                  return (
-                    <>
-                      {!isHardMode && (
-                        <div className="bg-secondary/50 rounded-xl p-4 mb-4">
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-xs text-muted-foreground uppercase tracking-wider">Rating</span>
-                            <span className={`text-lg font-bold ${color}`}>{label}</span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-muted-foreground">Points earned</span>
-                            <span className={`text-sm font-bold ${color}`}>{getPtsDisplay(stat.score, infoModal.category)}</span>
-                          </div>
-                        </div>
-                      )}
-                      <div>
-                        <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Analysis</div>
-                        <p className="text-sm text-foreground/85 leading-relaxed">{stat.description}</p>
-                      </div>
-                    </>
-                  );
-                })()}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Submit leaderboard dialog */}
       <AnimatePresence>
@@ -1225,15 +1134,17 @@ export default function Game() {
 // ─── CountryCard ──────────────────────────────────────────────────────────────
 
 function CountryCard({
-  country, hoveredCategory, poolRemaining, onInfoClick, isHardMode, roster,
+  country, hoveredCategory, poolRemaining, isHardMode, roster, onAssign, onHover,
 }: {
   country: Country;
   hoveredCategory: Category | null;
   poolRemaining: number;
-  onInfoClick: (cat: Category) => void;
   isHardMode: boolean;
   roster: Partial<Record<Category, Country>>;
+  onAssign: (cat: Category) => void;
+  onHover: (cat: Category | null) => void;
 }) {
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -1275,36 +1186,33 @@ function CountryCard({
               </>
             ) : (
               <>
-                <span className="text-primary font-semibold">Hover a slot</span> on the left to preview this country's score, then click to assign. Click{" "}
-                <span className="inline-flex items-center gap-0.5 text-muted-foreground"><Info className="w-3 h-3" /></span>{" "}
-                on any stat for full details.
+                <span className="text-primary font-semibold">Hover a slot</span> on the left to preview this country's score, then click to assign.
               </>
             )}
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {CATEGORIES.map((category) => {
+          {CATEGORIES.filter(c => !roster[c]).map((category) => {
             const catKey = getCategoryKey(category);
             const stat = country.stats[catKey];
             const isHighlighted = hoveredCategory === category;
             const isBonus = BONUS_CATEGORIES.includes(category);
-            const isFilled = !!roster[category];
             const { label, color } = getScoreLabel(stat.score);
             const stars = getCategoryStars(category);
 
             return (
-              <motion.div
+              <motion.button
                 key={category}
                 animate={{
                   borderColor: isHighlighted ? "hsl(43 90% 55% / 0.6)" : "hsl(217 30% 18%)",
-                  backgroundColor: isFilled
-                    ? "hsl(222 35% 12%)"
-                    : isHighlighted ? "hsl(43 90% 55% / 0.05)" : "hsl(222 40% 10%)",
-                  opacity: isFilled ? 0.45 : 1,
+                  backgroundColor: isHighlighted ? "hsl(43 90% 55% / 0.05)" : "hsl(222 40% 10%)",
                 }}
+                onClick={() => onAssign(category)}
+                onMouseEnter={() => onHover(category)}
+                onMouseLeave={() => onHover(null)}
                 transition={{ duration: 0.15 }}
-                className={`rounded-lg border p-3 ${isHighlighted ? "ring-1 ring-primary/30" : ""}`}
+                className={`rounded-lg border p-3 text-left transition-all hover:border-primary/50 ${isHighlighted ? "ring-1 ring-primary/30" : ""}`}
                 data-testid={`stat-${catKey}`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -1320,13 +1228,6 @@ function CountryCard({
                     }`}>{stars}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    {isFilled && <Lock className="w-3 h-3 text-muted-foreground/40" />}
-                    <button
-                      onClick={(e) => { e.stopPropagation(); onInfoClick(category); }}
-                      className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors shrink-0"
-                    >
-                      <Info className="w-3 h-3" />
-                    </button>
                   </div>
                 </div>
 
@@ -1341,8 +1242,8 @@ function CountryCard({
                   </div>
                 ) : null}
 
-                <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{stat.description}</p>
-              </motion.div>
+                <ExpandableDescription description={stat.description} />
+              </motion.button>
             );
           })}
         </div>
@@ -1354,8 +1255,8 @@ function CountryCard({
 // ─── GameOver ─────────────────────────────────────────────────────────────────
 
 function GameOver({
-  roster, totalScore, bonus, onReset, onDownload, onWildcard,
-  wildcardUsed, wildcardPhase, rosterRef, onInfoClick, isHardMode, isDailyMode,
+  roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect,
+  wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode,
   onSubmitLeaderboard, gameMode, leaderboardSubmitted,
 }: {
   roster: Partial<Record<Category, Country>>;
@@ -1364,10 +1265,10 @@ function GameOver({
   onReset: () => void;
   onDownload: () => void;
   onWildcard: () => void;
+  onWildcardSelect: (cat: Category) => void;
   wildcardUsed: boolean;
   wildcardPhase: boolean;
   rosterRef: React.RefObject<HTMLDivElement | null>;
-  onInfoClick: (cat: Category, country: Country) => void;
   isHardMode: boolean;
   isDailyMode: boolean;
   onSubmitLeaderboard: () => void;
@@ -1507,6 +1408,15 @@ function GameOver({
             <span className={`font-semibold ${rating.color}`}>{rating.label}</span>
           </div>
         </div>
+        {wildcardPhase && !isHardMode && (
+          <div className="bg-blue-500/10 border-b border-blue-500/30 px-6 py-3 flex items-center gap-3">
+            <Shuffle className="w-5 h-5 text-blue-400 shrink-0" />
+            <div>
+              <div className="text-sm font-semibold text-blue-300">Wildcard Active</div>
+              <div className="text-xs text-blue-400/70">Select any filled slot below to replace it with a random country from the remaining pool.</div>
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-px bg-border">
           {CATEGORIES.map((category) => {
             const country = roster[category];
@@ -1516,48 +1426,51 @@ function GameOver({
             const scoreInfo = score !== null ? getScoreLabel(score) : null;
 
             return (
-              <div key={category} className="bg-card p-4">
+              <motion.button
+                key={category}
+                disabled={!wildcardPhase}
+                onClick={() => wildcardPhase && onWildcardSelect(category)}
+                className={`bg-card p-4 text-left transition-all relative ${
+                  wildcardPhase
+                    ? "hover:bg-blue-500/5 cursor-pointer ring-inset hover:ring-2 hover:ring-blue-400/50"
+                    : ""
+                }`}
+              >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className="text-primary">{CATEGORY_ICONS[category]}</span>
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{category}</span>
                   </div>
-                  {country && (
-                    <button
-                      onClick={() => country && onInfoClick(category, country)}
-                      className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors"
-                    >
-                      <Info className="w-3 h-3" />
-                    </button>
-                  )}
                 </div>
                 {country ? (
-                  isBonus ? (
+                  <>
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">{country.flag}</span>
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-foreground text-sm">{country.name}</div>
-                        <div className="text-xs text-yellow-400/70 mt-0.5">💡 Bonus contributor</div>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{country.flag}</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-semibold text-foreground text-sm">{country.name}</div>
-                        {!isHardMode && score !== null && scoreInfo && (
-                          <div className="flex items-center justify-between mt-0.5">
-                            <span className={`text-xs font-semibold ${scoreInfo.color}`}>{scoreInfo.label}</span>
-                            <span className={`text-xs font-bold ${scoreInfo.color}`}>{getPtsDisplay(score, category)}</span>
-                          </div>
+                        {isBonus ? (
+                          <div className="text-xs text-yellow-400/70 mt-0.5">💡 Bonus contributor</div>
+                        ) : (
+                          !isHardMode && score !== null && scoreInfo && (
+                            <div className="flex items-center justify-between mt-0.5">
+                              <span className={`text-xs font-semibold ${scoreInfo.color}`}>{scoreInfo.label}</span>
+                              <span className={`text-xs font-bold ${scoreInfo.color}`}>{getPtsDisplay(score, category)}</span>
+                            </div>
+                          )
                         )}
                       </div>
                     </div>
-                  )
+                    <div className="mt-3">
+                      <ExpandableDescription description={country.stats[catKey].description} />
+                    </div>
+                  </>
                 ) : (
                   <div className="text-sm text-muted-foreground/40 italic">Not assigned</div>
                 )}
-              </div>
+                {wildcardPhase && (
+                  <div className="absolute inset-0 bg-blue-500/5 pointer-events-none" />
+                )}
+              </motion.button>
             );
           })}
         </div>
