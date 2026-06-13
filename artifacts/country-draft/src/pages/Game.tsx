@@ -209,6 +209,45 @@ function getPtsDisplay(score: number, cat: Category): string {
 
 const BONUS_CATEGORIES: Category[] = ["Size", "Population"];
 
+function ExpandableDescription({ description }: { description: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (el) {
+      setIsTruncated(el.scrollHeight > el.offsetHeight);
+    }
+  }, [description]);
+
+  return (
+    <div className="relative">
+      <p
+        ref={textRef}
+        className={`text-xs text-muted-foreground leading-relaxed ${expanded ? "" : "line-clamp-2"}`}
+      >
+        {description}
+      </p>
+      {(isTruncated || expanded) && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setExpanded(!expanded);
+          }}
+          className="mt-1 flex items-center gap-0.5 text-[10px] font-bold text-primary/60 hover:text-primary transition-colors"
+        >
+          {expanded ? (
+            <><ChevronUp className="w-3 h-3" /> Show Less</>
+          ) : (
+            <><ChevronDown className="w-3 h-3" /> Show More</>
+          )}
+        </button>
+      )}
+    </div>
+  );
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type GameState = {
@@ -1100,16 +1139,6 @@ function CountryCard({
   onAssign: (cat: Category) => void;
   onHover: (cat: Category | null) => void;
 }) {
-  const [expandedCats, setExpandedCats] = useState<Set<Category>>(new Set());
-  const toggleExpand = (cat: Category, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedCats(prev => {
-      const next = new Set(prev);
-      if (next.has(cat)) next.delete(cat);
-      else next.add(cat);
-      return next;
-    });
-  };
 
   return (
     <AnimatePresence mode="wait">
@@ -1208,21 +1237,7 @@ function CountryCard({
                   </div>
                 ) : null}
 
-                <div className="relative">
-                  <p className={`text-xs text-muted-foreground leading-relaxed ${expandedCats.has(category) ? "" : "line-clamp-2"}`}>
-                    {stat.description}
-                  </p>
-                  <button
-                    onClick={(e) => toggleExpand(category, e)}
-                    className="mt-1 flex items-center gap-0.5 text-[10px] font-bold text-primary/60 hover:text-primary transition-colors"
-                  >
-                    {expandedCats.has(category) ? (
-                      <><ChevronUp className="w-3 h-3" /> Show Less</>
-                    ) : (
-                      <><ChevronDown className="w-3 h-3" /> Show More</>
-                    )}
-                  </button>
-                </div>
+                <ExpandableDescription description={stat.description} />
               </motion.button>
             );
           })}
@@ -1258,15 +1273,6 @@ function GameOver({
   const rating = getRating(totalScore);
   const archetype = getCountryArchetype(roster);
   const bonusPath = getBonusPath(roster);
-  const [expandedCats, setExpandedCats] = useState<Set<Category>>(new Set());
-  const toggleExpand = (cat: Category) => {
-    setExpandedCats(prev => {
-      const next = new Set(prev);
-      if (next.has(cat)) next.delete(cat);
-      else next.add(cat);
-      return next;
-    });
-  };
   const leaderboard = loadLocalLeaderboard();
   const todayStr = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   const currentRank = leaderboard.findIndex((e) => e.score === totalScore && e.date === todayStr);
@@ -1431,19 +1437,7 @@ function GameOver({
                       </div>
                     </div>
                     <div className="mt-3">
-                      <p className={`text-xs text-muted-foreground leading-relaxed ${expandedCats.has(category) ? "" : "line-clamp-2"}`}>
-                        {country.stats[catKey].description}
-                      </p>
-                      <button
-                        onClick={() => toggleExpand(category)}
-                        className="mt-1 flex items-center gap-0.5 text-[10px] font-bold text-primary/60 hover:text-primary transition-colors"
-                      >
-                        {expandedCats.has(category) ? (
-                          <><ChevronUp className="w-3 h-3" /> Show Less</>
-                        ) : (
-                          <><ChevronDown className="w-3 h-3" /> Show More</>
-                        )}
-                      </button>
+                      <ExpandableDescription description={country.stats[catKey].description} />
                     </div>
                   </>
                 ) : (
