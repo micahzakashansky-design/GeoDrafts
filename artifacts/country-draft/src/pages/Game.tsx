@@ -886,7 +886,7 @@ export default function Game() {
             </button>
           </div>
           <div className="flex-1 p-3 space-y-1.5">
-            {CATEGORIES.map((category) => {
+            {CATEGORIES.filter(c => state.roster[c]).map((category) => {
               const assigned = state.roster[category];
               const catKey = getCategoryKey(category);
               const isBonus = BONUS_CATEGORIES.includes(category);
@@ -1049,6 +1049,8 @@ export default function Game() {
               onInfoClick={(cat) => state.currentCountry && setInfoModal({ category: cat, country: state.currentCountry })}
               isHardMode={isHardMode}
               roster={state.roster}
+              onAssign={assignCountry}
+              onHover={setHoveredCategory}
             />
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
@@ -1225,7 +1227,7 @@ export default function Game() {
 // ─── CountryCard ──────────────────────────────────────────────────────────────
 
 function CountryCard({
-  country, hoveredCategory, poolRemaining, onInfoClick, isHardMode, roster,
+  country, hoveredCategory, poolRemaining, onInfoClick, isHardMode, roster, onAssign, onHover,
 }: {
   country: Country;
   hoveredCategory: Category | null;
@@ -1233,6 +1235,8 @@ function CountryCard({
   onInfoClick: (cat: Category) => void;
   isHardMode: boolean;
   roster: Partial<Record<Category, Country>>;
+  onAssign: (cat: Category) => void;
+  onHover: (cat: Category | null) => void;
 }) {
   return (
     <AnimatePresence mode="wait">
@@ -1284,27 +1288,26 @@ function CountryCard({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {CATEGORIES.map((category) => {
+          {CATEGORIES.filter(c => !roster[c]).map((category) => {
             const catKey = getCategoryKey(category);
             const stat = country.stats[catKey];
             const isHighlighted = hoveredCategory === category;
             const isBonus = BONUS_CATEGORIES.includes(category);
-            const isFilled = !!roster[category];
             const { label, color } = getScoreLabel(stat.score);
             const stars = getCategoryStars(category);
 
             return (
-              <motion.div
+              <motion.button
                 key={category}
                 animate={{
                   borderColor: isHighlighted ? "hsl(43 90% 55% / 0.6)" : "hsl(217 30% 18%)",
-                  backgroundColor: isFilled
-                    ? "hsl(222 35% 12%)"
-                    : isHighlighted ? "hsl(43 90% 55% / 0.05)" : "hsl(222 40% 10%)",
-                  opacity: isFilled ? 0.45 : 1,
+                  backgroundColor: isHighlighted ? "hsl(43 90% 55% / 0.05)" : "hsl(222 40% 10%)",
                 }}
+                onClick={() => onAssign(category)}
+                onMouseEnter={() => onHover(category)}
+                onMouseLeave={() => onHover(null)}
                 transition={{ duration: 0.15 }}
-                className={`rounded-lg border p-3 ${isHighlighted ? "ring-1 ring-primary/30" : ""}`}
+                className={`rounded-lg border p-3 text-left transition-all hover:border-primary/50 ${isHighlighted ? "ring-1 ring-primary/30" : ""}`}
                 data-testid={`stat-${catKey}`}
               >
                 <div className="flex items-center justify-between mb-2">
@@ -1320,7 +1323,6 @@ function CountryCard({
                     }`}>{stars}</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    {isFilled && <Lock className="w-3 h-3 text-muted-foreground/40" />}
                     <button
                       onClick={(e) => { e.stopPropagation(); onInfoClick(category); }}
                       className="w-5 h-5 rounded-full border border-border/60 flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:border-primary/50 transition-colors shrink-0"
@@ -1342,7 +1344,7 @@ function CountryCard({
                 ) : null}
 
                 <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">{stat.description}</p>
-              </motion.div>
+              </motion.button>
             );
           })}
         </div>
