@@ -5,7 +5,8 @@
   "scripts": {
     "build": "pnpm run typecheck && pnpm -r --if-present run build",
     "typecheck:libs": "tsc --build",
-    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck"
+    "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
+    "dev": "PORT=3000 BASE_PATH=/ pnpm --filter ./artifacts/country-draft run dev & PORT=4000 pnpm --filter ./artifacts/api-server run dev & wait"
   },
   "private": true,
   "devDependencies": {
@@ -16,7 +17,6 @@
     "typescript": "~5.9.3"
   },
   "dependencies": {
-    "firebase": "^12.14.0",
-    "rollup": "4.61.1"
+    "firebase": "^12.14.0"
   }
 }
