@@ -1070,6 +1070,7 @@ export default function Game() {
               onReset={doReset}
               onDownload={downloadPng}
               onWildcard={startWildcard}
+              onWildcardSelect={applyWildcard}
               wildcardUsed={state.wildcardUsed}
               wildcardPhase={wildcardPhase}
               rosterRef={rosterRef}
@@ -1254,7 +1255,7 @@ function CountryCard({
 // ─── GameOver ─────────────────────────────────────────────────────────────────
 
 function GameOver({
-  roster, totalScore, bonus, onReset, onDownload, onWildcard,
+  roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect,
   wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode,
   onSubmitLeaderboard, gameMode, leaderboardSubmitted,
 }: {
@@ -1264,6 +1265,7 @@ function GameOver({
   onReset: () => void;
   onDownload: () => void;
   onWildcard: () => void;
+  onWildcardSelect: (cat: Category) => void;
   wildcardUsed: boolean;
   wildcardPhase: boolean;
   rosterRef: React.RefObject<HTMLDivElement | null>;
@@ -1406,6 +1408,15 @@ function GameOver({
             <span className={`font-semibold ${rating.color}`}>{rating.label}</span>
           </div>
         </div>
+        {wildcardPhase && !isHardMode && (
+          <div className="bg-blue-500/10 border-b border-blue-500/30 px-6 py-3 flex items-center gap-3">
+            <Shuffle className="w-5 h-5 text-blue-400 shrink-0" />
+            <div>
+              <div className="text-sm font-semibold text-blue-300">Wildcard Active</div>
+              <div className="text-xs text-blue-400/70">Select any filled slot below to replace it with a random country from the remaining pool.</div>
+            </div>
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-px bg-border">
           {CATEGORIES.map((category) => {
             const country = roster[category];
@@ -1415,7 +1426,16 @@ function GameOver({
             const scoreInfo = score !== null ? getScoreLabel(score) : null;
 
             return (
-              <div key={category} className="bg-card p-4">
+              <motion.button
+                key={category}
+                disabled={!wildcardPhase}
+                onClick={() => wildcardPhase && onWildcardSelect(category)}
+                className={`bg-card p-4 text-left transition-all relative ${
+                  wildcardPhase
+                    ? "hover:bg-blue-500/5 cursor-pointer ring-inset hover:ring-2 hover:ring-blue-400/50"
+                    : ""
+                }`}
+              >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <span className="text-primary">{CATEGORY_ICONS[category]}</span>
@@ -1447,7 +1467,10 @@ function GameOver({
                 ) : (
                   <div className="text-sm text-muted-foreground/40 italic">Not assigned</div>
                 )}
-              </div>
+                {wildcardPhase && (
+                  <div className="absolute inset-0 bg-blue-500/5 pointer-events-none" />
+                )}
+              </motion.button>
             );
           })}
         </div>
