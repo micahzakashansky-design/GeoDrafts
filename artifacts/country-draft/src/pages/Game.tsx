@@ -239,7 +239,7 @@ function ExpandableDescription({ description }: { description: string }) {
             e.stopPropagation();
             setExpanded(!expanded);
           }}
-          className="mt-1 flex items-center gap-0.5 text-[10px] font-bold/60 hover:text-primary transition-colors"
+          className="mt-1 flex items-center gap-0.5 text-[10px] font-bold text-primary/60 hover:text-primary transition-colors"
         >
           {expanded ? (
             <><ChevronUp className="w-3 h-3" /> Show Less</>
@@ -345,18 +345,18 @@ function getScoreBarColor(score: number): string {
 
 function getScoreLabel(score: number): { label: string; color: string } {
   if (score >= 9) return { label: "World-Class", color: "text-emerald-400" };
-  if (score >= 7) return { label: "Strong", color: "text-foreground" };
-  if (score >= 5) return { label: "Moderate", color: "text-foreground" };
-  if (score >= 3) return { label: "Weak", color: "text-foreground" };
-  return { label: "Critical", color: "text-foreground" };
+  if (score >= 7) return { label: "Strong", color: "text-green-400" };
+  if (score >= 5) return { label: "Moderate", color: "text-yellow-400" };
+  if (score >= 3) return { label: "Weak", color: "text-orange-400" };
+  return { label: "Critical", color: "text-red-400" };
 }
 
 function getRating(total: number): { label: string; color: string; icon: React.ReactNode } {
-  if (total >= 148) return { label: "Superpower",        color: "text-foreground", icon: <Trophy className="w-5 h-5" /> };
-  if (total >= 120) return { label: "Major Power",       color: "text-foreground",   icon: <Star className="w-5 h-5" /> };
-  if (total >= 95)  return { label: "Regional Power",    color: "text-foreground",  icon: <Zap className="w-5 h-5" /> };
-  if (total >= 72)  return { label: "Developing Nation", color: "text-foreground", icon: <Globe className="w-5 h-5" /> };
-  return { label: "Struggling State", color: "text-foreground", icon: <Shield className="w-5 h-5" /> };
+  if (total >= 148) return { label: "Superpower",        color: "text-yellow-400", icon: <Trophy className="w-5 h-5" /> };
+  if (total >= 120) return { label: "Major Power",       color: "text-blue-400",   icon: <Star className="w-5 h-5" /> };
+  if (total >= 95)  return { label: "Regional Power",    color: "text-green-400",  icon: <Zap className="w-5 h-5" /> };
+  if (total >= 72)  return { label: "Developing Nation", color: "text-orange-400", icon: <Globe className="w-5 h-5" /> };
+  return { label: "Struggling State", color: "text-red-400", icon: <Shield className="w-5 h-5" /> };
 }
 
 function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
@@ -465,7 +465,7 @@ function LocalLeaderboardRow({
         <span className="font-bold text-foreground text-base flex-1">{entry.score} pts</span>
         <span className="text-xs text-muted-foreground mr-1">{entry.date}</span>
         {isCurrentGame && (
-          <span className="text-xs bg-primary/20 px-1.5 py-0.5 rounded font-semibold mr-1">This game</span>
+          <span className="text-xs bg-primary/20 text-primary px-1.5 py-0.5 rounded font-semibold mr-1">This game</span>
         )}
         <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`} />
       </button>
@@ -481,7 +481,7 @@ function LocalLeaderboardRow({
             <div className="px-4 pb-3 pt-2 border-t border-border/40 grid grid-cols-2 gap-1.5">
               {Object.entries(entry.roster).map(([cat, name]) => (
                 <div key={cat} className="flex items-center gap-1.5 text-xs">
-                  <span className="text-muted-foreground shrink-0">{CATEGORY_ICONS[cat as Category]}</span>
+                  <span className="text-primary/60 shrink-0">{CATEGORY_ICONS[cat as Category]}</span>
                   <span className="text-muted-foreground shrink-0">{cat}:</span>
                   <span className="text-foreground font-medium truncate">{name}</span>
                 </div>
@@ -596,7 +596,7 @@ function SubmitDialog({
 
         <div className="px-5 py-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5" />
+            <Trophy className="w-5 h-5 text-yellow-400" />
             <span className="font-serif text-lg font-bold text-foreground">Submit Score</span>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
@@ -614,7 +614,7 @@ function SubmitDialog({
             </div>
             <button
               onClick={() => navigate("/leaderboard")}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors"
             >
               <Trophy className="w-4 h-4" />
               View Leaderboard
@@ -674,11 +674,11 @@ function SubmitDialog({
                   placeholder="Password"
                   className="w-full px-3 py-2 rounded-lg border border-border bg-secondary/40 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
                 />
-                {error && <p className="text-xs">{error}</p>}
+                {error && <p className="text-xs text-red-400">{error}</p>}
                 <button
                   onClick={handleEmailAuth}
                   disabled={loading}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary/20 border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50"
                 >
                   <Send className="w-4 h-4" />
                   {loading ? "…" : isSignUp ? "Create Account" : "Sign In"}
@@ -702,10 +702,10 @@ function SubmitDialog({
           <div className="px-5 py-4 space-y-4">
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">Your score</span>
-              <span className="font-bold">{score} pts · {modeLabel}</span>
+              <span className="font-bold text-primary">{score} pts · {modeLabel}</span>
             </div>
             <div className="bg-secondary/40 rounded-lg px-3 py-2.5 flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-xs font-bold shrink-0">
+              <div className="w-7 h-7 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-xs font-bold text-primary shrink-0">
                 {(displayName[0] ?? "?").toUpperCase()}
               </div>
               <div className="min-w-0">
@@ -713,13 +713,13 @@ function SubmitDialog({
                 <div className="text-xs text-muted-foreground">Posting as your username</div>
               </div>
             </div>
-            {error && <p className="text-xs">{error}</p>}
+            {error && <p className="text-xs text-red-400">{error}</p>}
             <button
               onClick={handleSubmit}
               disabled={loading}
               className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
                 !loading
-                  ? "bg-primary/20 border border-primary/40 hover:bg-primary/30"
+                  ? "bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30"
                   : "bg-secondary text-muted-foreground border border-border cursor-not-allowed"
               }`}
             >
@@ -852,7 +852,7 @@ export default function Game() {
           >
             <HomeIcon className="w-4 h-4" />
           </button>
-          <Globe className="w-5 h-5" />
+          <Globe className="w-5 h-5 text-primary" />
           <span className="font-serif text-lg font-bold text-foreground tracking-tight">GeoDrafts</span>
           {isDailyMode ? (
             <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-400/15 border border-amber-400/30 text-amber-400 text-xs font-bold">
@@ -875,7 +875,7 @@ export default function Game() {
               onClick={toggleHardMode}
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-colors ${
                 isHardMode
-                  ? "bg-red-500/20 border-red-500/40 hover:bg-red-500/30"
+                  ? "bg-red-500/20 text-red-400 border-red-500/40 hover:bg-red-500/30"
                   : "bg-secondary/50 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
               }`}
               title={isHardMode ? "Hard Mode — click to switch to Easy" : "Easy Mode — click to switch to Hard"}
@@ -996,7 +996,7 @@ export default function Game() {
                           : stars === "★★" ? "text-yellow-400/50"
                           : "text-yellow-400/30"
                         }`}>{stars}</span>
-                        {isWildcardTarget && <ArrowLeftRight className="w-3.5 h-3.5 shrink-0" />}
+                        {isWildcardTarget && <ArrowLeftRight className="w-3.5 h-3.5 text-blue-400 shrink-0" />}
                       </div>
                     </div>
 
@@ -1013,7 +1013,7 @@ export default function Game() {
                             </div>
                           )}
                           {isBonus && bonusReady && !isHardMode && (
-                            <div className="mt-0.5 text-[10px]/80 font-semibold">
+                            <div className="mt-0.5 text-[10px] text-yellow-400/80 font-semibold">
                               💡 +{bonus} bonus total
                             </div>
                           )}
@@ -1024,15 +1024,15 @@ export default function Game() {
                           )}
                         </div>
                         {isWildcardTarget ? (
-                          <Shuffle className="w-3 h-3 shrink-0" />
+                          <Shuffle className="w-3 h-3 text-blue-400 shrink-0" />
                         ) : (
                           <Lock className="w-3 h-3 text-muted-foreground/30 shrink-0" />
                         )}
                       </div>
                     ) : isAssignable ? (
                       <div className="flex items-center gap-1.5 mt-1">
-                        <ChevronRight className="w-3 h-3/60" />
-                        <span className="text-xs/70">
+                        <ChevronRight className="w-3 h-3 text-primary/60" />
+                        <span className="text-xs text-primary/70">
                           {isHovered ? `Assign ${state.currentCountry?.name}` : "Click to assign"}
                         </span>
                       </div>
@@ -1106,7 +1106,7 @@ export default function Game() {
           className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full shadow-lg text-sm font-semibold text-foreground hover:bg-secondary transition-colors"
           onClick={() => setRosterOpen(!rosterOpen)}
         >
-          <List className="w-4 h-4" />
+          <List className="w-4 h-4 text-primary" />
           <span>Roster</span>
           <span className="text-primary font-bold">{filledCount}/{CATEGORIES.length}</span>
         </button>
@@ -1195,7 +1195,7 @@ function CountryCard({
         </div>
 
         <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-2.5 flex items-center gap-3">
-          <ChevronRight className="w-4 h-4 shrink-0" />
+          <ChevronRight className="w-4 h-4 text-primary shrink-0" />
           <p className="text-sm text-foreground/80">
             {isHardMode ? (
               <>
@@ -1235,7 +1235,7 @@ function CountryCard({
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5">
-                    <span className={"text-foreground"}>
+                    <span className={isHighlighted ? "text-primary" : "text-muted-foreground"}>
                       {CATEGORY_ICONS[category]}
                     </span>
                     <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{category}</span>
@@ -1251,7 +1251,7 @@ function CountryCard({
 
                 {isBonus ? (
                   <div className="mb-1.5">
-                    <div className="text-[10px]/70 font-semibold mb-1">💡 Bonus formula stat</div>
+                    <div className="text-[10px] text-yellow-400/70 font-semibold mb-1">💡 Bonus formula stat</div>
                   </div>
                 ) : !isHardMode ? (
                   <div className="flex items-center justify-between mb-1">
@@ -1323,7 +1323,7 @@ function GameOver({
           )}
           <div className="flex items-center justify-center gap-6 flex-wrap">
             <div className="text-center">
-              <div className="text-5xl font-bold">{totalScore}</div>
+              <div className="text-5xl font-bold text-primary">{totalScore}</div>
               <div className="text-sm text-muted-foreground">total score</div>
             </div>
             <div className="w-px h-14 bg-border hidden sm:block" />
@@ -1345,7 +1345,7 @@ function GameOver({
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-sm font-semibold"
+            className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 text-sm font-semibold"
           >
             💡 Size + Population bonus: +{bonus} pts
             {bonusPath && (
@@ -1361,7 +1361,7 @@ function GameOver({
       <div className="flex justify-center gap-3 flex-wrap">
         <button
           onClick={onSubmitLeaderboard}
-          className="flex items-center gap-2 px-5 py-2.5 bg-yellow-400/20 border border-yellow-400/40 rounded-lg font-semibold text-sm hover:bg-yellow-400/30 transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 bg-yellow-400/20 text-yellow-400 border border-yellow-400/40 rounded-lg font-semibold text-sm hover:bg-yellow-400/30 transition-colors"
         >
           <Trophy className="w-4 h-4" />
           Submit to Leaderboard
@@ -1376,7 +1376,7 @@ function GameOver({
         <button
           data-testid="button-download"
           onClick={onDownload}
-          className="flex items-center gap-2 px-5 py-2.5 bg-primary/20 border border-primary/40 rounded-lg font-semibold text-sm hover:bg-primary/30 transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 bg-primary/20 text-primary border border-primary/40 rounded-lg font-semibold text-sm hover:bg-primary/30 transition-colors"
         >
           <Download className="w-4 h-4" />
           Download PNG
@@ -1418,15 +1418,15 @@ function GameOver({
         {wildcardPhase && !isHardMode && (
           <div className="bg-blue-500/10 border-b border-blue-500/30 px-6 py-3 flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <Shuffle className="w-5 h-5 shrink-0" />
+              <Shuffle className="w-5 h-5 text-blue-400 shrink-0" />
               <div>
                 <div className="text-sm font-semibold text-blue-300">Wildcard Active</div>
-                <div className="text-xs/70">Select any filled slot below to replace it with a random country from the remaining pool.</div>
+                <div className="text-xs text-blue-400/70">Select any filled slot below to replace it with a random country from the remaining pool.</div>
               </div>
             </div>
             <button
               onClick={() => setWildcardPhase(false)}
-              className="p-1.5 rounded-md/60 hover:text-blue-300 hover:bg-blue-500/20 transition-colors"
+              className="p-1.5 rounded-md text-blue-400/60 hover:text-blue-300 hover:bg-blue-500/20 transition-colors"
               title="Close wildcard"
             >
               <X className="w-4 h-4" />
@@ -1454,7 +1454,7 @@ function GameOver({
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-foreground">{CATEGORY_ICONS[category]}</span>
+                    <span className="text-primary">{CATEGORY_ICONS[category]}</span>
                     <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{category}</span>
                   </div>
                 </div>
@@ -1465,7 +1465,7 @@ function GameOver({
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-foreground text-sm">{country.name}</div>
                         {isBonus ? (
-                          <div className="text-xs/70 mt-0.5">💡 Bonus contributor</div>
+                          <div className="text-xs text-yellow-400/70 mt-0.5">💡 Bonus contributor</div>
                         ) : (
                           !isHardMode && score !== null && scoreInfo && (
                             <div className="flex items-center justify-between mt-0.5">
@@ -1495,7 +1495,7 @@ function GameOver({
       {/* Local Leaderboard */}
       <div className="rounded-xl border border-border overflow-hidden">
         <div className="bg-card px-5 py-3.5 border-b border-border flex items-center gap-2">
-          <Trophy className="w-4 h-4" />
+          <Trophy className="w-4 h-4 text-yellow-400" />
           <h2 className="text-sm font-semibold text-foreground">Your Best Scores</h2>
           <span className="text-xs text-muted-foreground ml-1">— click any row to see full roster</span>
         </div>

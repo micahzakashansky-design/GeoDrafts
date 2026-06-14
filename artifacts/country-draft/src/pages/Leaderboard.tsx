@@ -29,10 +29,10 @@ function LeaderboardRow({ rank, entry }: { rank: number; entry: LeaderboardEntry
         <span
           className={`text-xs px-2 py-0.5 rounded font-semibold mr-1 ${
             isDaily
-              ? "bg-amber-400/20"
+              ? "bg-amber-400/20 text-amber-400"
               : entry.mode === "hard"
               ? "bg-red-500/20 text-red-400"
-              : "bg-primary/20"
+              : "bg-primary/20 text-primary"
           }`}
         >
           {isDaily ? "🗓️ Daily" : entry.mode === "hard" ? "⚠️ Hard" : "Easy"}
@@ -87,9 +87,9 @@ export default function Leaderboard() {
   }, [modeFilter]);
 
   const tabs: { key: ModeFilter; label: string; activeClass: string }[] = [
-    { key: "all",   label: "All",                        activeClass: "bg-primary/20 border-primary/40" },
-    { key: "daily", label: `🗓️ Daily · ${todayLabel}`,   activeClass: "bg-amber-400/20 border-amber-400/40" },
-    { key: "easy",  label: "Easy",                       activeClass: "bg-primary/20 border-primary/40" },
+    { key: "all",   label: "All",                        activeClass: "bg-primary/20 text-primary border-primary/40" },
+    { key: "daily", label: `🗓️ Daily · ${todayLabel}`,   activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40" },
+    { key: "easy",  label: "Easy",                       activeClass: "bg-primary/20 text-primary border-primary/40" },
     { key: "hard",  label: "⚠️ Hard",                    activeClass: "bg-red-500/20 text-red-400 border-red-500/40" },
   ];
 
@@ -103,7 +103,7 @@ export default function Leaderboard() {
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
-          <Globe className="w-5 h-5" />
+          <Globe className="w-5 h-5 text-primary" />
           <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
           <span className="text-muted-foreground text-sm hidden sm:block">Leaderboard</span>
         </div>
@@ -116,7 +116,7 @@ export default function Leaderboard() {
           </button>
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm bg-primary/20 border border-primary/40 hover:bg-primary/30 transition-colors font-semibold"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30 transition-colors font-semibold"
           >
             Play Now
           </button>
@@ -125,7 +125,7 @@ export default function Leaderboard() {
 
       <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">
         <div className="flex items-center gap-3 mb-6">
-          <Trophy className="w-6 h-6" />
+          <Trophy className="w-6 h-6 text-yellow-400" />
           <h1 className="font-serif text-2xl font-bold text-foreground">Global Leaderboard</h1>
         </div>
 
@@ -135,9 +135,9 @@ export default function Leaderboard() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-4 rounded-xl border border-amber-400/30 bg-amber-400/5 px-4 py-3 flex items-center gap-3"
           >
-            <CalendarDays className="w-5 h-5 shrink-0" />
+            <CalendarDays className="w-5 h-5 text-amber-400 shrink-0" />
             <div>
-              <div className="text-sm font-semibold text-foreground">Daily Challenge Leaderboard</div>
+              <div className="text-sm font-semibold text-amber-300">Daily Challenge Leaderboard</div>
               <div className="text-xs text-muted-foreground">
                 Everyone drafts the same pool today —{" "}
                 {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
@@ -169,7 +169,7 @@ export default function Leaderboard() {
         ) : error ? (
           <div className="text-center py-20">
             <div className="text-red-400 text-sm mb-3">{error}</div>
-            <button onClick={() => window.location.reload()} className="text-sm hover:underline">
+            <button onClick={() => window.location.reload()} className="text-sm text-primary hover:underline">
               Try again
             </button>
           </div>
@@ -183,7 +183,7 @@ export default function Leaderboard() {
             </p>
             <button
               onClick={() => navigate("/")}
-              className="mt-4 px-4 py-2 rounded-lg bg-primary/20 border border-primary/40 text-sm font-semibold hover:bg-primary/30 transition-colors"
+              className="mt-4 px-4 py-2 rounded-lg bg-primary/20 text-primary border border-primary/40 text-sm font-semibold hover:bg-primary/30 transition-colors"
             >
               Play Now
             </button>
