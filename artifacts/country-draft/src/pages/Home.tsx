@@ -76,7 +76,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
       >
         <div className="px-5 py-4 border-b border-border flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3">
-            <BookOpen className="w-5 h-5" />
+            <BookOpen className="w-5 h-5 text-primary" />
             <span className="font-serif text-lg font-bold text-foreground">GeoDrafts Guidebook</span>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
@@ -112,7 +112,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                       onClick={() => setExpandedCat(isOpen ? null : cat)}
                       className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-secondary/20 transition-colors"
                     >
-                      <span className="text-muted-foreground">{CATEGORY_ICONS[cat]}</span>
+                      <span className="text-primary/70">{CATEGORY_ICONS[cat]}</span>
                       <span className="font-semibold text-sm text-foreground flex-1">{cat}</span>
                       <span className="text-xs text-muted-foreground mr-1">
                         {top3.map(c => c.flag).join(" ")}
@@ -135,11 +135,11 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                               return (
                                 <div key={country.name} className="bg-secondary/30 rounded-lg p-2.5">
                                   <div className="flex items-center gap-1.5 mb-1">
-                                    <span className="text-xs font-bold/60">#{i+1}</span>
+                                    <span className="text-xs font-bold text-primary/60">#{i+1}</span>
                                     <span className="text-lg leading-none">{country.flag}</span>
                                   </div>
                                   <div className="text-xs font-semibold text-foreground truncate">{country.name}</div>
-                                  <div className="text-xs text-foreground font-bold">{stat.score}/10</div>
+                                  <div className="text-xs text-emerald-400 font-bold">{stat.score}/10</div>
                                   <p className="text-[10px] text-muted-foreground mt-1 leading-relaxed line-clamp-2">{stat.description}</p>
                                 </div>
                               );
@@ -163,7 +163,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                         <span className={`text-sm font-semibold ${tier.color}`}>{tier.label}</span>
                         <div className="flex items-center gap-2">
                           <span className="text-xs text-muted-foreground">{tier.weight}</span>
-                          <span className="text-xs font-bold">{tier.max}</span>
+                          <span className="text-xs font-bold text-primary">{tier.max}</span>
                         </div>
                       </div>
                       <p className="text-xs text-muted-foreground">{tier.example}</p>
@@ -175,7 +175,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                 <h3 className="text-sm font-semibold text-foreground mb-3">Stat Ratings</h3>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { label: "World-Class", range: "9–10", color: "text-foreground" },
+                    { label: "World-Class", range: "9–10", color: "text-emerald-400" },
                     { label: "Strong",      range: "7–8",  color: "text-green-400" },
                     { label: "Moderate",    range: "5–6",  color: "text-yellow-400" },
                     { label: "Weak",        range: "3–4",  color: "text-orange-400" },
@@ -337,7 +337,7 @@ function DailyCard() {
               </div>
             </div>
             {alreadyCompleted && (
-              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-foreground text-xs font-bold border border-emerald-500/30">
+              <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
                 ✅ Completed
               </span>
             )}
@@ -356,13 +356,13 @@ function DailyCard() {
           {alreadyCompleted ? (
             <div className="flex items-center gap-3">
               <div className="flex-1 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
-                <div className="text-2xl font-bold text-foreground">{dailyResult!.score} pts</div>
+                <div className="text-2xl font-bold text-emerald-400">{dailyResult!.score} pts</div>
                 <div className="text-xs text-muted-foreground mt-0.5">Your score today</div>
               </div>
               <div className="flex flex-col gap-2">
                 <button
                   onClick={playDaily}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500/20 text-foreground border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors text-sm font-semibold"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 transition-colors text-sm font-semibold"
                 >
                   <CalendarDays className="w-3.5 h-3.5" />
                   View Result
@@ -371,7 +371,7 @@ function DailyCard() {
                   onClick={() => navigate("/leaderboard")}
                   className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary text-muted-foreground border border-border hover:text-foreground hover:bg-secondary/70 transition-colors text-sm font-semibold"
                 >
-                  <Trophy className="w-3.5 h-3.5" />
+                  <Trophy className="w-3.5 h-3.5 text-yellow-400" />
                   Leaderboard
                 </button>
               </div>
@@ -410,7 +410,7 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/50 backdrop-blur-sm">
         <div className="flex items-center gap-3">
-          <Globe className="w-6 h-6" />
+          <Globe className="w-6 h-6 text-primary" />
           <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
         </div>
         <button
@@ -446,11 +446,11 @@ export default function Home() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => startGame(false)}
-              className="flex flex-col items-center gap-2 px-5 py-4 rounded-xl bg-primary/10 border border-primary/30 hover:bg-primary/20 transition-colors font-semibold"
+              className="flex flex-col items-center gap-2 px-5 py-4 rounded-xl bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-colors font-semibold"
             >
               <Globe className="w-6 h-6" />
               <span className="text-base">Easy Mode</span>
-              <span className="text-xs font-normal/60">See ratings for each stat</span>
+              <span className="text-xs font-normal text-primary/60">See ratings for each stat</span>
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -472,7 +472,7 @@ export default function Home() {
               onClick={() => navigate("/leaderboard")}
               className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm"
             >
-              <Trophy className="w-4 h-4" />
+              <Trophy className="w-4 h-4 text-yellow-400" />
               View Leaderboard
             </motion.button>
             <motion.button
@@ -481,7 +481,7 @@ export default function Home() {
               onClick={() => setShowGuidebook(true)}
               className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm"
             >
-              <BookOpen className="w-4 h-4" />
+              <BookOpen className="w-4 h-4 text-blue-400" />
               Guidebook
             </motion.button>
           </div>
