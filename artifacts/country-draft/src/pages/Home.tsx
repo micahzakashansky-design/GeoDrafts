@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import {
@@ -8,6 +8,9 @@ import {
   Calculator, Zap, Star, Moon
 } from "lucide-react";
 import { CATEGORIES } from "../data/countries";
+import { useTheme } from "../lib/theme-context";
+import { useFirebaseAuth } from "../lib/use-firebase-auth";
+import { checkDailySubmitted, getDailyState } from "../lib/firestore";
 
 const BONUS_CATEGORIES: string[] = ["Size", "Population"];
 const NATION_RANKS = [
@@ -17,7 +20,6 @@ const NATION_RANKS = [
   { label: "Developing Nation", range: "80-109", color: "text-orange-400" },
   { label: "Struggling State", range: "0-79", color: "text-red-400" },
 ];
-import { useTheme } from "../lib/theme-context";
 
 // ─── Guidebook Modal ──────────────────────────────────────────────────────────
 
@@ -75,7 +77,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="p-3 rounded-xl border border-border bg-secondary/20">
-                  <div className="font-bold text-sm mb-1">Classic Mode</div>
+                  <div className="font-bold text-sm mb-1 text-foreground">Classic Mode</div>
                   <div className="text-xs text-muted-foreground">Standard gameplay where you see the ratings for each stat as you draft.</div>
                 </div>
                 <div className="p-3 rounded-xl border border-blue-500/20 bg-blue-500/5">
@@ -138,16 +140,17 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                   <Calculator className="w-4 h-4 text-blue-400" />
                   Density & Logic Bonus
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  The <span className="text-foreground font-semibold">Size</span> and <span className="text-foreground font-semibold">Population</span> categories calculate a special bonus when both are filled:
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  The <span className="text-foreground">Size</span> and <span className="text-foreground">Population</span> categories are unique. Instead of direct points, they contribute to a "Nation Bonus" (up to +20 pts) based on how well they fit together.
                 </p>
               </div>
 
-              <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 space-y-3">
+              <div className="space-y-3">
                 <div className="space-y-2">
-                  <div className="text-sm font-bold text-blue-400 uppercase tracking-tight">1. Optimal Density</div>
-                  <p className="text-xs text-muted-foreground">High population in a small area or low population in a massive area yields penalties. We calculate an "Ideal Density" factor based on your picks.</p>
+                  <div className="text-sm font-bold text-blue-400 uppercase tracking-tight">1. Density Fit</div>
+                  <p className="text-xs text-muted-foreground">If you have a massive population with tiny land area (or vice versa), your points are penalized. Ideal nations balance their human and physical geography.</p>
                 </div>
+
                 <div className="space-y-2">
                   <div className="text-sm font-bold text-blue-400 uppercase tracking-tight">2. Infrastructure Combo</div>
                   <p className="text-xs text-muted-foreground">If you have strong <span className="text-foreground">Technology</span> and <span className="text-foreground">Economy</span> scores, they act as a "multiplier" for your population efficiency, granting up to +20 bonus pts.</p>
@@ -185,12 +188,22 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
 
 function DailyCard() {
   const [, navigate] = useLocation();
+  const { firebaseUser } = useFirebaseAuth();
+  const [cloudCompleted, setCloudCompleted] = useState(false);
+  const [cloudState, setCloudState] = useState<any>(null);
 
   const todayKey  = useMemo(() => new Date().toISOString().slice(0, 10), []);
   const todayLabel = useMemo(
     () => new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }),
     []
   );
+
+  useEffect(() => {
+    if (firebaseUser) {
+      checkDailySubmitted(firebaseUser.uid).then(setCloudCompleted);
+      getDailyState(firebaseUser.uid, todayKey).then(setCloudState);
+    }
+  }, [firebaseUser, todayKey]);
 
   const dailyResult = useMemo<{ score: number; completed: boolean } | null>(() => {
     try {
@@ -200,7 +213,7 @@ function DailyCard() {
     } catch { return null; }
   }, [todayKey]);
 
-  const inProgress = useMemo(() => {
+  const inProgressLocal = useMemo(() => {
     try {
       const raw = localStorage.getItem(`countryDraftState_daily_${todayKey}`);
       if (!raw) return false;
@@ -209,13 +222,16 @@ function DailyCard() {
     } catch { return false; }
   }, [todayKey]);
 
+  const inProgressCloud = cloudState && !cloudState.gameOver;
+  const inProgress = inProgressLocal || inProgressCloud;
+
   function playDaily() {
     localStorage.setItem("countryDraftDailyMode", "true");
     localStorage.setItem("countryDraftDailyDate", todayKey);
     navigate("/game");
   }
 
-  const alreadyCompleted = dailyResult?.completed === true;
+  const alreadyCompleted = dailyResult?.completed === true || cloudCompleted;
 
   return (
     <motion.div
@@ -270,7 +286,7 @@ function DailyCard() {
           {alreadyCompleted ? (
             <div className="flex items-center gap-3">
               <div className="flex-1 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center group">
-                <div className="text-2xl font-bold text-emerald-400 group-hover:scale-110 transition-transform">{dailyResult!.score} pts</div>
+                <div className="text-2xl font-bold text-emerald-400 group-hover:scale-110 transition-transform">{dailyResult?.score || cloudState?.totalScore || 0} pts</div>
                 <div className="text-xs text-muted-foreground mt-0.5">Your score today</div>
               </div>
               <div className="flex flex-col gap-2">
@@ -320,13 +336,15 @@ export default function Home() {
           <Globe className="w-6 h-6 text-primary" />
           <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
         </div>
-        <button
-          onClick={toggleTheme}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors"
-        >
-          {isLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-          <span>{isLight ? "Dark" : "Light"}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors"
+          >
+            {isLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+            <span>{isLight ? "Dark" : "Light"}</span>
+          </button>
+        </div>
       </header>
 
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12">

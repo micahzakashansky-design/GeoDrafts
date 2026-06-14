@@ -782,7 +782,7 @@ export default function Game() {
   useEffect(() => {
     saveGameState(state);
     if (isDailyMode && firebaseUser) {
-      saveDailyState(firebaseUser.uid, dailyDate, state).catch(() => {});
+      saveDailyState(firebaseUser.uid, dailyDate, { ...state, totalScore }).catch(() => {});
     }
   }, [state, isDailyMode, dailyDate, firebaseUser]);
 
@@ -1411,20 +1411,24 @@ function GameOver({
 
       {/* Actions */}
       <div className="flex justify-center gap-3 flex-wrap">
-        <button
-          onClick={onSubmitLeaderboard}
-          className="flex items-center gap-2 px-5 py-2.5 bg-yellow-400/20 text-yellow-400 border border-yellow-400/40 rounded-lg font-semibold text-sm hover:bg-yellow-400/30 transition-colors"
-        >
-          <Trophy className="w-4 h-4" />
-          Submit to Leaderboard
-        </button>
-        <button
-          onClick={() => navigate("/leaderboard")}
-          className="flex items-center gap-2 px-5 py-2.5 bg-card text-muted-foreground border border-border rounded-lg font-semibold text-sm hover:text-foreground hover:bg-secondary transition-colors"
-        >
-          <List className="w-4 h-4" />
-          View Leaderboard
-        </button>
+        {!isDailyMode && (
+          <button
+            onClick={onSubmitLeaderboard}
+            className="flex items-center gap-2 px-5 py-2.5 bg-yellow-400/20 text-yellow-400 border border-yellow-400/40 rounded-lg font-semibold text-sm hover:bg-yellow-400/30 transition-colors"
+          >
+            <Trophy className="w-4 h-4" />
+            Submit to Leaderboard
+          </button>
+        )}
+        {!isDailyMode && (
+          <button
+            onClick={() => navigate("/leaderboard")}
+            className="flex items-center gap-2 px-5 py-2.5 bg-card text-muted-foreground border border-border rounded-lg font-semibold text-sm hover:text-foreground hover:bg-secondary transition-colors"
+          >
+            <List className="w-4 h-4" />
+            View Leaderboard
+          </button>
+        )}
         <button
           data-testid="button-download"
           onClick={onDownload}
