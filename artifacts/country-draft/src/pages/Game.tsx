@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import {
-  Shield, TrendingUp, Palette, Heart, Globe, Sun, Cpu, Map, Users,
+  Plus, Shield, TrendingUp, Palette, Heart, Globe, Sun, Cpu, Map, Users,
   BookOpen, Building, ChevronRight, ChevronDown, ChevronUp, Download, RotateCcw, Trophy,
   Star, Zap, Lock, Shuffle, X, ArrowLeftRight, List, Medal,
   GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
@@ -16,6 +16,10 @@ import {
   type Country, type Category,
 } from "@/data/countries";
 import { useTheme } from "@/lib/theme-context";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // ─── Canvas PNG export ────────────────────────────────────────────────────────
 
@@ -743,6 +747,7 @@ export default function Game() {
   const [wildcardPhase, setWildcardPhase] = useState(false);
   const [rosterOpen, setRosterOpen] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
   const [isHardMode, setIsHardMode] = useState<boolean>(() =>
     !isDailyMode && localStorage.getItem("countryDraftHardMode") === "true"
   );
@@ -841,7 +846,7 @@ export default function Game() {
       <header className="border-b border-border px-4 py-2.5 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
         <div className="flex items-center gap-2">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => { if (state.gameOver || Object.keys(state.roster).length === 0) { navigate("/"); } else { setShowExitConfirm(true); } }}
             className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
             title="Home"
           >
@@ -923,8 +928,17 @@ export default function Game() {
               <X className="w-4 h-4" />
             </button>
           </div>
-          <div className="flex-1 p-3 space-y-1.5">
-            {CATEGORIES.filter(c => state.roster[c]).map((category) => {
+          <div className="flex-1 p-3 space-y-1.5 flex flex-col">
+            {Object.keys(state.roster).length === 0 ? (
+              <div className="flex-1 flex flex-col items-center justify-center text-center p-6 opacity-60">
+                <div className="w-12 h-12 rounded-full bg-secondary flex items-center justify-center mb-4">
+                  <Plus className="w-6 h-6 text-muted-foreground" />
+                </div>
+                <p className="text-sm font-medium text-foreground mb-1">Your roster is empty</p>
+                <p className="text-xs text-muted-foreground">Pick a category to build up your nation!</p>
+              </div>
+            ) : (
+              CATEGORIES.filter(c => state.roster[c]).map((category) => {
               const assigned = state.roster[category];
               const catKey = getCategoryKey(category);
               const isBonus = BONUS_CATEGORIES.includes(category);
@@ -1028,7 +1042,8 @@ export default function Game() {
                   </div>
                 </motion.button>
               );
-            })}
+              })
+            )}
           </div>
 
             {wildcardPhase && (
@@ -1110,6 +1125,26 @@ export default function Game() {
           />
         )}
       </AnimatePresence>
+
+        <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to exit?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Your current draft progress will be lost. This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={() => navigate("/")}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Exit Game
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
     </div>
   );
 }
