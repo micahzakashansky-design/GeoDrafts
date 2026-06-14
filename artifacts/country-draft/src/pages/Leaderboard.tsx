@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays } from "lucide-react";
+import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme-context";
 import { getTopScores, type LeaderboardEntry } from "@/lib/firestore";

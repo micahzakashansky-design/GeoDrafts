@@ -4,7 +4,9 @@ import {
   BookOpen, Building, ChevronRight, ChevronDown, ChevronUp, Download, RotateCcw, Trophy,
   Star, Zap, Lock, Shuffle, X, ArrowLeftRight, List, Medal,
   GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
-  CalendarDays, LogIn,
+  CalendarDays, LogIn, PartyPopper, Swords, Laptop,
+  Globe as GlobeIcon, Plane, Leaf,
+  Handshake, Umbrella, Info,
 } from "lucide-react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { saveScore, saveDailyState, getDailyState } from "@/lib/firestore";
@@ -287,7 +289,7 @@ type LocalLeaderboardEntry = {
   roster: Partial<Record<string, string>>;
 };
 
-type Archetype = { title: string; emoji: string; description: string };
+type Archetype = { title: string; icon: React.ReactNode; description: string };
 
 // ─── Storage ──────────────────────────────────────────────────────────────────
 
@@ -367,7 +369,7 @@ function getScoreLabel(score: number): { label: string; color: string } {
 }
 
 function getRating(total: number): { label: string; color: string; icon: React.ReactNode } {
-  if (total >= 165) return { label: "Superpower",        color: "text-yellow-400", icon: <Trophy className="w-5 h-5" /> };
+  if (total >= 165) return { label: "Superpower",        color: "text-yellow-400", icon: <Medal className="w-5 h-5" /> };
   if (total >= 140) return { label: "Major Power",       color: "text-blue-400",   icon: <Star className="w-5 h-5" /> };
   if (total >= 110)  return { label: "Regional Power",    color: "text-green-400",  icon: <Zap className="w-5 h-5" /> };
   if (total >= 80)  return { label: "Developing Nation", color: "text-orange-400", icon: <Globe className="w-5 h-5" /> };
@@ -433,28 +435,28 @@ function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archet
   const hist = s("History"), tour = s("Tourism");
   const edu = s("Education"), nat = s("Natural Resources"), loc = s("Location");
 
-  if (mil >= 9 && eco >= 8)    return { title: "Military Superpower",  emoji: "⚔️",  description: "A dominant force projecting military might backed by formidable economic power." };
-  if (mil >= 9)                return { title: "Military Power",        emoji: "🛡️",  description: "An imposing military force built for security and strategic dominance." };
-  if (eco >= 9 && gov >= 8)    return { title: "Economic Powerhouse",   emoji: "📈",  description: "A well-governed nation driving global economic growth and innovation." };
-  if (edu >= 9 && tech >= 8)   return { title: "Knowledge Economy",     emoji: "🎓",  description: "Innovation powered by world-class education and cutting-edge technology." };
-  if (gov >= 9 && health >= 8) return { title: "Stable Democracy",      emoji: "🏛️",  description: "A model of governance — transparent, effective, and caring for its citizens." };
-  if (tech >= 9 && eco >= 7)   return { title: "Tech Nation",           emoji: "💻",  description: "A forward-thinking nation built on innovation and digital infrastructure." };
-  if (nat >= 9 && eco >= 7)    return { title: "Resource Giant",        emoji: "⛏️",  description: "A nation whose natural wealth fuels economic dominance and global leverage." };
-  if (intl >= 9 && loc >= 7)   return { title: "Diplomatic Powerhouse", emoji: "🌐",  description: "Strategically positioned and globally connected — allies everywhere." };
-  if (intl >= 9)               return { title: "Diplomatic Power",      emoji: "🤝",  description: "A skilled navigator of global politics with allies on every continent." };
-  if (climate >= 9 && tour >= 8) return { title: "Tourist Paradise",    emoji: "🏖️",  description: "Blessed with breathtaking scenery and a world-famous tourism destination." };
-  if (hist >= 9 && cult >= 8)  return { title: "Cultural Empire",       emoji: "🎭",  description: "A civilization with deep cultural roots and an enduring historical legacy." };
-  if (health >= 9 && edu >= 8) return { title: "Welfare State",         emoji: "❤️",  description: "A nation that puts its people first with world-class healthcare and education." };
-  if (cult >= 9)               return { title: "Cultural Giant",        emoji: "🎨",  description: "A vibrant nation with rich traditions, arts, and cultural influence worldwide." };
-  if (tour >= 9)               return { title: "Tourism Powerhouse",    emoji: "✈️",  description: "A destination the world dreams of visiting, with iconic landscapes and attractions." };
-  if (climate >= 9)            return { title: "Natural Paradise",      emoji: "🌿",  description: "Blessed with exceptional climate and natural beauty." };
-  if (nat >= 8)                return { title: "Resource Rich",         emoji: "⛰️",  description: "Blessed with abundant natural resources powering growth and exports." };
+  if (mil >= 9 && eco >= 8)    return { title: "Military Superpower", icon: <Swords className="w-5 h-5 text-red-400" />, description: "A dominant force projecting military might backed by formidable economic power." };
+  if (mil >= 9)                return { title: "Military Power", icon: <Shield className="w-5 h-5 text-red-400" />, description: "An imposing military force built for security and strategic dominance." };
+  if (eco >= 9 && gov >= 8)    return { title: "Economic Powerhouse", icon: <TrendingUp className="w-5 h-5 text-emerald-400" />, description: "A well-governed nation driving global economic growth and innovation." };
+  if (edu >= 9 && tech >= 8)   return { title: "Knowledge Economy", icon: <GraduationCap className="w-5 h-5 text-blue-400" />, description: "Innovation powered by world-class education and cutting-edge technology." };
+  if (gov >= 9 && health >= 8) return { title: "Stable Democracy", icon: <Building className="w-5 h-5 text-indigo-400" />, description: "A model of governance — transparent, effective, and caring for its citizens." };
+  if (tech >= 9 && eco >= 7)   return { title: "Tech Nation", icon: <Laptop className="w-5 h-5 text-cyan-400" />, description: "A forward-thinking nation built on innovation and digital infrastructure." };
+  if (nat >= 9 && eco >= 7)    return { title: "Resource Giant", icon: <Mountain className="w-5 h-5 text-orange-400" />, description: "A nation whose natural wealth fuels economic dominance and global leverage." };
+  if (intl >= 9 && loc >= 7)   return { title: "Diplomatic Powerhouse", icon: <GlobeIcon className="w-5 h-5 text-primary" />, description: "Strategically positioned and globally connected — allies everywhere." };
+  if (intl >= 9)               return { title: "Diplomatic Power", icon: <Handshake className="w-5 h-5 text-primary" />, description: "A skilled navigator of global politics with allies on every continent." };
+  if (climate >= 9 && tour >= 8) return { title: "Tourist Paradise", icon: <Umbrella className="w-5 h-5 text-yellow-400" />, description: "Blessed with breathtaking scenery and a world-famous tourism destination." };
+  if (hist >= 9 && cult >= 8)  return { title: "Cultural Empire", icon: <Palette className="w-5 h-5 text-purple-400" />, description: "A civilization with deep cultural roots and an enduring historical legacy." };
+  if (health >= 9 && edu >= 8) return { title: "Welfare State", icon: <Heart className="w-5 h-5 text-rose-400" />, description: "A nation that puts its people first with world-class healthcare and education." };
+  if (cult >= 9)               return { title: "Cultural Giant", icon: <Palette className="w-5 h-5 text-purple-400" />, description: "A vibrant nation with rich traditions, arts, and cultural influence worldwide." };
+  if (tour >= 9)               return { title: "Tourism Powerhouse", icon: <Plane className="w-5 h-5 text-blue-400" />, description: "A destination the world dreams of visiting, with iconic landscapes and attractions." };
+  if (climate >= 9)            return { title: "Natural Paradise", icon: <Leaf className="w-5 h-5 text-green-400" />, description: "Blessed with exceptional climate and natural beauty." };
+  if (nat >= 8)                return { title: "Resource Rich", icon: <Mountain className="w-5 h-5 text-orange-400" />, description: "Blessed with abundant natural resources powering growth and exports." };
 
   const values = [mil, eco, gov, intl, tech, edu, nat, loc, cult, health, climate, hist, tour].filter(x => x > 0);
   const avg = values.length ? values.reduce((a, b) => a + b, 0) / values.length : 0;
-  if (avg >= 7.5) return { title: "World Power",      emoji: "🌍", description: "A well-rounded nation excelling across multiple domains." };
-  if (avg >= 5.5) return { title: "Emerging Nation",  emoji: "🌱", description: "A country with clear strengths building toward global relevance." };
-  return { title: "Developing State", emoji: "🏗️", description: "A nation still finding its footing on the world stage." };
+  if (avg >= 7.5) return { title: "World Power", icon: <GlobeIcon className="w-5 h-5 text-primary" />, description: "A well-rounded nation excelling across multiple domains." };
+  if (avg >= 5.5) return { title: "Emerging Nation", icon: <TrendingUp className="w-5 h-5 text-emerald-400" />, description: "A country with clear strengths building toward global relevance." };
+  return { title: "Developing State", icon: <Leaf className="w-5 h-5 text-green-400" />, description: "A nation still finding its footing on the world stage." };
 }
 
 // ─── Local leaderboard row ────────────────────────────────────────────────────
@@ -621,7 +623,9 @@ function SubmitDialog({
 
         {done ? (
           <div className="px-5 py-8 text-center">
-            <div className="text-4xl mb-3">🎉</div>
+            <div className="p-3 rounded-full bg-primary/10 w-fit mx-auto mb-4">
+              <PartyPopper className="w-8 h-8 text-primary" />
+            </div>
             <div className="font-semibold text-foreground mb-1">Score submitted!</div>
             <div className="text-sm text-muted-foreground mb-5">
               <span className="text-primary font-bold">{score} pts</span> posted as{" "}
@@ -643,7 +647,9 @@ function SubmitDialog({
           /* ── Not signed in ── */
           <div className="px-5 py-5 space-y-3">
             <div className="text-center mb-2">
-              <div className="text-3xl mb-1">🔒</div>
+              <div className="p-3 rounded-full bg-secondary w-fit mx-auto mb-3">
+                <Lock className="w-6 h-6 text-muted-foreground" />
+              </div>
               <div className="font-semibold text-foreground">Sign in to submit</div>
               <p className="text-xs text-muted-foreground mt-1">
                 Post your <span className="text-primary font-bold">{score} pts</span> · {modeLabel} to the global leaderboard.
@@ -1134,7 +1140,7 @@ export default function Game() {
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground">
               <div className="text-center">
-                <Globe className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                <GlobeIcon className="w-12 h-12 mx-auto mb-3 opacity-30" />
                 <p>No more countries available.</p>
               </div>
             </div>
@@ -1376,7 +1382,10 @@ function GameOver({
             </div>
             <div className="w-px h-14 bg-border hidden sm:block" />
             <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">{archetype.emoji} {archetype.title}</div>
+              <div className="flex items-center justify-center gap-2 mb-1">
+                <span className="text-foreground">{archetype.icon}</span>
+                <div className="text-2xl font-bold text-foreground">{archetype.title}</div>
+              </div>
               <div className="text-sm text-muted-foreground">nation archetype</div>
             </div>
           </div>
@@ -1390,7 +1399,7 @@ function GameOver({
             transition={{ delay: 0.4 }}
             className="mt-3 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-400/10 border border-yellow-400/30 text-yellow-400 text-sm font-semibold"
           >
-            💡 Size + Population bonus: +{bonus} pts
+            <Info className="w-4 h-4" /> Size + Population bonus: +{bonus} pts
             {bonusPath && (
               <span className="text-yellow-400/70 font-normal text-xs">
                 ({bonusPath === "agricultural" ? "agricultural nation" : "urban powerhouse"})
@@ -1508,7 +1517,7 @@ function GameOver({
                       <div className="flex-1 min-w-0">
                         <div className="font-semibold text-foreground text-sm">{country.name}</div>
                         {isBonus ? (
-                          <div className="text-xs text-yellow-400/70 mt-0.5">💡 Bonus contributor</div>
+                          <div className="text-xs text-yellow-400/70 mt-0.5"><Info className="w-3 h-3 shrink-0" /> Bonus contributor</div>
                         ) : (
                           !isHardMode && score !== null && scoreInfo && (
                             <div className="flex items-center justify-between mt-0.5">

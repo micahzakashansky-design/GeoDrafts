@@ -5,7 +5,7 @@ import {
   Globe, Shield, TrendingUp, Heart, Building, Sun, Cpu,
   Map, Users, BookOpen, Trophy, Info, Camera, GraduationCap,
   MapPin, Mountain, Palette, CalendarDays, X, ChevronRight,
-  Calculator, Zap, Star
+  Calculator, Zap, Star, Moon
 } from "lucide-react";
 import { CATEGORIES } from "../data/countries";
 
@@ -239,10 +239,10 @@ function DailyCard() {
         <div className="relative">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-3">
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xl ${
-                alreadyCompleted ? "bg-emerald-500/20" : "bg-amber-400/20"
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                alreadyCompleted ? "bg-emerald-500/20 text-emerald-400" : "bg-amber-400/20 text-amber-400"
               }`}>
-                🗓️
+                <CalendarDays className="w-6 h-6" />
               </div>
               <div>
                 <h2 className={`font-semibold text-base ${alreadyCompleted ? "text-emerald-300" : "text-amber-300"}`}>
@@ -253,12 +253,12 @@ function DailyCard() {
             </div>
             {alreadyCompleted && (
               <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
-                ✅ Completed
+                <span>Completed</span>
               </span>
             )}
             {inProgress && !alreadyCompleted && (
               <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-400/20 text-amber-400 text-xs font-bold border border-amber-400/30 animate-pulse">
-                ⏳ In Progress
+                <span>In Progress</span>
               </span>
             )}
           </div>
@@ -269,8 +269,8 @@ function DailyCard() {
 
           {alreadyCompleted ? (
             <div className="flex items-center gap-3">
-              <div className="flex-1 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center">
-                <div className="text-2xl font-bold text-emerald-400">{dailyResult!.score} pts</div>
+              <div className="flex-1 bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-3 text-center group">
+                <div className="text-2xl font-bold text-emerald-400 group-hover:scale-110 transition-transform">{dailyResult!.score} pts</div>
                 <div className="text-xs text-muted-foreground mt-0.5">Your score today</div>
               </div>
               <div className="flex flex-col gap-2">
@@ -322,9 +322,10 @@ export default function Home() {
         </div>
         <button
           onClick={toggleTheme}
-          className="px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors"
         >
-          {isLight ? "🌙 Dark" : "☀️ Light"}
+          {isLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+          <span>{isLight ? "Dark" : "Light"}</span>
         </button>
       </header>
 
@@ -335,7 +336,9 @@ export default function Home() {
           transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
           className="flex flex-col items-center w-full max-w-xl"
         >
-          <div className="text-6xl mb-4">🌍</div>
+          <div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 mb-4">
+            <Globe className="w-12 h-12 text-primary" />
+          </div>
           <h1 className="font-serif text-5xl font-bold text-foreground mb-2 tracking-tight">GeoDrafts</h1>
           <p className="text-base text-muted-foreground mb-1 text-center">
             Draft random countries one-by-one and build the ideal nation.
