@@ -1,248 +1,163 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import {
-  Globe, Trophy, BookOpen, Shield, TrendingUp, Palette, Heart, Sun, Cpu, Map,
-  Users, BookOpen as BookIcon, GraduationCap, MapPin, Mountain, Camera,
-  Building, X, ChevronRight, CalendarDays,
+  Globe, Shield, TrendingUp, Heart, Building, Sun, Cpu,
+  Map, Users, BookOpen, Trophy, Info, Camera, GraduationCap,
+  MapPin, Mountain, Palette, CalendarDays, X, ChevronRight,
+  Calculator, Zap, Star
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { COUNTRIES, CATEGORIES, getCategoryKey, type Category } from "@/data/countries";
-import { useTheme } from "@/lib/theme-context";
+import { CATEGORIES } from "../data/countries";
 
-// ─── Icons ────────────────────────────────────────────────────────────────────
-
-const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
-  Military: <Shield className="w-4 h-4" />,
-  Economy: <TrendingUp className="w-4 h-4" />,
-  Culture: <Palette className="w-4 h-4" />,
-  Healthcare: <Heart className="w-4 h-4" />,
-  "International Relationships": <Globe className="w-4 h-4" />,
-  Government: <Building className="w-4 h-4" />,
-  Climate: <Sun className="w-4 h-4" />,
-  Technology: <Cpu className="w-4 h-4" />,
-  Size: <Map className="w-4 h-4" />,
-  Population: <Users className="w-4 h-4" />,
-  History: <BookIcon className="w-4 h-4" />,
-  Tourism: <Camera className="w-4 h-4" />,
-  Education: <GraduationCap className="w-4 h-4" />,
-  Location: <MapPin className="w-4 h-4" />,
-  "Natural Resources": <Mountain className="w-4 h-4" />,
-};
-
-// ─── Scoring tiers / ranks (for guidebook) ────────────────────────────────────
-
-const SCORING_TIERS = [
-  { label: "★★★ Three-star", example: "Military, Economy, Government", max: "15 pts max", weight: "1.5×", color: "text-yellow-400" },
-  { label: "★★ Two-star", example: "Healthcare, Technology, Education, Natural Resources, International Relationships", max: "12 pts max", weight: "1.2×", color: "text-yellow-400/70" },
-  { label: "★ One-star", example: "Culture, Climate, History, Tourism, Location", max: "10 pts max", weight: "1.0×", color: "text-yellow-400/40" },
-  { label: "💡 Size + Population", example: "Bonus formula based on density fit with Climate, Tech & Economy", max: "Up to +25 pts", weight: "Formula", color: "text-blue-400" },
-];
-
+const BONUS_CATEGORIES: string[] = ["Size", "Population"];
 const NATION_RANKS = [
-  { label: "Superpower",        range: "148+ pts",  color: "text-yellow-400" },
-  { label: "Major Power",       range: "120–147 pts", color: "text-blue-400" },
-  { label: "Regional Power",    range: "95–119 pts",  color: "text-green-400" },
-  { label: "Developing Nation", range: "72–94 pts",   color: "text-orange-400" },
-  { label: "Struggling State",  range: "< 72 pts",    color: "text-red-400" },
+  { label: "Superpower", range: "165+", color: "text-yellow-400" },
+  { label: "Major Power", range: "140-164", color: "text-blue-400" },
+  { label: "Regional Power", range: "110-139", color: "text-green-400" },
+  { label: "Developing Nation", range: "80-109", color: "text-orange-400" },
+  { label: "Struggling State", range: "0-79", color: "text-red-400" },
 ];
+import { useTheme } from "../lib/theme-context";
 
-function getTop3ForCategory(category: Category) {
-  const catKey = getCategoryKey(category);
-  return [...COUNTRIES].sort((a, b) => b.stats[catKey].score - a.stats[catKey].score).slice(0, 3);
-}
-
-// ─── Guidebook modal ──────────────────────────────────────────────────────────
+// ─── Guidebook Modal ──────────────────────────────────────────────────────────
 
 function GuidebookModal({ onClose }: { onClose: () => void }) {
-  const [activeTab, setActiveTab] = useState<"top3" | "scoring">("top3");
-  const [expandedCat, setExpandedCat] = useState<Category | null>(null);
-  const nonBonusCategories = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
+  const [activeTab, setActiveTab] = useState<"basics" | "scoring" | "bonus">("basics");
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
-      onClick={onClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md"
     >
       <motion.div
-        initial={{ scale: 0.92, y: 16 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.92, y: 16 }}
-        transition={{ duration: 0.2, ease: [0.34, 1.56, 0.64, 1] }}
-        className="bg-card border border-border rounded-2xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl"
-        onClick={e => e.stopPropagation()}
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        className="bg-card border border-border w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
       >
-        <div className="px-5 py-4 border-b border-border flex items-center justify-between shrink-0">
-          <div className="flex items-center gap-3">
+        <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-secondary/30">
+          <div className="flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-primary" />
-            <span className="font-serif text-lg font-bold text-foreground">GeoDrafts Guidebook</span>
+            <h2 className="font-serif text-xl font-bold">Game Guidebook</h2>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
-            <X className="w-4 h-4" />
+          <button onClick={onClose} className="p-1 rounded-lg hover:bg-secondary transition-colors">
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="flex border-b border-border shrink-0">
-          {(["top3", "scoring"] as const).map(tab => (
+        <div className="flex border-b border-border bg-secondary/10">
+          {(["basics", "scoring", "bonus"] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`flex-1 py-2.5 text-sm font-semibold transition-colors ${
-                activeTab === tab
-                  ? "text-primary border-b-2 border-primary"
-                  : "text-muted-foreground hover:text-foreground"
+              className={`flex-1 py-3 text-sm font-semibold capitalize transition-all border-b-2 ${
+                activeTab === tab ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"
               }`}
             >
-              {tab === "top3" ? "🌍 Top Countries per Category" : "📊 Scoring System"}
+              {tab}
             </button>
           ))}
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
-          {activeTab === "top3" ? (
-            <div className="space-y-2">
-              {nonBonusCategories.map(cat => {
-                const top3 = getTop3ForCategory(cat);
-                const isOpen = expandedCat === cat;
-                return (
-                  <div key={cat} className="rounded-lg border border-border overflow-hidden">
-                    <button
-                      onClick={() => setExpandedCat(isOpen ? null : cat)}
-                      className="w-full flex items-center gap-2 px-3 py-2.5 text-left hover:bg-secondary/20 transition-colors"
-                    >
-                      <span className="text-primary/70">{CATEGORY_ICONS[cat]}</span>
-                      <span className="font-semibold text-sm text-foreground flex-1">{cat}</span>
-                      <span className="text-xs text-muted-foreground mr-1">
-                        {top3.map(c => c.flag).join(" ")}
-                      </span>
-                      <ChevronRight className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${isOpen ? "rotate-90" : ""}`} />
-                    </button>
-                    <AnimatePresence>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="overflow-hidden"
-                        >
-                          <div className="px-3 pb-3 pt-1 border-t border-border/40 grid grid-cols-3 gap-2">
-                            {top3.map((country, i) => {
-                              const catKey = getCategoryKey(cat);
-                              const stat = country.stats[catKey];
-                              return (
-                                <div key={country.name} className="bg-secondary/30 rounded-lg p-2.5">
-                                  <div className="flex items-center gap-1.5 mb-1">
-                                    <span className="text-xs font-bold text-primary/60">#{i+1}</span>
-                                    <span className="text-lg leading-none">{country.flag}</span>
-                                  </div>
-                                  <div className="text-xs font-semibold text-foreground truncate">{country.name}</div>
-                                  <div className="text-xs text-emerald-400 font-bold">{stat.score}/10</div>
-                                  <p className="text-[10px] text-muted-foreground mt-1 leading-relaxed line-clamp-2">{stat.description}</p>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                );
-              })}
-            </div>
-          ) : (
+        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          {activeTab === "basics" && (
             <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Category Weights</h3>
-                <div className="space-y-2">
-                  {SCORING_TIERS.map(tier => (
-                    <div key={tier.label} className="rounded-lg border border-border p-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className={`text-sm font-semibold ${tier.color}`}>{tier.label}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-muted-foreground">{tier.weight}</span>
-                          <span className="text-xs font-bold text-primary">{tier.max}</span>
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground">{tier.example}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-foreground mb-3">Stat Ratings</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { label: "World-Class", range: "9–10", color: "text-emerald-400" },
-                    { label: "Strong",      range: "7–8",  color: "text-green-400" },
-                    { label: "Moderate",    range: "5–6",  color: "text-yellow-400" },
-                    { label: "Weak",        range: "3–4",  color: "text-orange-400" },
-                    { label: "Critical",    range: "1–2",  color: "text-red-400" },
-                  ].map(r => (
-                    <div key={r.label} className="flex items-center justify-between rounded-lg bg-secondary/30 px-3 py-2">
-                      <span className={`text-sm font-semibold ${r.color}`}>{r.label}</span>
-                      <span className="text-xs text-muted-foreground">{r.range}/10</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Size + Population Bonus — detailed formula */}
-              <div className="rounded-xl border border-blue-500/30 bg-blue-500/5 p-4">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-lg">💡</span>
-                  <h3 className="text-sm font-semibold text-blue-300">Size + Population Bonus — Full Formula</h3>
-                </div>
-                <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
-                  Size and Population don't contribute points directly. Instead, they unlock a <span className="text-blue-300 font-semibold">density bonus</span> based on how well the two scores pair with your other slots. Max total bonus ≈ <span className="text-primary font-bold">+25 pts</span>.
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-amber-400" />
+                  How to Play
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  You are presented with countries one-by-one from a randomized pool. For each country, you must assign it to one of 15 available category slots. Once a slot is filled, it cannot be changed.
                 </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl border border-border bg-secondary/20">
+                  <div className="font-bold text-sm mb-1">Classic Mode</div>
+                  <div className="text-xs text-muted-foreground">Standard gameplay where you see the ratings for each stat as you draft.</div>
+                </div>
+                <div className="p-3 rounded-xl border border-blue-500/20 bg-blue-500/5">
+                  <div className="font-bold text-sm mb-1 text-blue-400">Daily Challenge</div>
+                  <div className="text-xs text-muted-foreground">A fixed daily seed. Everyone gets the same countries in the same order.</div>
+                </div>
+              </div>
+            </div>
+          )}
 
-                <div className="space-y-3 text-xs font-mono">
-                  <div className="bg-background/60 rounded-lg p-3 border border-border/50">
-                    <div className="text-muted-foreground mb-1 font-sans font-semibold not-italic">Step 1 — Overcrowding penalty</div>
-                    <div className="text-foreground">diff = size_score − population_score</div>
-                    <div className="text-foreground mt-1">
-                      if diff &lt; −2 → fitMult = max(0, 1.0 − (−diff − 2) × 0.4)<br />
-                      if diff &gt;  6 → fitMult = max(0.3, 1.0 − (diff − 6) × 0.15)<br />
-                      else            → fitMult = 1.0
-                    </div>
-                    <div className="text-muted-foreground mt-1 font-sans italic not-italic">
-                      Best fit: size ≥ population (sweet spot: diff 0–6). Overcrowded nations (diff &lt; −2) lose up to 100% bonus. Vast empty nations (diff &gt; 6) lose up to 70%.
-                    </div>
+          {activeTab === "scoring" && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Calculator className="w-4 h-4 text-emerald-400" />
+                  Point System
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  Each category is scored from 1 to 10 based on real data. However, some categories are more vital than others and carry higher weights:
+                </p>
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-2.5 rounded-lg bg-emerald-500/5 border border-emerald-500/20">
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-400" />
+                    <span className="text-sm font-bold uppercase">3-Star Categories</span>
                   </div>
+                  <span className="text-xs font-bold text-emerald-400">1.5x Multiplier</span>
+                </div>
+                <p className="text-[11px] text-muted-foreground px-1 italic">Military, Economy, Government</p>
 
-                  <div className="bg-background/60 rounded-lg p-3 border border-border/50">
-                    <div className="text-muted-foreground mb-1 font-sans font-semibold">Step 2 — Path multipliers</div>
-                    <div className="text-foreground">agFactor  = (size / 10) × (climate / 10)</div>
-                    <div className="text-foreground">urbFactor = (tech / 10) × (economy / 10)</div>
-                    <div className="text-muted-foreground mt-1 font-sans italic">
-                      Agricultural path: big land + good climate.<br />
-                      Urban path: high tech + strong economy.
+                <div className="flex items-center justify-between p-2.5 rounded-lg bg-blue-500/5 border border-blue-500/20 mt-3">
+                  <div className="flex items-center gap-2">
+                    <div className="flex">
+                      <Star className="w-4 h-4 text-yellow-400" />
+                      <Star className="w-4 h-4 text-yellow-400" />
                     </div>
+                    <span className="text-sm font-bold uppercase">2-Star Categories</span>
                   </div>
+                  <span className="text-xs font-bold text-blue-400">1.2x Multiplier</span>
+                </div>
+                <p className="text-[11px] text-muted-foreground px-1 italic">Relationships, Tech, Education, Resources, Healthcare</p>
 
-                  <div className="bg-background/60 rounded-lg p-3 border border-border/50">
-                    <div className="text-muted-foreground mb-1 font-sans font-semibold">Step 3 — Density bonus</div>
-                    <div className="text-foreground">densityBonus = min(20, round(fitMult × max(agFactor, urbFactor) × 22))</div>
+                <div className="flex items-center justify-between p-2.5 rounded-lg bg-secondary border border-border mt-3">
+                  <div className="flex items-center gap-2">
+                    <Star className="w-4 h-4 text-yellow-400" />
+                    <span className="text-sm font-bold uppercase">1-Star Categories</span>
                   </div>
+                  <span className="text-xs font-bold text-muted-foreground">1.0x Multiplier</span>
+                </div>
+                <p className="text-[11px] text-muted-foreground px-1 italic">All others (Culture, Climate, History, etc.)</p>
+              </div>
+            </div>
+          )}
 
-                  <div className="bg-background/60 rounded-lg p-3 border border-border/50">
-                    <div className="text-muted-foreground mb-1 font-sans font-semibold">Step 4 — Combo bonus</div>
-                    <div className="text-foreground">matchedPop = min(population, size + 2)</div>
-                    <div className="text-foreground">comboBonus = min(5, round((size × matchedPop) / 20))</div>
-                    <div className="text-muted-foreground mt-1 font-sans italic">
-                      Rewards large, well-populated nations. Capped at +5.
-                    </div>
-                  </div>
+          {activeTab === "bonus" && (
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Calculator className="w-4 h-4 text-blue-400" />
+                  Density & Logic Bonus
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  The <span className="text-foreground font-semibold">Size</span> and <span className="text-foreground font-semibold">Population</span> categories calculate a special bonus when both are filled:
+                </p>
+              </div>
 
-                  <div className="bg-blue-500/10 rounded-lg p-3 border border-blue-500/30">
-                    <div className="text-blue-300 font-sans font-semibold mb-1">Total bonus = densityBonus + comboBonus</div>
-                    <div className="text-muted-foreground font-sans italic">
-                      Example: USA (size 9) + China (pop 10) with Germany (tech 9) + USA (eco 9):<br />
-                      diff = −1 → fitMult ≈ 0.6; urbFactor = 0.81; densityBonus ≈ min(20, 11) = 11; comboBonus = 5 → <span className="text-primary font-bold">+16 pts</span>
-                    </div>
+              <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 space-y-3">
+                <div className="space-y-2">
+                  <div className="text-sm font-bold text-blue-400 uppercase tracking-tight">1. Optimal Density</div>
+                  <p className="text-xs text-muted-foreground">High population in a small area or low population in a massive area yields penalties. We calculate an "Ideal Density" factor based on your picks.</p>
+                </div>
+                <div className="space-y-2">
+                  <div className="text-sm font-bold text-blue-400 uppercase tracking-tight">2. Infrastructure Combo</div>
+                  <p className="text-xs text-muted-foreground">If you have strong <span className="text-foreground">Technology</span> and <span className="text-foreground">Economy</span> scores, they act as a "multiplier" for your population efficiency, granting up to +20 bonus pts.</p>
+                </div>
+
+                <div className="pt-2 mt-2 border-t border-blue-500/30">
+                  <div className="text-blue-300 font-sans font-semibold mb-1">Total bonus = densityBonus + comboBonus</div>
+                  <div className="text-muted-foreground font-sans italic">
+                    Example: USA (size 9) + China (pop 10) with Germany (tech 9) + USA (eco 9):<br />
+                    diff = −1 → fitMult ≈ 0.6; urbFactor = 0.81; densityBonus ≈ min(20, 11) = 11; comboBonus = 5 → <span className="text-primary font-bold">+16 pts</span>
                   </div>
                 </div>
               </div>
@@ -250,7 +165,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
               <div>
                 <h3 className="text-sm font-semibold text-foreground mb-3">Nation Rankings</h3>
                 <div className="space-y-1.5">
-                  {NATION_RANKS.map(r => (
+                  {NATION_RANKS.map((r: { label: string; range: string; color: string }) => (
                     <div key={r.label} className="flex items-center justify-between rounded-lg bg-secondary/30 px-3 py-2">
                       <span className={`text-sm font-semibold ${r.color}`}>{r.label}</span>
                       <span className="text-xs text-muted-foreground">{r.range}</span>
@@ -350,7 +265,6 @@ function DailyCard() {
 
           <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
             Everyone drafts the <span className="text-foreground/80 font-medium">same shuffled pool</span> today.
-            Compare your score on the global leaderboard!
           </p>
 
           {alreadyCompleted ? (
@@ -366,13 +280,6 @@ function DailyCard() {
                 >
                   <CalendarDays className="w-3.5 h-3.5" />
                   View Result
-                </button>
-                <button
-                  onClick={() => navigate("/leaderboard")}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary text-muted-foreground border border-border hover:text-foreground hover:bg-secondary/70 transition-colors text-sm font-semibold"
-                >
-                  <Trophy className="w-3.5 h-3.5 text-yellow-400" />
-                  Leaderboard
                 </button>
               </div>
             </div>
@@ -440,7 +347,6 @@ export default function Home() {
           {/* Daily Challenge */}
           <DailyCard />
 
-          {/* Easy / Hard mode */}
           <div className="grid grid-cols-2 gap-3 w-full mb-4">
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -449,7 +355,7 @@ export default function Home() {
               className="flex flex-col items-center gap-2 px-5 py-4 rounded-xl bg-primary/10 border border-primary/30 text-primary hover:bg-primary/20 transition-colors font-semibold"
             >
               <Globe className="w-6 h-6" />
-              <span className="text-base">Easy Mode</span>
+              <span className="text-base">Classic Mode</span>
               <span className="text-xs font-normal text-primary/60">See ratings for each stat</span>
             </motion.button>
             <motion.button
@@ -464,7 +370,6 @@ export default function Home() {
             </motion.button>
           </div>
 
-          {/* Secondary actions */}
           <div className="grid grid-cols-2 gap-3 w-full">
             <motion.button
               whileHover={{ scale: 1.02 }}

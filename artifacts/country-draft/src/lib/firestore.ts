@@ -105,3 +105,16 @@ export async function checkDailySubmitted(uid: string): Promise<boolean> {
   const snap = await getDoc(doc(firestore, "leaderboard", `daily_${uid}_${today}`));
   return snap.exists();
 }
+
+export async function saveDailyState(uid: string, date: string, state: any): Promise<void> {
+  await setDoc(doc(firestore, "daily_states", `${uid}_${date}`), {
+    state,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function getDailyState(uid: string, date: string): Promise<any | null> {
+  const snap = await getDoc(doc(firestore, "daily_states", `${uid}_${date}`));
+  if (!snap.exists()) return null;
+  return snap.data().state;
+}

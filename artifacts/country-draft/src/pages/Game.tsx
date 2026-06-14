@@ -7,7 +7,7 @@ import {
   CalendarDays, LogIn,
 } from "lucide-react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
-import { saveScore } from "@/lib/firestore";
+import { saveScore, saveDailyState, getDailyState } from "@/lib/firestore";
 import { UsernamePrompt } from "@/components/UsernamePrompt";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
@@ -42,19 +42,23 @@ function pngScoreBar(score: number): string {
   return PNG_COLORS.scoreColors[Math.max(0, Math.min(10, score)) - 1] ?? "#eab308";
 }
 function pngRatingColor(total: number): string {
-  if (total >= 148) return PNG_COLORS.ratingColors.superpower;
-  if (total >= 120) return PNG_COLORS.ratingColors.major;
-  if (total >= 95)  return PNG_COLORS.ratingColors.regional;
-  if (total >= 72)  return PNG_COLORS.ratingColors.developing;
+  if (total >= 165) return PNG_COLORS.ratingColors.superpower;
+  if (total >= 140) return PNG_COLORS.ratingColors.major;
+  if (total >= 110)  return PNG_COLORS.ratingColors.regional;
+  if (total >= 80)  return PNG_COLORS.ratingColors.developing;
   return PNG_COLORS.ratingColors.struggling;
 }
-function pngScoreLabel(score: number): string {
-  if (score >= 9) return "World-Class"; if (score >= 7) return "Strong";
-  if (score >= 5) return "Moderate"; if (score >= 3) return "Weak"; return "Critical";
+function pngScoreLabel(score: number, weight: number): string {
+  const weighted = score * weight;
+  if (weighted >= 13.5) return "World-Class";
+  if (weighted >= 10) return "Strong";
+  if (weighted >= 7) return "Moderate";
+  if (weighted >= 4) return "Weak";
+  return "Critical";
 }
 function pngRatingLabel(total: number): string {
-  if (total >= 148) return "Superpower"; if (total >= 120) return "Major Power";
-  if (total >= 95) return "Regional Power"; if (total >= 72) return "Developing Nation";
+  if (total >= 165) return "Superpower"; if (total >= 140) return "Major Power";
+  if (total >= 110) return "Regional Power"; if (total >= 80) return "Developing Nation";
   return "Struggling State";
 }
 
@@ -98,20 +102,29 @@ async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalSc
     const catKey = getCategoryKey(category);
     const isBonus = category === "Size" || category === "Population";
     const score = country && !isBonus ? country.stats[catKey].score : null;
+    const weight = CATEGORY_WEIGHTS[category] ?? 1.0;
+    const stars = getCategoryStars(category);
 
     ctx.fillStyle = C.cardBg2; canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8); ctx.fill();
     ctx.strokeStyle = C.border; ctx.lineWidth = 1; canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8); ctx.stroke();
     ctx.fillStyle = C.muted; ctx.font = "bold 10px sans-serif";
     ctx.fillText(category.toUpperCase() + (isBonus ? " (BONUS)" : ""), cx + 12, cy + 20);
 
+    // Draw stars in PNG
+    ctx.fillStyle = stars === "★★★" ? "#facc15" : stars === "★★" ? "#94a3b8" : "#64748b";
+    ctx.font = "bold 9px sans-serif";
+    ctx.fillText(stars, cx + CARD_W - ctx.measureText(stars).width - 12, cy + 20);
+
     if (country) {
       ctx.font = "22px sans-serif"; ctx.fillText(country.flag, cx + 12, cy + 55);
       ctx.fillStyle = C.fg; ctx.font = "bold 14px sans-serif"; ctx.fillText(country.name, cx + 46, cy + 47);
       if (score !== null) {
         const barX = cx + 46, barY = cy + 56, barW = CARD_W - 58, barH = 6;
+        const pts = Math.round(score * weight);
         ctx.fillStyle = "#192736"; canvasRoundRect(ctx, barX, barY, barW, barH, 3); ctx.fill();
         ctx.fillStyle = pngScoreBar(score); canvasRoundRect(ctx, barX, barY, barW * (score / 10), barH, 3); ctx.fill();
-        ctx.fillStyle = pngScoreBar(score); ctx.font = "bold 11px sans-serif"; ctx.fillText(pngScoreLabel(score), cx + 46, cy + 80);
+        ctx.fillStyle = pngScoreBar(score); ctx.font = "bold 11px sans-serif";
+        ctx.fillText(`${pngScoreLabel(score, weight)} · ${pts} pts`, cx + 46, cy + 80);
         const desc = country.stats[catKey].description;
         const maxDescW = CARD_W - 60;
         ctx.fillStyle = C.fgDim; ctx.font = "11px sans-serif";
@@ -194,6 +207,8 @@ const CATEGORY_WEIGHTS: Partial<Record<Category, number>> = {
   Military: 1.5, Economy: 1.5, Government: 1.5,
   "International Relationships": 1.2, Technology: 1.2,
   Education: 1.2, "Natural Resources": 1.2, Healthcare: 1.2,
+  Size: 1.2, Population: 1.2,
+  Location: 1.0,
 };
 
 function getCategoryStars(cat: Category): string {
@@ -352,10 +367,10 @@ function getScoreLabel(score: number): { label: string; color: string } {
 }
 
 function getRating(total: number): { label: string; color: string; icon: React.ReactNode } {
-  if (total >= 148) return { label: "Superpower",        color: "text-yellow-400", icon: <Trophy className="w-5 h-5" /> };
-  if (total >= 120) return { label: "Major Power",       color: "text-blue-400",   icon: <Star className="w-5 h-5" /> };
-  if (total >= 95)  return { label: "Regional Power",    color: "text-green-400",  icon: <Zap className="w-5 h-5" /> };
-  if (total >= 72)  return { label: "Developing Nation", color: "text-orange-400", icon: <Globe className="w-5 h-5" /> };
+  if (total >= 165) return { label: "Superpower",        color: "text-yellow-400", icon: <Trophy className="w-5 h-5" /> };
+  if (total >= 140) return { label: "Major Power",       color: "text-blue-400",   icon: <Star className="w-5 h-5" /> };
+  if (total >= 110)  return { label: "Regional Power",    color: "text-green-400",  icon: <Zap className="w-5 h-5" /> };
+  if (total >= 80)  return { label: "Developing Nation", color: "text-orange-400", icon: <Globe className="w-5 h-5" /> };
   return { label: "Struggling State", color: "text-red-400", icon: <Shield className="w-5 h-5" /> };
 }
 
@@ -755,13 +770,35 @@ export default function Game() {
   const localLeaderboardSaved = useRef(false);
   const dailyResultSaved = useRef(false);
   const { isLight, toggleTheme } = useTheme();
+  const { firebaseUser } = useFirebaseAuth();
   const [, navigate] = useLocation();
 
-  useEffect(() => { saveGameState(state); }, [state]);
+  useEffect(() => {
+    saveGameState(state);
+    if (isDailyMode && firebaseUser) {
+      saveDailyState(firebaseUser.uid, dailyDate, state).catch(() => {});
+    }
+  }, [state, isDailyMode, dailyDate, firebaseUser]);
 
   const filledCount = CATEGORIES.filter((c) => state.roster[c]).length;
   const totalScore  = computeTotalScore(state.roster);
   const bonus       = computeSizePopBonus(state.roster);
+
+  // Load initial daily state from Firestore if available
+  useEffect(() => {
+    if (isDailyMode && firebaseUser) {
+      getDailyState(firebaseUser.uid, dailyDate).then((cloudState) => {
+        if (cloudState) {
+          // Only sync if cloud state is further ahead or we are at start
+          const cloudFilled = CATEGORIES.filter(c => cloudState.roster[c]).length;
+          const localFilled = CATEGORIES.filter(c => state.roster[c]).length;
+          if (cloudFilled > localFilled || (cloudState.gameOver && !state.gameOver)) {
+            setState(cloudState);
+          }
+        }
+      });
+    }
+  }, [isDailyMode, firebaseUser, dailyDate]);
 
   useEffect(() => {
     if (state.gameOver) {
@@ -771,6 +808,12 @@ export default function Game() {
       }
       if (isDailyMode && !dailyResultSaved.current) {
         saveDailyResult(dailyDate, totalScore);
+        if (firebaseUser) {
+           const rosterMap = Object.fromEntries(
+             Object.entries(state.roster).filter(([, c]) => c).map(([cat, c]) => [cat, c!.name])
+           );
+           saveScore(firebaseUser.uid, firebaseUser.displayName || firebaseUser.email || "User", totalScore, "daily", rosterMap).catch(() => {});
+        }
         dailyResultSaved.current = true;
       }
     }
