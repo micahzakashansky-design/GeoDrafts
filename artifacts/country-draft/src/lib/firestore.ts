@@ -54,10 +54,6 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   return { uid, ...snap.data() } as UserProfile;
 }
 
-export async function updateUsername(uid: string, username: string): Promise<void> {
-  await updateDoc(doc(firestore, "users", uid), { username });
-}
-
 export async function createUserProfile(uid: string, username: string): Promise<UserProfile> {
   const profile = {
     username,
