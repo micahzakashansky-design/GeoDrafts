@@ -1,0 +1,10 @@
+
+> @workspace/country-draft@0.0.0 dev /app/artifacts/country-draft
+> vite --config vite.config.ts --host 0.0.0.0
+
+
+  VITE v7.3.5  ready in 427 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: http://192.168.0.2:3000/
+ ELIFECYCLE  Command failed with exit code 143.
