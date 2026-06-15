@@ -1,0 +1,12 @@
+
+> @workspace/country-draft@0.0.0 dev /app/artifacts/country-draft
+> vite --config vite.config.ts --host 0.0.0.0
+
+
+  VITE v7.3.5  ready in 411 ms
+
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: http://192.168.0.2:3000/
+/app/artifacts/country-draft:
+ ERR_PNPM_RECURSIVE_RUN_FIRST_FAIL  @workspace/country-draft@0.0.0 dev: `vite --config vite.config.ts --host 0.0.0.0`
+Command failed with signal "SIGTERM"
