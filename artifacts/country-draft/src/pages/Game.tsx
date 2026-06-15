@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import {
   Plus, Shield, TrendingUp, Palette, Heart, Globe, Sun, Cpu, Map, Users,
@@ -9,7 +10,7 @@ import {
   Handshake, Umbrella, Info, Search
 } from "lucide-react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
-import { saveScore, saveDailyState, getDailyState, createRoom, joinRoom, updateRoom, updatePlayer, listenToRoom, listenToPlayers, type Room, type RoomPlayer } from "@/lib/firestore";
+import { saveScore, saveDailyState, getDailyState, createRoom, joinRoom, updateRoom, updatePlayer, listenToRoom, listenToPlayers, getTopScores, type Room, type RoomPlayer } from "@/lib/firestore";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import {
@@ -242,6 +243,7 @@ function LocalLeaderboardRow({ rank, entry, isCurrentGame }: { rank: number; ent
 }
 
 function SubmitDialog({ score, mode, roster, onClose, onSuccess }: { score: number; mode: string; roster: Partial<Record<Category, Country>>; onClose: () => void; onSuccess: () => void; }) {
+  const queryClient = useQueryClient();
   const [, navigate] = useLocation(); const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
   const [loading, setLoading] = useState(false); const [done, setDone] = useState(false); const [error, setError] = useState<string | null>(null);
   const [showEmail, setShowEmail] = useState(false); const [isSignUp, setIsSignUp] = useState(false); const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
@@ -254,7 +256,7 @@ function SubmitDialog({ score, mode, roster, onClose, onSuccess }: { score: numb
   async function handleSubmit() {
     if (!firebaseUser || !profile) return; setLoading(true); setError(null); try {
       const rosterMap = Object.fromEntries(Object.entries(roster).filter(([, c]) => c).map(([cat, c]) => [cat, c!.name]));
-      await saveScore(firebaseUser.uid, profile.username, score, mode, rosterMap); setDone(true); onSuccess();
+      await saveScore(firebaseUser.uid, profile.username, score, mode, rosterMap); queryClient.invalidateQueries({ queryKey: ["leaderboard"] }); queryClient.prefetchQuery({ queryKey: ["leaderboard", "all"], queryFn: () => getTopScores("all", 10) }); setDone(true); onSuccess();
     } catch (e: any) { const code = e?.code ?? ""; if (code === "already-submitted") { setError("You've already submitted a daily score today."); } else { setError("Failed to submit. Please try again."); } } finally { setLoading(false); }
   }
   return (

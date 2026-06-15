@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -70,21 +71,18 @@ type ModeFilter = "all" | "easy" | "hard" | "daily";
 
 export default function Leaderboard() {
   const [, navigate] = useLocation();
-  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [modeFilter, setModeFilter] = useState<ModeFilter>("all");
   const { isLight, toggleTheme } = useTheme();
 
   const todayLabel = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-    getTopScores(modeFilter, 10)
-      .then((data) => { setEntries(data); setLoading(false); })
-      .catch(() => { setError("Failed to load leaderboard."); setLoading(false); });
-  }, [modeFilter]);
+  const { data: entries = [], isLoading: loading, error: queryError } = useQuery({
+    queryKey: ["leaderboard", modeFilter],
+    queryFn: () => getTopScores(modeFilter, 10),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  const error = queryError ? "Failed to load leaderboard." : null;
 
   const tabs: { key: ModeFilter; label: string; activeClass: string }[] = [
     { key: "all",   label: "All",                        activeClass: "bg-primary/20 text-primary border-primary/40" },
