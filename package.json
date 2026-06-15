@@ -7,7 +7,8 @@
     "typecheck:libs": "tsc --build",
     "typecheck": "pnpm run typecheck:libs && pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "dev": "PORT=3000 BASE_PATH=/ pnpm --filter ./artifacts/country-draft run dev & PORT=4000 pnpm --filter ./artifacts/api-server run dev & wait",
-    "start": "PORT=3000 BASE_PATH=/ pnpm --filter ./artifacts/country-draft run serve & PORT=4000 pnpm --filter ./artifacts/api-server run start & wait"
+    "start": "PORT=3000 BASE_PATH=/ pnpm --filter ./artifacts/country-draft run serve & PORT=4000 pnpm --filter ./artifacts/api-server run start & wait",
+    "test": "vitest run"
   },
   "private": true,
   "devDependencies": {
@@ -15,7 +16,8 @@
     "@tailwindcss/oxide-darwin-arm64": "^4.3.0",
     "lightningcss-darwin-arm64": "^1.32.0",
     "prettier": "^3.8.3",
-    "typescript": "~5.9.3"
+    "typescript": "~5.9.3",
+    "vitest": "^4.1.8"
   },
   "dependencies": {
     "firebase": "^12.14.0"
