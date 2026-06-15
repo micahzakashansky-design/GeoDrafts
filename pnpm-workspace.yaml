@@ -17,7 +17,7 @@ catalog:
   '@replit/vite-plugin-runtime-error-modal': ^0.0.6
   '@tailwindcss/vite': ^4.1.14
   '@tanstack/react-query': ^5.90.21
-  '@types/node': ^25.3.3
+  '@types/node': ^25.9.3
   '@types/react': ^19.2.0
   '@types/react-dom': ^19.2.0
   '@vitejs/plugin-react': ^5.0.4
@@ -131,9 +131,5 @@ overrides:
   rollup>@rollup/rollup-win32-x64-msvc: '-'
 
 supportedArchitectures:
-  os:
-    - darwin
-    - current
-  cpu:
-    - arm64
-    - current
+  cpu: [arm64, current]
+  os: [darwin, current]
