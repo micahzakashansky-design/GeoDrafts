@@ -114,19 +114,28 @@ export async function saveScore(
 }
 
 export async function getTopScores(modeFilter?: string, topN = 10): Promise<LeaderboardEntry[]> {
-  // If we are looking for 'all', we only need topN.
-  // If we are filtering, we fetch more to increase chances of finding enough matches in the top scores.
-  const fetchLimit = (modeFilter && modeFilter !== "all") ? 100 : topN;
-
-  const snap = await getDocs(
-    query(collection(firestore, "leaderboard"), orderBy("score", "desc"), limit(fetchLimit))
-  );
-  const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
+  const leaderboardRef = collection(firestore, "leaderboard");
+  let q;
 
   if (modeFilter && modeFilter !== "all") {
-    return all.filter(e => e.mode === modeFilter).slice(0, topN);
+    // Direct query for specific mode
+    q = query(
+      leaderboardRef,
+      where("mode", "==", modeFilter),
+      orderBy("score", "desc"),
+      limit(topN)
+    );
+  } else {
+    // All scores
+    q = query(
+      leaderboardRef,
+      orderBy("score", "desc"),
+      limit(topN)
+    );
   }
-  return all;
+
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
 }
 
 export async function checkDailySubmitted(uid: string): Promise<boolean> {

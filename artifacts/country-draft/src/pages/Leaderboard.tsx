@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -70,6 +70,7 @@ function LeaderboardRow({ rank, entry }: { rank: number; entry: LeaderboardEntry
 type ModeFilter = "all" | "easy" | "hard" | "daily";
 
 export default function Leaderboard() {
+  const queryClient = useQueryClient();
   const [, navigate] = useLocation();
   const [modeFilter, setModeFilter] = useState<ModeFilter>("all");
   const { isLight, toggleTheme } = useTheme();
@@ -81,6 +82,20 @@ export default function Leaderboard() {
     queryFn: () => getTopScores(modeFilter, 10),
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  // Prefetch other tabs
+  useEffect(() => {
+    const filters: ModeFilter[] = ["all", "daily", "easy", "hard"];
+    filters.forEach(f => {
+      if (f !== modeFilter) {
+        queryClient.prefetchQuery({
+          queryKey: ["leaderboard", f],
+          queryFn: () => getTopScores(f, 10),
+          staleTime: 1000 * 60 * 5,
+        });
+      }
+    });
+  }, [queryClient, modeFilter]);
 
   const error = queryError ? "Failed to load leaderboard." : null;
 

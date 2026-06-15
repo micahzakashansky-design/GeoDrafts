@@ -256,7 +256,7 @@ function SubmitDialog({ score, mode, roster, onClose, onSuccess }: { score: numb
   async function handleSubmit() {
     if (!firebaseUser || !profile) return; setLoading(true); setError(null); try {
       const rosterMap = Object.fromEntries(Object.entries(roster).filter(([, c]) => c).map(([cat, c]) => [cat, c!.name]));
-      await saveScore(firebaseUser.uid, profile.username, score, mode, rosterMap); queryClient.invalidateQueries({ queryKey: ["leaderboard"] }); queryClient.prefetchQuery({ queryKey: ["leaderboard", "all"], queryFn: () => getTopScores("all", 10) }); setDone(true); onSuccess();
+      await saveScore(firebaseUser.uid, profile.username, score, mode, rosterMap); queryClient.invalidateQueries({ queryKey: ["leaderboard"] }); queryClient.prefetchQuery({ queryKey: ["leaderboard", "all"], queryFn: () => getTopScores("all", 10) }); queryClient.prefetchQuery({ queryKey: ["leaderboard", mode], queryFn: () => getTopScores(mode, 10) }); setDone(true); onSuccess();
     } catch (e: any) { const code = e?.code ?? ""; if (code === "already-submitted") { setError("You've already submitted a daily score today."); } else { setError("Failed to submit. Please try again."); } } finally { setLoading(false); }
   }
   return (
@@ -369,6 +369,7 @@ function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, 
 }
 
 export default function Game() {
+  const queryClient = useQueryClient();
   const isDailyMode = localStorage.getItem("countryDraftDailyMode") === "true"; const dailyDate = localStorage.getItem("countryDraftDailyDate") || getTodayStr();
   const roomCode = localStorage.getItem("countryDraftRoomCode"); const forcedMode = localStorage.getItem("countryDraftMode");
   const [state, setState] = useState<GameState>(() => { const loaded = loadGameState(isDailyMode, dailyDate); if (loaded) return loaded; return freshGame(isDailyMode, dailyDate, forcedMode || undefined, undefined, roomCode || undefined); });
@@ -415,7 +416,7 @@ export default function Game() {
         saveDailyResult(dailyDate, totalScore);
         if (firebaseUser) {
           const rosterMap = Object.fromEntries(Object.entries(state.roster).filter(([, c]) => c).map(([cat, c]) => [cat, c!.name]));
-          saveScore(firebaseUser.uid, firebaseUser.displayName || firebaseUser.email || "User", totalScore, "daily", rosterMap).catch(() => {});
+          saveScore(firebaseUser.uid, firebaseUser.displayName || firebaseUser.email || "User", totalScore, "daily", rosterMap).then(() => { queryClient.invalidateQueries({ queryKey: ["leaderboard"] }); queryClient.prefetchQuery({ queryKey: ["leaderboard", "daily"], queryFn: () => getTopScores("daily", 10) }); }).catch(() => {});
         }
         dailyResultSaved.current = true;
       }
