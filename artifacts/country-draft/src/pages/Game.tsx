@@ -45,6 +45,8 @@ import {
   Handshake,
   Umbrella,
   Info,
+  Lightbulb,
+  AlertTriangle,
   Search,
 } from "lucide-react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
@@ -949,7 +951,17 @@ function SubmitDialog({
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const modeLabel =
-    mode === "daily" ? "🗓️ Daily" : mode === "hard" ? "⚠️ Hard" : "Easy";
+    mode === "daily" ? (
+      <span className="flex items-center gap-1">
+        <CalendarDays className="w-3 h-3" /> Daily
+      </span>
+    ) : mode === "hard" ? (
+      <span className="flex items-center gap-1">
+        <AlertTriangle className="w-3 h-3" /> Hard
+      </span>
+    ) : (
+      "Easy"
+    );
   const displayName =
     profile?.username ??
     firebaseUser?.displayName ??
@@ -1548,7 +1560,9 @@ function CountryCard({
                 {isBonus ? (
                   <div className="mb-1.5">
                     <div className="text-[10px] text-yellow-400/70 font-semibold mb-1">
-                      💡 Bonus formula stat
+                      <span className="flex items-center gap-1">
+                        <Lightbulb className="w-3 h-3" /> Bonus formula stat
+                      </span>
                     </div>
                   </div>
                 ) : !isHardMode ? (
@@ -2236,7 +2250,13 @@ export default function Game() {
               onClick={toggleHardMode}
               className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-semibold border transition-colors ${isHardMode ? "bg-red-500/20 text-red-400 border-red-500/40 hover:bg-red-500/30" : "bg-secondary/50 text-muted-foreground border-border hover:text-foreground hover:bg-secondary"}`}
             >
-              {isHardMode ? "⚠️ Hard" : "Easy"}
+              {isHardMode ? (
+                <span className="flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" /> Hard
+                </span>
+              ) : (
+                "Easy"
+              )}
             </button>
           )}
           <button

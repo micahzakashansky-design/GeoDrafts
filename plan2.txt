@@ -1,0 +1,4 @@
+1. We need to go through the entire UI (Game.tsx, Home.tsx, etc.) to ensure it is minimalistic, clean, and consistent.
+2. The user specifically mentioned "no emojis", so any remaining emojis (like the 💡 or ⚠️ or 🌎) should be replaced with `lucide-react` icons (e.g., `Zap`, `AlertTriangle`, `Globe`, etc.), which is consistent with the memory instruction "Iconography across the application uses flat Lucide vector icons (lucide-react) for a consistent modern aesthetic, replacing previous 3D emojis".
+3. Check `Game.tsx`, `Home.tsx`, and `Leaderboard.tsx` for emojis and replace them.
+4. Verify alignment and consistency in class names.
