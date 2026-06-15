@@ -1,0 +1,4 @@
+## Commands
+- Install: pnpm install --frozen-lockfile
+- Build: pnpm run build
+- Dev server: pnpm run start (runs on port 3000)
