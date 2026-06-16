@@ -930,14 +930,25 @@ export default function Game() {
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground"><div className="text-center"><GlobeIcon className="w-12 h-12 mx-auto mb-3 opacity-30" /><p>Waiting for game to advance...</p></div></div>
-          )}
+                   <div className="flex-1 flex items-center justify-center text-muted-foreground">
+          <div className="text-center">
+            <GlobeIcon className="animate-spin h-8 w-8 mb-2 mx-auto" />
+            <p>Loading game...</p>
+          </div>
         </div>
-      </main>
+           )}
+    </div>
 
-      {!state.gameOver && !room && (
-        <button className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full shadow-lg text-sm font-semibold text-foreground hover:bg-secondary transition-colors" onClick={() => setRosterOpen(!rosterOpen)}><List className="w-4 h-4 text-primary" /><span>Roster</span><span className="text-primary font-bold">{filledCount}/{CATEGORIES.length}</span></button>
-      )}
+    {!state.gameOver && !room && (
+      <button className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full">
+      </button>
+    )}
+
+    <AnimatePresence>{showSubmitDialog && (<SubmitDialog score={totalScore} mode={gameMode} roster={state.roster} onClose={() => setShowSubmitDialog(false)} />)}</AnimatePresence>
+    <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure you want to exit?</AlertDialogTitle></AlertDialogHeader></AlertDialogContent></AlertDialog>
+  </main>
+</div>
+);
 
       <AnimatePresence>{showSubmitDialog && (<SubmitDialog score={totalScore} mode={gameMode} roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />)}</AnimatePresence>
       <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure you want to exit?</AlertDialogTitle><AlertDialogDescription>Your current progress will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => navigate("/")} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Exit Game</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
