@@ -169,6 +169,19 @@ async function drawRosterPng(
   totalScore: number,
   bonus: number,
 ): Promise<void> {
+  const hasSize = !!roster["Size"];
+  const hasPop = !!roster["Population"];
+  const mergePopStructure = hasSize && hasPop;
+
+  const displayCats = CATEGORIES.reduce((acc, c) => {
+    if (mergePopStructure && (c === "Size" || c === "Population")) {
+      if (!acc.includes("Population Structure" as any)) acc.push("Population Structure" as any);
+    } else {
+      acc.push(c);
+    }
+    return acc;
+  }, [] as (Category | "Population Structure")[]);
+
   const DPR = 2,
     W = 1180,
     HDR = 88,
@@ -177,7 +190,7 @@ async function drawRosterPng(
     COLS = 2;
   const CARD_W = (W - PAD * 3) / COLS;
   const CARD_H = 112;
-  const ROWS = Math.ceil(CATEGORIES.length / COLS);
+  const ROWS = Math.ceil(displayCats.length / COLS);
   const H = HDR + PAD + ROWS * (CARD_H + GAP) - GAP + PAD;
   const canvas = document.createElement("canvas");
   canvas.width = W * DPR;
@@ -2342,12 +2355,58 @@ export default function Game() {
                       No categories assigned yet
                     </p>
                   ) : (
-                    CATEGORIES.filter((c) => state.roster[c]).map(
+                    CATEGORIES.filter((c) => state.roster[c]).reduce((acc, c) => {
+                      const hasSize = !!state.roster["Size"];
+                      const hasPop = !!state.roster["Population"];
+                      const mergePopStructure = hasSize && hasPop;
+                      if (mergePopStructure && (c === "Size" || c === "Population")) {
+                        if (!acc.includes("Population Structure")) acc.push("Population Structure");
+                      } else {
+                        acc.push(c);
+                      }
+                      return acc;
+                    }, [] as string[]).map(
                       (category) => {
-                        const assigned = state.roster[category]!;
-                        const catKey = getCategoryKey(category);
-                        const isBonus = BONUS_CATEGORIES.includes(category);
-                        const stars = getCategoryStars(category);
+                        if (category === "Population Structure") {
+                          const sizeCountry = state.roster["Size"]!;
+                          const popCountry = state.roster["Population"]!;
+                          const bonusVal = computeSizePopBonus(state.roster);
+                          return (
+                            <div
+                              key="Population Structure"
+                              className="w-full rounded-lg border border-border/25 bg-muted/10 opacity-80 text-left transition-all"
+                            >
+                              <div className="px-3 py-2 flex items-center justify-between">
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                  <span className="text-muted-foreground shrink-0">
+                                    <Users className="w-4 h-4" />
+                                  </span>
+                                  <div className="truncate">
+                                    <div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">
+                                      Population Structure
+                                    </div>
+                                    <div className="text-xs font-semibold text-foreground/80 truncate">
+                                      {sizeCountry.flag} {sizeCountry.name} &amp; {popCountry.flag} {popCountry.name}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex flex-col items-end gap-1 shrink-0">
+                                  <span className="text-[9px] text-yellow-400/40">
+                                    ★★
+                                  </span>
+                                  <span className="text-[10px] font-bold text-yellow-400">
+                                    +{bonusVal} pts
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        const assigned = state.roster[category as Category]!;
+                        const catKey = getCategoryKey(category as Category);
+                        const isBonus = BONUS_CATEGORIES.includes(category as Category);
+                        const stars = getCategoryStars(category as Category);
                         const score = !isBonus
                           ? assigned.stats[catKey].score
                           : null;
@@ -2359,7 +2418,7 @@ export default function Game() {
                             <div className="px-3 py-2 flex items-center justify-between">
                               <div className="flex items-center gap-2 overflow-hidden">
                                 <span className="text-muted-foreground shrink-0">
-                                  {CATEGORY_ICONS[category]}
+                                  {CATEGORY_ICONS[category as Category]}
                                 </span>
                                 <div className="truncate">
                                   <div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">
@@ -2374,9 +2433,9 @@ export default function Game() {
                                 <span className="text-[9px] text-yellow-400/40">
                                   {stars}
                                 </span>
-                                {!isHardMode && !isBonus && score !== null && (
+                                {!isBonus && score !== null && (
                                   <span className="text-[10px] font-bold text-primary">
-                                    {getPtsDisplay(score, category)}
+                                    {getPtsDisplay(score, category as Category)}
                                   </span>
                                 )}
                               </div>
