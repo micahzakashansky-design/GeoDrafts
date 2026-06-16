@@ -6,7 +6,7 @@ import {
   GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
   CalendarDays, LogIn, PartyPopper, Swords, Laptop,
   Globe as GlobeIcon, Plane, Leaf,
-  Handshake, Umbrella, Info, Search
+  Handshake, Umbrella, Info, Search, Lightbulb
 } from "lucide-react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { saveScore, saveDailyState, getDailyState, createRoom, joinRoom, updateRoom, updatePlayer, listenToRoom, listenToPlayers, type Room, type RoomPlayer } from "@/lib/firestore";
@@ -97,7 +97,10 @@ async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalSc
     ctx.font = "12px sans-serif";
     ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
   }
-  displayCats.forEach((category, i) => {
+  const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
+  if (roster["Size"] && roster["Population"]) displayCats.push("Population Structure");
+  else { if (roster["Size"]) displayCats.push("Size"); if (roster["Population"]) displayCats.push("Population"); }
+  displayCats.forEach((category: string, i: number) => {
     const col = i % COLS;
     const row = Math.floor(i / COLS);
     const cx = PAD + col * (CARD_W + PAD);
@@ -152,7 +155,7 @@ async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalSc
     const catKey = getCategoryKey(category as Category);
     const isBonus = category === "Size" || category === "Population";
     const score = country && !isBonus ? country.stats[catKey].score : null;
-    const weight = CATEGORY_WEIGHTS[category] ?? 1.0;
+    const weight = CATEGORY_WEIGHTS[category as Category] ?? 1.0;
     const stars = getCategoryStars(category as Category);
     ctx.fillStyle = C.cardBg2;
     canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8);
@@ -938,20 +941,17 @@ export default function Game() {
         </div>
            )}
     </div>
+          </>
+        )}
 
     {!state.gameOver && !room && (
       <button className="fixed bottom-5 left-4 z-50 md:hidden flex items-center gap-2 px-4 py-2.5 bg-card border border-border rounded-full">
       </button>
     )}
 
-    <AnimatePresence>{showSubmitDialog && (<SubmitDialog score={totalScore} mode={gameMode} roster={state.roster} onClose={() => setShowSubmitDialog(false)} />)}</AnimatePresence>
-    <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure you want to exit?</AlertDialogTitle></AlertDialogHeader></AlertDialogContent></AlertDialog>
-  </main>
-</div>
-);
-
       <AnimatePresence>{showSubmitDialog && (<SubmitDialog score={totalScore} mode={gameMode} roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />)}</AnimatePresence>
       <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}><AlertDialogContent><AlertDialogHeader><AlertDialogTitle>Are you sure you want to exit?</AlertDialogTitle><AlertDialogDescription>Your current progress will be lost.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => navigate("/")} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Exit Game</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
-    </div>
+  </main>
+</div>
   );
 }
