@@ -232,17 +232,63 @@ async function drawRosterPng(
     ctx.font = "12px sans-serif";
     ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
   }
-  CATEGORIES.forEach((category, i) => {
+  displayCats.forEach((category, i) => {
     const col = i % COLS;
     const row = Math.floor(i / COLS);
     const cx = PAD + col * (CARD_W + PAD);
     const cy = HDR + PAD + row * (CARD_H + GAP);
-    const country = roster[category];
-    const catKey = getCategoryKey(category);
+
+    if (category === "Population Structure") {
+      const sizeCountry = roster["Size"]!;
+      const popCountry = roster["Population"]!;
+      const bonusVal = computeSizePopBonus(roster);
+
+      ctx.fillStyle = C.cardBg;
+      ctx.fillRect(cx, cy, CARD_W, CARD_H);
+      ctx.strokeStyle = C.border;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(cx, cy, CARD_W, CARD_H);
+
+      ctx.fillStyle = C.gold;
+      ctx.font = "bold 10px sans-serif";
+      ctx.fillText("POPULATION STRUCTURE", cx + 16, cy + 24);
+
+      ctx.fillStyle = C.gold;
+      ctx.textAlign = "right";
+      ctx.fillText(`★★`, cx + CARD_W - 16, cy + 24);
+      ctx.textAlign = "left";
+
+      // Draw flags and names
+      ctx.font = "32px serif";
+      ctx.fillText(sizeCountry.flag, cx + 16, cy + 60);
+      ctx.fillText(popCountry.flag, cx + 16, cy + 96);
+
+      ctx.fillStyle = C.fg;
+      ctx.font = "bold 14px sans-serif";
+      ctx.fillText(sizeCountry.name, cx + 56, cy + 54);
+      ctx.fillText(popCountry.name, cx + 56, cy + 90);
+
+      ctx.fillStyle = C.fgDim;
+      ctx.font = "10px sans-serif";
+      ctx.fillText("Size", cx + 56, cy + 66);
+      ctx.fillText("Population", cx + 56, cy + 102);
+
+      // Draw bonus points
+      ctx.fillStyle = C.gold;
+      ctx.textAlign = "right";
+      ctx.font = "bold 12px sans-serif";
+      ctx.fillText(`+${bonusVal} pts`, cx + CARD_W - 16, cy + 90);
+      ctx.textAlign = "left";
+
+      return;
+    }
+
+    const country = roster[category as Category];
+    const catKey = getCategoryKey(category as Category);
     const isBonus = category === "Size" || category === "Population";
     const score = country && !isBonus ? country.stats[catKey].score : null;
     const weight = CATEGORY_WEIGHTS[category] ?? 1.0;
-    const stars = getCategoryStars(category);
+    const stars = getCategoryStars(category as Category);
     ctx.fillStyle = C.cardBg2;
     canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8);
     ctx.fill();
@@ -1528,12 +1574,12 @@ function CountryCard({
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
           {CATEGORIES.filter((c) => !roster[c]).map((category) => {
-            const catKey = getCategoryKey(category);
+            const catKey = getCategoryKey(category as Category);
             const stat = country.stats[catKey];
             const isHighlighted = hoveredCategory === category;
-            const isBonus = BONUS_CATEGORIES.includes(category);
+            const isBonus = BONUS_CATEGORIES.includes(category as Category);
             const { label, color } = getScoreLabel(stat.score);
-            const stars = getCategoryStars(category);
+            const stars = getCategoryStars(category as Category);
             return (
               <motion.button
                 key={category}
@@ -1558,7 +1604,7 @@ function CountryCard({
                         isHighlighted ? "text-primary" : "text-muted-foreground"
                       }
                     >
-                      {CATEGORY_ICONS[category]}
+                      {CATEGORY_ICONS[category as Category]}
                     </span>
                     <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                       {category}
@@ -1801,10 +1847,63 @@ function GameOver({
           </div>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border/40">
-          {CATEGORIES.map((category) => {
-            const country = roster[category];
-            const catKey = getCategoryKey(category);
-            const isBonus = BONUS_CATEGORIES.includes(category);
+          {CATEGORIES.reduce((acc, c) => { if (wildcardPhase) { acc.push(c); return acc; } const hasSize = !!roster["Size"]; const hasPop = !!roster["Population"]; const mergePopStructure = hasSize && hasPop; if (mergePopStructure && (c === "Size" || c === "Population")) { if (!acc.includes("Population Structure" as any)) acc.push("Population Structure" as any); } else { acc.push(c); } return acc; }, [] as (Category | "Population Structure")[]).map((category) => {
+            if (category === "Population Structure") {
+            const sizeCountry = roster["Size"]!;
+            const popCountry = roster["Population"]!;
+            const bonusVal = computeSizePopBonus(roster);
+            return (
+              <div
+                key="Population Structure"
+                className="bg-card p-6 text-left transition-all border-2 border-yellow-500/30 rounded-2xl"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-yellow-500/70">
+                      <Users className="w-5 h-5" />
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      Population Structure
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-yellow-400/30 font-bold">
+                    ★★
+                  </span>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl leading-none">{sizeCountry.flag}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-foreground text-lg truncate">
+                        {sizeCountry.name}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">
+                        Size
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl leading-none">{popCountry.flag}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-foreground text-lg truncate">
+                        {popCountry.name}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">
+                        Population
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground">Synergy Bonus</span>
+                  <span className="text-sm font-bold text-yellow-400">+{bonusVal} pts</span>
+                </div>
+              </div>
+            );
+          }
+          const country = roster[category as Category];
+            const catKey = getCategoryKey(category as Category);
+            const isBonus = BONUS_CATEGORIES.includes(category as Category);
             const score =
               country && !isBonus ? country.stats[catKey].score : null;
             const scoreInfo = score !== null ? getScoreLabel(score) : null;
@@ -1812,20 +1911,20 @@ function GameOver({
               <motion.button
                 key={category}
                 disabled={!wildcardPhase}
-                onClick={() => wildcardPhase && onWildcardSelect(category)}
+                onClick={() => wildcardPhase && onWildcardSelect(category as Category)}
                 className={`bg-card p-6 text-left transition-all relative group ${wildcardPhase ? "hover:bg-blue-500/5 cursor-pointer ring-inset hover:ring-2 hover:ring-blue-400/50" : ""}`}
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-2.5">
                     <span className="text-primary/70">
-                      {CATEGORY_ICONS[category]}
+                      {CATEGORY_ICONS[category as Category]}
                     </span>
                     <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                       {category}
                     </span>
                   </div>
                   <span className="text-[10px] text-yellow-400/30 font-bold">
-                    {getCategoryStars(category)}
+                    {getCategoryStars(category as Category)}
                   </span>
                 </div>
                 {country ? (
