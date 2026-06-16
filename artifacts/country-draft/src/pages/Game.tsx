@@ -916,7 +916,6 @@ export default function Game() {
               })}
             </div>
           </div>
-        </div>
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
             <GameOver roster={state.roster} totalScore={totalScore} bonus={bonus} onReset={doReset} onDownload={downloadPng} onWildcard={startWildcard} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={isHardMode} isDailyMode={isDailyMode} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode={gameMode} leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
