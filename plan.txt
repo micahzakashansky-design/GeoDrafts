@@ -1,0 +1,8 @@
+1. We need to pass `guesses={state.guesses}` and `currentCountry={state.currentCountry}` to `GameOver`.
+2. Inside `GameOver`, we check if `gameMode === "guess"`. If so, we render:
+   - "Amount of guesses: {guesses.length}"
+   - The country they guessed with its stats below it.
+   - A "Play Again" / reset button.
+3. In `onGuess` in `Game.tsx`, set `gameOver: true` directly upon correct guess.
+
+Let's do a request_plan_review.
