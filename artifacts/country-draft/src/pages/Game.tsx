@@ -412,14 +412,14 @@ function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountry: Coun
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full">
       <div className="text-center"><h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2><p className="text-muted-foreground text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">{categories.map(cat => { const key = getCategoryKey(cat); const score = stats[key].score; return (<div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm"><div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div><div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div><div className="text-3xl font-bold text-foreground tracking-tighter">{score}</div></div>); })}</div>
-      <div className="w-full max-w-md relative mt-4">
+      <div className="w-full max-w-md relative mt-4 mb-6">
         <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" /></div>
           <input type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} placeholder="Start typing a country name..." className="w-full bg-secondary/50 border border-border rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
           {showSuggestions && suggestions.length > 0 && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-full left-0 w-full mb-3 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-50">{suggestions.map(s => (<button key={s.name} onClick={() => { onGuess(s.name); setInput(""); setShowSuggestions(false); }} className="w-full px-5 py-4 text-left hover:bg-primary/10 transition-colors border-b border-border last:border-0 flex items-center justify-between group"><div className="flex items-center gap-4"><span className="text-2xl">{s.flag}</span><span className="font-bold text-foreground">{s.name}</span></div><ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" /></button>))}</motion.div>)}
         </div>
         {guesses.length > 0 && (<div className="mt-8 space-y-3"><div className="flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div><div className="flex flex-wrap gap-2 justify-center">{guesses.map((g, i) => (<motion.div key={i} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold shadow-sm">{g}</motion.div>))}</div></div>)}
       </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">{categories.map(cat => { const key = getCategoryKey(cat); const score = stats[key].score; return (<div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm"><div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div><div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div><div className="text-3xl font-bold text-foreground tracking-tighter">{score}</div></div>); })}</div>
     </div>
   );
 }
@@ -499,9 +499,63 @@ function CountryCard({ country, hoveredCategory, poolRemaining, isHardMode, rost
   );
 }
 
-function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players }: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: Room | null; players?: RoomPlayer[]; }) {
+function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players, guesses }: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: Room | null; players?: RoomPlayer[]; guesses?: string[]; }) {
   const [, navigate] = useLocation(); const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bonusPath = getBonusPath(roster); const leaderboard = loadLocalLeaderboard();
   const sortedPlayers = useMemo(() => { if (!players) return []; return [...players].sort((a, b) => b.score - a.score); }, [players]);
+
+  if (gameMode === "guess") {
+    const mysteryCountry = Object.values(roster)[0];
+    const attemptCount = guesses ? guesses.length : 0;
+    const categories = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
+
+    return (
+      <div className="p-6 flex flex-col gap-8 max-w-5xl mx-auto w-full">
+        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="bg-card/50 border border-border p-8 rounded-3xl text-center shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-primary/5 to-transparent opacity-50" />
+          <div className="relative">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+              <Medal className="w-3.5 h-3.5" /> Correct Guess!
+            </div>
+            <h2 className="font-serif text-5xl font-bold mb-8 text-foreground tracking-tight">{mysteryCountry?.name}</h2>
+            <div className="text-8xl mb-8">{mysteryCountry?.flag}</div>
+
+            <div className="flex items-center justify-center gap-12 flex-wrap mb-8">
+              <div className="text-center group">
+                <div className="text-6xl font-bold text-primary group-hover:scale-110 transition-transform">{attemptCount}</div>
+                <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Attempts</div>
+              </div>
+            </div>
+
+            {mysteryCountry && (
+              <div className="mt-8 text-left max-w-3xl mx-auto">
+                <p className="text-lg text-foreground/80 italic mb-6 text-center">"{mysteryCountry.knownFor}"</p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">
+                  {categories.map(cat => {
+                    const key = getCategoryKey(cat);
+                    const score = mysteryCountry.stats[key].score;
+                    return (
+                      <div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm">
+                        <div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div>
+                        <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div>
+                        <div className="text-3xl font-bold text-foreground tracking-tighter">{score}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        <div className="flex justify-center gap-4 flex-wrap">
+          <button onClick={onReset} className="flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-xl font-bold text-sm hover:bg-secondary/70 transition-all border border-border shadow-md hover:scale-105">
+            <RotateCcw className="w-4 h-4" /> Start New Game
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 flex flex-col gap-8 max-w-5xl mx-auto w-full">
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="bg-card/50 border border-border p-8 rounded-3xl text-center shadow-2xl relative overflow-hidden"><div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-primary/5 to-transparent opacity-50" /><div className="relative"><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-widest mb-6"><Medal className="w-3.5 h-3.5" />Draft Complete</div><h2 className="font-serif text-5xl font-bold mb-8 text-foreground tracking-tight">Your Ideal Nation</h2><div className="flex items-center justify-center gap-12 flex-wrap mb-8"><div className="text-center group"><div className="text-6xl font-bold text-primary group-hover:scale-110 transition-transform">{totalScore}</div><div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">total score</div></div><div className="w-px h-16 bg-border hidden sm:block" /><div className="text-center group"><div className={`text-3xl font-bold ${rating.color} flex items-center justify-center gap-2`}>{rating.icon} {rating.label}</div><div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">nation ranking</div></div><div className="w-px h-16 bg-border hidden sm:block" /><div className="text-center group"><div className="flex items-center justify-center gap-3 mb-1"><span className="text-foreground">{archetype.icon}</span><div className="text-3xl font-bold text-foreground">{archetype.title}</div></div><div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">nation archetype</div></div></div><p className="text-base text-muted-foreground/80 italic max-w-2xl mx-auto">"{archetype.description}"</p></div></motion.div>
@@ -717,7 +771,7 @@ export default function Game() {
   const onGuess = useCallback((name: string) => {
     if (state.mode !== "guess" || !state.mysteryCountry) return;
     const correct = name.toLowerCase() === state.mysteryCountry.name.toLowerCase();
-    if (correct) { setState(prev => ({ ...prev, currentCountry: state.mysteryCountry, mysteryCountry: null, guesses: [...prev.guesses, name] })); }
+    if (correct) { setState(prev => ({ ...prev, currentCountry: state.mysteryCountry, mysteryCountry: null, guesses: [...prev.guesses, name], gameOver: true })); }
     else { setState(prev => ({ ...prev, guesses: [...prev.guesses, name] })); }
   }, [state.mode, state.mysteryCountry]);
   const assignCountry = useCallback((category: Category) => {
@@ -923,7 +977,7 @@ export default function Game() {
 )}
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={totalScore} bonus={bonus} onReset={doReset} onDownload={downloadPng} onWildcard={startWildcard} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={isHardMode} isDailyMode={isDailyMode} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode={gameMode} leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
+            <GameOver roster={state.roster} totalScore={totalScore} bonus={bonus} onReset={doReset} onDownload={downloadPng} onWildcard={startWildcard} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={isHardMode} isDailyMode={isDailyMode} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode={gameMode} leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} guesses={state.guesses} />
           ) : room && room.status === "waiting" ? (
             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 mb-4 animate-pulse"><Users className="w-12 h-12 text-primary" /></div><h2 className="text-3xl font-serif font-bold mb-2">Game Lobby</h2><p className="text-muted-foreground mb-8">Room Code: <span className="text-foreground font-bold tracking-widest">{room.code}</span></p><div className="w-full max-w-sm space-y-3 mb-8"><p className="text-xs font-bold text-muted-foreground uppercase tracking-widest text-left">Players ({players.length})</p>{players.map(p => (<div key={p.uid} className="flex items-center justify-between p-3 rounded-xl bg-card border border-border shadow-sm"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">{p.username[0].toUpperCase()}</div><span className="font-semibold">{p.username}</span></div>{p.uid === room.hostId && <span className="text-[10px] bg-yellow-400/20 text-yellow-400 px-2 py-0.5 rounded-full font-bold">HOST</span>}</div>))}</div>{firebaseUser?.uid === room.hostId ? (<button onClick={() => updateRoom(room.code, { status: "playing" })} disabled={room.mode === "sabotage" && players.length < 2} className="px-12 py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 shadow-xl">Start Match</button>) : (<p className="text-primary font-medium animate-pulse">Waiting for host to begin...</p>)}</div>
           ) : room && room.status === "playing" && players.find(p => p.uid === firebaseUser?.uid)?.finishedRound && !players.every(p => p.finishedRound) ? (
