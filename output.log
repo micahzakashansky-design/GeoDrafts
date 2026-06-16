@@ -1,0 +1,16 @@
+
+> workspace@0.0.0 start /app
+> PORT=3000 BASE_PATH=/ pnpm --filter ./artifacts/country-draft run serve & PORT=4000 pnpm --filter ./artifacts/api-server run start & wait
+
+
+> @workspace/api-server@0.0.0 start /app/artifacts/api-server
+> node --enable-source-maps ./dist/index.mjs
+
+
+> @workspace/country-draft@0.0.0 serve /app/artifacts/country-draft
+> vite preview --config vite.config.ts --host 0.0.0.0
+
+[13:10:41.838] [32mINFO[39m (38081): [36mServer listening[39m
+    [35mport[39m: 4000
+  ➜  Local:   http://localhost:3000/
+  ➜  Network: http://192.168.0.2:3000/
