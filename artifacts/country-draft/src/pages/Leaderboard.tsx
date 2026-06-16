@@ -1,45 +1,18 @@
 import { useState, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "wouter";
-import {
-  Trophy,
-  ChevronDown,
-  ArrowLeft,
-  Globe,
-  CalendarDays,
-  Sun,
-  Moon,
-  AlertTriangle,
-} from "lucide-react";
+import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme-context";
 import { getTopScores, type LeaderboardEntry } from "@/lib/firestore";
 
-function LeaderboardRow({
-  rank,
-  entry,
-}: {
-  rank: number;
-  entry: LeaderboardEntry;
-}) {
+function LeaderboardRow({ rank, entry }: { rank: number; entry: LeaderboardEntry }) {
   const [expanded, setExpanded] = useState(false);
-  const medal =
-    rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
+  const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
   const rankColor =
-    rank === 1
-      ? "text-yellow-400"
-      : rank === 2
-        ? "text-slate-300"
-        : rank === 3
-          ? "text-amber-600"
-          : "text-muted-foreground";
+    rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-muted-foreground";
   const date = entry.createdAt
-    ? new Date(entry.createdAt.toMillis()).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      })
-    : (entry.date ?? "");
+    ? new Date(entry.createdAt.toMillis()).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    : entry.date ?? "";
   const isDaily = entry.mode === "daily";
 
   return (
@@ -48,43 +21,23 @@ function LeaderboardRow({
         className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-secondary/20 transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
-        <span
-          className={`text-sm font-bold w-6 text-center shrink-0 ${rankColor}`}
-        >
+        <span className={`text-sm font-bold w-6 text-center shrink-0 ${rankColor}`}>
           {medal ?? `#${rank}`}
         </span>
-        <span className="font-bold text-foreground text-base flex-1">
-          {entry.username}
-        </span>
-        <span className="text-primary font-bold text-sm">
-          {entry.score} pts
-        </span>
+        <span className="font-bold text-foreground text-base flex-1">{entry.username}</span>
+        <span className="text-primary font-bold text-sm">{entry.score} pts</span>
         <span
           className={`text-xs px-2 py-0.5 rounded font-semibold mr-1 ${
             isDaily
               ? "bg-amber-400/20 text-amber-400"
               : entry.mode === "hard"
-                ? "bg-red-500/20 text-red-400"
-                : "bg-primary/20 text-primary"
+              ? "bg-red-500/20 text-red-400"
+              : "bg-primary/20 text-primary"
           }`}
         >
-          {isDaily ? (
-            <span className="flex items-center gap-1">
-              <CalendarDays className="w-3 h-3" />
-              Daily
-            </span>
-          ) : entry.mode === "hard" ? (
-            <span className="flex items-center gap-1">
-              <AlertTriangle className="w-3 h-3" />
-              Hard
-            </span>
-          ) : (
-            "Easy"
-          )}
+          {isDaily ? "🗓️ Daily" : entry.mode === "hard" ? "⚠️ Hard" : "Easy"}
         </span>
-        <span className="text-xs text-muted-foreground mr-1 hidden sm:block">
-          {date}
-        </span>
+        <span className="text-xs text-muted-foreground mr-1 hidden sm:block">{date}</span>
         <ChevronDown
           className={`w-3.5 h-3.5 text-muted-foreground transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`}
         />
@@ -101,12 +54,8 @@ function LeaderboardRow({
             <div className="px-4 pb-3 pt-2 border-t border-border/40 grid grid-cols-2 sm:grid-cols-3 gap-1.5">
               {Object.entries(entry.roster).map(([cat, name]) => (
                 <div key={cat} className="flex items-center gap-1.5 text-xs">
-                  <span className="text-muted-foreground shrink-0 truncate">
-                    {cat}:
-                  </span>
-                  <span className="text-foreground font-medium truncate">
-                    {name}
-                  </span>
+                  <span className="text-muted-foreground shrink-0 truncate">{cat}:</span>
+                  <span className="text-foreground font-medium truncate">{name}</span>
                 </div>
               ))}
             </div>
@@ -120,73 +69,28 @@ function LeaderboardRow({
 type ModeFilter = "all" | "easy" | "hard" | "daily";
 
 export default function Leaderboard() {
-  const queryClient = useQueryClient();
   const [, navigate] = useLocation();
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [modeFilter, setModeFilter] = useState<ModeFilter>("all");
   const { isLight, toggleTheme } = useTheme();
 
-  const todayLabel = new Date().toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-  });
+  const todayLabel = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
-  const {
-    data: entries = [],
-    isLoading: loading,
-    error: queryError,
-  } = useQuery({
-    queryKey: ["leaderboard", modeFilter],
-    queryFn: () => getTopScores(modeFilter, 10),
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
-
-  // Prefetch other tabs
   useEffect(() => {
-    const filters: ModeFilter[] = ["all", "daily", "easy", "hard"];
-    filters.forEach(f => {
-      if (f !== modeFilter) {
-        queryClient.prefetchQuery({
-          queryKey: ["leaderboard", f],
-          queryFn: () => getTopScores(f, 10),
-          staleTime: 1000 * 60 * 5,
-        });
-      }
-    });
-  }, [queryClient, modeFilter]);
+    setLoading(true);
+    setError(null);
+    getTopScores(modeFilter, 10)
+      .then((data) => { setEntries(data); setLoading(false); })
+      .catch(() => { setError("Failed to load leaderboard."); setLoading(false); });
+  }, [modeFilter]);
 
-  const error = queryError ? "Failed to load leaderboard." : null;
-
-  const tabs: { key: ModeFilter; label: React.ReactNode; activeClass: string }[] = [
-    {
-      key: "all",
-      label: "All",
-      activeClass: "bg-primary/20 text-primary border-primary/40",
-    },
-    {
-      key: "daily",
-      label: (
-        <span className="flex items-center gap-1">
-          <CalendarDays className="w-4 h-4" />
-          Daily · {todayLabel}
-        </span>
-      ),
-      activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40",
-    },
-    {
-      key: "easy",
-      label: "Easy",
-      activeClass: "bg-primary/20 text-primary border-primary/40",
-    },
-    {
-      key: "hard",
-      label: (
-        <span className="flex items-center gap-1">
-          <AlertTriangle className="w-4 h-4" />
-          Hard
-        </span>
-      ),
-      activeClass: "bg-red-500/20 text-red-400 border-red-500/40",
-    },
+  const tabs: { key: ModeFilter; label: string; activeClass: string }[] = [
+    { key: "all",   label: "All",                        activeClass: "bg-primary/20 text-primary border-primary/40" },
+    { key: "daily", label: `🗓️ Daily · ${todayLabel}`,   activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40" },
+    { key: "easy",  label: "Easy",                       activeClass: "bg-primary/20 text-primary border-primary/40" },
+    { key: "hard",  label: "⚠️ Hard",                    activeClass: "bg-red-500/20 text-red-400 border-red-500/40" },
   ];
 
   return (
@@ -200,12 +104,8 @@ export default function Leaderboard() {
             <ArrowLeft className="w-4 h-4" />
           </button>
           <Globe className="w-5 h-5 text-primary" />
-          <span className="font-serif text-xl font-bold text-foreground tracking-tight">
-            GeoDrafts
-          </span>
-          <span className="text-muted-foreground text-sm hidden sm:block">
-            Leaderboard
-          </span>
+          <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
+          <span className="text-muted-foreground text-sm hidden sm:block">Leaderboard</span>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -226,9 +126,7 @@ export default function Leaderboard() {
       <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">
         <div className="flex items-center gap-3 mb-6">
           <Trophy className="w-6 h-6 text-yellow-400" />
-          <h1 className="font-serif text-2xl font-bold text-foreground">
-            Global Leaderboard
-          </h1>
+          <h1 className="font-serif text-2xl font-bold text-foreground">Global Leaderboard</h1>
         </div>
 
         {modeFilter === "daily" && (
@@ -239,16 +137,10 @@ export default function Leaderboard() {
           >
             <CalendarDays className="w-5 h-5 text-amber-400 shrink-0" />
             <div>
-              <div className="text-sm font-semibold text-amber-300">
-                Daily Challenge Leaderboard
-              </div>
+              <div className="text-sm font-semibold text-amber-300">Daily Challenge Leaderboard</div>
               <div className="text-xs text-muted-foreground">
                 Everyone drafts the same pool today —{" "}
-                {new Date().toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "long",
-                  day: "numeric",
-                })}
+                {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
               </div>
             </div>
           </motion.div>
@@ -272,17 +164,12 @@ export default function Leaderboard() {
 
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="text-muted-foreground text-sm animate-pulse">
-              Loading scores…
-            </div>
+            <div className="text-muted-foreground text-sm animate-pulse">Loading scores…</div>
           </div>
         ) : error ? (
           <div className="text-center py-20">
             <div className="text-red-400 text-sm mb-3">{error}</div>
-            <button
-              onClick={() => window.location.reload()}
-              className="text-sm text-primary hover:underline"
-            >
+            <button onClick={() => window.location.reload()} className="text-sm text-primary hover:underline">
               Try again
             </button>
           </div>
