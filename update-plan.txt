@@ -1,0 +1,17 @@
+I need to request a plan review for the following steps:
+
+1. **Modify `GuessPhase` in `artifacts/country-draft/src/pages/Game.tsx`**:
+   - Move the search bar container (`<div className="w-full max-w-md relative mt-4">...</div>`) above the country stats grid (`<div className="grid grid-cols-2 sm:grid-cols-3...</div>`).
+
+2. **Modify `Game`'s `onGuess` callback**:
+   - Update `onGuess` so that when a correct guess is made, it sets `gameOver: true` instead of `currentCountry: state.mysteryCountry` (and it should also push the name to `guesses` and set `currentCountry` to `mysteryCountry` so that `GameOver` knows the country).
+
+3. **Modify `GameOver` rendering**:
+   - Pass `guesses={state.guesses}` and `guessedCountry={state.currentCountry}` into the `GameOver` component props from `Game`.
+   - Update `GameOver`'s function signature to accept these props.
+   - Inside `GameOver`, check `if (gameMode === "guess")`. If so, render a completely different UI:
+     - Top title: "You guessed it in {guesses.length} attempts!" or just "Amount of guesses: {guesses.length}".
+     - Render the country stats using a simplified card view or by passing `guessedCountry` down to some components (we'll just use a layout similar to what `CountryCard` uses but purely for display).
+     - Include a "Play Again" button hooked to `onReset`.
+
+Let's do a request_plan_review.
