@@ -914,8 +914,11 @@ export default function Game() {
                 const assigned = state.roster[category]; const catKey = getCategoryKey(category); const isBonus = BONUS_CATEGORIES.includes(category); const isHovered = hoveredCategory === category; const isAssignable = !assigned && !!state.currentCountry && !state.gameOver; const isWildcardTarget = wildcardPhase && !!assigned; const stars = getCategoryStars(category);
                 return (<button key={category} onClick={() => { if (isWildcardTarget) applyWildcard(category); else if (isAssignable) { assignCountry(category); setRosterOpen(false); } }} onMouseEnter={() => setHoveredCategory(category)} onMouseLeave={() => setHoveredCategory(null)} disabled={!isAssignable && !isWildcardTarget} className={`w-full rounded-lg border text-left transition-all ${isWildcardTarget ? "border-blue-500/50 bg-blue-500/10 hover:bg-blue-500/20" : assigned ? "border-border/25 bg-muted/10 opacity-60" : isAssignable ? "border-primary/30 bg-secondary/30 hover:bg-secondary/60 hover:border-primary/60" : "border-border/10 bg-card/5 opacity-40"}`}><div className="px-3 py-2 flex items-center justify-between"><div className="flex items-center gap-2 overflow-hidden"><span className="text-muted-foreground shrink-0">{CATEGORY_ICONS[category]}</span><div className="truncate"><div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">{category}</div>{assigned && <div className="text-xs font-semibold text-foreground/80 truncate">{assigned.flag} {assigned.name}</div>}</div></div><span className="text-[9px] text-yellow-400/40 shrink-0">{stars}</span></div></button>);
               })}
-            </div>
-          </div>
+                    </div>
+      </div>
+    </div>
+  </>
+)}
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
             <GameOver roster={state.roster} totalScore={totalScore} bonus={bonus} onReset={doReset} onDownload={downloadPng} onWildcard={startWildcard} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={isHardMode} isDailyMode={isDailyMode} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode={gameMode} leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
