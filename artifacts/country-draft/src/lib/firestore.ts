@@ -1,7 +1,8 @@
 import {
   collection, doc, getDoc, setDoc, addDoc, updateDoc,
   query, orderBy, limit, getDocs, serverTimestamp,
-  onSnapshot, type Timestamp,
+  onSnapshot, type Timestamp, where,
+  getCountFromServer,
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -118,14 +119,28 @@ export async function saveScore(
 }
 
 export async function getTopScores(modeFilter?: string, topN = 10): Promise<LeaderboardEntry[]> {
-  const snap = await getDocs(
-    query(collection(firestore, "leaderboard"), orderBy("score", "desc"), limit(100))
-  );
-  const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
+  const leaderboardRef = collection(firestore, "leaderboard");
+  let q;
+
   if (modeFilter && modeFilter !== "all") {
-    return all.filter(e => e.mode === modeFilter).slice(0, topN);
+    // Direct query for specific mode
+    q = query(
+      leaderboardRef,
+      where("mode", "==", modeFilter),
+      orderBy("score", "desc"),
+      limit(topN)
+    );
+  } else {
+    // All scores
+    q = query(
+      leaderboardRef,
+      orderBy("score", "desc"),
+      limit(topN)
+    );
   }
-  return all.slice(0, topN);
+
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
 }
 
 export async function checkDailySubmitted(uid: string): Promise<boolean> {
@@ -193,9 +208,9 @@ export async function joinRoom(code: string, uid: string, username: string): Pro
   if (room.status !== "waiting") throw new Error("Room already in progress");
 
   // Get current players to check limit
-  const playersSnap = await getDocs(collection(firestore, "rooms", code, "players"));
-  if (room.mode === "sabotage" && playersSnap.size >= 2) throw new Error("Room is full (2 player limit)");
-
+  const playersSnap = await getCountFromServer(collection(firestore, "rooms", code, "players"));
+  if (room.mode === "sabotage" && playersSnap.data().count >= 2) throw new Error("Room is full (2 player limit)");
+  
   const playerRef = doc(firestore, "rooms", code, "players", uid);
   const player: RoomPlayer = {
     uid,
