@@ -2385,8 +2385,13 @@ export default function Game() {
                                     <div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">
                                       Population Structure
                                     </div>
-                                    <div className="text-xs font-semibold text-foreground/80 truncate">
-                                      {sizeCountry.flag} {sizeCountry.name} &amp; {popCountry.flag} {popCountry.name}
+                                    <div className="flex flex-col gap-0.5">
+                                      <div className="text-xs font-semibold text-foreground/80 truncate">
+                                        {sizeCountry.flag} {sizeCountry.name}
+                                      </div>
+                                      <div className="text-xs font-semibold text-foreground/80 truncate">
+                                        {popCountry.flag} {popCountry.name}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
