@@ -22,7 +22,7 @@ catalogs:
       specifier: ^5.90.21
       version: 5.101.0
     '@types/node':
-      specifier: ^25.3.3
+      specifier: ^25.9.3
       version: 25.9.3
     '@types/react':
       specifier: ^19.2.0
@@ -167,6 +167,12 @@ importers:
       '@tailwindcss/oxide-darwin-arm64':
         specifier: ^4.3.0
         version: 4.3.0
+      '@types/express':
+        specifier: ^5.0.6
+        version: 5.0.6
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.9.3
       lightningcss-darwin-arm64:
         specifier: ^1.32.0
         version: 1.32.0
@@ -176,6 +182,9 @@ importers:
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
+      vitest:
+        specifier: ^4.1.8
+        version: 4.1.8(@types/node@25.9.3)(jiti@2.7.0)(jsdom@29.1.1)(lightningcss@1.32.0)(tsx@4.22.4)(yaml@2.9.0)
 
   artifacts/api-server:
     dependencies:
