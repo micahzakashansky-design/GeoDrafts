@@ -464,13 +464,161 @@ export default function Game() {
       </header>
 
       <main className="flex-1 flex overflow-hidden relative">
-        {rosterOpen && <div className="fixed inset-0 bg-black/60 z-20 md:hidden" onClick={() => setRosterOpen(false)} />}
-        <div className={`fixed md:relative inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out md:translate-x-0 md:transition-none ${rosterOpen ? "translate-x-0" : "-translate-x-full"} w-72 shrink-0 border-r border-border flex flex-col bg-[#0a1520]/95 md:bg-card/30 backdrop-blur-sm md:backdrop-blur-none overflow-y-auto`}>
-          <div className="px-4 py-3 border-b border-border flex items-center justify-between"><h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{roomCode ? "Players & Roster" : "Your Nation's Roster"}</h2><button className="md:hidden p-1 rounded text-muted-foreground hover:text-foreground transition-colors" onClick={() => setRosterOpen(false)}><X className="w-4 h-4" /></button></div>
-          <div className="flex-1 p-3 space-y-4 flex flex-col">
-            {roomCode && (
-              <div className="space-y-2"><p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Players Status</p>
-                {players.map(p => (<div key={p.uid} className="flex items-center justify-between p-2 rounded-lg bg-secondary/20 border border-border/40"><div className="flex items-center gap-2"><div className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">{p.username[0].toUpperCase()}</div><span className="text-xs font-medium truncate max-w-[100px]">{p.username}</span></div>{p.finishedRound ? <div className="w-2 h-2 rounded-full bg-emerald-500" /> : <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />}</div>))}
+        {!state.gameOver && (
+          <>
+            {rosterOpen && (
+              <div
+                className="fixed inset-0 bg-black/60 z-20 md:hidden"
+                onClick={() => setRosterOpen(false)}
+              />
+            )}
+            <div
+              className={`fixed md:relative inset-y-0 left-0 z-30 transition-transform duration-300 ease-in-out md:translate-x-0 md:transition-none ${rosterOpen ? "translate-x-0" : "-translate-x-full"} w-72 shrink-0 border-r border-border flex flex-col bg-[#0a1520]/95 md:bg-card/30 backdrop-blur-sm md:backdrop-blur-none overflow-y-auto`}
+            >
+              <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+                <h2 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  {roomCode ? "Players & Roster" : "Your Nation's Roster"}
+                </h2>
+                <button
+                  className="md:hidden p-1 rounded text-muted-foreground hover:text-foreground transition-colors"
+                  onClick={() => setRosterOpen(false)}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex-1 p-3 space-y-4 flex flex-col">
+                {roomCode && (
+                  <div className="space-y-2">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                      Players Status
+                    </p>
+                    {players.map((p) => (
+                      <div
+                        key={p.uid}
+                        className="flex items-center justify-between p-2 rounded-lg bg-secondary/20 border border-border/40"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="w-5 h-5 rounded bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">
+                            {p.username[0].toUpperCase()}
+                          </div>
+                          <span className="text-xs font-medium truncate max-w-[100px]">
+                            {p.username}
+                          </span>
+                        </div>
+                        {p.finishedRound ? (
+                          <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                        ) : (
+                          <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="space-y-1.5">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">
+                    Draft Categories
+                  </p>
+                  {CATEGORIES.filter((c) => state.roster[c]).length === 0 ? (
+                    <p className="text-xs text-muted-foreground italic px-1">
+                      No categories assigned yet
+                    </p>
+                  ) : (
+                    CATEGORIES.filter((c) => state.roster[c]).reduce((acc, c) => {
+                      const hasSize = !!state.roster["Size"];
+                      const hasPop = !!state.roster["Population"];
+                      const mergePopStructure = hasSize && hasPop;
+                      if (mergePopStructure && (c === "Size" || c === "Population")) {
+                        if (!acc.includes("Population Structure")) acc.push("Population Structure");
+                      } else {
+                        acc.push(c);
+                      }
+                      return acc;
+                    }, [] as string[]).map(
+                      (category) => {
+                        if (category === "Population Structure") {
+                          const sizeCountry = state.roster["Size"]!;
+                          const popCountry = state.roster["Population"]!;
+                          const bonusVal = computeSizePopBonus(state.roster);
+                          return (
+                            <div
+                              key="Population Structure"
+                              className="w-full rounded-lg border border-border/25 bg-muted/10 opacity-80 text-left transition-all"
+                            >
+                              <div className="px-3 py-2 flex items-center justify-between">
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                  <span className="text-muted-foreground shrink-0">
+                                    <Users className="w-4 h-4" />
+                                  </span>
+                                  <div className="truncate">
+                                    <div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">
+                                      Population Structure
+                                    </div>
+                                    <div className="flex flex-col gap-0.5">
+                                      <div className="text-xs font-semibold text-foreground/80 truncate">
+                                        {sizeCountry.flag} {sizeCountry.name}
+                                      </div>
+                                      <div className="text-xs font-semibold text-foreground/80 truncate">
+                                        {popCountry.flag} {popCountry.name}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="flex flex-col items-end gap-1 shrink-0">
+                                  <span className="text-[9px] text-yellow-400/40">
+                                    ★★
+                                  </span>
+                                  <span className="text-[10px] font-bold text-yellow-400">
+                                    +{bonusVal} pts
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        const assigned = state.roster[category as Category]!;
+                        const catKey = getCategoryKey(category as Category);
+                        const isBonus = BONUS_CATEGORIES.includes(category as Category);
+                        const stars = getCategoryStars(category as Category);
+                        const score = !isBonus
+                          ? assigned.stats[catKey].score
+                          : null;
+                        return (
+                          <div
+                            key={category}
+                            className="w-full rounded-lg border border-border/25 bg-muted/10 opacity-80 text-left transition-all"
+                          >
+                            <div className="px-3 py-2 flex items-center justify-between">
+                              <div className="flex items-center gap-2 overflow-hidden">
+                                <span className="text-muted-foreground shrink-0">
+                                  {CATEGORY_ICONS[category as Category]}
+                                </span>
+                                <div className="truncate">
+                                  <div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">
+                                    {category}
+                                  </div>
+                                  <div className="text-xs font-semibold text-foreground/80 truncate">
+                                    {assigned.flag} {assigned.name}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex flex-col items-end gap-1 shrink-0">
+                                <span className="text-[9px] text-yellow-400/40">
+                                  {stars}
+                                </span>
+                                {!isBonus && score !== null && (
+                                  <span className="text-[10px] font-bold text-primary">
+                                    {getPtsDisplay(score, category as Category)}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      },
+                    )
+                  )}
+                </div>
               </div>
             )}
             <div className="space-y-1.5"><p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">Draft Categories</p>
