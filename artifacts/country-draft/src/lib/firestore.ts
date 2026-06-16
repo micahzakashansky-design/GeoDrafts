@@ -2,6 +2,7 @@ import {
   collection, doc, getDoc, setDoc, addDoc, updateDoc,
   query, orderBy, limit, getDocs, serverTimestamp,
   onSnapshot, type Timestamp, where,
+  getCountFromServer,
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -203,9 +204,9 @@ export async function joinRoom(code: string, uid: string, username: string): Pro
   if (room.status !== "waiting") throw new Error("Room already in progress");
 
   // Get current players to check limit
-  const playersSnap = await getDocs(collection(firestore, "rooms", code, "players"));
-  if (room.mode === "sabotage" && playersSnap.size >= 2) throw new Error("Room is full (2 player limit)");
-
+  const playersSnap = await getCountFromServer(collection(firestore, "rooms", code, "players"));
+  if (room.mode === "sabotage" && playersSnap.data().count >= 2) throw new Error("Room is full (2 player limit)");
+  
   const playerRef = doc(firestore, "rooms", code, "players", uid);
   const player: RoomPlayer = {
     uid,
