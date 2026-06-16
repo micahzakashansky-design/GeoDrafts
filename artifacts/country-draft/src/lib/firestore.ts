@@ -1,7 +1,7 @@
 import {
   collection, doc, getDoc, setDoc, addDoc, updateDoc,
   query, orderBy, limit, getDocs, serverTimestamp,
-  onSnapshot, type Timestamp, where,
+  onSnapshot, type Timestamp,
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -52,6 +52,10 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   const snap = await getDoc(doc(firestore, "users", uid));
   if (!snap.exists()) return null;
   return { uid, ...snap.data() } as UserProfile;
+}
+
+export async function updateUsername(uid: string, username: string): Promise<void> {
+  await updateDoc(doc(firestore, "users", uid), { username });
 }
 
 export async function createUserProfile(uid: string, username: string): Promise<UserProfile> {
@@ -114,28 +118,14 @@ export async function saveScore(
 }
 
 export async function getTopScores(modeFilter?: string, topN = 10): Promise<LeaderboardEntry[]> {
-  const leaderboardRef = collection(firestore, "leaderboard");
-  let q;
-
+  const snap = await getDocs(
+    query(collection(firestore, "leaderboard"), orderBy("score", "desc"), limit(100))
+  );
+  const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
   if (modeFilter && modeFilter !== "all") {
-    // Direct query for specific mode
-    q = query(
-      leaderboardRef,
-      where("mode", "==", modeFilter),
-      orderBy("score", "desc"),
-      limit(topN)
-    );
-  } else {
-    // All scores
-    q = query(
-      leaderboardRef,
-      orderBy("score", "desc"),
-      limit(topN)
-    );
+    return all.filter(e => e.mode === modeFilter).slice(0, topN);
   }
-
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
+  return all.slice(0, topN);
 }
 
 export async function checkDailySubmitted(uid: string): Promise<boolean> {
