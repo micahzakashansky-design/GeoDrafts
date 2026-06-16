@@ -1,0 +1,10 @@
+--- artifacts/country-draft/src/pages/Game.tsx
++++ artifacts/country-draft/src/pages/Game.tsx
+@@ -918,6 +918,7 @@
+               })}
+                     </div>
+       </div>
++    </div>
+   </>
+ )}
+         <div className="flex-1 flex flex-col overflow-y-auto relative">

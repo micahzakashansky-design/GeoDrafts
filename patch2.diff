@@ -1,0 +1,9 @@
+--- artifacts/country-draft/src/pages/Game.tsx
++++ artifacts/country-draft/src/pages/Game.tsx
+@@ -944,6 +944,7 @@
+            )}
+     </div>
+           </>
+         )}
+
+     {!state.gameOver && !room && (
