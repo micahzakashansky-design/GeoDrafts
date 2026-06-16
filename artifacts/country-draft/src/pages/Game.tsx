@@ -57,25 +57,125 @@ async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalSc
   const DPR = 2, W = 1180, HDR = 88, PAD = 20, GAP = 10, COLS = 2;
   const CARD_W = (W - PAD * 3) / COLS; const CARD_H = 112; const ROWS = Math.ceil(CATEGORIES.length / COLS);
   const H = HDR + PAD + ROWS * (CARD_H + GAP) - GAP + PAD;
-  const canvas = document.createElement("canvas"); canvas.width = W * DPR; canvas.height = H * DPR;
-  const ctx = canvas.getContext("2d")!; ctx.scale(DPR, DPR); const C = PNG_COLORS;
-  ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H); ctx.fillStyle = C.cardBg; ctx.fillRect(0, 0, W, HDR);
-  ctx.strokeStyle = C.border; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, HDR); ctx.lineTo(W, HDR); ctx.stroke();
-  ctx.fillStyle = C.gold; ctx.font = "bold 18px 'Georgia', serif"; ctx.fillText("GeoDrafts — My Ideal Nation", PAD, 30);
-  ctx.fillStyle = C.fgDim; ctx.font = "13px sans-serif"; ctx.fillText("Final Roster · Score:", PAD, 56);
-  ctx.fillStyle = C.gold; ctx.font = "bold 15px sans-serif"; const scoreStr = `${totalScore}`; ctx.fillText(scoreStr, PAD + 148, 56);
-  const rLabel = pngRatingLabel(totalScore); const rColor = pngRatingColor(totalScore); ctx.fillStyle = rColor; ctx.font = "bold 15px sans-serif";
-  ctx.fillText(`· ${rLabel}`, PAD + 148 + ctx.measureText(scoreStr).width + 8, 56);
-  if (bonus > 0) { ctx.fillStyle = C.fgDim; ctx.font = "12px sans-serif"; ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76); }
-  CATEGORIES.forEach((category, i) => {
-    const col = i % COLS; const row = Math.floor(i / COLS); const cx = PAD + col * (CARD_W + PAD); const cy = HDR + PAD + row * (CARD_H + GAP);
-    const country = roster[category]; const catKey = getCategoryKey(category); const isBonus = category === "Size" || category === "Population";
-    const score = country && !isBonus ? country.stats[catKey].score : null; const weight = CATEGORY_WEIGHTS[category] ?? 1.0; const stars = getCategoryStars(category);
-    ctx.fillStyle = C.cardBg2; canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8); ctx.fill();
-    ctx.strokeStyle = C.border; ctx.lineWidth = 1; canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8); ctx.stroke();
-    ctx.fillStyle = C.muted; ctx.font = "bold 10px sans-serif"; ctx.fillText(category.toUpperCase() + (isBonus ? " (BONUS)" : ""), cx + 12, cy + 20);
-    ctx.fillStyle = stars === "★★★" ? "#facc15" : stars === "★★" ? "#94a3b8" : "#64748b"; ctx.font = "bold 9px sans-serif";
-    ctx.fillText(stars, cx + CARD_W - ctx.measureText(stars).width - 12, cy + 20);
+  const canvas = document.createElement("canvas");
+  canvas.width = W * DPR;
+  canvas.height = H * DPR;
+  const ctx = canvas.getContext("2d")!;
+  ctx.scale(DPR, DPR);
+  const C = PNG_COLORS;
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = C.cardBg;
+  ctx.fillRect(0, 0, W, HDR);
+  ctx.strokeStyle = C.border;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, HDR);
+  ctx.lineTo(W, HDR);
+  ctx.stroke();
+  ctx.fillStyle = C.gold;
+  ctx.font = "bold 18px 'Georgia', serif";
+  ctx.fillText("GeoDrafts — My Ideal Nation", PAD, 30);
+  ctx.fillStyle = C.fgDim;
+  ctx.font = "13px sans-serif";
+  ctx.fillText("Final Roster · Score:", PAD, 56);
+  ctx.fillStyle = C.gold;
+  ctx.font = "bold 15px sans-serif";
+  const scoreStr = `${totalScore}`;
+  ctx.fillText(scoreStr, PAD + 148, 56);
+  const rLabel = pngRatingLabel(totalScore);
+  const rColor = pngRatingColor(totalScore);
+  ctx.fillStyle = rColor;
+  ctx.font = "bold 15px sans-serif";
+  ctx.fillText(
+    `· ${rLabel}`,
+    PAD + 148 + ctx.measureText(scoreStr).width + 8,
+    56,
+  );
+  if (bonus > 0) {
+    ctx.fillStyle = C.fgDim;
+    ctx.font = "12px sans-serif";
+    ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
+  }
+  displayCats.forEach((category, i) => {
+    const col = i % COLS;
+    const row = Math.floor(i / COLS);
+    const cx = PAD + col * (CARD_W + PAD);
+    const cy = HDR + PAD + row * (CARD_H + GAP);
+
+    if (category === "Population Structure") {
+      const sizeCountry = roster["Size"]!;
+      const popCountry = roster["Population"]!;
+      const bonusVal = computeSizePopBonus(roster);
+
+      ctx.fillStyle = C.cardBg;
+      ctx.fillRect(cx, cy, CARD_W, CARD_H);
+      ctx.strokeStyle = C.border;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(cx, cy, CARD_W, CARD_H);
+
+      ctx.fillStyle = C.gold;
+      ctx.font = "bold 10px sans-serif";
+      ctx.fillText("POPULATION STRUCTURE", cx + 16, cy + 24);
+
+      ctx.fillStyle = C.gold;
+      ctx.textAlign = "right";
+      ctx.fillText(`★★`, cx + CARD_W - 16, cy + 24);
+      ctx.textAlign = "left";
+
+      // Draw flags and names
+      ctx.font = "32px serif";
+      ctx.fillText(sizeCountry.flag, cx + 16, cy + 60);
+      ctx.fillText(popCountry.flag, cx + 16, cy + 96);
+
+      ctx.fillStyle = C.fg;
+      ctx.font = "bold 14px sans-serif";
+      ctx.fillText(sizeCountry.name, cx + 56, cy + 54);
+      ctx.fillText(popCountry.name, cx + 56, cy + 90);
+
+      ctx.fillStyle = C.fgDim;
+      ctx.font = "10px sans-serif";
+      ctx.fillText("Size", cx + 56, cy + 66);
+      ctx.fillText("Population", cx + 56, cy + 102);
+
+      // Draw bonus points
+      ctx.fillStyle = C.gold;
+      ctx.textAlign = "right";
+      ctx.font = "bold 12px sans-serif";
+      ctx.fillText(`+${bonusVal} pts`, cx + CARD_W - 16, cy + 90);
+      ctx.textAlign = "left";
+
+      return;
+    }
+
+    const country = roster[category as Category];
+    const catKey = getCategoryKey(category as Category);
+    const isBonus = category === "Size" || category === "Population";
+    const score = country && !isBonus ? country.stats[catKey].score : null;
+    const weight = CATEGORY_WEIGHTS[category] ?? 1.0;
+    const stars = getCategoryStars(category as Category);
+    ctx.fillStyle = C.cardBg2;
+    canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8);
+    ctx.fill();
+    ctx.strokeStyle = C.border;
+    ctx.lineWidth = 1;
+    canvasRoundRect(ctx, cx, cy, CARD_W, CARD_H, 8);
+    ctx.stroke();
+    ctx.fillStyle = C.muted;
+    ctx.font = "bold 10px sans-serif";
+    ctx.fillText(
+      category.toUpperCase() + (isBonus ? " (BONUS)" : ""),
+      cx + 12,
+      cy + 20,
+    );
+    ctx.fillStyle =
+      stars === "★★★" ? "#facc15" : stars === "★★" ? "#94a3b8" : "#64748b";
+    ctx.font = "bold 9px sans-serif";
+    ctx.fillText(
+      stars,
+      cx + CARD_W - ctx.measureText(stars).width - 12,
+      cy + 20,
+    );
     if (country) {
       ctx.font = "22px sans-serif"; ctx.fillText(country.flag, cx + 12, cy + 55);
       ctx.fillStyle = C.fg; ctx.font = "bold 14px sans-serif"; ctx.fillText(country.name, cx + 46, cy + 47);
@@ -326,9 +426,70 @@ function CountryCard({ country, hoveredCategory, poolRemaining, isHardMode, rost
         <div className="flex items-start gap-4 pb-4 border-b border-border"><div className="text-6xl leading-none">{country.flag}</div><div className="flex-1 min-w-0"><div className="flex items-center gap-3 mb-1 flex-wrap"><h1 className="font-serif text-3xl font-bold text-foreground">{country.name}</h1></div><div className="flex items-center gap-3 text-sm text-muted-foreground mb-2"><span>{country.capital}</span><span className="w-1 h-1 rounded-full bg-muted-foreground/40" /><span>{country.region}</span></div><p className="text-sm text-foreground/70 leading-relaxed max-w-xl">{country.knownFor}</p></div><div className="text-right shrink-0"><div className="text-xs text-muted-foreground uppercase tracking-wider mb-1">Pool</div><div className="text-2xl font-bold text-foreground">{poolRemaining}</div><div className="text-xs text-muted-foreground">remaining</div></div></div>
         <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-2.5 flex items-center gap-3"><ChevronRight className="w-4 h-4 text-primary shrink-0" /><p className="text-sm text-foreground/80">{isHardMode ? (<><span className="text-red-400 font-semibold">Hard Mode</span> — no ratings. <span className="text-primary font-semibold">Click a slot</span> to assign based on objective stats.</>) : (<><span className="text-primary font-semibold">Hover a slot</span> on the left to preview this country's score, then click to assign.</>)}</p></div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-          {CATEGORIES.filter(c => !roster[c]).map((category) => {
-            const catKey = getCategoryKey(category); const stat = country.stats[catKey]; const isHighlighted = hoveredCategory === category; const isBonus = BONUS_CATEGORIES.includes(category); const { label, color } = getScoreLabel(stat.score); const stars = getCategoryStars(category);
-            return (<motion.button key={category} animate={{ borderColor: isHighlighted ? "hsl(43 90% 55% / 0.6)" : "hsl(217 30% 18%)", backgroundColor: isHighlighted ? "hsl(43 90% 55% / 0.05)" : "hsl(222 40% 10%)", }} onClick={() => onAssign(category)} onMouseEnter={() => onHover(category)} onMouseLeave={() => onHover(null)} transition={{ duration: 0.15 }} className={`rounded-lg border p-3 text-left transition-all hover:border-primary/50 ${isHighlighted ? "ring-1 ring-primary/30" : ""}`}><div className="flex items-center justify-between mb-2"><div className="flex items-center gap-1.5"><span className={isHighlighted ? "text-primary" : "text-muted-foreground"}>{CATEGORY_ICONS[category]}</span><span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{category}</span><span className={`text-[9px] leading-none ${stars === "★★★" ? "text-yellow-400/60" : stars === "★★" ? "text-yellow-400/40" : "text-yellow-400/25"}`}>{stars}</span></div></div>{isBonus ? (<div className="mb-1.5"><div className="text-[10px] text-yellow-400/70 font-semibold mb-1">💡 Bonus formula stat</div></div>) : !isHardMode ? (<div className="flex items-center justify-between mb-1"><span className={`text-xs font-semibold ${color}`}>{label}</span><span className={`text-xs font-bold ${color}`}>{getPtsDisplay(stat.score, category)}</span></div>) : null}<ExpandableDescription description={stat.description} /></motion.button>);
+          {CATEGORIES.filter((c) => !roster[c]).map((category) => {
+            const catKey = getCategoryKey(category as Category);
+            const stat = country.stats[catKey];
+            const isHighlighted = hoveredCategory === category;
+            const isBonus = BONUS_CATEGORIES.includes(category as Category);
+            const { label, color } = getScoreLabel(stat.score);
+            const stars = getCategoryStars(category as Category);
+            return (
+              <motion.button
+                key={category}
+                animate={{
+                  borderColor: isHighlighted
+                    ? "hsl(43 90% 55% / 0.6)"
+                    : "hsl(217 30% 18%)",
+                  backgroundColor: isHighlighted
+                    ? "hsl(43 90% 55% / 0.05)"
+                    : "hsl(222 40% 10%)",
+                }}
+                onClick={() => onAssign(category)}
+                onMouseEnter={() => onHover(category)}
+                onMouseLeave={() => onHover(null)}
+                transition={{ duration: 0.15 }}
+                className={`rounded-lg border p-3 text-left transition-all hover:border-primary/50 ${isHighlighted ? "ring-1 ring-primary/30" : ""}`}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-1.5">
+                    <span
+                      className={
+                        isHighlighted ? "text-primary" : "text-muted-foreground"
+                      }
+                    >
+                      {CATEGORY_ICONS[category as Category]}
+                    </span>
+                    <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                      {category}
+                    </span>
+                    <span
+                      className={`text-[9px] leading-none ${stars === "★★★" ? "text-yellow-400/60" : stars === "★★" ? "text-yellow-400/40" : "text-yellow-400/25"}`}
+                    >
+                      {stars}
+                    </span>
+                  </div>
+                </div>
+                {isBonus ? (
+                  <div className="mb-1.5">
+                    <div className="text-[10px] text-yellow-400/70 font-semibold mb-1">
+                      <span className="flex items-center gap-1">
+                        <Lightbulb className="w-3 h-3" /> Bonus formula stat
+                      </span>
+                    </div>
+                  </div>
+                ) : !isHardMode ? (
+                  <div className="flex items-center justify-between mb-1">
+                    <span className={`text-xs font-semibold ${color}`}>
+                      {label}
+                    </span>
+                    <span className={`text-xs font-bold ${color}`}>
+                      {getPtsDisplay(stat.score, category)}
+                    </span>
+                  </div>
+                ) : null}
+                <ExpandableDescription description={stat.description} />
+              </motion.button>
+            );
           })}
         </div>
       </motion.div></AnimatePresence>
@@ -353,10 +514,138 @@ function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, 
       <div ref={rosterRef} className="rounded-3xl overflow-hidden border border-border shadow-2xl bg-card/20 backdrop-blur-sm">
         {wildcardPhase && (<div className="bg-blue-500/10 border-b border-blue-500/30 px-8 py-4 flex items-center justify-between gap-4"><div className="flex items-center gap-3"><Shuffle className="w-6 h-6 text-blue-400 animate-spin-slow" /><div><div className="text-lg font-bold text-blue-300">Wildcard Active</div><div className="text-xs text-blue-400/70">Pick a slot to swap it for a mystery country.</div></div></div><button onClick={() => setWildcardPhase(false)} className="p-2 rounded-xl text-blue-400/60 hover:text-blue-300 hover:bg-blue-500/20 transition-colors"><X className="w-5 h-5" /></button></div>)}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border/40">
-          {CATEGORIES.map((category) => {
-            const country = roster[category]; const catKey = getCategoryKey(category); const isBonus = BONUS_CATEGORIES.includes(category); const score = country && !isBonus ? country.stats[catKey].score : null; const scoreInfo = score !== null ? getScoreLabel(score) : null;
+          {CATEGORIES.reduce((acc, c) => { if (wildcardPhase) { acc.push(c); return acc; } const hasSize = !!roster["Size"]; const hasPop = !!roster["Population"]; const mergePopStructure = hasSize && hasPop; if (mergePopStructure && (c === "Size" || c === "Population")) { if (!acc.includes("Population Structure" as any)) acc.push("Population Structure" as any); } else { acc.push(c); } return acc; }, [] as (Category | "Population Structure")[]).map((category) => {
+            if (category === "Population Structure") {
+            const sizeCountry = roster["Size"]!;
+            const popCountry = roster["Population"]!;
+            const bonusVal = computeSizePopBonus(roster);
             return (
-              <motion.button key={category} disabled={!wildcardPhase} onClick={() => wildcardPhase && onWildcardSelect(category)} className={`bg-card p-6 text-left transition-all relative group ${wildcardPhase ? "hover:bg-blue-500/5 cursor-pointer ring-inset hover:ring-2 hover:ring-blue-400/50" : ""}`}><div className="flex items-center justify-between mb-4"><div className="flex items-center gap-2.5"><span className="text-primary/70">{CATEGORY_ICONS[category]}</span><span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{category}</span></div><span className="text-[10px] text-yellow-400/30 font-bold">{getCategoryStars(category)}</span></div>{country ? (<><div className="flex items-center gap-4"><span className="text-4xl leading-none">{country.flag}</span><div className="flex-1 min-w-0"><div className="font-bold text-foreground text-lg truncate">{country.name}</div>{isBonus ? (<div className="text-[10px] text-yellow-400/70 mt-0.5 flex items-center gap-1 font-bold"><Zap className="w-3 h-3" /> Bonus Contributor</div>) : (!isHardMode && score !== null && scoreInfo && (<div className="flex items-center gap-2 mt-0.5"><span className={`text-xs font-bold ${scoreInfo.color}`}>{scoreInfo.label}</span><span className="text-muted-foreground/30">·</span><span className={`text-xs font-bold ${scoreInfo.color}`}>{getPtsDisplay(score, category)}</span></div>))}</div></div><div className="mt-4"><ExpandableDescription description={country.stats[catKey].description} /></div></>) : (<div className="text-sm text-muted-foreground/30 italic py-4">Slot not assigned</div>)}{wildcardPhase && <div className="absolute inset-0 bg-blue-500/5 pointer-events-none" />}</motion.button>
+              <div
+                key="Population Structure"
+                className="bg-card p-6 text-left transition-all border-2 border-yellow-500/30 rounded-2xl"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-yellow-500/70">
+                      <Users className="w-5 h-5" />
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      Population Structure
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-yellow-400/30 font-bold">
+                    ★★
+                  </span>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl leading-none">{sizeCountry.flag}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-foreground text-lg truncate">
+                        {sizeCountry.name}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">
+                        Size
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl leading-none">{popCountry.flag}</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-bold text-foreground text-lg truncate">
+                        {popCountry.name}
+                      </div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-widest mt-0.5">
+                        Population
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+                  <span className="text-xs font-medium text-muted-foreground">Synergy Bonus</span>
+                  <span className="text-sm font-bold text-yellow-400">+{bonusVal} pts</span>
+                </div>
+              </div>
+            );
+          }
+          const country = roster[category as Category];
+            const catKey = getCategoryKey(category as Category);
+            const isBonus = BONUS_CATEGORIES.includes(category as Category);
+            const score =
+              country && !isBonus ? country.stats[catKey].score : null;
+            const scoreInfo = score !== null ? getScoreLabel(score) : null;
+            return (
+              <motion.button
+                key={category}
+                disabled={!wildcardPhase}
+                onClick={() => wildcardPhase && onWildcardSelect(category as Category)}
+                className={`bg-card p-6 text-left transition-all relative group ${wildcardPhase ? "hover:bg-blue-500/5 cursor-pointer ring-inset hover:ring-2 hover:ring-blue-400/50" : ""}`}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-primary/70">
+                      {CATEGORY_ICONS[category as Category]}
+                    </span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                      {category}
+                    </span>
+                  </div>
+                  <span className="text-[10px] text-yellow-400/30 font-bold">
+                    {getCategoryStars(category as Category)}
+                  </span>
+                </div>
+                {country ? (
+                  <>
+                    <div className="flex items-center gap-4">
+                      <span className="text-4xl leading-none">
+                        {country.flag}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-bold text-foreground text-lg truncate">
+                          {country.name}
+                        </div>
+                        {isBonus ? (
+                          <div className="text-[10px] text-yellow-400/70 mt-0.5 flex items-center gap-1 font-bold">
+                            <Zap className="w-3 h-3" /> Bonus Contributor
+                          </div>
+                        ) : (
+                          !isHardMode &&
+                          score !== null &&
+                          scoreInfo && (
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <span
+                                className={`text-xs font-bold ${scoreInfo.color}`}
+                              >
+                                {scoreInfo.label}
+                              </span>
+                              <span className="text-muted-foreground/30">
+                                ·
+                              </span>
+                              <span
+                                className={`text-xs font-bold ${scoreInfo.color}`}
+                              >
+                                {getPtsDisplay(score, category)}
+                              </span>
+                            </div>
+                          )
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-4">
+                      <ExpandableDescription
+                        description={country.stats[catKey].description}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-sm text-muted-foreground/30 italic py-4">
+                    Slot not assigned
+                  </div>
+                )}
+                {wildcardPhase && (
+                  <div className="absolute inset-0 bg-blue-500/5 pointer-events-none" />
+                )}
+              </motion.button>
             );
           })}
         </div>
