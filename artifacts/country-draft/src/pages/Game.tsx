@@ -909,7 +909,6 @@ export default function Game() {
                   )}
                 </div>
               </div>
-            )}
             <div className="space-y-1.5"><p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">Draft Categories</p>
               {CATEGORIES.map((category) => {
                 const assigned = state.roster[category]; const catKey = getCategoryKey(category); const isBonus = BONUS_CATEGORIES.includes(category); const isHovered = hoveredCategory === category; const isAssignable = !assigned && !!state.currentCountry && !state.gameOver; const isWildcardTarget = wildcardPhase && !!assigned; const stars = getCategoryStars(category);
