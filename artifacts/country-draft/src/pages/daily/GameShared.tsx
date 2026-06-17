@@ -403,22 +403,22 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
     <div className="p-4 md:p-8 flex-1 overflow-y-auto" ref={rosterRef}>
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 pb-20">
         <div className="text-center space-y-3 md:space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-700">
-          <div className="inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full bg-primary/10 border border-primary/20 mb-2 md:mb-4">{rating.icon}</div>
           <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Draft Complete</h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm md:text-base">
             <span className="text-muted-foreground font-medium tracking-wide">Final Score:</span>
             <div className="flex items-center gap-3">
               <span className="text-2xl md:text-3xl font-bold text-primary">{totalScore} <span className="text-sm text-primary/60">pts</span></span>
-              <span className="text-muted-foreground/30 hidden sm:block">|</span>
-              <span className={`font-bold ${rating.color} px-3 py-1 rounded-full bg-background border border-border shadow-sm`}>{rating.label}</span>
-            </div>
+              </div>
           </div>
-          {bonus > 0 && (<p className="text-xs text-muted-foreground font-medium">Includes <span className="text-yellow-400 font-bold">+{bonus}</span> size/population bonus</p>)}
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200">
+          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200">
           <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
             <div className="p-3 bg-primary/10 text-primary rounded-xl shrink-0">{archetype.icon}</div>
             <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{archetype.name}</h3><p className="text-xs text-muted-foreground">{archetype.desc}</p></div>
+          </div>
+          <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
+            <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{rating.icon}</div>
+            <div><h3 className={`font-bold text-sm md:text-base mb-1 ${rating.color}`}>{rating.label}</h3><p className="text-xs text-muted-foreground">Overall draft performance.</p></div>
           </div>
           {bPath && (
             <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
