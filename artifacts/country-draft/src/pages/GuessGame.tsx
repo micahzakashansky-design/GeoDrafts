@@ -49,6 +49,7 @@ export default function GuessGame() {
     let pool = [...COUNTRIES];
     shuffleArray(pool);
     const mystery = pool.pop() || null;
+    setShowStatsModal(false);
     setState({
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: mystery, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
@@ -107,7 +108,7 @@ export default function GuessGame() {
                                 {isLast && isCorrect && (
                                    <button 
                                      onClick={() => setShowStatsModal(true)} 
-                                     className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-emerald-500/10 hover:bg-emerald-500/30 rounded-full transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                     className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 bg-emerald-500/10 hover:bg-emerald-500/30 rounded-full transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
                                      title="View Country Stats"
                                    >
                                       <ChevronRight className="w-6 h-6 text-emerald-400" />
