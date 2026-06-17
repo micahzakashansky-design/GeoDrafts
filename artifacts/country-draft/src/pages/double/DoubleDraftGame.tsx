@@ -6,7 +6,7 @@ import {
 } from "@/data/countries";
 import {
   CountryCard, GameOver, SelectionPhase, GameState, computeSizePopBonus,
-  CATEGORY_ICONS, CATEGORY_WEIGHTS, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
+  CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./GameShared";
 import { SidebarRoster } from "./SidebarRoster";
 import { Home, Globe as GlobeIcon } from "lucide-react";
@@ -39,8 +39,8 @@ export default function DoubleDraftGame() {
     return CATEGORIES.reduce((sum, cat) => {
       const country = state.roster[cat]; if (!country) return sum;
       if (BONUS_CATEGORIES.includes(cat)) return sum;
-      const key = getCategoryKey(cat); const raw = country.stats[key].score; const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
-      return sum + Math.round(raw * weight);
+      const key = getCategoryKey(cat); const score = country.stats[key].score;
+      return sum + score;
     }, 0);
   }, [state.roster]);
 

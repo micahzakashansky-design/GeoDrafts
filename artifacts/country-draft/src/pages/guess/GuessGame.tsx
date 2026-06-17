@@ -7,7 +7,7 @@ import {
 } from "@/data/countries";
 import {
   GuessPhase, GameState,
-  CATEGORY_ICONS, CATEGORY_WEIGHTS, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
+  CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./GameShared";
 import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown, ChevronRight, X, MapPin, Trophy } from "lucide-react";
 import { SubmitDialog } from "./SubmitDialog";

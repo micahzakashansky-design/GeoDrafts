@@ -32,10 +32,10 @@ export const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
   Population: <Users className="w-5 h-5" />,
 };
 
-export const CATEGORY_WEIGHTS: Partial<Record<Category, number>> = {
-  Military: 1.5, Economy: 1.5, Government: 1.5,
-  "International Relationships": 1.2, Technology: 1.2, Education: 1.2, "Natural Resources": 1.2, Healthcare: 1.2,
-  Location: 1.0, Size: 1.0, Population: 1.0, Culture: 1.0, Climate: 1.0, History: 1.0, Tourism: 1.0,
+export const CATEGORY_MAX_SCORES: Partial<Record<Category, number>> = {
+  Military: 15, Economy: 15, Government: 15,
+  "International Relationships": 12, Technology: 12, Education: 12, "Natural Resources": 12, Healthcare: 12,
+  Location: 10, Size: 10, Population: 10, Culture: 10, Climate: 10, History: 10, Tourism: 10,
 };
 
 export const BONUS_CATEGORIES: Category[] = ["Size", "Population"];
@@ -61,10 +61,10 @@ export function pngRatingColor(total: number): string {
   if (total >= 80) return PNG_COLORS.ratingColors.developing;
   return PNG_COLORS.ratingColors.struggling;
 }
-export function pngScoreLabel(score: number, weight: number): string {
-  const weighted = score * weight; if (weighted >= 13.5) return "World-Class";
-  if (weighted >= 10) return "Strong"; if (weighted >= 7) return "Moderate";
-  if (weighted >= 4) return "Weak"; return "Critical";
+export function pngScoreLabel(score: number): string {
+  if (score >= 13.5) return "World-Class";
+  if (score >= 10) return "Strong"; if (score >= 7) return "Moderate";
+  if (score >= 4) return "Weak"; return "Critical";
 }
 export function pngRatingLabel(total: number): string {
   if (total >= 165) return "Superpower"; if (total >= 140) return "Major Power";
@@ -156,7 +156,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
       } else {
         const ck = getCategoryKey(actualCat);
         scoreVal = assigned.stats[ck].score;
-        weight = CATEGORY_WEIGHTS[actualCat] ?? 1.0;
+        weight = CATEGORY_MAX_SCORES[actualCat] ?? 10;
         desc = assigned.stats[ck].description;
       }
 
@@ -165,10 +165,10 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
       if (!isBonus) {
         ctx.fillStyle = pngScoreBar(scoreVal);
         ctx.font = "bold 13px sans-serif";
-        const wScore = scoreVal * weight;
+        const wScore = scoreVal;
         ctx.fillText(`${wScore} pts`, x + CARD_W - 60, y + 20);
 
-        const sl = pngScoreLabel(scoreVal, weight);
+        const sl = pngScoreLabel(scoreVal);
         ctx.fillStyle = C.fgDim;
         ctx.font = "10px sans-serif";
         ctx.fillText(sl, x + CARD_W - 12 - ctx.measureText(sl).width, y + 34);
@@ -177,7 +177,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
         canvasRoundRect(ctx, x + 12, y + 54, CARD_W - 24, 4, 2);
         ctx.fill();
         ctx.fillStyle = pngScoreBar(scoreVal);
-        canvasRoundRect(ctx, x + 12, y + 54, ((CARD_W - 24) * scoreVal) / 10, 4, 2);
+        canvasRoundRect(ctx, x + 12, y + 54, ((CARD_W - 24) * scoreVal) / weight, 4, 2);
         ctx.fill();
       } else {
         ctx.fillStyle = C.gold;
@@ -219,12 +219,12 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
 
 // ─── Helpers ────────────────────────────────────────────────────────
 export function getCategoryStars(cat: Category): string {
-  const w = CATEGORY_WEIGHTS[cat] ?? 1.0;
-  if (w >= 1.5) return "★★★";
-  if (w >= 1.2) return "★★";
+  const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
+  if (maxScore === 15) return "★★★";
+  if (maxScore === 12) return "★★";
   return "★";
 }
-export function getPtsDisplay(score: number, cat: Category): string { const weight = CATEGORY_WEIGHTS[cat] ?? 1.0; return `${Math.round(score * weight)}/${Math.round(10 * weight)} pts`; }
+export function getPtsDisplay(score: number, cat: Category): string { const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10; return `${score}/${maxScore} pts`; }
 export function getScoreBarColor(score: number): string { if (score >= 9) return "bg-emerald-500"; if (score >= 7) return "bg-green-500"; if (score >= 5) return "bg-yellow-500"; if (score >= 3) return "bg-orange-500"; return "bg-red-500"; }
 export function getScoreLabel(score: number): { label: string; color: string } {
   if (score >= 13.5) return { label: "World-Class", color: "text-emerald-400" };
@@ -360,8 +360,8 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
           {CATEGORIES.filter(cat => !roster[cat]).map((cat) => {
             const stat = country.stats[getCategoryKey(cat)];
             const isHovered = hoveredCategory === cat;
-            const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
-            const scoreLabel = getScoreLabel(Math.round(stat.score * weight));
+            const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
+            const scoreLabel = getScoreLabel(stat.score);
             
             return (
               <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative overflow-hidden ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
@@ -458,7 +458,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                     {(() => {
                       let scoreVal = 0, weight = 1, desc = "";
                       if (isCombo) { scoreVal = (assigned.stats.size.score + roster.Population!.stats.population.score) / 2; weight = 1; desc = "Combined structure bonus applied based on Size and Population compatibility."; }
-                      else { const ck = getCategoryKey(actualCat); scoreVal = assigned.stats[ck].score; weight = CATEGORY_WEIGHTS[actualCat] ?? 1.0; desc = assigned.stats[ck].description; }
+                      else { const ck = getCategoryKey(actualCat); scoreVal = assigned.stats[ck].score; const maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; desc = assigned.stats[ck].description; }
                       const isBonus = BONUS_CATEGORIES.includes(actualCat) || isCombo;
                       return (
                         <div className="space-y-2 mt-auto">
