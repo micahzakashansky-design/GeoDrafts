@@ -9,7 +9,7 @@ import {
   GuessPhase, GameState,
   CATEGORY_ICONS, CATEGORY_WEIGHTS, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./GameShared";
-import { Home, Globe as GlobeIcon, PartyPopper } from "lucide-react";
+import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown } from "lucide-react";
 
 export default function GuessGame() {
   const [, navigate] = useLocation();
@@ -80,14 +80,40 @@ export default function GuessGame() {
                  <p className="text-xl text-muted-foreground">The country was <span className="font-bold text-foreground text-2xl ml-1">{state.mysteryCountry?.flag} {state.mysteryCountry?.name}</span></p>
                </div>
 
-               <div className="w-full space-y-4 max-w-md mx-auto mt-8">
-                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest text-left">Your Guesses:</h3>
-                  <div className="flex flex-col gap-2">
-                     {state.guesses.map((g, i) => (
-                        <div key={i} className={`p-3 rounded-lg text-left font-semibold border ${g.toLowerCase() === state.mysteryCountry?.name.toLowerCase() ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-400" : "bg-secondary/50 border-border text-muted-foreground"}`}>
-                           {i + 1}. {g}
-                        </div>
-                     ))}
+               <div className="w-full max-w-md mx-auto mt-8 flex flex-col items-center">
+                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-6">Your Guess Path:</h3>
+                  <div className="flex flex-col items-center w-full relative">
+                     {state.guesses.map((g, i) => {
+                        const isLast = i === state.guesses.length - 1;
+                        const isCorrect = g.toLowerCase() === state.mysteryCountry?.name.toLowerCase();
+                        
+                        return (
+                           <React.Fragment key={i}>
+                              <motion.div 
+                                initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15 }}
+                                className={`
+                                  flex items-center justify-center text-center font-bold border shadow-sm
+                                  ${isLast && isCorrect 
+                                    ? "p-6 rounded-2xl bg-emerald-500/20 border-emerald-500/50 text-emerald-400 text-3xl w-full scale-110 my-4 shadow-emerald-500/20" 
+                                    : "px-6 py-3 rounded-xl bg-secondary/50 border-border text-muted-foreground w-3/4"}
+                                `}
+                              >
+                                {g}
+                              </motion.div>
+                              
+                              {!isLast && (
+                                 <motion.div 
+                                    initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 24 }} transition={{ delay: i * 0.15 + 0.1 }}
+                                    className="w-0.5 bg-border my-2 relative"
+                                 >
+                                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-background rounded-full">
+                                       <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                                    </div>
+                                 </motion.div>
+                              )}
+                           </React.Fragment>
+                        );
+                     })}
                   </div>
                </div>
 
