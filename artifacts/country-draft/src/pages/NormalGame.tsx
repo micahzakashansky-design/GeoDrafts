@@ -9,6 +9,7 @@ import {
   CATEGORY_ICONS, CATEGORY_WEIGHTS, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./GameShared";
 import { Home, Globe as GlobeIcon } from "lucide-react";
+import { SidebarRoster } from "./SidebarRoster";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 
@@ -39,7 +40,7 @@ export default function NormalGame() {
       const country = state.roster[cat]; if (!country) return sum;
       if (BONUS_CATEGORIES.includes(cat)) return sum;
       const key = getCategoryKey(cat); const raw = country.stats[key].score; const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
-      return sum + raw * weight;
+      return sum + Math.round(raw * weight);
     }, 0);
   }, [state.roster]);
 
@@ -113,37 +114,7 @@ export default function NormalGame() {
         {!state.gameOver && (
           <div className="hidden md:flex w-80 bg-card/30 border-r border-border/50 flex-col overflow-y-auto">
              <div className="p-5 space-y-6">
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between px-1"><h3 className="text-sm font-bold text-foreground">Your Roster</h3><span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{Object.keys(state.roster).length}/{CATEGORIES.length}</span></div>
-                  <div className="space-y-1.5">
-                    {Object.keys(state.roster).length === 0 ? (
-                      <div className="py-6 text-center rounded-xl border border-dashed border-border/50 bg-secondary/10"><p className="text-xs text-muted-foreground font-medium">Select a category on the right<br/>to begin drafting.</p></div>
-                    ) : (
-                      CATEGORIES.filter(c => state.roster[c]).map(category => {
-                        const assigned = state.roster[category]!; const catKey = getCategoryKey(category); const isBonus = BONUS_CATEGORIES.includes(category); const stars = getCategoryStars(category); const score = !isBonus ? assigned.stats[catKey].score : null;
-                        return (
-                          <div key={category} className="w-full rounded-lg border border-border/25 bg-muted/10 opacity-80 text-left transition-all">
-                            <div className="px-3 py-2 flex items-center justify-between">
-                              <div className="flex items-center gap-2 overflow-hidden"><span className="text-muted-foreground shrink-0">{CATEGORY_ICONS[category]}</span><div className="truncate"><div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">{category}</div><div className="text-xs font-semibold text-foreground/80 truncate">{assigned.flag} {assigned.name}</div></div></div>
-                              <div className="flex flex-col items-end gap-1 shrink-0"><span className="text-[9px] text-yellow-400/40">{stars}</span>{!isBonus && score !== null && (<span className="text-[10px] font-bold text-primary">{getPtsDisplay(score, category)}</span>)}</div>
-                            </div>
-                          </div>
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-                <div className="space-y-1.5">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest px-1">Draft Categories</p>
-                  {CATEGORIES.map(category => {
-                    const assigned = state.roster[category]; const isAssignable = !assigned && !!state.currentCountry && !state.gameOver; const stars = getCategoryStars(category);
-                    return (
-                      <button key={category} onClick={() => { if (isAssignable) assignCountry(category); }} onMouseEnter={() => setHoveredCategory(category)} onMouseLeave={() => setHoveredCategory(null)} disabled={!isAssignable} className={`w-full rounded-lg border text-left transition-all ${assigned ? "border-border/25 bg-muted/10 opacity-60" : isAssignable ? "border-primary/30 bg-secondary/30 hover:bg-secondary/60 hover:border-primary/60" : "border-border/10 bg-card/5 opacity-40"}`}>
-                        <div className="px-3 py-2 flex items-center justify-between"><div className="flex items-center gap-2 overflow-hidden"><span className="text-muted-foreground shrink-0">{CATEGORY_ICONS[category]}</span><div className="truncate"><div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">{category}</div>{assigned && <div className="text-xs font-semibold text-foreground/80 truncate">{assigned.flag} {assigned.name}</div>}</div></div><span className="text-[9px] text-yellow-400/40 shrink-0">{stars}</span></div>
-                      </button>
-                    );
-                  })}
-                </div>
+                <SidebarRoster roster={state.roster} />
              </div>
           </div>
         )}

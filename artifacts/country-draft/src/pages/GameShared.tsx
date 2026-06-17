@@ -354,38 +354,17 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
             </div>
           </div>
         </div>
-        
-        {/* Pool Counter */}
-        <div className="hidden md:flex flex-col items-end text-right ml-4">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Pool</span>
-          <span className="text-3xl font-bold text-foreground leading-none">{poolRemaining}</span>
-          <span className="text-xs text-muted-foreground mt-1">remaining</span>
-        </div>
       </div>
-
-      {/* Separator / Banner */}
-      <div className="border border-border/60 rounded-lg px-4 py-3 bg-secondary/10 mb-6 flex items-center gap-3">
-        <ChevronRight className="w-4 h-4 text-yellow-500 shrink-0" />
-        <p className="text-sm text-foreground/80">
-          {isHardMode ? (
-            <><span className="text-red-400 font-semibold">Hard Mode</span> &mdash; no ratings. <span className="text-primary font-semibold">Click a slot</span> to assign based on objective stats.</>
-          ) : (
-            <><span className="text-yellow-500 font-semibold">Hover a slot</span> on the left to preview this country's score, then click to assign.</>
-          )}
-        </p>
-      </div>
-
-      <div className="flex-1 overflow-y-auto pb-6">
+      <div className="flex-1 overflow-y-auto p-2 pb-8 -mx-2">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {CATEGORIES.map((cat) => {
+          {CATEGORIES.filter(cat => !roster[cat]).map((cat) => {
             const stat = country.stats[getCategoryKey(cat)];
             const isHovered = hoveredCategory === cat;
-            const isAssigned = !!roster[cat];
             const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
             const scoreLabel = getScoreLabel(Math.round(stat.score * weight));
             
             return (
-              <div key={cat} onMouseEnter={() => !isAssigned && onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => !isAssigned && onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative overflow-hidden ${isAssigned ? "bg-muted/10 border-border/25 opacity-40 cursor-not-allowed" : isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
+              <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative overflow-hidden ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
                 {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse" />}
                 
                 <div className="relative z-10 flex flex-col h-full">
