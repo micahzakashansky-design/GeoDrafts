@@ -233,12 +233,12 @@ export function getScoreLabel(score: number): { label: string; color: string } {
   if (score >= 4) return { label: "Weak", color: "text-orange-400" };
   return { label: "Critical", color: "text-red-400" };
 }
-export function getRating(total: number): { label: string; color: string; icon: React.ReactNode } {
-  if (total >= 165) return { label: "Superpower", color: "text-yellow-400", icon: <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" /> };
-  if (total >= 140) return { label: "Major Power", color: "text-blue-400", icon: <Globe className="w-6 h-6 text-blue-400" /> };
-  if (total >= 110) return { label: "Regional Power", color: "text-green-400", icon: <Shield className="w-6 h-6 text-green-400" /> };
-  if (total >= 80) return { label: "Developing Nation", color: "text-orange-400", icon: <TrendingUp className="w-6 h-6 text-orange-400" /> };
-  return { label: "Struggling State", color: "text-red-400", icon: <Building className="w-6 h-6 text-red-400" /> };
+export function getRating(total: number): { label: string; color: string; icon: React.ReactNode; desc: string } {
+  if (total >= 165) return { label: "Superpower", color: "text-yellow-400", icon: <Star className="w-6 h-6 text-yellow-400 fill-yellow-400" />, desc: "Unrivaled global influence and capabilities." };
+  if (total >= 140) return { label: "Major Power", color: "text-blue-400", icon: <Globe className="w-6 h-6 text-blue-400" />, desc: "Significant influence on the world stage." };
+  if (total >= 110) return { label: "Regional Power", color: "text-green-400", icon: <Shield className="w-6 h-6 text-green-400" />, desc: "Strong capabilities within its geographic sphere." };
+  if (total >= 80) return { label: "Developing Nation", color: "text-orange-400", icon: <TrendingUp className="w-6 h-6 text-orange-400" />, desc: "Growing capabilities and emerging potential." };
+  return { label: "Struggling State", color: "text-red-400", icon: <Building className="w-6 h-6 text-red-400" />, desc: "Facing significant challenges and limitations." };
 }
 export function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
   let b = 0;
@@ -411,14 +411,14 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
               </div>
           </div>
           </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 ${bPath ? "lg:grid-cols-3" : ""} gap-4 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200`}>
           <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
             <div className="p-3 bg-primary/10 text-primary rounded-xl shrink-0">{archetype.icon}</div>
             <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{archetype.name}</h3><p className="text-xs text-muted-foreground">{archetype.desc}</p></div>
           </div>
           <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
             <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{rating.icon}</div>
-            <div><h3 className={`font-bold text-sm md:text-base mb-1 ${rating.color}`}>{rating.label}</h3><p className="text-xs text-muted-foreground">Overall draft performance.</p></div>
+            <div><h3 className={`font-bold text-sm md:text-base mb-1 ${rating.color}`}>{rating.label}</h3><p className="text-xs text-muted-foreground">{rating.desc}</p></div>
           </div>
           {bPath && (
             <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
