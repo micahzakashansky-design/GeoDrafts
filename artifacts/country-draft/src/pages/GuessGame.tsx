@@ -9,10 +9,11 @@ import {
   GuessPhase, GameState,
   CATEGORY_ICONS, CATEGORY_WEIGHTS, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./GameShared";
-import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown } from "lucide-react";
+import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown, ChevronRight, X, MapPin } from "lucide-react";
 
 export default function GuessGame() {
   const [, navigate] = useLocation();
+  const [showStatsModal, setShowStatsModal] = useState(false);
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
@@ -96,13 +97,22 @@ export default function GuessGame() {
                               <motion.div 
                                 initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.15 }}
                                 className={`
-                                  flex items-center justify-center text-center font-bold border shadow-sm
+                                  flex items-center justify-center text-center font-bold border shadow-sm relative group
                                   ${isLast && isCorrect 
                                     ? "p-6 rounded-2xl bg-emerald-500/20 border-emerald-500/50 text-emerald-400 text-3xl w-full scale-110 my-4 shadow-emerald-500/20" 
                                     : "px-6 py-3 rounded-xl bg-secondary/50 border-border text-muted-foreground w-3/4"}
                                 `}
                               >
                                 {g}
+                                {isLast && isCorrect && (
+                                   <button 
+                                     onClick={() => setShowStatsModal(true)} 
+                                     className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-emerald-500/10 hover:bg-emerald-500/30 rounded-full transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                                     title="View Country Stats"
+                                   >
+                                      <ChevronRight className="w-6 h-6 text-emerald-400" />
+                                   </button>
+                                )}
                               </motion.div>
                               
                               {!isLast && (
@@ -132,6 +142,57 @@ export default function GuessGame() {
           )}
         </div>
       </main>
+
+      <AnimatePresence>
+        {showStatsModal && state.mysteryCountry && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }} 
+              animate={{ scale: 1, opacity: 1, y: 0 }} 
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative"
+            >
+              <button 
+                onClick={() => setShowStatsModal(false)}
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-secondary transition-colors"
+              >
+                <X className="w-6 h-6 text-muted-foreground" />
+              </button>
+              
+              <div className="p-8">
+                <div className="flex flex-col items-center text-center mb-8">
+                  <div className="text-8xl mb-4 drop-shadow-lg">{state.mysteryCountry.flag}</div>
+                  <h2 className="text-4xl font-serif font-bold tracking-tight mb-2">{state.mysteryCountry.name}</h2>
+                  <p className="text-sm text-muted-foreground uppercase tracking-widest font-semibold flex items-center gap-1.5"><MapPin className="w-4 h-4" />{state.mysteryCountry.region}</p>
+                </div>
+
+                <div className="bg-secondary/30 border border-border rounded-xl p-6 mb-8 text-center">
+                  <p className="text-muted-foreground leading-relaxed italic">"{state.mysteryCountry.knownFor}"</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c)).map(cat => {
+                    const stat = state.mysteryCountry!.stats[getCategoryKey(cat)];
+                    return (
+                      <div key={cat} className="bg-secondary/20 border border-border/50 rounded-xl p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-muted-foreground">{CATEGORY_ICONS[cat]}</span>
+                          <span className="text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span>
+                        </div>
+                        <p className="text-sm text-foreground/70">{stat.description}</p>
+                        <div className="mt-2 text-primary font-mono font-bold">{getPtsDisplay(stat.pts)} pts</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
