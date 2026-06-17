@@ -34,6 +34,8 @@ export default function GuessGame() {
         finalName = prev.mysteryCountry.name;
       }
       
+      if (prev.guesses.some(g => g.toLowerCase() === finalName.toLowerCase())) return prev;
+      
       const newGuesses = [...prev.guesses, finalName];
       const isCorrect = prev.mysteryCountry?.name.toLowerCase() === finalName.toLowerCase();
       const isOver = isCorrect || newGuesses.length >= 5;
@@ -82,7 +84,7 @@ export default function GuessGame() {
                  )}
                </div>
 
-               <div className="w-full max-w-md mx-auto mt-8 flex flex-col items-center">
+               <div className="w-full max-w-md mx-auto mt-2 flex flex-col items-center">
                   <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-6">Your Guess Path:</h3>
                   <div className="flex flex-col items-center w-full relative">
                      {state.guesses.map((g, i) => {

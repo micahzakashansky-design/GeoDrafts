@@ -320,7 +320,7 @@ export function SelectionPhase({ options, onPick, isHardMode, mode }: { options:
 
 export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountry: Country; guesses: string[]; onGuess: (name: string) => void; }) {
   const [input, setInput] = useState(""); const [showSuggestions, setShowSuggestions] = useState(false);
-  const suggestions = useMemo(() => { if (!input.trim()) return []; return COUNTRIES.filter(c => c.name.toLowerCase().includes(input.toLowerCase())).slice(0, 6); }, [input]);
+  const suggestions = useMemo(() => { if (!input.trim()) return []; return COUNTRIES.filter(c => c.name.toLowerCase().includes(input.toLowerCase()) && !guesses.some(g => g.toLowerCase() === c.name.toLowerCase())).slice(0, 6); }, [input, guesses]);
   const stats = mysteryCountry.stats; const categories = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full">
