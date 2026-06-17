@@ -148,7 +148,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
       }
       ctx.fillText(nameText, x + 12, y + 42);
 
-      let scoreVal = 0, weight = 1, desc = "";
+      let scoreVal = 0, weight = 1, desc = "", maxScore = 10;
       if (isCombo) {
         scoreVal = (assigned.stats.size.score + roster.Population!.stats.population.score) / 2;
         weight = 1;
@@ -456,15 +456,15 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                     <div className="flex items-center justify-between"><div className="flex items-center gap-2 text-muted-foreground">{isCombo ? <Users className="w-4 h-4 md:w-5 md:h-5" /> : CATEGORY_ICONS[actualCat]}<span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span></div></div>
                     <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{assigned.flag} {assigned.name}{isCombo && roster.Population && <><span className="text-muted-foreground/50">+</span> {roster.Population.flag} {roster.Population.name}</>}</div></div>
                     {(() => {
-                      let scoreVal = 0, weight = 1, desc = "";
+                      let scoreVal = 0, weight = 1, desc = "", maxScore = 10;
                       if (isCombo) { scoreVal = (assigned.stats.size.score + roster.Population!.stats.population.score) / 2; weight = 1; desc = "Combined structure bonus applied based on Size and Population compatibility."; }
-                      else { const ck = getCategoryKey(actualCat); scoreVal = assigned.stats[ck].score; const maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; desc = assigned.stats[ck].description; }
+                      else { const ck = getCategoryKey(actualCat); scoreVal = assigned.stats[ck].score; maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; desc = assigned.stats[ck].description; }
                       const isBonus = BONUS_CATEGORIES.includes(actualCat) || isCombo;
                       return (
                         <div className="space-y-2 mt-auto">
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
-                              {!isBonus ? ( <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal).color} bg-secondary/50`}>{getScoreLabel(scoreVal).label}</span></div></>
+                              {!isBonus ? ( <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-primary/50 text-xs">/ {maxScore}</span> <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal).color} bg-secondary/50`}>{getScoreLabel(scoreVal).label}</span></div></>
                               ) : ( <span className="font-bold text-yellow-400">+{isCombo ? bonus : Math.floor(scoreVal / 2)} <span className="text-[10px] text-yellow-400/60">pts</span></span> )}
                             </div>
                           )}
