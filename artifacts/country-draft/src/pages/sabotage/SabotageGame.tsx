@@ -30,8 +30,7 @@ export default function SabotageGame() {
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
-    let pool = [...COUNTRIES];
-    shuffleArray(pool);
+    let pool = shuffleArray([...COUNTRIES]);
     return {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,

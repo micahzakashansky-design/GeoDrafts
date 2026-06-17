@@ -19,8 +19,7 @@ export default function GuessGame() {
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
-    let pool = [...COUNTRIES];
-    shuffleArray(pool);
+    let pool = shuffleArray([...COUNTRIES]);
     const mystery = pool.pop() || null;
     return {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: mystery, guesses: [],
@@ -64,8 +63,7 @@ export default function GuessGame() {
 
   const doReset = useCallback(() => {
     const isHardMode = state.isHardMode;
-    let pool = [...COUNTRIES];
-    shuffleArray(pool);
+    let pool = shuffleArray([...COUNTRIES]);
     const mystery = pool.pop() || null;
     setShowStatsModal(false);
     setState({

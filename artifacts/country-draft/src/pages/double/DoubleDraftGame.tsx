@@ -18,8 +18,7 @@ export default function DoubleDraftGame() {
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
-    let pool = [...COUNTRIES];
-    shuffleArray(pool);
+    let pool = shuffleArray([...COUNTRIES]);
     const c1 = pool.pop(); const c2 = pool.pop();
     const selection = (c1 && c2) ? [c1, c2] : null;
     return {
@@ -82,8 +81,7 @@ export default function DoubleDraftGame() {
 
   const doReset = useCallback(() => {
     const isHardMode = state.isHardMode;
-    let pool = [...COUNTRIES];
-    shuffleArray(pool);
+    let pool = shuffleArray([...COUNTRIES]);
     const c1 = pool.pop(); const c2 = pool.pop();
     const selection = (c1 && c2) ? [c1, c2] : null;
     setState({

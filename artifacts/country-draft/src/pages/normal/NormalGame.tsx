@@ -18,8 +18,7 @@ export default function NormalGame() {
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
-    let pool = [...COUNTRIES];
-    shuffleArray(pool);
+    let pool = shuffleArray([...COUNTRIES]);
     const currentCountry = pool.pop() || null;
     return {
       pool, currentCountry, selectionOptions: null, mysteryCountry: null, guesses: [],
@@ -89,8 +88,7 @@ export default function NormalGame() {
 
   const doReset = useCallback(() => {
     const isHardMode = state.isHardMode;
-    let pool = [...COUNTRIES];
-    shuffleArray(pool);
+    let pool = shuffleArray([...COUNTRIES]);
     setState({
       pool, currentCountry: pool.pop() || null, selectionOptions: null, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
