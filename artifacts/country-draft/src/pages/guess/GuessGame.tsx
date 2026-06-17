@@ -178,7 +178,7 @@ export default function GuessGame() {
               initial={{ scale: 0.95, opacity: 0, y: 20 }} 
               animate={{ scale: 1, opacity: 1, y: 0 }} 
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative"
+              className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto relative"
             >
               <button 
                 onClick={() => setShowStatsModal(false)}
@@ -198,7 +198,7 @@ export default function GuessGame() {
                   <p className="text-muted-foreground leading-relaxed italic">"{state.mysteryCountry.knownFor}"</p>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c)).map(cat => {
                     const stat = state.mysteryCountry!.stats[getCategoryKey(cat)];
                     return (
