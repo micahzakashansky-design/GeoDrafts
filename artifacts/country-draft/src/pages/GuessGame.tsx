@@ -77,7 +77,9 @@ export default function GuessGame() {
                  <h2 className="text-4xl font-serif font-bold mb-2">
                     {state.guesses[state.guesses.length - 1].toLowerCase() === state.mysteryCountry?.name.toLowerCase() ? "Correct!" : "Game Over"}
                  </h2>
-                 <p className="text-xl text-muted-foreground">The country was <span className="font-bold text-foreground text-2xl ml-1">{state.mysteryCountry?.flag} {state.mysteryCountry?.name}</span></p>
+                 {state.guesses[state.guesses.length - 1].toLowerCase() !== state.mysteryCountry?.name.toLowerCase() && (
+                    <p className="text-xl text-muted-foreground">The country was <span className="font-bold text-foreground text-2xl ml-1">{state.mysteryCountry?.flag} {state.mysteryCountry?.name}</span></p>
+                 )}
                </div>
 
                <div className="w-full max-w-md mx-auto mt-8 flex flex-col items-center">
