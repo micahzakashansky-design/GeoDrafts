@@ -62,8 +62,11 @@ export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Cou
                 <span className="text-yellow-500 shrink-0"><Users className="w-4 h-4" /></span>
                 <div className="truncate">
                   <div className="text-[10px] font-bold uppercase tracking-tight text-yellow-500/80 truncate">Population Structure</div>
-                  <div className="text-xs font-semibold text-foreground/80 truncate">
-                    {roster["Size"]?.flag} {roster["Size"]?.name} & {roster["Population"]?.flag} {roster["Population"]?.name}
+                  <div className="text-xs font-semibold text-foreground/80 truncate mt-0.5">
+                    {roster["Size"]?.flag} {roster["Size"]?.name}
+                  </div>
+                  <div className="text-xs font-semibold text-foreground/80 truncate mt-0.5">
+                    {roster["Population"]?.flag} {roster["Population"]?.name}
                   </div>
                 </div>
               </div>

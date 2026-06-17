@@ -4,12 +4,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/lib/theme-context";
 import NotFound from "@/pages/not-found";
-import NormalGame from "@/pages/NormalGame";
-import DoubleDraftGame from "@/pages/DoubleDraftGame";
-import GuessGame from "@/pages/GuessGame";
-import DailyGame from "@/pages/DailyGame";
-import PartyGame from "@/pages/PartyGame";
-import SabotageGame from "@/pages/SabotageGame";
+import NormalGame from "@/pages/normal/NormalGame";
+import DoubleDraftGame from "@/pages/double/DoubleDraftGame";
+import GuessGame from "@/pages/guess/GuessGame";
+import DailyGame from "@/pages/daily/DailyGame";
+import PartyGame from "@/pages/party/PartyGame";
+import SabotageGame from "@/pages/sabotage/SabotageGame";
 import Home from "@/pages/Home";
 import Leaderboard from "@/pages/Leaderboard";
 
