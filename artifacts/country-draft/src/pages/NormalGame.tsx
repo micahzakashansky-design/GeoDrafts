@@ -10,6 +10,7 @@ import {
 } from "./GameShared";
 import { Home, Globe as GlobeIcon } from "lucide-react";
 import { SubmitDialog } from "./SubmitDialog";
+import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 
 export default function NormalGame() {
   const [, navigate] = useLocation();
@@ -31,6 +32,7 @@ export default function NormalGame() {
   const [wildcardPhase, setWildcardPhase] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const rosterRef = useRef<HTMLDivElement>(null);
+  const localSavedRef = useRef(false);
 
   const totalScore = useMemo(() => {
     return CATEGORIES.reduce((sum, cat) => {
@@ -43,6 +45,13 @@ export default function NormalGame() {
 
   const bonus = useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
   const finalScore = totalScore + bonus;
+
+  React.useEffect(() => {
+    if (state.gameOver && !localSavedRef.current) {
+      savePersonalScore(state.isHardMode ? "hard" : "normal", { score: finalScore, roster: formatRoster(state.roster) });
+      localSavedRef.current = true;
+    }
+  }, [state.gameOver, state.isHardMode, finalScore, state.roster]);
 
   const assignCountry = useCallback((category: Category) => {
     if (state.roster[category]) return;
@@ -87,6 +96,7 @@ export default function NormalGame() {
       dailyDate: "", leaderboardSubmitted: false, mode: "normal", isHardMode,
       roomCode: null, poolSeed: 0
     });
+    localSavedRef.current = false;
   }, [state.isHardMode]);
 
   return (

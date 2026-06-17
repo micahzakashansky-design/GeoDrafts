@@ -492,7 +492,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
             <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-secondary text-foreground font-bold text-sm md:text-base hover:bg-secondary/80 transition-colors border border-border shadow-sm">
               <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
             </button>
-            {!isHardMode && !leaderboardSubmitted && (
+            {!leaderboardSubmitted && (
               <button onClick={onSubmitLeaderboard} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary/20 text-primary border border-primary/40 font-bold text-sm md:text-base hover:bg-primary/30 transition-colors shadow-sm">
                 <Medal className="w-4 h-4 md:w-5 md:h-5" /> Submit Score
               </button>

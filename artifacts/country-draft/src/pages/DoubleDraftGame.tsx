@@ -10,6 +10,7 @@ import {
 } from "./GameShared";
 import { Home, Globe as GlobeIcon } from "lucide-react";
 import { SubmitDialog } from "./SubmitDialog";
+import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 
 export default function DoubleDraftGame() {
   const [, navigate] = useLocation();
@@ -31,6 +32,7 @@ export default function DoubleDraftGame() {
   const [hoveredCategory, setHoveredCategory] = useState<Category | null>(null);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const rosterRef = useRef<HTMLDivElement>(null);
+  const localSavedRef = useRef(false);
 
   const totalScore = useMemo(() => {
     return CATEGORIES.reduce((sum, cat) => {
@@ -43,6 +45,13 @@ export default function DoubleDraftGame() {
 
   const bonus = useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
   const finalScore = totalScore + bonus;
+
+  React.useEffect(() => {
+    if (state.gameOver && !localSavedRef.current) {
+      savePersonalScore("double", { score: finalScore, roster: formatRoster(state.roster) });
+      localSavedRef.current = true;
+    }
+  }, [state.gameOver, finalScore, state.roster]);
 
   const onSelectionPick = useCallback((country: Country) => {
     setState(prev => ({ ...prev, currentCountry: country, selectionOptions: null }));
@@ -82,6 +91,7 @@ export default function DoubleDraftGame() {
       dailyDate: "", leaderboardSubmitted: false, mode: "double", isHardMode,
       roomCode: null, poolSeed: 0
     });
+    localSavedRef.current = false;
   }, [state.isHardMode]);
 
   return (

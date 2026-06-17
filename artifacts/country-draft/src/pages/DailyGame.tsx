@@ -10,6 +10,7 @@ import {
 } from "./GameShared";
 import { Home, Globe as GlobeIcon, CalendarDays } from "lucide-react";
 import { SubmitDialog } from "./SubmitDialog";
+import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 
 export default function DailyGame() {
   const [, navigate] = useLocation();
@@ -40,6 +41,7 @@ export default function DailyGame() {
   const [wildcardPhase, setWildcardPhase] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const rosterRef = useRef<HTMLDivElement>(null);
+  const localSavedRef = useRef(false);
 
   // Save state on change
   useEffect(() => {
@@ -57,6 +59,14 @@ export default function DailyGame() {
 
   const bonus = useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
   const finalScore = totalScore + bonus;
+
+  React.useEffect(() => {
+    if (state.gameOver && !localSavedRef.current) {
+      savePersonalScore("daily", { score: finalScore, roster: formatRoster(state.roster) });
+      localStorage.setItem(`countryDraftDailyResult_${state.dailyDate}`, JSON.stringify({ score: finalScore, completed: true }));
+      localSavedRef.current = true;
+    }
+  }, [state.gameOver, finalScore, state.roster, state.dailyDate]);
 
   const assignCountry = useCallback((category: Category) => {
     if (state.roster[category]) return;
@@ -92,6 +102,7 @@ export default function DailyGame() {
   }, [wildcardPhase, state.wildcardUsed]);
 
   const doReset = useCallback(() => {
+     localSavedRef.current = false;
      navigate("/");
   }, [navigate]);
 

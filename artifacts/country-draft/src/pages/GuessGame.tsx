@@ -9,7 +9,9 @@ import {
   GuessPhase, GameState,
   CATEGORY_ICONS, CATEGORY_WEIGHTS, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./GameShared";
-import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown, ChevronRight, X, MapPin } from "lucide-react";
+import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown, ChevronRight, X, MapPin, Trophy } from "lucide-react";
+import { SubmitDialog } from "./SubmitDialog";
+import { savePersonalScore } from "@/lib/local-leaderboard";
 
 export default function GuessGame() {
   const [, navigate] = useLocation();
@@ -28,6 +30,8 @@ export default function GuessGame() {
     };
   });
 
+  const localSavedRef = useRef(false);
+
   const onGuess = useCallback((name: string) => {
     setState(prev => {
       let finalName = name;
@@ -44,6 +48,20 @@ export default function GuessGame() {
     });
   }, []);
 
+  const isWin = state.guesses.length > 0 && state.guesses[state.guesses.length - 1].toLowerCase() === state.mysteryCountry?.name.toLowerCase();
+  const guessScore = isWin ? 10 - state.guesses.length : 0;
+
+  React.useEffect(() => {
+    if (state.gameOver && !localSavedRef.current) {
+      savePersonalScore("guess", { 
+        score: guessScore, 
+        guesses: state.guesses,
+        mysteryCountry: state.mysteryCountry?.name
+      });
+      localSavedRef.current = true;
+    }
+  }, [state.gameOver, guessScore, state.guesses, state.mysteryCountry]);
+
   const doReset = useCallback(() => {
     const isHardMode = state.isHardMode;
     let pool = [...COUNTRIES];
@@ -56,6 +74,7 @@ export default function GuessGame() {
       dailyDate: "", leaderboardSubmitted: false, mode: "guess", isHardMode,
       roomCode: null, poolSeed: 0
     });
+    localSavedRef.current = false;
   }, [state.isHardMode]);
 
   return (
@@ -132,9 +151,16 @@ export default function GuessGame() {
                   </div>
                </div>
 
-               <button onClick={doReset} className="mt-12 px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg hover:opacity-90 transition-opacity shadow-lg">
-                 Play Again
-               </button>
+               <div className="mt-12 flex flex-col items-center justify-center gap-4">
+                 {!state.leaderboardSubmitted && isWin && (
+                   <button onClick={() => setState(prev => ({ ...prev, leaderboardSubmitted: 'pending' as any }))} className="flex items-center gap-2 px-6 py-3 bg-yellow-400/20 text-yellow-400 border border-yellow-400/40 rounded-xl font-bold text-sm hover:bg-yellow-400/30 transition-all shadow-lg hover:scale-105">
+                     <Trophy className="w-4 h-4" /> Submit to Global Leaderboard
+                   </button>
+                 )}
+                 <button onClick={doReset} className="px-8 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-lg hover:opacity-90 transition-opacity shadow-lg">
+                   Play Again
+                 </button>
+               </div>
             </div>
           ) : state.mysteryCountry ? (
             <GuessPhase mysteryCountry={state.mysteryCountry} guesses={state.guesses} onGuess={onGuess} />
@@ -194,6 +220,10 @@ export default function GuessGame() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {state.leaderboardSubmitted === 'pending' as any && (
+        <SubmitDialog score={guessScore} mode="guess" roster={{}} onClose={() => setState(prev => ({ ...prev, leaderboardSubmitted: false }))} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />
+      )}
     </div>
   );
 }
