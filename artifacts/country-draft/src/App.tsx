@@ -4,7 +4,12 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/lib/theme-context";
 import NotFound from "@/pages/not-found";
-import Game from "@/pages/Game";
+import NormalGame from "@/pages/NormalGame";
+import DoubleDraftGame from "@/pages/DoubleDraftGame";
+import GuessGame from "@/pages/GuessGame";
+import DailyGame from "@/pages/DailyGame";
+import PartyGame from "@/pages/PartyGame";
+import SabotageGame from "@/pages/SabotageGame";
 import Home from "@/pages/Home";
 import Leaderboard from "@/pages/Leaderboard";
 
@@ -14,7 +19,12 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/game" component={Game} />
+      <Route path="/game/normal" component={NormalGame} />
+      <Route path="/game/double" component={DoubleDraftGame} />
+      <Route path="/game/guess" component={GuessGame} />
+      <Route path="/game/daily" component={DailyGame} />
+      <Route path="/game/party" component={PartyGame} />
+      <Route path="/game/sabotage" component={SabotageGame} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route component={NotFound} />
     </Switch>

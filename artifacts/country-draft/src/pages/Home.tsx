@@ -44,7 +44,7 @@ function DailyCard() {
   const dailyResult = useMemo<{ score: number; completed: boolean } | null>(() => { try { const raw = localStorage.getItem(`countryDraftDailyResult_${todayKey}`); if (!raw) return null; return JSON.parse(raw); } catch { return null; } }, [todayKey]);
   const inProgressLocal = useMemo(() => { try { const raw = localStorage.getItem(`countryDraftState_daily_${todayKey}`); if (!raw) return false; const s = JSON.parse(raw); return s && !s.gameOver && s.isDailyMode; } catch { return false; } }, [todayKey]);
   const inProgress = inProgressLocal || (cloudState && !cloudState.gameOver);
-  function playDaily() { localStorage.setItem("countryDraftDailyMode", "true"); localStorage.setItem("countryDraftDailyDate", todayKey); localStorage.removeItem("countryDraftMode"); navigate("/game"); }
+  function playDaily() { localStorage.setItem("countryDraftDailyMode", "true"); localStorage.setItem("countryDraftDailyDate", todayKey); localStorage.removeItem("countryDraftMode"); navigate("/game/daily"); }
   const alreadyCompleted = dailyResult?.completed === true || cloudCompleted;
   return (
     <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05, duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }} className="w-full max-w-xl mb-6">
@@ -55,8 +55,8 @@ function DailyCard() {
 
 function MultiplayerModal({ onClose }: { onClose: () => void }) {
   const [, navigate] = useLocation(); const { firebaseUser, profile, signInWithGoogle } = useFirebaseAuth(); const [loading, setLoading] = useState(false); const [error, setError] = useState<string | null>(null); const [joinCode, setJoinCode] = useState(""); const [isJoining, setIsJoining] = useState(false); const [difficulty, setDifficulty] = useState<"easy" | "hard">("easy");
-  async function handleHost(mode: "sabotage" | "party") { if (!firebaseUser || !profile) return; setLoading(true); try { const code = await createRoom(firebaseUser.uid, profile.username, mode, difficulty); localStorage.setItem("countryDraftRoomCode", code); navigate("/game"); } catch (e) { setError(e instanceof Error ? e.message : "Failed to create room"); } finally { setLoading(false); } }
-  async function handleJoin() { if (!firebaseUser || !profile) return; if (joinCode.length !== 6) return; setLoading(true); try { await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username); localStorage.setItem("countryDraftRoomCode", joinCode.toUpperCase()); navigate("/game"); } catch (e) { setError(e instanceof Error ? e.message : "Failed to join room"); } finally { setLoading(false); } }
+  async function handleHost(mode: "sabotage" | "party") { if (!firebaseUser || !profile) return; setLoading(true); try { const code = await createRoom(firebaseUser.uid, profile.username, mode, difficulty); localStorage.setItem("countryDraftRoomCode", code); navigate(`/game/${mode}?room=${code}`); } catch (e) { setError(e instanceof Error ? e.message : "Failed to create room"); } finally { setLoading(false); } }
+  async function handleJoin() { if (!firebaseUser || !profile) return; if (joinCode.length !== 6) return; setLoading(true); try { const room = await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username); localStorage.setItem("countryDraftRoomCode", joinCode.toUpperCase()); navigate(`/game/${room.mode}?room=${joinCode.toUpperCase()}`); } catch (e) { setError(e instanceof Error ? e.message : "Failed to join room"); } finally { setLoading(false); } }
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
       <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="bg-card border border-border w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
@@ -131,7 +131,10 @@ export default function Home() {
     localStorage.removeItem("countryDraftDailyDate");
     localStorage.removeItem("countryDraftState_v4");
     localStorage.removeItem("countryDraftRoomCode");
-    navigate("/game");
+    if (mode === "normal") navigate("/game/normal");
+    else if (mode === "double") navigate("/game/double");
+    else if (mode === "guess") navigate("/game/guess");
+    else navigate(`/game/${mode}`);
   }
 
   if (isLoading) {
