@@ -454,7 +454,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                 return (
                   <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative overflow-hidden transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
                     <div className="flex items-center justify-between"><div className="flex items-center gap-2 text-muted-foreground">{isCombo ? <Users className="w-4 h-4 md:w-5 md:h-5" /> : CATEGORY_ICONS[actualCat]}<span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span></div></div>
-                    <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{assigned.flag} {assigned.name}{isCombo && roster.Population && <span className="text-muted-foreground/50">+ {roster.Population.flag} {roster.Population.name}</span>}</div></div>
+                    <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{assigned.flag} {assigned.name}{isCombo && roster.Population && <><span className="text-muted-foreground/50">+</span> {roster.Population.flag} {roster.Population.name}</>}</div></div>
                     {(() => {
                       let scoreVal = 0, weight = 1, desc = "";
                       if (isCombo) { scoreVal = (assigned.stats.size.score + roster.Population!.stats.population.score) / 2; weight = 1; desc = "Combined structure bonus applied based on Size and Population compatibility."; }
