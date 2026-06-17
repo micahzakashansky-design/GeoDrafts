@@ -184,7 +184,7 @@ export default function GuessGame() {
                           <span className="text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span>
                         </div>
                         <p className="text-sm text-foreground/70">{stat.description}</p>
-                        <div className="mt-2 text-primary font-mono font-bold">{getPtsDisplay(stat.pts)} pts</div>
+                        <div className="mt-2 text-primary font-mono font-bold">{getPtsDisplay(stat.score, cat)}</div>
                       </div>
                     );
                   })}
