@@ -431,12 +431,12 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           <h3 className="text-lg md:text-xl font-serif font-bold text-foreground px-2 flex items-center justify-between">
             <span>Your Nation's Roster</span>
             {!isMultiplayerGame && !wildcardUsed && !wildcardPhase && (
-              <button onClick={onWildcard} className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 font-semibold hover:bg-blue-500/20 transition-colors border border-blue-500/30">
+              <button onClick={onWildcard} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 font-semibold hover:bg-blue-500/20 transition-colors border border-blue-500/30">
                 <Shuffle className="w-3.5 h-3.5" /> Use Wildcard
               </button>
             )}
             {wildcardPhase && (
-              <button onClick={() => setWildcardPhase(false)} className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-muted-foreground font-semibold hover:text-foreground transition-colors">
+              <button onClick={() => setWildcardPhase(false)} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-muted-foreground font-semibold hover:text-foreground transition-colors">
                 Cancel
               </button>
             )}
