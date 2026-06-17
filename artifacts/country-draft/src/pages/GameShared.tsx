@@ -341,63 +341,78 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
   const isComplete = CATEGORIES.every(c => roster[c]);
   if (isComplete) return null;
   return (
-    <div className="flex flex-col h-full relative max-w-3xl mx-auto w-full p-4 md:p-6 overflow-hidden">
-      <div className="flex items-center justify-between mb-4 md:mb-6 shrink-0">
-        <div className="bg-primary/5 border border-primary/20 rounded-lg px-4 py-2.5 flex items-center gap-3"><ChevronRight className="w-4 h-4 text-primary shrink-0" /><p className="text-sm text-foreground/80">{isHardMode ? (<><span className="text-red-400 font-semibold">Hard Mode</span> — no ratings. <span className="text-primary font-semibold">Click a slot</span> to assign based on objective stats.</>) : (<><span className="text-primary font-semibold">Hover a slot</span> on the left to preview this country's score, then click to assign.</>)}</p></div>
-        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-secondary/50 rounded-full border border-border"><GlobeIcon className="w-3.5 h-3.5 text-muted-foreground" /><span className="text-xs font-semibold text-muted-foreground">{poolRemaining} left</span></div>
+    <div className="flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8">
+      {/* Header section */}
+      <div className="flex justify-between items-start mb-6 w-full">
+        <div className="flex items-start gap-4 md:gap-6">
+          <div className="text-4xl md:text-5xl mt-1 drop-shadow-md">{country.flag}</div>
+          <div>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground tracking-tight">{country.name}</h2>
+            <p className="text-sm text-muted-foreground mt-0.5">{country.capital} &bull; {country.region}</p>
+            <div className="mt-4 max-w-2xl text-sm text-foreground/80 leading-relaxed">
+              {country.knownFor}
+            </div>
+          </div>
+        </div>
+        
+        {/* Pool Counter */}
+        <div className="hidden md:flex flex-col items-end text-right ml-4">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Pool</span>
+          <span className="text-3xl font-bold text-foreground leading-none">{poolRemaining}</span>
+          <span className="text-xs text-muted-foreground mt-1">remaining</span>
+        </div>
       </div>
-      <motion.div key={country.name} initial={{ opacity: 0, x: 20, scale: 0.95 }} animate={{ opacity: 1, x: 0, scale: 1 }} className="flex-1 bg-card rounded-2xl border border-border overflow-y-auto shadow-2xl relative">
-        <div className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border p-6 flex items-start justify-between">
-          <div><div className="text-6xl mb-3 drop-shadow-md">{country.flag}</div><h2 className="text-3xl font-serif font-bold text-foreground tracking-tight">{country.name}</h2><p className="text-sm text-muted-foreground uppercase tracking-widest font-semibold mt-1 flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" />{country.region}</p></div>
-          <div className="hidden sm:block text-right max-w-xs"><ExpandableDescription description={country.knownFor} /></div>
-        </div>
-        <div className="p-6">
-          <div className="sm:hidden mb-6"><ExpandableDescription description={country.knownFor} /></div>
+
+      {/* Separator / Banner */}
+      <div className="border border-border/60 rounded-lg px-4 py-3 bg-secondary/10 mb-6 flex items-center gap-3">
+        <ChevronRight className="w-4 h-4 text-yellow-500 shrink-0" />
+        <p className="text-sm text-foreground/80">
           {isHardMode ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {CATEGORIES.map((cat) => {
-                const stat = country.stats[getCategoryKey(cat)];
-                const isAssigned = !!roster[cat];
-                return (
-                  <button key={cat} onClick={() => !isAssigned && onAssign(cat)} disabled={isAssigned} className={`text-left p-4 rounded-xl border transition-all ${isAssigned ? "bg-muted/10 border-border/25 opacity-50 cursor-not-allowed" : "bg-secondary/30 border-border/50 hover:bg-secondary hover:border-primary/50"}`}>
-                    <div className="flex items-center justify-between mb-2"><div className="flex items-center gap-2"><span className="text-muted-foreground">{CATEGORY_ICONS[cat]}</span><span className="text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span></div>{!isAssigned && <Plus className="w-4 h-4 text-primary opacity-50" />}</div>
-                    <p className="text-sm text-foreground/70 leading-relaxed">{stat.description}</p>
-                  </button>
-                );
-              })}
-            </div>
+            <><span className="text-red-400 font-semibold">Hard Mode</span> &mdash; no ratings. <span className="text-primary font-semibold">Click a slot</span> to assign based on objective stats.</>
           ) : (
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c)).map((cat) => {
-                  const stat = country.stats[getCategoryKey(cat)]; const isHovered = hoveredCategory === cat; const isAssigned = !!roster[cat]; const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
-                  return (
-                    <div key={cat} onMouseEnter={() => !isAssigned && onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => !isAssigned && onAssign(cat)} className={`p-3 rounded-xl border transition-all cursor-pointer relative overflow-hidden ${isAssigned ? "bg-muted/10 border-border/25 opacity-40" : isHovered ? "bg-primary/10 border-primary shadow-md scale-[1.02]" : "bg-secondary/20 border-border/40 hover:bg-secondary/40"}`}>
-                      {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse" />}
-                      <div className="relative z-10 flex flex-col h-full justify-between">
-                        <div className="flex items-center justify-between mb-3"><div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-1.5">{CATEGORY_ICONS[cat]}<span className="truncate">{cat}</span></div><span className="text-[9px] text-yellow-400/60 font-bold">{getCategoryStars(cat)}</span></div>
-                        <div className="flex items-end justify-between"><div className="text-2xl font-bold text-foreground tracking-tighter">{stat.score}<span className="text-sm text-muted-foreground font-medium">/10</span></div>{isHovered && (<div className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded animate-in fade-in zoom-in duration-200">Select</div>)}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {BONUS_CATEGORIES.map(cat => {
-                  const stat = country.stats[getCategoryKey(cat)]; const isHovered = hoveredCategory === cat; const isAssigned = !!roster[cat]; const bonusVal = Math.floor(stat.score / 2);
-                  return (
-                    <div key={cat} onMouseEnter={() => !isAssigned && onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => !isAssigned && onAssign(cat)} className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center gap-4 ${isAssigned ? "bg-muted/10 border-border/25 opacity-40" : isHovered ? "bg-yellow-400/10 border-yellow-400/50 scale-[1.02]" : "bg-secondary/20 border-border/40 hover:bg-secondary/40"}`}>
-                      <div className={`p-3 rounded-lg ${isAssigned ? "bg-secondary" : "bg-yellow-400/20 text-yellow-400"}`}>{CATEGORY_ICONS[cat]}</div>
-                      <div className="flex-1"><div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1">{cat}</div><div className="text-sm text-foreground/80 leading-tight">{stat.description}</div></div>
-                      <div className="text-center shrink-0"><div className="text-lg font-bold text-yellow-400">+{bonusVal}</div><div className="text-[10px] uppercase font-bold text-muted-foreground">Bonus</div></div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <><span className="text-yellow-500 font-semibold">Hover a slot</span> on the left to preview this country's score, then click to assign.</>
           )}
+        </p>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {CATEGORIES.map((cat) => {
+            const stat = country.stats[getCategoryKey(cat)];
+            const isHovered = hoveredCategory === cat;
+            const isAssigned = !!roster[cat];
+            const weight = CATEGORY_WEIGHTS[cat] ?? 1.0;
+            const scoreLabel = getScoreLabel(Math.round(stat.score * weight));
+            
+            return (
+              <div key={cat} onMouseEnter={() => !isAssigned && onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => !isAssigned && onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative overflow-hidden ${isAssigned ? "bg-muted/10 border-border/25 opacity-40 cursor-not-allowed" : isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
+                {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse" />}
+                
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+                      {CATEGORY_ICONS[cat]}
+                      <span>{cat}</span>
+                      {!isHardMode && <span className="text-yellow-500/80">{getCategoryStars(cat)}</span>}
+                    </div>
+                  </div>
+                  
+                  {!isHardMode && (
+                    <div className="flex items-center justify-between mb-3">
+                      <div className={`text-sm font-bold ${scoreLabel.color}`}>{scoreLabel.label}</div>
+                      <div className={`text-sm font-bold ${scoreLabel.color}`}>{getPtsDisplay(stat.score, cat)}</div>
+                    </div>
+                  )}
+                  
+                  <div className="mt-auto pt-1">
+                    <ExpandableDescription description={stat.description} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }
