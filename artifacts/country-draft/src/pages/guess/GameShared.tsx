@@ -352,7 +352,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
                 const isHigher = mysteryScore > guessScore;
                 
                 return (
-                  <div key={cat} className={`flex flex-col items-center justify-center p-2 rounded-xl border ${isMatch ? 'bg-green-500/20 border-green-500/30 text-green-500' : 'bg-secondary border-border'}`}>
+                  <div key={cat} className={`flex flex-col items-center justify-center p-2 rounded-xl border ${isMatch ? 'bg-green-500/20 border-green-500/30 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
                     <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">{cat}</div>
                     <div className="flex items-center gap-1 font-bold text-sm">
                       {guessScore}
