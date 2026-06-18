@@ -366,10 +366,10 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
           const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
           
           return (
-            <div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm">
-              <div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div>
-              <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div>
-              <div className="text-2xl font-bold text-foreground tracking-tighter">
+            <div key={cat} className="p-4 h-full rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm">
+              <div className="text-primary/70 mb-1.5 shrink-0">{CATEGORY_ICONS[cat]}</div>
+              <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1 shrink-0 min-h-[32px] flex items-center justify-center leading-tight">{cat}</div>
+              <div className="text-2xl font-bold text-foreground tracking-tighter mt-auto shrink-0">
                 {isBonus ? (
                   <span className="text-xl md:text-2xl">{extractBonusText(desc, cat)}</span>
                 ) : (
