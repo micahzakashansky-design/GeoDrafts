@@ -117,7 +117,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
     ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
   }
   const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
-  if (roster.Size && roster.Population && !wildcardPhase) { displayCats.push("Population Structure" as any); }
+  if (roster.Size && roster.Population) { displayCats.push("Population Structure" as any); }
   else { if (roster.Size) displayCats.push("Size" as any); if (roster.Population) displayCats.push("Population" as any); }
 
   displayCats.forEach((cat, i) => {
