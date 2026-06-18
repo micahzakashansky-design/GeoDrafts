@@ -118,8 +118,9 @@ export async function saveScore(
 }
 
 export async function getTopScores(modeFilter?: string, topN = 10): Promise<LeaderboardEntry[]> {
+  const isAsc = modeFilter === "guess";
   const snap = await getDocs(
-    query(collection(firestore, "leaderboard"), orderBy("score", "desc"), limit(100))
+    query(collection(firestore, "leaderboard"), orderBy("score", isAsc ? "asc" : "desc"), limit(100))
   );
   const all = snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
   if (modeFilter && modeFilter !== "all") {

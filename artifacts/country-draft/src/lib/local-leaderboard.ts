@@ -35,7 +35,13 @@ export function savePersonalScore(mode: GameMode, entryData: Omit<PersonalLeader
 
   board.push(entry);
 
-  board.sort((a, b) => b.score - a.score);
+  if (mode === "guess") {
+    // For guess mode, lower score is better (guesses + hints)
+    board.sort((a, b) => a.score - b.score);
+  } else {
+    // For other modes, higher score is better
+    board.sort((a, b) => b.score - a.score);
+  }
 
   // Keep top 20 personal records per mode
   localStorage.setItem(getStorageKey(mode), JSON.stringify(board.slice(0, 20)));

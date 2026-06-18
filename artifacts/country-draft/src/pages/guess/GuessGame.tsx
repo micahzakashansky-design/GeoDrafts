@@ -25,7 +25,7 @@ export default function GuessGame() {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: mystery, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "guess", isHardMode,
-      roomCode: null, poolSeed: 0
+      roomCode: null, poolSeed: 0, hintsRevealed: 0
     };
   });
 
@@ -48,7 +48,9 @@ export default function GuessGame() {
   }, []);
 
   const isWin = state.guesses.length > 0 && state.guesses[state.guesses.length - 1].toLowerCase() === state.mysteryCountry?.name.toLowerCase();
-  const guessScore = isWin ? 10 - state.guesses.length : 0;
+  // Score = number of guesses + number of hints. Lower is better. 
+  // If not win, no score (or high penalty). But local leaderboard only saves wins anyway usually. We'll set it to 0 if they lose.
+  const guessScore = isWin ? state.guesses.length + (state.hintsRevealed || 0) : 0;
 
   React.useEffect(() => {
     if (state.gameOver && !localSavedRef.current) {
@@ -70,7 +72,7 @@ export default function GuessGame() {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: mystery, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "guess", isHardMode,
-      roomCode: null, poolSeed: 0
+      roomCode: null, poolSeed: 0, hintsRevealed: 0
     });
     localSavedRef.current = false;
   }, [state.isHardMode]);
@@ -100,6 +102,13 @@ export default function GuessGame() {
                  </h2>
                  {state.guesses[state.guesses.length - 1].toLowerCase() !== state.mysteryCountry?.name.toLowerCase() && (
                     <p className="text-xl text-muted-foreground">The country was <span className="font-bold text-foreground text-2xl ml-1">{state.mysteryCountry?.flag} {state.mysteryCountry?.name}</span></p>
+                 )}
+                 {isWin && (
+                    <div className="flex flex-col items-center justify-center my-4 p-4 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto">
+                      <div className="text-3xl font-bold text-primary">{guessScore} Points</div>
+                      <div className="text-sm text-muted-foreground mt-1">({state.guesses.length} guesses + {state.hintsRevealed || 0} hints)</div>
+                      <div className="text-[10px] text-primary/70 font-bold uppercase tracking-widest mt-2">Lower score is better!</div>
+                    </div>
                  )}
                </div>
 
@@ -161,7 +170,13 @@ export default function GuessGame() {
                </div>
             </div>
           ) : state.mysteryCountry ? (
-            <GuessPhase mysteryCountry={state.mysteryCountry} guesses={state.guesses} onGuess={onGuess} />
+            <GuessPhase 
+              mysteryCountry={state.mysteryCountry} 
+              guesses={state.guesses} 
+              onGuess={onGuess} 
+              hintsRevealed={state.hintsRevealed || 0}
+              onRevealHint={() => setState(prev => ({ ...prev, hintsRevealed: (prev.hintsRevealed || 0) + 1 }))}
+            />
           ) : (
             <div className="flex-1 flex items-center justify-center text-muted-foreground">Loading game...</div>
           )}
