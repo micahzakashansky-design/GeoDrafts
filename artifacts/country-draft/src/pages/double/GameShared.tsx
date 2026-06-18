@@ -313,9 +313,9 @@ export function SelectionPhase({ options, onPick, isHardMode, mode }: { options:
                  const threeStars = ["Military", "Economy", "Government"] as Category[];
                  const twoStars = ["International Relationships", "Technology", "Education", "Natural Resources", "Healthcare"] as Category[];
                  const oneStars = ["Location", "Size", "Population", "Culture", "Climate", "History", "Tourism"] as Category[];
-                 const avg3 = Math.round(threeStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / threeStars.length * 10) / 10;
-                 const avg2 = Math.round(twoStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / twoStars.length * 10) / 10;
-                 const avg1 = Math.round(oneStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / oneStars.length * 10) / 10;
+                 const avg3 = Math.round(threeStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / threeStars.length);
+                 const avg2 = Math.round(twoStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / twoStars.length);
+                 const avg1 = Math.round(oneStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / oneStars.length);
                  return (
                    <div className="grid grid-cols-3 gap-2">
                      <div className="text-center p-2 rounded-lg bg-secondary/30 border border-border/40"><div className="text-[9px] uppercase font-bold text-muted-foreground">3-Star Avg</div><div className="text-sm font-bold text-primary">{avg3}/15</div></div>
