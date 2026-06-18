@@ -335,54 +335,14 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
       </div>
         
       {guesses.length > 0 && (
-        <div className="w-full max-w-5xl mt-2 mb-6 space-y-4">
+        <div className="mt-8 space-y-4">
           <div className="flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div>
-          <div className="flex flex-col gap-2">
-            {guesses.map((g, i) => {
-              const guessedCountry = COUNTRIES.find(c => c.name.toLowerCase() === g.toLowerCase());
-              if (!guessedCountry) return null;
-              
-              const isRegionMatch = guessedCountry.region === mysteryCountry.region;
-              
-              const getStatFeedback = (cat: Category) => {
-                const key = getCategoryKey(cat);
-                const guessScore = guessedCountry.stats[key].score;
-                const mysteryScore = mysteryCountry.stats[key].score;
-                const isMatch = guessScore === mysteryScore;
-                const isHigher = mysteryScore > guessScore;
-                
-                return (
-                  <div key={cat} className={`flex flex-col items-center justify-center p-2 rounded-xl border ${isMatch ? 'bg-green-500/20 border-green-500/30 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
-                    <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">{cat}</div>
-                    <div className="flex items-center gap-1 font-bold text-sm">
-                      {guessScore}
-                      {!isMatch && (isHigher ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />)}
-                    </div>
-                  </div>
-                );
-              };
-
-              return (
-                <motion.div key={i} initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex flex-col sm:flex-row gap-2 p-3 rounded-2xl bg-card border border-border shadow-sm items-center">
-                  <div className="flex items-center gap-3 w-full sm:w-48 shrink-0">
-                    <span className="text-3xl">{guessedCountry.flag}</span>
-                    <div className="font-bold text-sm truncate">{guessedCountry.name}</div>
-                  </div>
-                  
-                  <div className="grid grid-cols-6 gap-2 w-full flex-1">
-                    <div className={`flex flex-col items-center justify-center p-2 rounded-xl border ${isRegionMatch ? 'bg-green-500/20 border-green-500/30 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
-                       <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">REGION</div>
-                       <div className="font-bold text-[10px] truncate w-full text-center" title={guessedCountry.region}>{guessedCountry.region}</div>
-                    </div>
-                    {getStatFeedback("Size" as Category)}
-                    {getStatFeedback("Population" as Category)}
-                    {getStatFeedback("Economy" as Category)}
-                    {getStatFeedback("Military" as Category)}
-                    {getStatFeedback("Government" as Category)}
-                  </div>
-                </motion.div>
-              );
-            })}
+          <div className="flex flex-wrap gap-2 justify-center">
+            {guesses.map((g, i) => (
+              <motion.div key={i} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold shadow-sm">
+                {g}
+              </motion.div>
+            ))}
           </div>
         </div>
       )}
