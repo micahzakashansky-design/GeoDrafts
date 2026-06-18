@@ -304,26 +304,35 @@ export function ExpandableDescription({ description }: { description: string }) 
       setIsOverflowing(textRef.current.scrollHeight > textRef.current.clientHeight);
     }
   }, [description]);
+  
   return (
-    <div className="relative flex flex-col flex-1">
-      {/* Invisible placeholder to maintain the normal collapsed height in the DOM */}
-      <div className="invisible flex flex-col flex-1" aria-hidden="true">
-        <p className="text-sm leading-relaxed italic line-clamp-2 flex-1">{description}</p>
-        {isOverflowing && (
-          <div className="text-[10px] uppercase font-bold mt-auto pt-1 py-1">Show More</div>
-        )}
-      </div>
+    <div className="relative">
+      <p ref={textRef} className={`text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic ${expanded ? "opacity-0 pointer-events-none" : "line-clamp-2"}`}>
+        {description}
+      </p>
       
-      {/* Absolute overlay for the actual content */}
-      <div className={`absolute top-0 left-0 right-0 flex flex-col ${expanded ? 'z-50 bg-card border border-border shadow-xl rounded-lg p-3 -mx-3 -my-3' : 'bottom-0'}`}>
-        <p ref={textRef} className={`text-sm text-foreground/80 leading-relaxed italic flex-1 ${expanded ? "" : "line-clamp-2"}`}>{description}</p>
-        {isOverflowing && (
-          <button onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }} className={`text-[10px] uppercase font-bold text-primary flex items-center gap-1 hover:bg-primary/20 px-2 py-1 rounded -ml-2 transition-colors w-max text-left ${expanded ? 'mt-2' : 'mt-auto pt-1'}`}>
-            {expanded ? "Show Less" : "Show More"}
-            {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+      {!expanded && isOverflowing && (
+        <button 
+          onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
+          className="text-[10px] uppercase font-bold text-yellow-500 hover:text-yellow-400 mt-2 flex items-center gap-1 group w-max transition-colors"
+        >
+          Show More <ChevronDown className="w-3 h-3 group-hover:translate-y-0.5 transition-transform" />
+        </button>
+      )}
+
+      {expanded && (
+        <div className="absolute top-[-8px] left-[calc(-1rem-1px)] right-[calc(-1rem-1px)] md:left-[calc(-1.25rem-1px)] md:right-[calc(-1.25rem-1px)] bg-card border-x border-b border-border/50 rounded-b-2xl px-4 md:px-5 pt-[8px] pb-4 md:pb-5 z-50 shadow-2xl">
+          <p className="text-[11px] md:text-xs text-foreground/90 leading-relaxed italic">
+            {description}
+          </p>
+          <button 
+            onClick={(e) => { e.stopPropagation(); setExpanded(false); }}
+            className="text-[10px] uppercase font-bold text-yellow-500 hover:text-yellow-400 mt-3 flex items-center gap-1 group w-max transition-colors"
+          >
+            Show Less <ChevronUp className="w-3 h-3 group-hover:-translate-y-0.5 transition-transform" />
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -418,7 +427,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                     </div>
                   )}
                   
-                  <div className="mt-auto pt-1">
+                  <div className="mt-3">
                     <ExpandableDescription description={stat.description} />
                   </div>
                 </div>
@@ -501,7 +510,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                             <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-muted-foreground">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-foreground/80">{sCat}</span></div></div>
                             <div><div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
-                              <div className="mt-auto space-y-1">
+                              <div className="space-y-1 mt-3">
                                 <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
                                 <div className="font-bold text-white text-xs">{extractBonusText(stat.description, sCat)}</div>
                               </div>
@@ -527,7 +536,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                       <div>
                         <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{(sizeCountry as any).flag} {(sizeCountry as any).name}</div>
                       </div>
-                      <div className="space-y-3 mt-auto">
+                      <div className="space-y-3 mt-3">
                         <div className="space-y-1">
                           {!isHardMode && (
                             <div className="flex items-center gap-2">
@@ -565,12 +574,12 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                       const isSizeOrPop = actualCat === "Size" || actualCat === "Population";
 
                       return (
-                        <div className="space-y-2 mt-auto">
+                        <div className="space-y-2 mt-3">
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
                               {!isBonus && !isSizeOrPop ? ( <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-primary/50 text-xs">/ {maxScore}</span> <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
                               ) : isSizeOrPop ? (
-                                <div className="flex items-center gap-2 mt-auto">
+                                <div className="flex items-center gap-2">
                                   <span className="font-bold text-white text-xs">{extractBonusText(desc, actualCat)}</span>
                                   <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
                                 </div>
