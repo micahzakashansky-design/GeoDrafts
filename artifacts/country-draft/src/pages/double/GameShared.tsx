@@ -288,10 +288,10 @@ export function ExpandableDescription({ description }: { description: string }) 
     }
   }, [description]);
   return (
-    <div className="relative">
-      <p ref={textRef} className={`text-sm text-foreground/80 leading-relaxed italic ${expanded ? "" : "line-clamp-2"}`}>"{description}"</p>
+    <div className="relative flex flex-col h-full">
+      <p ref={textRef} className={`text-sm text-foreground/80 leading-relaxed italic flex-1 ${expanded ? "" : "line-clamp-2"}`}>{description}</p>
       {isOverflowing && (
-        <button onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }} className="text-[10px] uppercase font-bold text-primary mt-1 hover:underline">
+        <button onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }} className="text-[10px] uppercase font-bold text-primary mt-auto pt-1 hover:underline text-left">
           {expanded ? "Show Less" : "Show More"}
         </button>
       )}
@@ -324,7 +324,7 @@ export function SelectionPhase({ options, onPick, isHardMode, mode }: { options:
                    </div>
                  );
                })()}
-               <div className="w-full py-2.5 rounded-xl bg-primary/10 text-primary text-center font-bold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-primary/20">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div>
+               <div className="mt-auto pt-4"><div className="w-full py-2.5 rounded-xl bg-primary/10 text-primary text-center font-bold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-primary/20">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div></div>
             </div>
           </motion.div>
         ))}
@@ -384,10 +384,12 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                 
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
-                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
-                      {CATEGORY_ICONS[cat]}
-                      <span>{cat}</span>
-                      {!isHardMode && <span className="text-yellow-500/80">{getCategoryStars(cat)}</span>}
+                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-start justify-between gap-2">
+                      <div className="flex items-start gap-2">
+                        <div className="shrink-0 mt-0.5">{CATEGORY_ICONS[cat]}</div>
+                        <span className="leading-tight">{cat}</span>
+                      </div>
+                      {!isHardMode && <span className="text-yellow-500/80 shrink-0 mt-0.5">{getCategoryStars(cat)}</span>}
                     </div>
                   </div>
                   
