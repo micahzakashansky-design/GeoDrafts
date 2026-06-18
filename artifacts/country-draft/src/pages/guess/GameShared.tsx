@@ -338,7 +338,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full overflow-y-auto">
       <div className="text-center"><h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2><p className="text-muted-foreground text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
-      <div className="w-full max-w-2xl relative mt-4 mb-6">
+      <div className="w-full max-w-2xl relative mt-4">
         <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" /></div>
           <input id="guess-input" name="guess-input" type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-secondary/50 border border-border rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
           {showSuggestions && suggestions.length > 0 && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-full left-0 w-full mb-3 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-50">{suggestions.map(s => (<button key={s.name} onClick={() => { onGuess(s.name); setInput(""); setShowSuggestions(false); }} className="w-full px-5 py-4 text-left hover:bg-primary/10 transition-colors border-b border-border last:border-0 flex items-center justify-between group"><div className="flex items-center gap-4"><span className="text-2xl">{s.flag}</span><span className="font-bold text-foreground">{s.name}</span></div><ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" /></button>))}</motion.div>)}
@@ -346,7 +346,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
       </div>
         
       {guesses.length > 0 && (
-        <div className="mt-8 space-y-4">
+        <div className="space-y-4">
           <div className="flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div>
           <div className="flex flex-wrap gap-2 justify-center">
             {guesses.map((g, i) => (
