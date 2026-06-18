@@ -40,6 +40,17 @@ export const CATEGORY_MAX_SCORES: Partial<Record<Category, number>> = {
 
 export const BONUS_CATEGORIES: Category[] = ["Size", "Population"];
 
+export function extractBonusText(desc: string, cat: string) {
+  if (!desc) return "";
+  const match = desc.match(/(\d[\d.,]*\s*(?:million|billion|M|K|km²|sq km)|\d[\d.,]{3,})/i);
+  if (match) {
+    let text = match[1].replace(/million/i, 'M').replace(/billion/i, 'B').trim();
+    if (cat === "Size" && !text.includes('km²') && !text.includes('sq km')) text += ' km²';
+    return text;
+  }
+  return desc.split(/[;—]/)[0].trim();
+}
+
 // ─── Canvas PNG export ────────────────────────────────────────────────────────
 export const PNG_COLORS = {
   bg: "#08111e", cardBg: "#0d1a2a", cardBg2: "#0f1e30", border: "#1b2d40",
@@ -350,6 +361,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
         {categories.map(cat => { 
           const key = getCategoryKey(cat); 
           const score = stats[key].score; 
+          const desc = stats[key].description;
           const isBonus = BONUS_CATEGORIES.includes(cat);
           const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
           
@@ -359,7 +371,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
               <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div>
               <div className="text-2xl font-bold text-foreground tracking-tighter">
                 {isBonus ? (
-                  <span className="text-yellow-400">+{Math.floor(score / 2)}</span>
+                  <span className="text-xl md:text-2xl">{extractBonusText(desc, cat)}</span>
                 ) : (
                   <span>{score}<span className="text-sm text-muted-foreground">/{maxScore}</span></span>
                 )}
@@ -494,18 +506,36 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                     <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{assigned.flag} {assigned.name}{isCombo && roster.Population && <><span className="text-muted-foreground/50">+</span> {roster.Population.flag} {roster.Population.name}</>}</div></div>
                     {(() => {
                       let scoreVal = 0, weight = 1, desc = "", maxScore = 10;
-                      if (isCombo) { scoreVal = (assigned.stats.size.score + roster.Population!.stats.population.score) / 2; weight = 1; desc = "Combined structure bonus applied based on Size and Population compatibility."; }
-                      else { const ck = getCategoryKey(actualCat); scoreVal = assigned.stats[ck].score; maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; desc = assigned.stats[ck].description; }
+                      if (isCombo) { 
+                        scoreVal = (assigned.stats.size.score + roster.Population!.stats.population.score) / 2; 
+                        weight = 1; 
+                        desc = "Combined structure bonus applied based on Size and Population compatibility."; 
+                      } else { 
+                        const ck = getCategoryKey(actualCat); 
+                        scoreVal = assigned.stats[ck].score; 
+                        maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; 
+                        desc = assigned.stats[ck].description; 
+                      }
+                      
                       const isBonus = BONUS_CATEGORIES.includes(actualCat) || isCombo;
+                      const hideDescriptionText = !isCombo && BONUS_CATEGORIES.includes(actualCat);
+
                       return (
                         <div className="space-y-2 mt-auto">
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
-                              {!isBonus ? ( <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-primary/50 text-xs">/ {maxScore}</span> <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal).color} bg-secondary/50`}>{getScoreLabel(scoreVal).label}</span></div></>
-                              ) : ( <span className="font-bold text-yellow-400">+{isCombo ? bonus : Math.floor(scoreVal / 2)} <span className="text-[10px] text-yellow-400/60">pts</span></span> )}
+                              {!isBonus ? (
+                                <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-primary/50 text-xs">/ {maxScore}</span> <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal).color} bg-secondary/50`}>{getScoreLabel(scoreVal).label}</span></div></>
+                              ) : ( 
+                                isCombo ? (
+                                  <span className="font-bold text-yellow-400">+{bonus} <span className="text-[10px] text-yellow-400/60">pts</span></span>
+                                ) : (
+                                  <span className="font-bold text-foreground text-lg">{extractBonusText(desc, actualCat)}</span>
+                                )
+                              )}
                             </div>
                           )}
-                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{desc}"</p>
+                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">{hideDescriptionText ? "" : `"${desc}"`}</p>
                         </div>
                       );
                     })()}
