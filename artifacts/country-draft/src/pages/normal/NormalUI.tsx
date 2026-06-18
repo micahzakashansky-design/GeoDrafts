@@ -510,7 +510,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         <div className="space-y-2 mt-auto">
                           {!isHardMode && (
                             <div className="flex items-center gap-2 mt-auto">
-                              <span className="font-bold text-white text-xs">{sizeCountry.stats.size.score}</span>
+                              <span className="font-bold text-white text-xs">{extractBonusText(sizeCountry.stats.size.description, "Size")}</span>
                               <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
                             </div>
                           )}
@@ -523,7 +523,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         <div className="space-y-2 mt-auto">
                           {!isHardMode && (
                             <div className="flex items-center gap-2 mt-auto">
-                              <span className="font-bold text-white text-xs">{popCountry.stats.population.score}M</span>
+                              <span className="font-bold text-white text-xs">{extractBonusText(popCountry.stats.population.description, "Population")}</span>
                               <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
                             </div>
                           )}
@@ -554,7 +554,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                               {!isBonus && !isSizeOrPop ? ( <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-primary/50 text-xs">/ {maxScore}</span> <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
                               ) : isSizeOrPop ? (
                                 <div className="flex items-center gap-2 mt-auto">
-                                  <span className="font-bold text-white text-xs">{scoreVal}{actualCat === "Population" ? "M" : ""}</span>
+                                  <span className="font-bold text-white text-xs">{extractBonusText(desc, actualCat)}</span>
                                   <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
                                 </div>
                               ) : ( <span className="font-bold text-yellow-400">+{Math.floor(scoreVal / 2)} <span className="text-[10px] text-yellow-400/60">pts</span></span> )}
