@@ -118,8 +118,9 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
     ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
   }
   const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
-  if (roster.Size && roster.Population) { displayCats.push("Population Structure" as any); }
-  else { if (roster.Size) displayCats.push("Size"); if (roster.Population) displayCats.push("Population"); }
+  const isSame = Array.isArray(roster.Size) ? ((roster.Size as any)[0]?.name === (roster.Population as any)[0]?.name && (roster.Size as any)[1]?.name === (roster.Population as any)[1]?.name) : ((roster.Size as any)?.name === (roster.Population as any)?.name);
+  if (roster.Size && roster.Population && isSame) { displayCats.push("Population Structure" as any); }
+  else { if (roster.Size) displayCats.push("Size" as any); if (roster.Population) displayCats.push("Population" as any); }
 
   displayCats.forEach((cat, i) => {
     const isCombo = cat === "Population Structure";
@@ -571,7 +572,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {(() => {
               const displayCats: string[] = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
-              if (roster.Size && roster.Population) { displayCats.push("Population Structure"); }
+              const isSame = Array.isArray(roster.Size) ? ((roster.Size as any)[0]?.name === (roster.Population as any)[0]?.name && (roster.Size as any)[1]?.name === (roster.Population as any)[1]?.name) : ((roster.Size as any)?.name === (roster.Population as any)?.name);
+              if (roster.Size && roster.Population && isSame) { displayCats.push("Population Structure"); }
               else { if (roster.Size || wildcardPhase) displayCats.push("Size"); if (roster.Population || wildcardPhase) displayCats.push("Population"); }
               return displayCats.map((cat, idx) => {
                 const isCombo = cat === "Population Structure"; const actualCat = isCombo ? "Size" : (cat as Category); const assigned = roster[actualCat];
@@ -604,34 +606,37 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                   );
                 }
                 if (isCombo && roster.Population) {
-                  const sizeCountry = assigned;
-                  const popCountry = roster.Population;
+                  const sizeCountry = Array.isArray(assigned) ? assigned[0] : assigned;
+                  const popCountry = Array.isArray(roster.Population) ? roster.Population[0] : roster.Population;
                   return (
-                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-0 rounded-2xl border flex flex-row relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
-                      <div className="flex-1 p-4 md:p-5 border-r border-border/50 flex flex-col gap-3">
-                        <div className="flex items-center justify-between"><div className="flex items-center gap-2 text-muted-foreground">{CATEGORY_ICONS["Size"]}<span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Size</span></div></div>
-                        <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{sizeCountry.flag} {sizeCountry.name}</div></div>
-                        <div className="space-y-2 mt-auto">
-                          {!isHardMode && (
-                            <div className="flex items-center gap-2 mt-auto">
-                              <span className="font-bold text-white text-xs">{extractBonusText(sizeCountry.stats.size.description, "Size")}</span>
-                              <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
-                            </div>
-                          )}
-                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{sizeCountry.stats.size.description}"</p>
+                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          {CATEGORY_ICONS["Size"]}
+                          <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population Structure</span>
                         </div>
                       </div>
-                      <div className="flex-1 p-4 md:p-5 flex flex-col gap-3 bg-secondary/5">
-                        <div className="flex items-center justify-between"><div className="flex items-center gap-2 text-muted-foreground">{CATEGORY_ICONS["Population"]}<span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population</span></div></div>
-                        <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{popCountry.flag} {popCountry.name}</div></div>
-                        <div className="space-y-2 mt-auto">
+                      <div>
+                        <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{(sizeCountry as any).flag} {(sizeCountry as any).name}</div>
+                      </div>
+                      <div className="space-y-3 mt-auto">
+                        <div className="space-y-1">
                           {!isHardMode && (
-                            <div className="flex items-center gap-2 mt-auto">
-                              <span className="font-bold text-white text-xs">{extractBonusText(popCountry.stats.population.description, "Population")}</span>
-                              <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-white text-xs">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
+                              <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50">Size Bonus</div>
                             </div>
                           )}
-                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{popCountry.stats.population.description}"</p>
+                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{(sizeCountry as any).stats.size.description}"</p>
+                        </div>
+                        <div className="space-y-1">
+                          {!isHardMode && (
+                            <div className="flex items-center gap-2">
+                              <span className="font-bold text-white text-xs">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
+                              <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50">Pop Bonus</div>
+                            </div>
+                          )}
+                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{(popCountry as any).stats.population.description}"</p>
                         </div>
                       </div>
                     </div>
