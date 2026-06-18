@@ -305,14 +305,25 @@ export function ExpandableDescription({ description }: { description: string }) 
     }
   }, [description]);
   return (
-    <div className="relative flex flex-col h-full">
-      <p ref={textRef} className={`text-sm text-foreground/80 leading-relaxed italic flex-1 ${expanded ? "" : "line-clamp-2"}`}>{description}</p>
-      {isOverflowing && (
-        <button onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }} className="text-[10px] uppercase font-bold text-primary mt-auto flex items-center gap-1 hover:bg-primary/20 px-2 py-1 rounded -ml-2 transition-colors w-max text-left">
-          {expanded ? "Show Less" : "Show More"}
-          {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-        </button>
-      )}
+    <div className="relative flex flex-col flex-1">
+      {/* Invisible placeholder to maintain the normal collapsed height in the DOM */}
+      <div className="invisible flex flex-col flex-1" aria-hidden="true">
+        <p className="text-sm leading-relaxed italic line-clamp-2 flex-1">{description}</p>
+        {isOverflowing && (
+          <div className="text-[10px] uppercase font-bold mt-auto pt-1 py-1">Show More</div>
+        )}
+      </div>
+      
+      {/* Absolute overlay for the actual content */}
+      <div className={`absolute top-0 left-0 right-0 flex flex-col ${expanded ? 'z-50 bg-card border border-border shadow-xl rounded-lg p-3 -mx-3 -my-3' : 'bottom-0'}`}>
+        <p ref={textRef} className={`text-sm text-foreground/80 leading-relaxed italic flex-1 ${expanded ? "" : "line-clamp-2"}`}>{description}</p>
+        {isOverflowing && (
+          <button onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }} className={`text-[10px] uppercase font-bold text-primary flex items-center gap-1 hover:bg-primary/20 px-2 py-1 rounded -ml-2 transition-colors w-max text-left ${expanded ? 'mt-2' : 'mt-auto pt-1'}`}>
+            {expanded ? "Show Less" : "Show More"}
+            {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -473,8 +484,8 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
             const scoreLabel = getScoreLabel(stat.score, maxScore);
             
             return (
-              <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative overflow-hidden ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
-                {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse" />}
+              <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
+                {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-xl" />}
                 
                 <div className="relative z-10 flex flex-col h-full">
                   <div className="flex items-center justify-between mb-4">
@@ -576,7 +587,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         const ck = getCategoryKey(sCat);
                         const stat = splitAssigned.stats[ck];
                         return (
-                          <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative overflow-hidden transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card">
+                          <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card">
                             <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-muted-foreground">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-foreground/80">{sCat}</span></div></div>
                             <div><div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
@@ -596,7 +607,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                   const sizeCountry = assigned;
                   const popCountry = roster.Population;
                   return (
-                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-0 rounded-2xl border flex flex-row relative overflow-hidden transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
+                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-0 rounded-2xl border flex flex-row relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
                       <div className="flex-1 p-4 md:p-5 border-r border-border/50 flex flex-col gap-3">
                         <div className="flex items-center justify-between"><div className="flex items-center gap-2 text-muted-foreground">{CATEGORY_ICONS["Size"]}<span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Size</span></div></div>
                         <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{sizeCountry.flag} {sizeCountry.name}</div></div>
@@ -628,7 +639,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                 }
 
                 return (
-                  <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative overflow-hidden transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
+                  <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
                     <div className="flex items-center justify-between"><div className="flex items-center gap-2 text-muted-foreground">{CATEGORY_ICONS[actualCat]}<span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span></div></div>
                     <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{assigned.flag} {assigned.name}</div></div>
                     {(() => {
