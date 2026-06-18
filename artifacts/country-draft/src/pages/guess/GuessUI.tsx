@@ -221,6 +221,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
 
 // ─── Helpers ────────────────────────────────────────────────────────
 export function getCategoryStars(cat: Category): string {
+  if (BONUS_CATEGORIES.includes(cat)) return "";
   const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
   if (maxScore === 15) return "★★★";
   if (maxScore === 12) return "★★";
