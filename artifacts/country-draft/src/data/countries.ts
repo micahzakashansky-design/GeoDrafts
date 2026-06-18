@@ -1567,6 +1567,12 @@ export function shuffleArray<T>(array: T[]): T[] {
 export function extractBonusText(desc: string, cat: string) {
   if (!desc) return "";
   const match = desc.match(/(\d+(?:\.\d+)?[A-Z]?\s*(?:km²)?)/i);
-  if (match) return match[1];
+  if (match) {
+    let text = match[1];
+    if (cat === "Population" && !text.toUpperCase().endsWith("M")) {
+      text += "M";
+    }
+    return text;
+  }
   return "";
 }
