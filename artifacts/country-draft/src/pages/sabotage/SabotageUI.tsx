@@ -381,8 +381,8 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                   
                   {!isHardMode && (
                     <div className="flex items-center justify-between mb-3">
-                      <div className={`text-sm font-bold ${scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
-                      <div className={`text-sm font-bold ${scoreLabel.color}`}>
+                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-white" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
+                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-white" : scoreLabel.color}`}>
                         {BONUS_CATEGORIES.includes(cat) 
                           ? extractBonusText(stat.description, cat) 
                           : getPtsDisplay(stat.score, cat)}
@@ -473,8 +473,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                             <div><div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
                               <div className="mt-auto space-y-1">
-                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max ${getScoreLabel(stat.score).color} bg-secondary/50`}>Bonus Contributor</div>
-                                <div className="font-bold text-yellow-400 text-xs">{extractBonusText(stat.description, sCat)}</div>
+                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
+                                <div className="font-bold text-white text-xs">{extractBonusText(stat.description, sCat)}</div>
                               </div>
                             )}
                             <p className="text-[9px] text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
