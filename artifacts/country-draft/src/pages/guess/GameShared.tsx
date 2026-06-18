@@ -11,7 +11,7 @@ import { ArrowUp, ArrowDown, Check, X as LucideX,
 import { motion, AnimatePresence } from "framer-motion";
 import {
   COUNTRIES, CATEGORIES, getCategoryKey,
-  type Country, type Category,
+  type Country, type Category, extractBonusText
 } from "@/data/countries";
 
 export const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
@@ -40,16 +40,7 @@ export const CATEGORY_MAX_SCORES: Partial<Record<Category, number>> = {
 
 export const BONUS_CATEGORIES: Category[] = ["Size", "Population"];
 
-export function extractBonusText(desc: string, cat: string) {
-  if (!desc) return "";
-  const match = desc.match(/(\d[\d.,]*\s*(?:million|billion|M|K|km²|sq km)|\d[\d.,]{3,})/i);
-  if (match) {
-    let text = match[1].replace(/million/i, 'M').replace(/billion/i, 'B').trim();
-    if (cat === "Size" && !text.includes('km²') && !text.includes('sq km')) text += ' km²';
-    return text;
-  }
-  return desc.split(/[;—]/)[0].trim();
-}
+
 
 // ─── Canvas PNG export ────────────────────────────────────────────────────────
 export const PNG_COLORS = {

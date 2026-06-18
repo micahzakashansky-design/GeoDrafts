@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   COUNTRIES, CATEGORIES, getCategoryKey,
   type Country, type Category,
+  extractBonusText
 } from "@/data/countries";
 
 export const CATEGORY_ICONS: Record<Category, React.ReactNode> = {
@@ -396,7 +397,11 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                   {!isHardMode && (
                     <div className="flex items-center justify-between mb-3">
                       <div className={`text-sm font-bold ${scoreLabel.color}`}>{scoreLabel.label}</div>
-                      <div className={`text-sm font-bold ${scoreLabel.color}`}>{getPtsDisplay(stat.score, cat)}</div>
+                      <div className={`text-sm font-bold ${scoreLabel.color}`}>
+                        {BONUS_CATEGORIES.includes(cat) 
+                          ? extractBonusText(stat.description, cat) 
+                          : getPtsDisplay(stat.score, cat)}
+                      </div>
                     </div>
                   )}
                   
