@@ -190,10 +190,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <Globe className="w-6 h-6 text-primary" />
-          <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
-        </div>
+        <div className="flex items-center gap-3"></div>
         <div className="flex items-center gap-2">
           {firebaseUser ? (
             <button
@@ -227,7 +224,11 @@ export default function Home() {
         <LoginScreen onSignIn={signInWithGoogle} />
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-3xl mx-auto w-full">
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }} className="flex flex-col items-center w-full"><p className="text-base text-muted-foreground mb-8 text-center max-w-md mt-6">Draft countries and build the ideal nation in various competitive and solo modes.</p>
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }} className="flex flex-col items-center w-full"><div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 mb-4">
+              <Globe className="w-12 h-12 text-primary" />
+            </div>
+            <h1 className="font-serif text-5xl font-bold text-foreground mb-2 tracking-tight">GeoDrafts</h1>
+            <p className="text-base text-muted-foreground mb-8 text-center max-w-md">Draft countries and build the ideal nation in various competitive and solo modes.</p>
             <DailyCard /><div className="w-full space-y-8">
               <section><h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Star className="w-3.5 h-3.5" />Classic Experience</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-3"><button onClick={() => startGame("normal", false)} className="flex flex-col items-start p-5 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"><div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3 group-hover:scale-110 transition-transform"><Globe className="w-5 h-5" /></div><div className="font-bold text-lg">Easy Mode</div><div className="text-sm text-muted-foreground">See all ratings as you draft.</div></button><button onClick={() => startGame("normal", true)} className="flex flex-col items-start p-5 rounded-2xl bg-card border border-border hover:border-red-500/50 hover:bg-red-500/5 transition-all group"><div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 mb-3 group-hover:scale-110 transition-transform"><Shield className="w-5 h-5" /></div><div className="font-bold text-lg">Hard Mode</div><div className="text-sm text-muted-foreground">No ratings shown until assigned.</div></button></div></section>
               <section><h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Zap className="w-3.5 h-3.5" />Special Variants</h3><div className="space-y-6"><div className="p-5 rounded-2xl bg-card border border-border"><div className="flex items-center gap-4 mb-4"><div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400"><ArrowLeftRight className="w-6 h-6" /></div><div><div className="font-bold text-lg">Double Draft</div><div className="text-sm text-muted-foreground">Pick between two countries every round.</div></div></div><div className="grid grid-cols-2 gap-2"><button onClick={() => startGame("double", false)} className="py-2 rounded-lg bg-secondary/50 hover:bg-secondary text-sm font-bold transition-colors">Classic Difficulty</button><button onClick={() => startGame("double", true)} className="py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-sm font-bold transition-colors border border-red-500/20">Hard Difficulty</button></div></div><button onClick={() => startGame("guess", false)} className="w-full flex items-center gap-4 p-5 rounded-2xl bg-card border border-border hover:bg-secondary/50 transition-colors text-left"><div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400"><Search className="w-6 h-6" /></div><div><div className="font-bold text-lg">Guess the Country</div><div className="text-sm text-muted-foreground">Identify a nation by its stats alone.</div></div></button></div></section>
