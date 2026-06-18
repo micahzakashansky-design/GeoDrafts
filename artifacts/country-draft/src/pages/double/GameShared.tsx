@@ -301,7 +301,7 @@ export function ExpandableDescription({ description }: { description: string }) 
 
 export function SelectionPhase({ options, onPick, isHardMode, mode }: { options: Country[]; onPick: (c: Country) => void; isHardMode: boolean; mode: string; }) {
   return (
-    <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1">
+    <div className="p-6 flex flex-col gap-6 items-center justify-start flex-1 overflow-y-auto w-full">
       <div className="text-center"><h2 className="text-3xl font-serif font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-muted-foreground text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {options.map((country, idx) => (

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import {
+import { ArrowUp, ArrowDown, Check, X as LucideX, 
   Plus, Shield, TrendingUp, Palette, Heart, Globe, Sun, Cpu, Map, Users,
   BookOpen, Building, ChevronRight, ChevronDown, ChevronUp, Download, RotateCcw, Trophy,
   Star, Zap, Lock, Shuffle, X, ArrowLeftRight, List, Medal,
@@ -321,18 +321,84 @@ export function SelectionPhase({ options, onPick, isHardMode, mode }: { options:
 export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountry: Country; guesses: string[]; onGuess: (name: string) => void; }) {
   const [input, setInput] = useState(""); const [showSuggestions, setShowSuggestions] = useState(false);
   const suggestions = useMemo(() => { if (!input.trim()) return []; return COUNTRIES.filter(c => c.name.toLowerCase().includes(input.toLowerCase()) && !guesses.some(g => g.toLowerCase() === c.name.toLowerCase())).slice(0, 6); }, [input, guesses]);
-  const stats = mysteryCountry.stats; const categories = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
+  const stats = mysteryCountry.stats; 
+  const categories = CATEGORIES; // Include all categories
+  
   return (
-    <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full">
+    <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full overflow-y-auto">
       <div className="text-center"><h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2><p className="text-muted-foreground text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
-      <div className="w-full max-w-md relative mt-4 mb-6">
+      <div className="w-full max-w-2xl relative mt-4 mb-6">
         <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" /></div>
-          <input type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-secondary/50 border border-border rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
+          <input id="guess-input" name="guess-input" type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-secondary/50 border border-border rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
           {showSuggestions && suggestions.length > 0 && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-full left-0 w-full mb-3 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-50">{suggestions.map(s => (<button key={s.name} onClick={() => { onGuess(s.name); setInput(""); setShowSuggestions(false); }} className="w-full px-5 py-4 text-left hover:bg-primary/10 transition-colors border-b border-border last:border-0 flex items-center justify-between group"><div className="flex items-center gap-4"><span className="text-2xl">{s.flag}</span><span className="font-bold text-foreground">{s.name}</span></div><ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" /></button>))}</motion.div>)}
         </div>
-        {guesses.length > 0 && (<div className="mt-8 space-y-3"><div className="flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div><div className="flex flex-wrap gap-2 justify-center">{guesses.map((g, i) => (<motion.div key={i} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold shadow-sm">{g}</motion.div>))}</div></div>)}
+        
+        {guesses.length > 0 && (
+          <div className="mt-8 space-y-4">
+            <div className="flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div>
+            <div className="flex flex-col gap-2">
+              {guesses.map((g, i) => {
+                const guessedCountry = COUNTRIES.find(c => c.name.toLowerCase() === g.toLowerCase());
+                if (!guessedCountry) return null;
+                
+                const isRegionMatch = guessedCountry.region === mysteryCountry.region;
+                
+                const getStatFeedback = (cat: Category) => {
+                  const key = getCategoryKey(cat);
+                  const guessScore = guessedCountry.stats[key].score;
+                  const mysteryScore = mysteryCountry.stats[key].score;
+                  const isMatch = guessScore === mysteryScore;
+                  const isHigher = mysteryScore > guessScore;
+                  
+                  return (
+                    <div key={cat} className={`flex flex-col items-center justify-center p-2 rounded-xl border ${isMatch ? 'bg-green-500/20 border-green-500/30 text-green-500' : 'bg-secondary border-border'}`}>
+                      <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">{cat.substring(0, 4)}</div>
+                      <div className="flex items-center gap-1 font-bold text-sm">
+                        {guessScore}
+                        {!isMatch && (isHigher ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />)}
+                      </div>
+                    </div>
+                  );
+                };
+
+                return (
+                  <motion.div key={i} initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} className="flex flex-col sm:flex-row gap-2 p-3 rounded-2xl bg-card border border-border shadow-sm items-center">
+                    <div className="flex items-center gap-3 w-full sm:w-48 shrink-0">
+                      <span className="text-3xl">{guessedCountry.flag}</span>
+                      <div className="font-bold text-sm truncate">{guessedCountry.name}</div>
+                    </div>
+                    
+                    <div className="grid grid-cols-6 gap-2 w-full flex-1">
+                      <div className={`flex flex-col items-center justify-center p-2 rounded-xl border ${isRegionMatch ? 'bg-green-500/20 border-green-500/30 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
+                         <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">REG</div>
+                         <div className="font-bold text-[10px] truncate w-full text-center" title={guessedCountry.region}>{guessedCountry.region}</div>
+                      </div>
+                      {getStatFeedback("Size" as Category)}
+                      {getStatFeedback("Population" as Category)}
+                      {getStatFeedback("Economy" as Category)}
+                      {getStatFeedback("Military" as Category)}
+                      {getStatFeedback("Government" as Category)}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">{categories.map(cat => { const key = getCategoryKey(cat); const score = stats[key].score; return (<div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm"><div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div><div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div><div className="text-3xl font-bold text-foreground tracking-tighter">{score}</div></div>); })}</div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full max-w-5xl mt-6">
+        {categories.map(cat => { 
+          const key = getCategoryKey(cat); 
+          const score = stats[key].score; 
+          return (
+            <div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm">
+              <div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div>
+              <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div>
+              <div className="text-3xl font-bold text-foreground tracking-tighter">{score}</div>
+            </div>
+          ); 
+        })}
+      </div>
     </div>
   );
 }
