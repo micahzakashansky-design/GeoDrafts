@@ -28,7 +28,7 @@ GeoDrafts is a nation-building draft game where players build their ideal nation
 - `lib/api-spec`: OpenAPI specification and Orval configuration.
 - `lib/api-client-react`: Generated React Query hooks for the API.
 - `lib/api-zod`: Generated Zod schemas for API validation.
-- `lib/replit-auth-web`: Firebase Auth integration for the web.
+- `lib/firebase-auth-web`: Firebase Auth integration for the web.
 
 ## Getting Started
 
