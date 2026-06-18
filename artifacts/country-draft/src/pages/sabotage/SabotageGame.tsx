@@ -104,8 +104,23 @@ export default function SabotageGame() {
       if (!prev.currentCountry) return prev;
       const newRoster = { ...prev.roster, [category]: prev.currentCountry };
       const isGameOver = CATEGORIES.every(c => newRoster[c]);
+      
+      // Calculate score right away
+      const baseScore = CATEGORIES.reduce((sum, cat) => {
+        const country = newRoster[cat]; if (!country) return sum;
+        if (BONUS_CATEGORIES.includes(cat)) return sum;
+        const key = getCategoryKey(cat); return sum + country.stats[key].score;
+      }, 0);
+      const bonusScore = computeSizePopBonus(newRoster);
+      const finalScore = baseScore + bonusScore;
+      
+      // Map roster to Record<string, string> of names
+      const mappedRoster = {} as Record<string, string>;
+      for (const cat of CATEGORIES) {
+         if (newRoster[cat]) mappedRoster[cat] = newRoster[cat].name;
+      }
 
-      updatePlayer(roomCode, firebaseUser.uid, { finishedRound: true });
+      updatePlayer(roomCode, firebaseUser.uid, { finishedRound: true, score: finalScore, roster: mappedRoster });
 
       return {
         ...prev, roster: newRoster, currentCountry: null,

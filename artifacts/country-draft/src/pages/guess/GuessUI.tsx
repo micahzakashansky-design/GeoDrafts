@@ -118,8 +118,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
     ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
   }
   const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
-  const isSame = Array.isArray(roster.Size) ? ((roster.Size as any)[0]?.name === (roster.Population as any)[0]?.name && (roster.Size as any)[1]?.name === (roster.Population as any)[1]?.name) : ((roster.Size as any)?.name === (roster.Population as any)?.name);
-  if (roster.Size && roster.Population && isSame) { displayCats.push("Population Structure" as any); }
+  if (roster.Size && roster.Population && !wildcardPhase) { displayCats.push("Population Structure" as any); }
   else { if (roster.Size) displayCats.push("Size" as any); if (roster.Population) displayCats.push("Population" as any); }
 
   displayCats.forEach((cat, i) => {
@@ -498,7 +497,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                 {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-xl" />}
                 
                 <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex items-center justify-between mb-4">
+                  <div className={`flex items-center justify-between ${!isHardMode ? "mb-4" : "mb-2"}`}>
                     <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-start justify-between gap-2">
                       <div className="flex items-start gap-2">
                         <div className="shrink-0 mt-0.5">{CATEGORY_ICONS[cat]}</div>
@@ -510,8 +509,8 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                   
                   {!isHardMode && (
                     <div className="flex items-center justify-between mb-3">
-                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-white" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
-                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-white" : scoreLabel.color}`}>
+                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
+                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>
                         {BONUS_CATEGORIES.includes(cat) 
                           ? extractBonusText(stat.description, cat) 
                           : getPtsDisplay(stat.score, cat)}
@@ -519,7 +518,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                     </div>
                   )}
                   
-                  <div className="mt-3">
+                  <div className={!isHardMode ? "mt-3" : "mt-1"}>
                     <ExpandableDescription description={stat.description} />
                   </div>
                 </div>
@@ -566,7 +565,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
         <div className="space-y-4">
           <h3 className="text-lg md:text-xl font-serif font-bold text-foreground px-2 flex items-center justify-between">
             <span>Your Nation's Roster</span>
-            {!isMultiplayerGame && !wildcardUsed && !wildcardPhase && (
+            {!wildcardUsed && !wildcardPhase && (
               <button onClick={onWildcard} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 font-semibold hover:bg-blue-500/20 transition-colors border border-blue-500/30">
                 <Shuffle className="w-3.5 h-3.5" /> Use Wildcard
               </button>
@@ -581,8 +580,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {(() => {
               const displayCats: string[] = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
-              const isSame = Array.isArray(roster.Size) ? ((roster.Size as any)[0]?.name === (roster.Population as any)[0]?.name && (roster.Size as any)[1]?.name === (roster.Population as any)[1]?.name) : ((roster.Size as any)?.name === (roster.Population as any)?.name);
-              if (roster.Size && roster.Population && isSame) { displayCats.push("Population Structure"); }
+              if (roster.Size && roster.Population && !wildcardPhase) { displayCats.push("Population Structure"); }
               else { if (roster.Size || wildcardPhase) displayCats.push("Size"); if (roster.Population || wildcardPhase) displayCats.push("Population"); }
               return displayCats.map((cat, idx) => {
                 const isCombo = cat === "Population Structure"; const actualCat = isCombo ? "Size" : (cat as Category); const assigned = roster[actualCat];
@@ -603,8 +601,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                             <div><div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
                               <div className="space-y-1 mt-3">
-                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
-                                <div className="font-bold text-white text-xs">{extractBonusText(stat.description, sCat)}</div>
+                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50`}>Bonus Contributor</div>
+                                <div className="font-bold text-foreground text-xs">{extractBonusText(stat.description, sCat)}</div>
                               </div>
                             )}
                             <p className="text-[9px] text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
@@ -625,15 +623,18 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population Structure</span>
                         </div>
                       </div>
-                      <div>
-                        <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{(sizeCountry as any).flag} {(sizeCountry as any).name}</div>
+                      <div className="flex flex-col gap-1">
+                        <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{(sizeCountry as any).flag} {(sizeCountry as any).name}{(sizeCountry as any).name !== (popCountry as any).name && " (Size)"}</div>
+                        {(sizeCountry as any).name !== (popCountry as any).name && (
+                           <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2 mt-0.5">{(popCountry as any).flag} {(popCountry as any).name} (Population)</div>
+                        )}
                       </div>
                       <div className="space-y-3 mt-3">
                         <div className="space-y-1">
                           {!isHardMode && (
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-white text-xs">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
-                              <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50">Size Bonus</div>
+                              <span className="font-bold text-foreground text-xs">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
+                              <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Size Bonus</div>
                             </div>
                           )}
                           <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{(sizeCountry as any).stats.size.description}"</p>
@@ -641,8 +642,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         <div className="space-y-1">
                           {!isHardMode && (
                             <div className="flex items-center gap-2">
-                              <span className="font-bold text-white text-xs">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
-                              <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50">Pop Bonus</div>
+                              <span className="font-bold text-foreground text-xs">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
+                              <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Pop Bonus</div>
                             </div>
                           )}
                           <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{(popCountry as any).stats.population.description}"</p>
@@ -672,11 +673,11 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
                               {!isBonus && !isSizeOrPop ? (
-                                <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-primary/50 text-xs">/ {maxScore}</span> <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
+                                <><div className="flex items-center gap-2"><span className="text-lg md:text-xl font-black text-primary">{scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-muted-foreground font-semibold">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
                               ) : isSizeOrPop ? (
                                 <div className="flex items-center gap-2">
-                                  <span className="font-bold text-white text-xs">{extractBonusText(desc, actualCat)}</span>
-                                  <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-secondary/50`}>Bonus Contributor</div>
+                                  <span className="font-bold text-foreground text-xs">{extractBonusText(desc, actualCat)}</span>
+                                  <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50`}>Bonus Contributor</div>
                                 </div>
                               ) : (
                                 <span className="font-bold text-foreground text-lg">{extractBonusText(desc, actualCat)}</span>

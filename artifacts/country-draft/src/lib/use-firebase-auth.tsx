@@ -1,4 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, createContext, useContext } from "react";
+
+const AuthContext = createContext<FirebaseAuthState | null>(null);
 import {
   onAuthStateChanged,
   signInWithPopup,
@@ -23,7 +25,7 @@ export type FirebaseAuthState = {
   refreshProfile: () => Promise<void>;
 };
 
-export function useFirebaseAuth(): FirebaseAuthState {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -72,7 +74,7 @@ export function useFirebaseAuth(): FirebaseAuthState {
     if (firebaseUser) await fetchProfile(firebaseUser);
   }, [firebaseUser, fetchProfile]);
 
-  return {
+  const value = {
     firebaseUser,
     profile,
     isLoading,
@@ -83,4 +85,13 @@ export function useFirebaseAuth(): FirebaseAuthState {
     logout,
     refreshProfile,
   };
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useFirebaseAuth(): FirebaseAuthState {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useFirebaseAuth must be used within an AuthProvider");
+  }
+  return context;
 }

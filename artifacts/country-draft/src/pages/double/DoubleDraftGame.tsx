@@ -30,6 +30,7 @@ export default function DoubleDraftGame() {
   });
 
   const [hoveredCategory, setHoveredCategory] = useState<Category | null>(null);
+  const [wildcardPhase, setWildcardPhase] = useState(false);
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const rosterRef = useRef<HTMLDivElement>(null);
   const localSavedRef = useRef(false);
@@ -56,6 +57,19 @@ export default function DoubleDraftGame() {
   const onSelectionPick = useCallback((country: Country) => {
     setState(prev => ({ ...prev, currentCountry: country, selectionOptions: null }));
   }, []);
+
+
+  const applyWildcard = useCallback((cat: Category) => {
+    if (!wildcardPhase || state.wildcardUsed) return;
+    setState(prev => {
+      const newRoster = { ...prev.roster };
+      delete newRoster[cat];
+      const newPool = [...prev.pool];
+      const nextCountry = newPool.pop() || null;
+      return { ...prev, roster: newRoster, currentCountry: nextCountry, pool: newPool, wildcardUsed: true, selectionOptions: null };
+    });
+    setWildcardPhase(false);
+  }, [wildcardPhase, state.wildcardUsed]);
 
   const assignCountry = useCallback((category: Category) => {
     if (state.roster[category]) return;
@@ -114,7 +128,7 @@ export default function DoubleDraftGame() {
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} />
+            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} />
           ) : state.selectionOptions ? (
              <SelectionPhase options={state.selectionOptions} onPick={onSelectionPick} isHardMode={state.isHardMode} mode="double" />
           ) : state.currentCountry ? (

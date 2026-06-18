@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, User } from "lucide-react";
+import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, User, Medal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme-context";
 import { getTopScores, type LeaderboardEntry } from "@/lib/firestore";
@@ -8,7 +8,7 @@ import { loadPersonalLeaderboard, type GameMode, type PersonalLeaderboardEntry }
 
 function LeaderboardRow({ rank, entry, isPersonal = false }: { rank: number; entry: LeaderboardEntry | PersonalLeaderboardEntry; isPersonal?: boolean }) {
   const [expanded, setExpanded] = useState(false);
-  const medal = rank === 1 ? "🥇" : rank === 2 ? "🥈" : rank === 3 ? "🥉" : null;
+  const medal = rank === 1 ? <Medal className="w-5 h-5 text-yellow-400" /> : rank === 2 ? <Medal className="w-5 h-5 text-slate-300" /> : rank === 3 ? <Medal className="w-5 h-5 text-amber-600" /> : null;
   const rankColor =
     rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-muted-foreground";
 
@@ -60,7 +60,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false }: { rank: number; ent
                 : "bg-primary/20 text-primary"
             }`}
           >
-            {isDaily ? "🗓️ Daily" : isHard ? "⚠️ Hard" : isDouble ? "👯 Double" : isGuess ? "❓ Guess" : "Easy"}
+            {isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isGuess ? "Guess" : "Easy"}
           </span>
         )}
 
@@ -143,10 +143,10 @@ export default function Leaderboard() {
 
   const modeTabs: { key: ModeFilter; label: string; activeClass: string }[] = [
     { key: "normal", label: "Normal (Easy)", activeClass: "bg-primary/20 text-primary border-primary/40" },
-    { key: "hard",   label: "⚠️ Hard",      activeClass: "bg-red-500/20 text-red-400 border-red-500/40" },
-    { key: "double", label: "👯 Double Draft", activeClass: "bg-purple-500/20 text-purple-400 border-purple-500/40" },
-    { key: "guess",  label: "❓ Guess Country", activeClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" },
-    { key: "daily",  label: `🗓️ Daily`,   activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40" },
+    { key: "hard",   label: "Hard",      activeClass: "bg-red-500/20 text-red-400 border-red-500/40" },
+    { key: "double", label: "Double Draft", activeClass: "bg-purple-500/20 text-purple-400 border-purple-500/40" },
+    { key: "guess",  label: "Guess Country", activeClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" },
+    { key: "daily",  label: `Daily`,   activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40" },
   ];
 
   const entriesToDisplay = scopeFilter === "global" ? globalEntries : personalEntries;

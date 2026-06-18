@@ -50,25 +50,7 @@ export default function PartyGame() {
     }
   }, [room, state.pool.length, state.gameOver]);
 
-  // Handle Party round progression
-  useEffect(() => {
-    if (!room || room.status !== "playing" || !firebaseUser || state.gameOver) return;
 
-    const me = players.find(p => p.uid === firebaseUser.uid);
-    if (!me) return;
-
-    if (players.every(p => p.finishedRound) && me.finishedRound) {
-       // Everyone finished, reveal next country
-       updatePlayer(room.code, firebaseUser.uid, { finishedRound: false });
-
-       setState(prev => {
-          const pool = [...prev.pool];
-          const nextCountry = pool.pop() || null;
-          return { ...prev, pool, currentCountry: nextCountry };
-       });
-    }
-
-  }, [room, players, firebaseUser, state.gameOver, state.pool]);
 
 
   const totalScore = useMemo(() => {
@@ -89,11 +71,31 @@ export default function PartyGame() {
       if (!prev.currentCountry) return prev;
       const newRoster = { ...prev.roster, [category]: prev.currentCountry };
       const isGameOver = CATEGORIES.every(c => newRoster[c]);
+      
+      const pool = [...prev.pool];
+      const nextCountry = isGameOver ? null : (pool.pop() || null);
 
-      updatePlayer(roomCode, firebaseUser.uid, { finishedRound: true });
+      if (isGameOver) {
+        // Calculate score right away
+        const baseScore = CATEGORIES.reduce((sum, cat) => {
+          const country = newRoster[cat]; if (!country) return sum;
+          if (BONUS_CATEGORIES.includes(cat)) return sum;
+          const key = getCategoryKey(cat); return sum + country.stats[key].score;
+        }, 0);
+        const bonusScore = computeSizePopBonus(newRoster);
+        const finalScore = baseScore + bonusScore;
+        
+        // Map roster to Record<string, string> of names
+        const mappedRoster = {} as Record<string, string>;
+        for (const cat of CATEGORIES) {
+           if (newRoster[cat]) mappedRoster[cat] = newRoster[cat].name;
+        }
+
+        updatePlayer(roomCode, firebaseUser.uid, { finishedRound: true, score: finalScore, roster: mappedRoster });
+      }
 
       return {
-        ...prev, roster: newRoster, currentCountry: null,
+        ...prev, roster: newRoster, currentCountry: nextCountry, pool,
         gameOver: isGameOver
       };
     });
@@ -128,8 +130,6 @@ export default function PartyGame() {
             <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="party" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
           ) : room && room.status === "waiting" ? (
             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 mb-4 animate-pulse"><Users className="w-12 h-12 text-primary" /></div><h2 className="text-3xl font-serif font-bold mb-2">Game Lobby</h2><p className="text-muted-foreground mb-8">Room Code: <span className="text-foreground font-bold tracking-widest">{room.code}</span></p><div className="w-full max-w-sm space-y-3 mb-8"><p className="text-xs font-bold text-muted-foreground uppercase tracking-widest text-left">Players ({players.length})</p>{players.map(p => (<div key={p.uid} className="flex items-center justify-between p-3 rounded-xl bg-card border border-border shadow-sm"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">{p.username[0].toUpperCase()}</div><span className="font-semibold">{p.username}</span></div>{p.uid === room.hostId && <span className="text-[10px] bg-yellow-400/20 text-yellow-400 px-2 py-0.5 rounded-full font-bold">HOST</span>}</div>))}</div>{firebaseUser?.uid === room.hostId ? (<button onClick={() => updateRoom(room.code, { status: "playing" })} className="px-12 py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 shadow-xl">Start Match</button>) : (<p className="text-primary font-medium animate-pulse">Waiting for host to begin...</p>)}</div>
-          ) : room && room.status === "playing" && players.find(p => p.uid === firebaseUser?.uid)?.finishedRound && !players.every(p => p.finishedRound) ? (
-             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-6" /><h2 className="text-2xl font-serif font-bold mb-2">Waiting for others...</h2><p className="text-muted-foreground">The next country will be revealed once everyone finishes this round.</p></div>
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (
