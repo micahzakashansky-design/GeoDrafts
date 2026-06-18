@@ -107,7 +107,6 @@ export default function GuessGame() {
                     <div className="flex flex-col items-center justify-center my-4 p-4 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto">
                       <div className="text-3xl font-bold text-primary">{guessScore} Points</div>
                       <div className="text-sm text-muted-foreground mt-1">({state.guesses.length} guesses + {state.hintsRevealed || 0} hints)</div>
-                      <div className="text-[10px] text-primary/70 font-bold uppercase tracking-widest mt-2">Lower score is better!</div>
                     </div>
                  )}
                </div>
