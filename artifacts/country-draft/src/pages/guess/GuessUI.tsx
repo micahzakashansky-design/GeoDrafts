@@ -337,7 +337,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess, hintsRevealed, on
   
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full overflow-y-auto">
-      <div className="text-center"><h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2><p className="text-muted-foreground text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
+      <div className="text-center"><h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2><p className="text-muted-foreground text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise! <span className="font-bold text-primary">Get the lowest score!</span></p></div>
       <div className="w-full max-w-5xl relative mt-4">
         <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" /></div>
           <input id="guess-input" name="guess-input" type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-secondary/50 border border-border rounded-2xl pl-12 pr-24 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
@@ -352,7 +352,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess, hintsRevealed, on
               <div className="relative group/tooltip flex items-center">
                 <HelpCircle className="w-4 h-4 text-primary/70 hover:text-primary transition-colors cursor-help" />
                 <div className="absolute right-0 bottom-full mb-2 w-64 bg-card border border-border shadow-lg rounded-xl p-3 text-xs font-medium text-muted-foreground opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:pointer-events-auto transition-opacity z-50 text-left font-normal normal-case">
-                  Each hint costs 1 point. You can reveal up to 3 hints to help identify the country. Lower scores are better!
+                  Each hint costs 1 point. You can reveal up to 3 hints to help identify the country.
                 </div>
               </div>
             </button>
