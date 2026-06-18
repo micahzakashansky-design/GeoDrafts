@@ -6,7 +6,7 @@ import { ArrowUp, ArrowDown, Check, X as LucideX,
   GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
   CalendarDays, LogIn, PartyPopper, Swords, Laptop,
   Globe as GlobeIcon, Plane, Leaf,
-  Handshake, Umbrella, Info, Search, Lightbulb
+  Handshake, Umbrella, Info, Search, Lightbulb, HelpCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -346,9 +346,15 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess, hintsRevealed, on
             <button 
               onClick={onRevealHint} 
               disabled={hintsRevealed >= 3}
-              className={`px-3 py-1.5 rounded-xl font-bold text-sm transition-all shadow-sm ${hintsRevealed >= 3 ? 'bg-secondary/50 text-muted-foreground opacity-50 cursor-not-allowed' : 'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20'}`}
+              className={`px-3 py-1.5 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center gap-1.5 ${hintsRevealed >= 3 ? 'bg-secondary/50 text-muted-foreground opacity-50 cursor-not-allowed' : 'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20'}`}
             >
               Get Hint
+              <div className="relative group/tooltip flex items-center">
+                <HelpCircle className="w-4 h-4 text-primary/70 hover:text-primary transition-colors cursor-help" />
+                <div className="absolute right-0 bottom-full mb-2 w-64 bg-card border border-border shadow-lg rounded-xl p-3 text-xs font-medium text-muted-foreground opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:pointer-events-auto transition-opacity z-50 text-left font-normal normal-case">
+                  Each hint costs 1 point. You can reveal up to 3 hints to help identify the country. Lower scores are better!
+                </div>
+              </div>
             </button>
           </div>
 
