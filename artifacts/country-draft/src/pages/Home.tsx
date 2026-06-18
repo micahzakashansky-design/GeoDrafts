@@ -189,8 +189,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="flex items-center gap-3"></div>
+      <header className="px-6 py-4 flex items-center justify-end sticky top-0 z-40">
         <div className="flex items-center gap-2">
           {firebaseUser ? (
             <button
