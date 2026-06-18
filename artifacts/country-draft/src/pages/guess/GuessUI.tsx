@@ -308,8 +308,9 @@ export function ExpandableDescription({ description }: { description: string }) 
     <div className="relative flex flex-col h-full">
       <p ref={textRef} className={`text-sm text-foreground/80 leading-relaxed italic flex-1 ${expanded ? "" : "line-clamp-2"}`}>{description}</p>
       {isOverflowing && (
-        <button onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }} className="text-[10px] uppercase font-bold text-primary mt-auto pt-1 hover:underline text-left">
+        <button onClick={(e) => { e.stopPropagation(); setExpanded(!expanded); }} className="text-[10px] uppercase font-bold text-primary mt-auto flex items-center gap-1 hover:bg-primary/20 px-2 py-1 rounded -ml-2 transition-colors w-max text-left">
           {expanded ? "Show Less" : "Show More"}
+          {expanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
         </button>
       )}
     </div>
