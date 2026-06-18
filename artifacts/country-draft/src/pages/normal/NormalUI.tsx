@@ -227,11 +227,25 @@ export function getCategoryStars(cat: Category): string {
 }
 export function getPtsDisplay(score: number, cat: Category): string { const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10; return `${score}/${maxScore} pts`; }
 export function getScoreBarColor(score: number): string { if (score >= 9) return "bg-emerald-500"; if (score >= 7) return "bg-green-500"; if (score >= 5) return "bg-yellow-500"; if (score >= 3) return "bg-orange-500"; return "bg-red-500"; }
-export function getScoreLabel(score: number): { label: string; color: string } {
-  if (score >= 13.5) return { label: "World-Class", color: "text-emerald-400" };
-  if (score >= 10) return { label: "Strong", color: "text-green-400" };
-  if (score >= 7) return { label: "Moderate", color: "text-yellow-400" };
-  if (score >= 4) return { label: "Weak", color: "text-orange-400" };
+export function getScoreLabel(score: number, maxScore: number = 15): { label: string; color: string } {
+  if (maxScore === 10) {
+    if (score >= 9) return { label: "World-Class", color: "text-emerald-400" };
+    if (score >= 7) return { label: "Strong", color: "text-green-400" };
+    if (score >= 5) return { label: "Moderate", color: "text-yellow-400" };
+    if (score >= 3) return { label: "Weak", color: "text-orange-400" };
+    return { label: "Critical", color: "text-red-400" };
+  }
+  if (maxScore === 12) {
+    if (score >= 11) return { label: "World-Class", color: "text-emerald-400" };
+    if (score >= 9) return { label: "Strong", color: "text-green-400" };
+    if (score >= 6) return { label: "Moderate", color: "text-yellow-400" };
+    if (score >= 4) return { label: "Weak", color: "text-orange-400" };
+    return { label: "Critical", color: "text-red-400" };
+  }
+  if (score >= 14) return { label: "World-Class", color: "text-emerald-400" };
+  if (score >= 12) return { label: "Strong", color: "text-green-400" };
+  if (score >= 8) return { label: "Moderate", color: "text-yellow-400" };
+  if (score >= 5) return { label: "Weak", color: "text-orange-400" };
   return { label: "Critical", color: "text-red-400" };
 }
 export function getRating(total: number): { label: string; color: string; icon: React.ReactNode; desc: string } {
@@ -362,7 +376,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
             const stat = country.stats[getCategoryKey(cat)];
             const isHovered = hoveredCategory === cat;
             const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
-            const scoreLabel = getScoreLabel(stat.score);
+            const scoreLabel = getScoreLabel(stat.score, maxScore);
             
             return (
               <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative overflow-hidden ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
@@ -497,7 +511,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         <div className="space-y-2 mt-auto">
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
-                              {!isBonus ? ( <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-primary/50 text-xs">/ {maxScore}</span> <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal).color} bg-secondary/50`}>{getScoreLabel(scoreVal).label}</span></div></>
+                              {!isBonus ? ( <><div className="flex items-center gap-2"><span className="font-bold text-primary">{scoreVal * weight} <span className="text-primary/50 text-xs">/ {maxScore}</span> <span className="text-[10px] text-muted-foreground">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
                               ) : ( <span className="font-bold text-yellow-400">+{isCombo ? bonus : Math.floor(scoreVal / 2)} <span className="text-[10px] text-yellow-400/60">pts</span></span> )}
                             </div>
                           )}
