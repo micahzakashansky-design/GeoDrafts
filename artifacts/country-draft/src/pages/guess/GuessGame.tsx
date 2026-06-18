@@ -8,7 +8,7 @@ import {
 import {
   GuessPhase, GameState,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
-} from "./GameShared";
+} from "./GuessUI";
 import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown, ChevronRight, X, MapPin, Trophy } from "lucide-react";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore } from "@/lib/local-leaderboard";

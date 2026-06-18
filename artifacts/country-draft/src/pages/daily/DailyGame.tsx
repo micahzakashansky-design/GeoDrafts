@@ -7,7 +7,7 @@ import {
 import {
   CountryCard, GameOver, GameState, computeSizePopBonus, seededShuffle, dateStrToSeed,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
-} from "./GameShared";
+} from "./DailyUI";
 import { SidebarRoster } from "./SidebarRoster";
 import { Home, Globe as GlobeIcon, CalendarDays } from "lucide-react";
 import { SubmitDialog } from "./SubmitDialog";

@@ -9,7 +9,7 @@ import { updatePlayer, listenToRoom, listenToPlayers, type Room, type RoomPlayer
 import {
   CountryCard, GameOver, SelectionPhase, GameState, computeSizePopBonus,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
-} from "./GameShared";
+} from "./SabotageUI";
 import { Home, Globe as GlobeIcon, Users, UserX, Skull } from "lucide-react";
 import { SidebarRoster } from "./SidebarRoster";
 

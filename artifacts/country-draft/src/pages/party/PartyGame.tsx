@@ -9,7 +9,7 @@ import { updatePlayer, listenToRoom, listenToPlayers, type Room, type RoomPlayer
 import {
   CountryCard, GameOver, GameState, computeSizePopBonus, seededShuffle, dateStrToSeed,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
-} from "./GameShared";
+} from "./PartyUI";
 import { Home, Globe as GlobeIcon, Users } from "lucide-react";
 import { SidebarRoster } from "./SidebarRoster";
 

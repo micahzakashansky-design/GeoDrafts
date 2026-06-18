@@ -1,6 +1,6 @@
 import React from "react";
 import { Category, Country, CATEGORIES, getCategoryKey } from "@/data/countries";
-import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, computeSizePopBonus, BONUS_CATEGORIES } from "./GameShared";
+import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, computeSizePopBonus, BONUS_CATEGORIES } from "./GuessUI";
 import { Users, Plus } from "lucide-react";
 
 export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Country>> }) {

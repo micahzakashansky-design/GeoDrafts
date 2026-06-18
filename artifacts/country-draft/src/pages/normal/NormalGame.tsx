@@ -7,7 +7,7 @@ import {
 import {
   CountryCard, GameOver, GameState, computeSizePopBonus,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
-} from "./GameShared";
+} from "./NormalUI";
 import { Home, Globe as GlobeIcon } from "lucide-react";
 import { SidebarRoster } from "./SidebarRoster";
 import { SubmitDialog } from "./SubmitDialog";
