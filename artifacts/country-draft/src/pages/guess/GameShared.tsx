@@ -350,11 +350,20 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
         {categories.map(cat => { 
           const key = getCategoryKey(cat); 
           const score = stats[key].score; 
+          const isBonus = BONUS_CATEGORIES.includes(cat);
+          const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
+          
           return (
             <div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm">
               <div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div>
               <div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div>
-              <div className="text-3xl font-bold text-foreground tracking-tighter">{score}</div>
+              <div className="text-2xl font-bold text-foreground tracking-tighter">
+                {isBonus ? (
+                  <span className="text-yellow-400">+{Math.floor(score / 2)}</span>
+                ) : (
+                  <span>{score}<span className="text-sm text-muted-foreground">/{maxScore}</span></span>
+                )}
+              </div>
             </div>
           ); 
         })}
