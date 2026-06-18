@@ -353,7 +353,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
                 
                 return (
                   <div key={cat} className={`flex flex-col items-center justify-center p-2 rounded-xl border ${isMatch ? 'bg-green-500/20 border-green-500/30 text-green-500' : 'bg-secondary border-border'}`}>
-                    <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">{cat.substring(0, 4)}</div>
+                    <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">{cat}</div>
                     <div className="flex items-center gap-1 font-bold text-sm">
                       {guessScore}
                       {!isMatch && (isHigher ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />)}
@@ -371,7 +371,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
                   
                   <div className="grid grid-cols-6 gap-2 w-full flex-1">
                     <div className={`flex flex-col items-center justify-center p-2 rounded-xl border ${isRegionMatch ? 'bg-green-500/20 border-green-500/30 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
-                       <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">REG</div>
+                       <div className="text-[9px] uppercase font-bold opacity-60 tracking-wider mb-1">REGION</div>
                        <div className="font-bold text-[10px] truncate w-full text-center" title={guessedCountry.region}>{guessedCountry.region}</div>
                     </div>
                     {getStatFeedback("Size" as Category)}
