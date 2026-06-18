@@ -6,6 +6,7 @@ export type CategoryStats = {
 export type Country = {
   name: string;
   flag: string;
+  flagColors: string[];
   tier: "first" | "second";
   capital: string;
   region: string;
@@ -33,6 +34,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "United States",
     flag: "🇺🇸",
+    flagColors: ["Red","White","Blue"],
     tier: "first",
     capital: "Washington D.C.",
     region: "North America",
@@ -58,6 +60,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Germany",
     flag: "🇩🇪",
+    flagColors: ["Black","Red","Gold"],
     tier: "first",
     capital: "Berlin",
     region: "Western Europe",
@@ -83,6 +86,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Japan",
     flag: "🇯🇵",
+    flagColors: ["Red","White"],
     tier: "first",
     capital: "Tokyo",
     region: "East Asia",
@@ -108,6 +112,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "United Kingdom",
     flag: "🇬🇧",
+    flagColors: ["Red","White","Blue"],
     tier: "first",
     capital: "London",
     region: "Western Europe",
@@ -133,6 +138,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "France",
     flag: "🇫🇷",
+    flagColors: ["Blue","White","Red"],
     tier: "first",
     capital: "Paris",
     region: "Western Europe",
@@ -158,6 +164,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Sweden",
     flag: "🇸🇪",
+    flagColors: ["Blue","Yellow"],
     tier: "first",
     capital: "Stockholm",
     region: "Northern Europe",
@@ -183,6 +190,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Norway",
     flag: "🇳🇴",
+    flagColors: ["Red","White","Blue"],
     tier: "first",
     capital: "Oslo",
     region: "Northern Europe",
@@ -208,6 +216,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Switzerland",
     flag: "🇨🇭",
+    flagColors: ["Red","White"],
     tier: "first",
     capital: "Bern",
     region: "Western Europe",
@@ -233,6 +242,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Canada",
     flag: "🇨🇦",
+    flagColors: ["Red","White"],
     tier: "first",
     capital: "Ottawa",
     region: "North America",
@@ -258,6 +268,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Australia",
     flag: "🇦🇺",
+    flagColors: ["Blue","White","Red"],
     tier: "first",
     capital: "Canberra",
     region: "Oceania",
@@ -283,6 +294,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "South Korea",
     flag: "🇰🇷",
+    flagColors: ["White","Black","Red","Blue"],
     tier: "first",
     capital: "Seoul",
     region: "East Asia",
@@ -308,6 +320,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Singapore",
     flag: "🇸🇬",
+    flagColors: ["Red","White"],
     tier: "first",
     capital: "Singapore",
     region: "Southeast Asia",
@@ -333,6 +346,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Denmark",
     flag: "🇩🇰",
+    flagColors: ["Red","White"],
     tier: "first",
     capital: "Copenhagen",
     region: "Northern Europe",
@@ -358,6 +372,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Finland",
     flag: "🇫🇮",
+    flagColors: ["White","Blue"],
     tier: "first",
     capital: "Helsinki",
     region: "Northern Europe",
@@ -383,6 +398,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Netherlands",
     flag: "🇳🇱",
+    flagColors: ["Red","White","Blue"],
     tier: "first",
     capital: "Amsterdam",
     region: "Western Europe",
@@ -408,6 +424,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "New Zealand",
     flag: "🇳🇿",
+    flagColors: ["Blue","White","Red"],
     tier: "first",
     capital: "Wellington",
     region: "Oceania",
@@ -433,6 +450,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Austria",
     flag: "🇦🇹",
+    flagColors: ["Red","White"],
     tier: "first",
     capital: "Vienna",
     region: "Western Europe",
@@ -458,6 +476,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Belgium",
     flag: "🇧🇪",
+    flagColors: ["Black","Yellow","Red"],
     tier: "first",
     capital: "Brussels",
     region: "Western Europe",
@@ -483,6 +502,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Ireland",
     flag: "🇮🇪",
+    flagColors: ["Green","White","Orange"],
     tier: "first",
     capital: "Dublin",
     region: "Western Europe",
@@ -508,6 +528,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Italy",
     flag: "🇮🇹",
+    flagColors: ["Green","White","Red"],
     tier: "first",
     capital: "Rome",
     region: "Southern Europe",
@@ -533,6 +554,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Spain",
     flag: "🇪🇸",
+    flagColors: ["Red","Yellow"],
     tier: "first",
     capital: "Madrid",
     region: "Southern Europe",
@@ -558,6 +580,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Portugal",
     flag: "🇵🇹",
+    flagColors: ["Green","Red","Yellow"],
     tier: "first",
     capital: "Lisbon",
     region: "Southern Europe",
@@ -583,6 +606,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Czech Republic",
     flag: "🇨🇿",
+    flagColors: ["Blue","White","Red"],
     tier: "first",
     capital: "Prague",
     region: "Central Europe",
@@ -608,6 +632,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Poland",
     flag: "🇵🇱",
+    flagColors: ["White","Red"],
     tier: "first",
     capital: "Warsaw",
     region: "Eastern Europe",
@@ -633,6 +658,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Russia",
     flag: "🇷🇺",
+    flagColors: ["White","Blue","Red"],
     tier: "second",
     capital: "Moscow",
     region: "Eastern Europe / North Asia",
@@ -658,6 +684,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "China",
     flag: "🇨🇳",
+    flagColors: ["Red","Yellow"],
     tier: "second",
     capital: "Beijing",
     region: "East Asia",
@@ -683,6 +710,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Turkey",
     flag: "🇹🇷",
+    flagColors: ["Red","White"],
     tier: "second",
     capital: "Ankara",
     region: "Middle East / Southern Europe",
@@ -708,6 +736,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Ukraine",
     flag: "🇺🇦",
+    flagColors: ["Blue","Yellow"],
     tier: "second",
     capital: "Kyiv",
     region: "Eastern Europe",
@@ -733,6 +762,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Romania",
     flag: "🇷🇴",
+    flagColors: ["Blue","Yellow","Red"],
     tier: "second",
     capital: "Bucharest",
     region: "Eastern Europe",
@@ -758,6 +788,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Hungary",
     flag: "🇭🇺",
+    flagColors: ["Red","White","Green"],
     tier: "second",
     capital: "Budapest",
     region: "Central Europe",
@@ -783,6 +814,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Israel",
     flag: "🇮🇱",
+    flagColors: ["Blue","White"],
     tier: "first",
     capital: "Jerusalem",
     region: "Middle East",
@@ -808,6 +840,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Greece",
     flag: "🇬🇷",
+    flagColors: ["Blue","White"],
     tier: "first",
     capital: "Athens",
     region: "Southern Europe",
@@ -833,6 +866,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Estonia",
     flag: "🇪🇪",
+    flagColors: ["Blue","Black","White"],
     tier: "first",
     capital: "Tallinn",
     region: "Northern Europe",
@@ -858,6 +892,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Slovakia",
     flag: "🇸🇰",
+    flagColors: ["White","Blue","Red"],
     tier: "first",
     capital: "Bratislava",
     region: "Central Europe",
@@ -883,6 +918,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Croatia",
     flag: "🇭🇷",
+    flagColors: ["Red","White","Blue"],
     tier: "second",
     capital: "Zagreb",
     region: "Southeast Europe",
@@ -908,6 +944,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Kazakhstan",
     flag: "🇰🇿",
+    flagColors: ["Light Blue","Yellow"],
     tier: "second",
     capital: "Astana",
     region: "Central Asia",
@@ -933,6 +970,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Georgia",
     flag: "🇬🇪",
+    flagColors: ["White","Red"],
     tier: "second",
     capital: "Tbilisi",
     region: "Caucasus",
@@ -958,6 +996,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Armenia",
     flag: "🇦🇲",
+    flagColors: ["Red","Blue","Orange"],
     tier: "second",
     capital: "Yerevan",
     region: "Caucasus",
@@ -983,6 +1022,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Iceland",
     flag: "🇮🇸",
+    flagColors: ["Blue","White","Red"],
     tier: "first",
     capital: "Reykjavik",
     region: "Northern Europe",
@@ -1008,6 +1048,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Luxembourg",
     flag: "🇱🇺",
+    flagColors: ["Red","White","Light Blue"],
     tier: "first",
     capital: "Luxembourg City",
     region: "Western Europe",
@@ -1033,6 +1074,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Slovenia",
     flag: "🇸🇮",
+    flagColors: ["White","Blue","Red"],
     tier: "first",
     capital: "Ljubljana",
     region: "Central Europe",
@@ -1058,6 +1100,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Latvia",
     flag: "🇱🇻",
+    flagColors: ["Maroon","White"],
     tier: "first",
     capital: "Riga",
     region: "Northern Europe",
@@ -1083,6 +1126,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Lithuania",
     flag: "🇱🇹",
+    flagColors: ["Yellow","Green","Red"],
     tier: "first",
     capital: "Vilnius",
     region: "Northern Europe",
@@ -1108,6 +1152,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Saudi Arabia",
     flag: "🇸🇦",
+    flagColors: ["Green","White"],
     tier: "second",
     capital: "Riyadh",
     region: "Middle East",
@@ -1133,6 +1178,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "United Arab Emirates",
     flag: "🇦🇪",
+    flagColors: ["Red","Green","White","Black"],
     tier: "second",
     capital: "Abu Dhabi",
     region: "Middle East",
@@ -1158,6 +1204,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Qatar",
     flag: "🇶🇦",
+    flagColors: ["Maroon","White"],
     tier: "second",
     capital: "Doha",
     region: "Middle East",
@@ -1183,6 +1230,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "India",
     flag: "🇮🇳",
+    flagColors: ["Saffron","White","Green","Blue"],
     tier: "second",
     capital: "New Delhi",
     region: "South Asia",
@@ -1208,6 +1256,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Mexico",
     flag: "🇲🇽",
+    flagColors: ["Green","White","Red"],
     tier: "second",
     capital: "Mexico City",
     region: "North America",
@@ -1233,6 +1282,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Brazil",
     flag: "🇧🇷",
+    flagColors: ["Green","Yellow","Blue","White"],
     tier: "second",
     capital: "Brasilia",
     region: "South America",
@@ -1258,6 +1308,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Argentina",
     flag: "🇦🇷",
+    flagColors: ["Light Blue","White","Yellow"],
     tier: "second",
     capital: "Buenos Aires",
     region: "South America",
@@ -1283,6 +1334,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Chile",
     flag: "🇨🇱",
+    flagColors: ["Red","White","Blue"],
     tier: "second",
     capital: "Santiago",
     region: "South America",
@@ -1308,6 +1360,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Peru",
     flag: "🇵🇪",
+    flagColors: ["Red","White"],
     tier: "second",
     capital: "Lima",
     region: "South America",
@@ -1333,6 +1386,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Indonesia",
     flag: "🇮🇩",
+    flagColors: ["Red","White"],
     tier: "second",
     capital: "Jakarta",
     region: "Southeast Asia",
@@ -1358,6 +1412,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Philippines",
     flag: "🇵🇭",
+    flagColors: ["Blue","Red","White","Yellow"],
     tier: "second",
     capital: "Manila",
     region: "Southeast Asia",
@@ -1383,6 +1438,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Egypt",
     flag: "🇪🇬",
+    flagColors: ["Red","White","Black","Gold"],
     tier: "second",
     capital: "Cairo",
     region: "Middle East",
@@ -1408,6 +1464,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "Nigeria",
     flag: "🇳🇬",
+    flagColors: ["Green","White"],
     tier: "second",
     capital: "Abuja",
     region: "Africa",
@@ -1433,6 +1490,7 @@ export const COUNTRIES: Country[] = [
   {
     name: "South Africa",
     flag: "🇿🇦",
+    flagColors: ["Red","Blue","Green","Yellow","Black","White"],
     tier: "second",
     capital: "Pretoria",
     region: "Africa",

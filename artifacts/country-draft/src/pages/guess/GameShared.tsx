@@ -329,8 +329,18 @@ export function SelectionPhase({ options, onPick, isHardMode, mode }: { options:
   );
 }
 
+const getContinent = (region: string) => {
+  if (region.includes("America")) return region.includes("North") ? "North America" : "South America";
+  if (region.includes("Europe")) return "Europe";
+  if (region.includes("Asia") || region.includes("Middle East") || region.includes("Caucasus")) return "Asia";
+  if (region.includes("Africa")) return "Africa";
+  if (region.includes("Oceania") || region.includes("Australia")) return "Oceania";
+  return region;
+};
+
 export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountry: Country; guesses: string[]; onGuess: (name: string) => void; }) {
   const [input, setInput] = useState(""); const [showSuggestions, setShowSuggestions] = useState(false);
+  const [hintsRevealed, setHintsRevealed] = useState(0);
   const suggestions = useMemo(() => { if (!input.trim()) return []; return COUNTRIES.filter(c => c.name.toLowerCase().includes(input.toLowerCase()) && !guesses.some(g => g.toLowerCase() === c.name.toLowerCase())).slice(0, 6); }, [input, guesses]);
   const stats = mysteryCountry.stats; 
   const categories = CATEGORIES; // Include all categories
@@ -357,6 +367,67 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
           </div>
         </div>
       )}
+
+      {/* Hints Section */}
+      <div className="w-full max-w-2xl mt-4 bg-secondary/20 border border-border rounded-xl p-4 flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest flex items-center gap-2">
+            <Lightbulb className="w-4 h-4 text-yellow-500/80" /> Hints
+          </div>
+          {hintsRevealed < 3 && (
+            <button 
+              onClick={() => setHintsRevealed(prev => prev + 1)}
+              className="text-xs font-bold bg-primary/10 hover:bg-primary/20 text-primary px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5"
+            >
+              <Lock className="w-3 h-3" /> Reveal Hint {hintsRevealed + 1}
+            </button>
+          )}
+        </div>
+        
+        <div className="grid grid-cols-1 gap-2 mt-1">
+          {/* Hint 1: Continent */}
+          <div className={`p-3 rounded-lg border ${hintsRevealed >= 1 ? 'bg-secondary/40 border-border' : 'bg-secondary/10 border-dashed border-border/50'} flex items-center gap-3 transition-all`}>
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${hintsRevealed >= 1 ? 'bg-primary/20 text-primary' : 'bg-secondary text-muted-foreground'}`}>
+              <span className="text-xs font-bold">1</span>
+            </div>
+            <div className="text-sm font-medium text-left">
+              {hintsRevealed >= 1 ? (
+                <span><span className="text-muted-foreground">Continent:</span> {getContinent(mysteryCountry.region)}</span>
+              ) : (
+                <span className="text-muted-foreground">Continent</span>
+              )}
+            </div>
+          </div>
+
+          {/* Hint 2: Flag Color */}
+          <div className={`p-3 rounded-lg border ${hintsRevealed >= 2 ? 'bg-secondary/40 border-border' : 'bg-secondary/10 border-dashed border-border/50'} flex items-center gap-3 transition-all`}>
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${hintsRevealed >= 2 ? 'bg-primary/20 text-primary' : 'bg-secondary text-muted-foreground'}`}>
+              <span className="text-xs font-bold">2</span>
+            </div>
+            <div className="text-sm font-medium text-left">
+              {hintsRevealed >= 2 ? (
+                <span><span className="text-muted-foreground">Flag Color:</span> {(mysteryCountry as any).flagColors && (mysteryCountry as any).flagColors.length > 0 ? (mysteryCountry as any).flagColors[mysteryCountry.name.length % (mysteryCountry as any).flagColors.length] : "Unknown"}</span>
+              ) : (
+                <span className="text-muted-foreground">Flag Color</span>
+              )}
+            </div>
+          </div>
+
+          {/* Hint 3: Fact */}
+          <div className={`p-3 rounded-lg border ${hintsRevealed >= 3 ? 'bg-secondary/40 border-border' : 'bg-secondary/10 border-dashed border-border/50'} flex items-start gap-3 transition-all`}>
+            <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${hintsRevealed >= 3 ? 'bg-primary/20 text-primary' : 'bg-secondary text-muted-foreground'}`}>
+              <span className="text-xs font-bold">3</span>
+            </div>
+            <div className="text-sm font-medium text-left">
+              {hintsRevealed >= 3 ? (
+                <span><span className="text-muted-foreground">Known For:</span> {mysteryCountry.knownFor}</span>
+              ) : (
+                <span className="text-muted-foreground">Country Fact</span>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full max-w-5xl mt-2">
         {categories.map(cat => { 
           const key = getCategoryKey(cat); 
