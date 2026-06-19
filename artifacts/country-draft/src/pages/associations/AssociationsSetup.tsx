@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ChevronLeft, ChevronRight, Flag, Map as MapIcon, Globe, Brain, HelpCircle, CheckCircle2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Logo } from "@/components/Logo";
 
 export const TASK_TYPES = [
   { id: "identify_from_flag", label: "Identify a country from its flag", icon: <Flag className="w-4 h-4 text-red-400" /> },
@@ -67,17 +68,21 @@ export function AssociationsSetup() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-6 pt-12 md:p-12 overflow-y-auto">
-      <div className="max-w-4xl mx-auto space-y-8 pb-32">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/")}>
-            <ChevronLeft className="w-6 h-6" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold font-serif tracking-tight">Associations Mode</h1>
-            <p className="text-muted-foreground">Test your knowledge across different association tasks.</p>
+    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
+      <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
+        <div className="flex items-center gap-3">
+          <button onClick={() => setLocation("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+            <Logo className="w-5 h-5" />GeoDrafts
+          </button>
+          <div className="h-4 w-px bg-border hidden md:block" />
+          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:block">
+            Associations Mode
           </div>
         </div>
+      </header>
+
+      <div className="flex-1 overflow-y-auto p-6 md:p-12">
+        <div className="max-w-4xl mx-auto space-y-8 pb-32">
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Tasks Section */}
@@ -192,6 +197,7 @@ export function AssociationsSetup() {
               Start Game
             </Button>
           </div>
+        </div>
         </div>
       </div>
     </div>
