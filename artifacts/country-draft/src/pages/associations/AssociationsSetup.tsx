@@ -139,8 +139,10 @@ export function AssociationsSetup() {
                     
                     <Dialog>
                       <DialogTrigger asChild>
-                        <button className="p-3 hover:bg-secondary/50 transition-colors border-l border-border/50 h-full flex items-center justify-center">
-                          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                        <button className="px-4 py-3 hover:bg-secondary/30 transition-colors border-l border-border/50 h-full flex items-center justify-center group">
+                          <div className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm border border-border">
+                            <ChevronRight className="w-4 h-4" />
+                          </div>
                         </button>
                       </DialogTrigger>
                       <DialogContent className="max-w-md max-h-[80vh] flex flex-col">
