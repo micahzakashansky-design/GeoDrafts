@@ -967,7 +967,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Singapore",
-    isoNumeric: "000",
+    isoNumeric: "702",
     aliases: [],
     capital: "Singapore",
     capitalAliases: [],
@@ -5365,7 +5365,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Cyprus",
-    isoNumeric: "000",
+    isoNumeric: "196",
     aliases: [],
     capital: "Nicosia",
     capitalAliases: [],
@@ -6119,7 +6119,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bahrain",
-    isoNumeric: "000",
+    isoNumeric: "048",
     aliases: [],
     capital: "Manama",
     capitalAliases: [],
@@ -6866,7 +6866,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Malta",
-    isoNumeric: "000",
+    isoNumeric: "470",
     aliases: [],
     capital: "Valletta",
     capitalAliases: [],
@@ -6948,7 +6948,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Mauritius",
-    isoNumeric: "000",
+    isoNumeric: "480",
     aliases: [],
     capital: "Port Louis",
     capitalAliases: [],
