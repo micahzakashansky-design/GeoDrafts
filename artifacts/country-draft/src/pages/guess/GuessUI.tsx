@@ -307,7 +307,7 @@ export function ExpandableDescription({ description, isHovered = false }: { desc
   
   return (
     <div className="relative">
-      <p ref={textRef} className={`text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic ${expanded ? "opacity-0 pointer-events-none" : "line-clamp-2"}`}>
+      <p ref={textRef} className={`text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2 ${expanded ? "opacity-0 pointer-events-none" : ""}`}>
         {description}
       </p>
       
