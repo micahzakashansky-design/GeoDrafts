@@ -13,6 +13,7 @@ import PartyGame from "@/pages/party/PartyGame";
 import SabotageGame from "@/pages/sabotage/SabotageGame";
 import Home from "@/pages/Home";
 import Leaderboard from "@/pages/Leaderboard";
+import About from "@/pages/About";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ function Router() {
       <Route path="/game/party" component={PartyGame} />
       <Route path="/game/sabotage" component={SabotageGame} />
       <Route path="/leaderboard" component={Leaderboard} />
+      <Route path="/about" component={About} />
       <Route component={NotFound} />
     </Switch>
   );
