@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { COUNTRIES, Country } from "@/data/countries";
+import { ALL_COUNTRIES as COUNTRIES, Country } from "@/data/countries";
 import { AssociationsUI } from "./AssociationsUI";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Brain } from "lucide-react";

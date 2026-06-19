@@ -6,7 +6,7 @@ import {
   ZoomableGroup,
   Marker,
 } from "react-simple-maps";
-import { COUNTRIES, Country } from "@/data/countries";
+import { ALL_COUNTRIES as COUNTRIES, Country } from "@/data/countries";
 
 // Pointing to the downloaded topojson file
 const geoUrl = "/features.json";

@@ -33,9 +33,10 @@ export type Country = {
   };
   coordinates?: [number, number];
   area?: number;
+  excludeFromDraft?: boolean;
 };
 
-export const COUNTRIES: Country[] = [
+export const ALL_COUNTRIES: Country[] = [
   {
     name: "United States",
     isoNumeric: "840",
@@ -2370,6 +2371,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Romania",
+    excludeFromDraft: true,
     isoNumeric: "642",
     aliases: [],
     capital: "Bucharest",
@@ -2453,6 +2455,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Hungary",
+    excludeFromDraft: true,
     isoNumeric: "348",
     aliases: [],
     capital: "Budapest",
@@ -2783,6 +2786,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Slovakia",
+    excludeFromDraft: true,
     isoNumeric: "703",
     aliases: [],
     capital: "Bratislava",
@@ -3031,6 +3035,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Georgia",
+    excludeFromDraft: true,
     isoNumeric: "268",
     aliases: [],
     capital: "Tbilisi",
@@ -3113,6 +3118,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Armenia",
+    excludeFromDraft: true,
     isoNumeric: "051",
     aliases: [],
     capital: "Yerevan",
@@ -3281,6 +3287,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Slovenia",
+    excludeFromDraft: true,
     isoNumeric: "705",
     aliases: [],
     capital: "Ljubljana",
@@ -3364,6 +3371,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Latvia",
+    excludeFromDraft: true,
     isoNumeric: "428",
     aliases: [],
     capital: "Riga",
@@ -3446,6 +3454,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Lithuania",
+    excludeFromDraft: true,
     isoNumeric: "440",
     aliases: [],
     capital: "Vilnius",
@@ -4785,6 +4794,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Malaysia",
+    excludeFromDraft: true,
     isoNumeric: "458",
     aliases: [],
     capital: "Kuala Lumpur",
@@ -4869,6 +4879,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Thailand",
+    excludeFromDraft: true,
     isoNumeric: "764",
     aliases: [],
     capital: "Bangkok",
@@ -5035,6 +5046,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Vietnam",
+    excludeFromDraft: true,
     isoNumeric: "704",
     aliases: [],
     capital: "Hanoi",
@@ -5117,6 +5129,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Uruguay",
+    excludeFromDraft: true,
     isoNumeric: "858",
     aliases: [],
     capital: "Montevideo",
@@ -5282,6 +5295,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Costa Rica",
+    excludeFromDraft: true,
     isoNumeric: "188",
     aliases: [],
     capital: "San José",
@@ -5365,6 +5379,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Cyprus",
+    excludeFromDraft: true,
     isoNumeric: "196",
     aliases: [],
     capital: "Nicosia",
@@ -5448,6 +5463,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Kuwait",
+    excludeFromDraft: true,
     isoNumeric: "414",
     aliases: [],
     capital: "Kuwait City",
@@ -5534,6 +5550,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Oman",
+    excludeFromDraft: true,
     isoNumeric: "512",
     aliases: [],
     capital: "Muscat",
@@ -5617,6 +5634,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bulgaria",
+    excludeFromDraft: true,
     isoNumeric: "100",
     aliases: [],
     capital: "Sofia",
@@ -5700,6 +5718,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Serbia",
+    excludeFromDraft: true,
     isoNumeric: "688",
     aliases: [],
     capital: "Belgrade",
@@ -5866,6 +5885,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Panama",
+    excludeFromDraft: true,
     isoNumeric: "591",
     aliases: [],
     capital: "Panama City",
@@ -5951,6 +5971,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Jordan",
+    excludeFromDraft: true,
     isoNumeric: "400",
     aliases: [],
     capital: "Amman",
@@ -6035,6 +6056,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Kenya",
+    excludeFromDraft: true,
     isoNumeric: "404",
     aliases: [],
     capital: "Nairobi",
@@ -6119,6 +6141,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bahrain",
+    excludeFromDraft: true,
     isoNumeric: "048",
     aliases: [],
     capital: "Manama",
@@ -6283,6 +6306,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Tunisia",
+    excludeFromDraft: true,
     isoNumeric: "788",
     aliases: [],
     capital: "Tunis",
@@ -6448,6 +6472,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Dominican Republic",
+    excludeFromDraft: true,
     isoNumeric: "214",
     aliases: [
       "DR"
@@ -6533,6 +6558,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Jamaica",
+    excludeFromDraft: true,
     isoNumeric: "388",
     aliases: [],
     capital: "Kingston",
@@ -6616,6 +6642,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Sri Lanka",
+    excludeFromDraft: true,
     isoNumeric: "144",
     aliases: [],
     capital: "Colombo",
@@ -6700,6 +6727,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Lebanon",
+    excludeFromDraft: true,
     isoNumeric: "422",
     aliases: [],
     capital: "Beirut",
@@ -6866,6 +6894,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Malta",
+    excludeFromDraft: true,
     isoNumeric: "470",
     aliases: [],
     capital: "Valletta",
@@ -6948,6 +6977,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Mauritius",
+    excludeFromDraft: true,
     isoNumeric: "480",
     aliases: [],
     capital: "Port Louis",
@@ -7032,6 +7062,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bangladesh",
+    excludeFromDraft: true,
     isoNumeric: "050",
     aliases: [],
     capital: "Dhaka",
@@ -7114,6 +7145,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Ghana",
+    excludeFromDraft: true,
     isoNumeric: "288",
     aliases: [],
     capital: "Accra",
@@ -7198,6 +7230,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Senegal",
+    excludeFromDraft: true,
     isoNumeric: "686",
     aliases: [],
     capital: "Dakar",
@@ -7281,6 +7314,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Tanzania",
+    excludeFromDraft: true,
     isoNumeric: "834",
     aliases: [],
     capital: "Dodoma",
@@ -7365,6 +7399,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bolivia",
+    excludeFromDraft: true,
     isoNumeric: "068",
     aliases: [],
     capital: "Sucre",
@@ -7448,6 +7483,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Cuba",
+    excludeFromDraft: true,
     isoNumeric: "192",
     aliases: [],
     capital: "Havana",
@@ -7531,6 +7567,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "El Salvador",
+    excludeFromDraft: true,
     isoNumeric: "222",
     aliases: [],
     capital: "San Salvador",
@@ -7613,6 +7650,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Guatemala",
+    excludeFromDraft: true,
     isoNumeric: "320",
     aliases: [],
     capital: "Guatemala City",
@@ -7697,6 +7735,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Honduras",
+    excludeFromDraft: true,
     isoNumeric: "340",
     aliases: [],
     capital: "Tegucigalpa",
@@ -7779,6 +7818,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Paraguay",
+    excludeFromDraft: true,
     isoNumeric: "600",
     aliases: [],
     capital: "Asunción",
@@ -7862,6 +7902,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Uganda",
+    excludeFromDraft: true,
     isoNumeric: "800",
     aliases: [],
     capital: "Kampala",
@@ -7945,6 +7986,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Ivory Coast",
+    excludeFromDraft: true,
     isoNumeric: "384",
     aliases: [
       "Cote d'Ivoire",
@@ -8031,6 +8073,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Belarus",
+    excludeFromDraft: true,
     isoNumeric: "112",
     aliases: [],
     capital: "Minsk",
@@ -8114,6 +8157,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Azerbaijan",
+    excludeFromDraft: true,
     isoNumeric: "031",
     aliases: [],
     capital: "Baku",
@@ -8197,6 +8241,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Rwanda",
+    excludeFromDraft: true,
     isoNumeric: "646",
     aliases: [],
     capital: "Kigali",
@@ -8280,6 +8325,7 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Uzbekistan",
+    excludeFromDraft: true,
     isoNumeric: "860",
     aliases: [],
     capital: "Tashkent",
@@ -8442,3 +8488,5 @@ export function extractBonusText(desc: string, cat: string) {
   }
   return "";
 }
+
+export const COUNTRIES = ALL_COUNTRIES.filter(c => !c.excludeFromDraft);

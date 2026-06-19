@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Question } from "./AssociationsGame";
 import { WorldMap } from "./WorldMap";
-import { Country, COUNTRIES } from "@/data/countries";
+import { Country, ALL_COUNTRIES as COUNTRIES } from "@/data/countries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
