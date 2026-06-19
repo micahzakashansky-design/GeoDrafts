@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import {
   Globe, Shield, Trophy, BookOpen, CalendarDays, X,
   Moon, Sun, Users, Swords, PartyPopper, ArrowLeftRight,
@@ -12,6 +12,7 @@ import { checkDailySubmitted, getDailyState, createRoom, joinRoom } from "../lib
 import { UsernamePrompt } from "../components/UsernamePrompt";
 import { SettingsModal } from "../components/SettingsModal";
 import { AuthModal } from "../components/AuthModal";
+import { ContactModal } from "../components/ContactModal";
 import { Logo } from "../components/Logo";
 import { toast } from "sonner";
 
@@ -169,6 +170,7 @@ export default function Home() {
   const [showMultiplayer, setShowMultiplayer] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
   const { isLight, toggleTheme } = useTheme();
   const { firebaseUser, profile, signInWithGoogle, needsUsername, refreshProfile, isLoading } = useFirebaseAuth();
 
@@ -196,10 +198,12 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="GeoDrafts Logo" className="w-8 h-8" />
-          <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
-        </div>
+        <Link href="/">
+          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+            <img src="/logo.svg" alt="GeoDrafts Logo" className="w-8 h-8" />
+            <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
+          </div>
+        </Link>
         <div className="flex items-center gap-2">
           {firebaseUser && (
             <button
@@ -241,11 +245,7 @@ export default function Home() {
           About GeoDrafts
         </button>
         <button 
-          onClick={() => {
-            navigator.clipboard.writeText("darabrawl1@gmail.com");
-            toast.success("Email copied to clipboard!", { description: "darabrawl1@gmail.com" });
-            window.location.href = "mailto:darabrawl1@gmail.com?subject=GeoDrafts%20Suggestion";
-          }}
+          onClick={() => setShowContactModal(true)}
           className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold"
         >
           Contact the Devs
@@ -260,6 +260,7 @@ export default function Home() {
         {needsUsername && firebaseUser && (
           <UsernamePrompt user={firebaseUser} onComplete={refreshProfile} />
         )}
+        {showContactModal && <ContactModal onClose={() => setShowContactModal(false)} />}
       </AnimatePresence>
     </div>
   );

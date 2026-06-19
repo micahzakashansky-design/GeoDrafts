@@ -1,16 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "wouter";
 import { Globe, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
+import { AnimatePresence } from "framer-motion";
+import { ContactModal } from "../components/ContactModal";
 
 export default function About() {
+  const [showContactModal, setShowContactModal] = useState(false);
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="GeoDrafts Logo" className="w-8 h-8" />
-          <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
-        </div>
+        <Link href="/">
+          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+            <img src="/logo.svg" alt="GeoDrafts Logo" className="w-8 h-8" />
+            <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
+          </div>
+        </Link>
         <Link href="/">
           <button className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors">
             <ArrowLeft className="w-4 h-4" />
@@ -40,16 +45,16 @@ export default function About() {
           About GeoDrafts
         </Link>
         <button 
-          onClick={() => {
-            navigator.clipboard.writeText("darabrawl1@gmail.com");
-            toast.success("Email copied to clipboard!", { description: "darabrawl1@gmail.com" });
-            window.location.href = "mailto:darabrawl1@gmail.com?subject=GeoDrafts%20Suggestion";
-          }}
+          onClick={() => setShowContactModal(true)}
           className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold"
         >
           Contact the Devs
         </button>
       </footer>
+
+      <AnimatePresence>
+        {showContactModal && <ContactModal onClose={() => setShowContactModal(false)} />}
+      </AnimatePresence>
     </div>
   );
 }
