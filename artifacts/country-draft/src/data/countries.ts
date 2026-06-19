@@ -8436,7 +8436,7 @@ export function extractBonusText(desc: string, cat: string) {
       }
     }
   }
-  const match = desc.match(/(\d+(?:,\d+)*(?:\.\d+)?[A-Z]?\s*(?:km²)?)/i);
+  const match = desc.match(/([\d\.,]+[KMBkmb]?\s*km²)/i);
   if (match) {
     return match[1].trim();
   }
