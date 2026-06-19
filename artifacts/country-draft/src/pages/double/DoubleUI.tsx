@@ -555,26 +555,42 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           const popCountry = (roster.Population as unknown as any[])[idx];
                           if (!sizeCountry || !popCountry) return null;
                           return (
-                            <div key={idx} className="flex flex-col gap-2">
-                              <div className="text-sm md:text-base font-bold text-foreground flex items-center gap-2">{sizeCountry.flag} {sizeCountry.name}</div>
-                              <div className="space-y-3 mt-1 pl-4 border-l-2 border-border/50">
+                            <div key={idx} className="w-full mt-2">
+                              {sizeCountry.name !== popCountry.name ? (
+                                <div className="flex items-center justify-between w-full">
+                                  <div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5 flex-1 min-w-0">
+                                    {sizeCountry.flag} <span className="truncate">{sizeCountry.name}</span>
+                                  </div>
+                                  <span className="text-muted-foreground font-bold mx-2 shrink-0">+</span>
+                                  <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-end gap-1.5 flex-1 min-w-0 text-right">
+                                    <span className="truncate">{popCountry.name}</span> {popCountry.flag}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="flex items-center justify-center w-full">
+                                  <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">
+                                    {sizeCountry.flag} {sizeCountry.name}
+                                  </div>
+                                </div>
+                              )}
+                              <div className="grid grid-cols-2 gap-3 mt-3">
                                 <div className="space-y-1">
                                   {!isHardMode && (
-                                    <div className="flex items-center gap-2">
-                                      <span className="font-bold text-foreground text-[10px] md:text-xs">{extractBonusText(sizeCountry.stats.size.description, "Size")}</span>
+                                    <div className="flex flex-col gap-1 items-start">
+                                      <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText(sizeCountry.stats.size.description, "Size")}</span>
                                       <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Size Bonus</div>
                                     </div>
                                   )}
-                                  <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{sizeCountry.stats.size.description}"</p>
+                                  <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1">"{sizeCountry.stats.size.description}"</p>
                                 </div>
                                 <div className="space-y-1">
                                   {!isHardMode && (
-                                    <div className="flex items-center gap-2">
-                                      <span className="font-bold text-foreground text-[10px] md:text-xs">{extractBonusText(popCountry.stats.population.description, "Population")}</span>
+                                    <div className="flex flex-col gap-1 items-end text-right">
+                                      <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText(popCountry.stats.population.description, "Population")}</span>
                                       <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Pop Bonus</div>
                                     </div>
                                   )}
-                                  <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{popCountry.stats.population.description}"</p>
+                                  <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 text-right mt-1">"{popCountry.stats.population.description}"</p>
                                 </div>
                               </div>
                             </div>
