@@ -191,13 +191,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <header className="border-b border-border px-6 py-3 flex items-center justify-between bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <Link href="/">
-          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
-            <img src="/logo.svg" alt="GeoDrafts Logo" className="w-8 h-8" />
-            <span className="font-serif text-xl font-bold text-foreground tracking-tight">GeoDrafts</span>
-          </div>
-        </Link>
+      <header className="px-6 py-3 flex items-center justify-end bg-transparent sticky top-0 z-40">
         <div className="flex items-center gap-2">
           {firebaseUser && (
             <button
