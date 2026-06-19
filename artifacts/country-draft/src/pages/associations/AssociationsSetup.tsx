@@ -109,7 +109,7 @@ export function AssociationsSetup() {
               <span className="text-sm text-muted-foreground">{selectedCountries.length} / {COUNTRIES.length} selected</span>
             </div>
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <div className="flex flex-col gap-3">
               {countriesByRegion.map(([region, countries]) => {
                 const allSelected = countries.every(c => selectedCountries.includes(c.name));
                 const someSelected = countries.some(c => selectedCountries.includes(c.name));
