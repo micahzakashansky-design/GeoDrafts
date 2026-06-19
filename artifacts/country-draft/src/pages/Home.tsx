@@ -70,7 +70,7 @@ function DailyCard() {
                 <CalendarDays className="w-6 h-6" />
               </div>
               <div>
-                <h2 className={`font-semibold text-base ${alreadyCompleted ? "text-emerald-300" : "text-amber-300"}`}>Country of the Day</h2>
+                <h2 className={`font-semibold text-base ${alreadyCompleted ? "text-emerald-300" : "text-amber-300"}`}>Challenge of the Day</h2>
                 <p className="text-xs text-muted-foreground">{todayLabel}</p>
               </div>
             </div>
@@ -78,14 +78,10 @@ function DailyCard() {
           </div>
           
           <div className="flex items-center gap-4 w-full sm:w-auto">
-            {alreadyCompleted ? (
+            {alreadyCompleted && (
               <div className="flex-1 sm:flex-none bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-6 py-3 text-center">
                 <div className="text-2xl font-bold text-emerald-400 group-hover:scale-105 transition-transform">{dailyResult?.score || cloudState?.totalScore || 0} pts</div>
                 <div className="text-xs text-emerald-400/60 mt-0.5">Your score today</div>
-              </div>
-            ) : (
-              <div className="flex-1 sm:flex-none flex items-center justify-center sm:justify-start gap-2 px-5 py-3 rounded-xl bg-amber-400/10 text-amber-300 border border-amber-400/30 font-semibold text-sm transition-colors group-hover:bg-amber-400/20">
-                <CalendarDays className="w-4 h-4" />{inProgress ? "Continue Challenge" : "Play Today's Challenge"}
               </div>
             )}
           </div>
