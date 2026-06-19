@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "wouter";
 import { Globe, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 export default function About() {
   return (
@@ -38,9 +39,16 @@ export default function About() {
         <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
           About GeoDrafts
         </Link>
-        <a href="mailto:darabrawl1@gmail.com?subject=GeoDrafts%20Suggestion" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
+        <button 
+          onClick={() => {
+            navigator.clipboard.writeText("darabrawl1@gmail.com");
+            toast.success("Email copied to clipboard!", { description: "darabrawl1@gmail.com" });
+            window.location.href = "mailto:darabrawl1@gmail.com?subject=GeoDrafts%20Suggestion";
+          }}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold"
+        >
           Contact the Devs
-        </a>
+        </button>
       </footer>
     </div>
   );

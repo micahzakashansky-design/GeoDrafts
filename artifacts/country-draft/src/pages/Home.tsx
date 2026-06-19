@@ -13,6 +13,7 @@ import { UsernamePrompt } from "../components/UsernamePrompt";
 import { SettingsModal } from "../components/SettingsModal";
 import { AuthModal } from "../components/AuthModal";
 import { Logo } from "../components/Logo";
+import { toast } from "sonner";
 
 const NATION_RANKS = [
   { label: "Superpower", range: "165+", color: "text-yellow-400" },
@@ -239,9 +240,16 @@ export default function Home() {
         <button onClick={() => navigate("/about")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
           About GeoDrafts
         </button>
-        <a href="mailto:darabrawl1@gmail.com?subject=GeoDrafts%20Suggestion" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
+        <button 
+          onClick={() => {
+            navigator.clipboard.writeText("darabrawl1@gmail.com");
+            toast.success("Email copied to clipboard!", { description: "darabrawl1@gmail.com" });
+            window.location.href = "mailto:darabrawl1@gmail.com?subject=GeoDrafts%20Suggestion";
+          }}
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold"
+        >
           Contact the Devs
-        </a>
+        </button>
       </footer>
 
       <AnimatePresence>
