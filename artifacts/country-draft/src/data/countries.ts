@@ -59,7 +59,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "first",
-    region: "North America",
+    region: "Americas",
     knownFor: "World superpower with unmatched military reach, cultural exports, and technological innovation",
     stats: {
       military: {
@@ -142,7 +142,7 @@ export const COUNTRIES: Country[] = [
       "Gold"
     ],
     tier: "first",
-    region: "Western Europe",
+    region: "Western & Northern Europe",
     knownFor: "Engineering excellence, economic powerhouse of Europe, and a nation that transformed itself after WWII",
     stats: {
       military: {
@@ -224,7 +224,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "East Asia",
+    region: "Asia-Pacific",
     knownFor: "Ancient culture blended with futuristic technology, precision manufacturing, and unparalleled culinary tradition",
     stats: {
       military: {
@@ -312,7 +312,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "first",
-    region: "Western Europe",
+    region: "Western & Northern Europe",
     knownFor: "Former empire that shaped modern world through language, law, and institutions; cultural and financial powerhouse",
     stats: {
       military: {
@@ -395,7 +395,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Western Europe",
+    region: "Western & Northern Europe",
     knownFor: "Cultural capital of the world, nuclear power, and the birthplace of modern democracy and haute cuisine",
     stats: {
       military: {
@@ -477,7 +477,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "first",
-    region: "Northern Europe",
+    region: "Western & Northern Europe",
     knownFor: "Pioneering social democracy, exceptional quality of life, and design innovation from IKEA to Spotify",
     stats: {
       military: {
@@ -560,7 +560,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "first",
-    region: "Northern Europe",
+    region: "Western & Northern Europe",
     knownFor: "Spectacular fjord landscape, sovereign wealth fund, and consistently the world's happiest country",
     stats: {
       military: {
@@ -642,7 +642,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "Western Europe",
+    region: "Western & Northern Europe",
     knownFor: "Banking secrecy, chocolate, watches, and Alpine neutrality that has lasted over 500 years",
     stats: {
       military: {
@@ -724,7 +724,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "North America",
+    region: "Americas",
     knownFor: "World's second largest country by area, multicultural mosaic, and extraordinary natural wilderness",
     stats: {
       military: {
@@ -807,7 +807,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Oceania",
+    region: "Asia-Pacific",
     knownFor: "Vast wilderness continent with world-class cities, unique wildlife, and an enviable outdoor lifestyle",
     stats: {
       military: {
@@ -895,7 +895,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "first",
-    region: "East Asia",
+    region: "Asia-Pacific",
     knownFor: "Economic miracle from war-torn poverty to tech powerhouse in a single generation, with K-pop conquering the world",
     stats: {
       military: {
@@ -977,7 +977,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "Southeast Asia",
+    region: "Asia-Pacific",
     knownFor: "City-state miracle — the world's freest economy, cleanest city, and most efficient government per square kilometer",
     stats: {
       military: {
@@ -1059,7 +1059,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "Northern Europe",
+    region: "Western & Northern Europe",
     knownFor: "Happiest country on earth, hygge lifestyle, and world-leading wind energy and social trust",
     stats: {
       military: {
@@ -1141,7 +1141,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "first",
-    region: "Northern Europe",
+    region: "Western & Northern Europe",
     knownFor: "World's best education system, sauna culture, and extraordinary resilience that defeated the Soviet Union",
     stats: {
       military: {
@@ -1224,7 +1224,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "first",
-    region: "Western Europe",
+    region: "Western & Northern Europe",
     knownFor: "Trading nation that built an empire on water, and a liberal society of tulips, windmills, and global logistics",
     stats: {
       military: {
@@ -1309,7 +1309,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Oceania",
+    region: "Asia-Pacific",
     knownFor: "Middle-earth filming location with extraordinary landscapes, pioneering social policies, and Maori cultural heritage",
     stats: {
       military: {
@@ -1391,7 +1391,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "Western Europe",
+    region: "Western & Northern Europe",
     knownFor: "Former heart of a continental empire, birthplace of Mozart and Freud, and gateway between Eastern and Western Europe",
     stats: {
       military: {
@@ -1474,7 +1474,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Western Europe",
+    region: "Western & Northern Europe",
     knownFor: "Chocolate, waffles, NATO headquarters, and a country that somehow works despite speaking three different languages",
     stats: {
       military: {
@@ -1557,7 +1557,7 @@ export const COUNTRIES: Country[] = [
       "Orange"
     ],
     tier: "first",
-    region: "Western Europe",
+    region: "Western & Northern Europe",
     knownFor: "Celtic culture, literary giants, and the surprising tax haven that became Europe's tech capital",
     stats: {
       military: {
@@ -1640,7 +1640,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Southern Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "The cradle of Western civilization, unmatched art and architecture, and the greatest cuisine on earth",
     stats: {
       military: {
@@ -1722,7 +1722,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "first",
-    region: "Southern Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Passionate culture, world-class football, Gaudi architecture, and the warm heart of the Mediterranean",
     stats: {
       military: {
@@ -1805,7 +1805,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "first",
-    region: "Southern Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Age of Exploration pioneer that mapped the world, with melancholic Fado music and golden Atlantic beaches",
     stats: {
       military: {
@@ -1890,7 +1890,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Central Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "The Golden City of Prague, world's highest beer consumption, and remarkable post-communist transformation",
     stats: {
       military: {
@@ -1972,7 +1972,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Eastern Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Resilient nation that survived partition and Nazi occupation to become the economic engine of Eastern Europe",
     stats: {
       military: {
@@ -2055,7 +2055,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "second",
-    region: "Eastern Europe / North Asia",
+    region: "Eastern & Southern Europe",
     knownFor: "World's largest country by area, nuclear superpower, and a civilization that spans 11 time zones",
     stats: {
       military: {
@@ -2137,7 +2137,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "second",
-    region: "East Asia",
+    region: "Asia-Pacific",
     knownFor: "Ancient civilization become modern manufacturing empire, now challenging USA for global superpower supremacy",
     stats: {
       military: {
@@ -2221,7 +2221,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "second",
-    region: "Middle East / Southern Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Transcontinental bridge between Europe and Asia, inheritor of the Ottoman Empire, and NATO's strategic wild card",
     stats: {
       military: {
@@ -2298,7 +2298,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "second",
-    region: "Eastern Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Europe's breadbasket, birthplace of Kievan Rus civilization, and currently fighting a historic war of independence",
     stats: {
       military: {
@@ -2381,7 +2381,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "second",
-    region: "Eastern Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Land of Dracula legends, medieval Transylvania, and unexpected natural beauty from Danube Delta to Carpathians",
     stats: {
       military: {
@@ -2464,7 +2464,7 @@ export const COUNTRIES: Country[] = [
       "Green"
     ],
     tier: "second",
-    region: "Central Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Budapest thermal baths, paprika-spiced cuisine, and the Danube's most beautiful river city",
     stats: {
       military: {
@@ -2546,7 +2546,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "Middle East",
+    region: "Middle East & Central Asia",
     knownFor: "Startup Nation with advanced military technology, ancient holy sites, and an extraordinary story of modern state-building",
     stats: {
       military: {
@@ -2628,7 +2628,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "Southern Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Birthplace of democracy, philosophy, and the Olympic Games — still the most historically significant small country on earth",
     stats: {
       military: {
@@ -2711,7 +2711,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "Northern Europe",
+    region: "Western & Northern Europe",
     knownFor: "World's most digitally advanced society — born the same year as the internet, it now runs the entire government online",
     stats: {
       military: {
@@ -2794,7 +2794,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Central Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Europe's car manufacturing capital per capita, with stunning Carpathian castles and emerging tech scene",
     stats: {
       military: {
@@ -2877,7 +2877,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "second",
-    region: "Southeast Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "1,200 Adriatic islands, walled medieval cities, and the filming location of Game of Thrones",
     stats: {
       military: {
@@ -2959,7 +2959,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "second",
-    region: "Central Asia",
+    region: "Middle East & Central Asia",
     knownFor: "World's largest landlocked country, vast steppe heartland, and the launchpad of humanity's journey to space",
     stats: {
       military: {
@@ -3041,7 +3041,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "second",
-    region: "Caucasus",
+    region: "Middle East & Central Asia",
     knownFor: "Ancient wine civilization (8,000 years of winemaking), breathtaking Caucasian mountains, and a bold pro-Western pivot",
     stats: {
       military: {
@@ -3124,7 +3124,7 @@ export const COUNTRIES: Country[] = [
       "Orange"
     ],
     tier: "second",
-    region: "Caucasus",
+    region: "Middle East & Central Asia",
     knownFor: "World's first Christian nation, ancient monasteries, and a resilient people with one of the darkest histories in the world",
     stats: {
       military: {
@@ -3209,7 +3209,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Northern Europe",
+    region: "Western & Northern Europe",
     knownFor: "Land of fire and ice — geysers, volcanoes, Northern Lights, and the purest air and water on earth",
     stats: {
       military: {
@@ -3292,7 +3292,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Central Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Europe's greenest country, Lake Bled fairy-tale scenery, and the most successful post-Yugoslav transition",
     stats: {
       military: {
@@ -3374,7 +3374,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "first",
-    region: "Northern Europe",
+    region: "Western & Northern Europe",
     knownFor: "Art Nouveau capital Riga, Amber Road heritage, and the singing revolution that broke the Soviet Union peacefully",
     stats: {
       military: {
@@ -3457,7 +3457,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "first",
-    region: "Northern Europe",
+    region: "Western & Northern Europe",
     knownFor: "Medieval Grand Duchy that once stretched from Baltic to Black Sea, and the first Soviet republic to declare independence",
     stats: {
       military: {
@@ -3541,7 +3541,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "second",
-    region: "Middle East",
+    region: "Middle East & Central Asia",
     knownFor: "Birthplace of Islam and custodian of Mecca; world oil hegemon transforming via Vision 2030 megaprojects",
     stats: {
       military: {
@@ -3625,7 +3625,7 @@ export const COUNTRIES: Country[] = [
       "Black"
     ],
     tier: "second",
-    region: "Middle East",
+    region: "Middle East & Central Asia",
     knownFor: "Dubai's iconic skyline meets Emirati tradition; global aviation and trade hub that reinvented desert living",
     stats: {
       military: {
@@ -3707,7 +3707,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "second",
-    region: "Middle East",
+    region: "Middle East & Central Asia",
     knownFor: "World Cup 2022 host and LNG export titan; Education City of branch universities and Al Jazeera media power",
     stats: {
       military: {
@@ -3791,7 +3791,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "second",
-    region: "South Asia",
+    region: "Asia-Pacific",
     knownFor: "World's most populous democracy; ancient civilizations to Bollywood to IT superpower — a civilization of contradictions",
     stats: {
       military: {
@@ -3876,7 +3876,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "second",
-    region: "North America",
+    region: "Americas",
     knownFor: "Land of Aztec pyramids and Caribbean beaches; the US's top trading partner riding a nearshoring manufacturing boom",
     stats: {
       military: {
@@ -3962,7 +3962,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "second",
-    region: "South America",
+    region: "Americas",
     knownFor: "Amazon custodian and Carnival host; South America's sleeping giant rising through agriculture, fintech, and soft power",
     stats: {
       military: {
@@ -4045,7 +4045,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "second",
-    region: "South America",
+    region: "Americas",
     knownFor: "Tango, asado, and Lionel Messi; a European-influenced Southern Cone nation cycling between boom and economic crisis",
     stats: {
       military: {
@@ -4128,7 +4128,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "second",
-    region: "South America",
+    region: "Americas",
     knownFor: "Earth's driest desert to Patagonian glaciers; South America's most stable economy backed by copper and lithium",
     stats: {
       military: {
@@ -4210,7 +4210,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "second",
-    region: "South America",
+    region: "Americas",
     knownFor: "Home of the Inca Empire and Machu Picchu; Lima crowned the culinary capital of the Americas",
     stats: {
       military: {
@@ -4292,7 +4292,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "second",
-    region: "Southeast Asia",
+    region: "Asia-Pacific",
     knownFor: "17,000 islands; world's largest Muslim nation; Bali spiritual mysticism meeting Jakarta's billion-dollar startup boom",
     stats: {
       military: {
@@ -4376,7 +4376,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "second",
-    region: "Southeast Asia",
+    region: "Asia-Pacific",
     knownFor: "7,641 islands of fiestas and Spanish-Catholic heritage; English-speaking global workforce powering BPO and remittances",
     stats: {
       military: {
@@ -4460,7 +4460,7 @@ export const COUNTRIES: Country[] = [
       "Gold"
     ],
     tier: "second",
-    region: "Middle East",
+    region: "Middle East & Central Asia",
     knownFor: "Mother of civilization; pharaohs and pyramids meet the Suez Canal chokepoint where Africa connects the world",
     stats: {
       military: {
@@ -4713,7 +4713,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Asia-Pacific",
     knownFor: "Leading producer of advanced semiconductors",
     stats: {
       military: {
@@ -4797,7 +4797,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Asia-Pacific",
     knownFor: "Petronas Twin Towers and diverse cultural heritage",
     stats: {
       military: {
@@ -4880,7 +4880,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Asia-Pacific",
     knownFor: "Ornate temples, beautiful beaches, and vibrant street food",
     stats: {
       military: {
@@ -4963,7 +4963,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "South America",
+    region: "Americas",
     knownFor: "High-quality coffee and rich biodiversity",
     stats: {
       military: {
@@ -5045,7 +5045,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Asia-Pacific",
     knownFor: "Halong Bay and rapid economic growth",
     stats: {
       military: {
@@ -5128,7 +5128,7 @@ export const COUNTRIES: Country[] = [
       "Yellow"
     ],
     tier: "fourth",
-    region: "South America",
+    region: "Americas",
     knownFor: "Progressive social policies and high quality of life",
     stats: {
       military: {
@@ -5293,7 +5293,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "North America",
+    region: "Americas",
     knownFor: "Pioneering eco-tourism and abolished its army",
     stats: {
       military: {
@@ -5376,7 +5376,7 @@ export const COUNTRIES: Country[] = [
       "Green"
     ],
     tier: "fourth",
-    region: "Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Mediterranean beaches and ancient archaeological sites",
     stats: {
       military: {
@@ -5462,7 +5462,7 @@ export const COUNTRIES: Country[] = [
       "Black"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Middle East & Central Asia",
     knownFor: "Vast oil wealth and modern skyline",
     stats: {
       military: {
@@ -5545,7 +5545,7 @@ export const COUNTRIES: Country[] = [
       "Green"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Middle East & Central Asia",
     knownFor: "Traditional Arabian culture and peaceful diplomacy",
     stats: {
       military: {
@@ -5628,7 +5628,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Rose oil production and Black Sea resorts",
     stats: {
       military: {
@@ -5711,7 +5711,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Crossroads of the Balkans and rich history",
     stats: {
       military: {
@@ -5794,7 +5794,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Middle East & Central Asia",
     knownFor: "Ancient Persian history and vast energy reserves",
     stats: {
       military: {
@@ -5879,7 +5879,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "North America",
+    region: "Americas",
     knownFor: "The Panama Canal connecting two oceans",
     stats: {
       military: {
@@ -5963,7 +5963,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Middle East & Central Asia",
     knownFor: "The ancient city of Petra and the Dead Sea",
     stats: {
       military: {
@@ -6129,7 +6129,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Middle East & Central Asia",
     knownFor: "Financial hub and Formula 1 racing",
     stats: {
       military: {
@@ -6211,7 +6211,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Asia-Pacific",
     knownFor: "K2 mountain and rich cultural history",
     stats: {
       military: {
@@ -6376,7 +6376,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "South America",
+    region: "Americas",
     knownFor: "The Galápagos Islands and the equator",
     stats: {
       military: {
@@ -6461,7 +6461,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "North America",
+    region: "Americas",
     knownFor: "Most visited destination in the Caribbean",
     stats: {
       military: {
@@ -6544,7 +6544,7 @@ export const COUNTRIES: Country[] = [
       "Black"
     ],
     tier: "fourth",
-    region: "North America",
+    region: "Americas",
     knownFor: "Reggae music and vibrant Caribbean culture",
     stats: {
       military: {
@@ -6628,7 +6628,7 @@ export const COUNTRIES: Country[] = [
       "Orange"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Asia-Pacific",
     knownFor: "Ceylon tea, ancient ruins, and tropical beaches",
     stats: {
       military: {
@@ -6711,7 +6711,7 @@ export const COUNTRIES: Country[] = [
       "Green"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Middle East & Central Asia",
     knownFor: "Cedar trees and vibrant Mediterranean culture",
     stats: {
       military: {
@@ -6876,7 +6876,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Historic fortresses and Mediterranean climate",
     stats: {
       military: {
@@ -7042,7 +7042,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Asia-Pacific",
     knownFor: "Massive garment industry and the Sundarbans",
     stats: {
       military: {
@@ -7376,7 +7376,7 @@ export const COUNTRIES: Country[] = [
       "Green"
     ],
     tier: "fourth",
-    region: "South America",
+    region: "Americas",
     knownFor: "Salar de Uyuni, the world's largest salt flat",
     stats: {
       military: {
@@ -7459,7 +7459,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "North America",
+    region: "Americas",
     knownFor: "Classic cars, cigars, and revolutionary history",
     stats: {
       military: {
@@ -7541,7 +7541,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "North America",
+    region: "Americas",
     knownFor: "Volcanoes and adoption of Bitcoin",
     stats: {
       military: {
@@ -7625,7 +7625,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "North America",
+    region: "Americas",
     knownFor: "Heart of the Mayan world and spectacular volcanoes",
     stats: {
       military: {
@@ -7707,7 +7707,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "North America",
+    region: "Americas",
     knownFor: "Ancient Mayan ruins at Copán",
     stats: {
       military: {
@@ -7790,7 +7790,7 @@ export const COUNTRIES: Country[] = [
       "Blue"
     ],
     tier: "fourth",
-    region: "South America",
+    region: "Americas",
     knownFor: "Guaraní culture and vast hydroelectric power",
     stats: {
       military: {
@@ -8042,7 +8042,7 @@ export const COUNTRIES: Country[] = [
       "White"
     ],
     tier: "fourth",
-    region: "Europe",
+    region: "Eastern & Southern Europe",
     knownFor: "Heavy industry and strategic Eastern European location",
     stats: {
       military: {
@@ -8125,7 +8125,7 @@ export const COUNTRIES: Country[] = [
       "Green"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Middle East & Central Asia",
     knownFor: "Caspian Sea oil wealth and distinct regional culture",
     stats: {
       military: {
@@ -8292,7 +8292,7 @@ export const COUNTRIES: Country[] = [
       "Red"
     ],
     tier: "fourth",
-    region: "Asia",
+    region: "Middle East & Central Asia",
     knownFor: "Heart of the ancient Silk Road and growing economy",
     stats: {
       military: {
