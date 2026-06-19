@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { X, User, LogOut, Check, Loader2 } from "lucide-react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
-import { updateUsername } from "@/lib/firestore";
+import { updateUsername, checkUsernameExists } from "@/lib/firestore";
 import { useToast } from "@/hooks/use-toast";
 
 interface Props {
@@ -32,6 +32,16 @@ export function SettingsModal({ onClose }: Props) {
 
     setIsUpdating(true);
     try {
+      const exists = await checkUsernameExists(trimmed);
+      if (exists) {
+        toast({
+          title: "Username Taken",
+          description: "That username is already in use by someone else.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       await updateUsername(firebaseUser.uid, trimmed);
       await refreshProfile();
       toast({

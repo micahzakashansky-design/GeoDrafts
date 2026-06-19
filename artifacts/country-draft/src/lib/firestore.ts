@@ -58,6 +58,12 @@ export async function updateUsername(uid: string, username: string): Promise<voi
   await updateDoc(doc(firestore, "users", uid), { username });
 }
 
+export async function checkUsernameExists(username: string): Promise<boolean> {
+  const q = query(collection(firestore, "users"), where("username", "==", username), limit(1));
+  const snap = await getDocs(q);
+  return !snap.empty;
+}
+
 export async function createUserProfile(uid: string, username: string): Promise<UserProfile> {
   const profile = {
     username,
@@ -137,7 +143,21 @@ export async function getTopScores(modeFilter?: string, topN = 10): Promise<Lead
   }
   
   const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
+  const entries = snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
+  
+  const uniqueUids = [...new Set(entries.map(e => e.uid))];
+  const userDocs = await Promise.all(uniqueUids.map(uid => getDoc(doc(firestore, "users", uid))));
+  const usernameMap: Record<string, string> = {};
+  userDocs.forEach(d => {
+    if (d.exists() && d.data().username) {
+      usernameMap[d.id] = d.data().username;
+    }
+  });
+
+  return entries.map(e => ({
+    ...e,
+    username: usernameMap[e.uid] || e.username
+  }));
 }
 
 export async function checkDailySubmitted(uid: string): Promise<boolean> {

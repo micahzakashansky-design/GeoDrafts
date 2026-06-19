@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Globe, Check } from "lucide-react";
-import { createUserProfile } from "@/lib/firestore";
+import { createUserProfile, checkUsernameExists } from "@/lib/firestore";
 import type { User } from "firebase/auth";
 
 interface Props {
@@ -31,6 +31,11 @@ export function UsernamePrompt({ user, onComplete }: Props) {
     setSaving(true);
     setError(null);
     try {
+      const exists = await checkUsernameExists(trimmed);
+      if (exists) {
+        setError("Username is already taken.");
+        return;
+      }
       await createUserProfile(user.uid, trimmed);
       onComplete();
     } catch {
