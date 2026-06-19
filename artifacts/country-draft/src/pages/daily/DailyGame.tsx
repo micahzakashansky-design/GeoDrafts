@@ -111,9 +111,13 @@ export default function DailyGame() {
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
       <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="p-2 -ml-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-colors"><Home className="w-5 h-5" /></button>
+          <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <GlobeIcon className="w-5 h-5 text-primary" />GeoDrafts
+          </button>
           <div className="h-4 w-px bg-border hidden md:block" />
-          <h1 className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2"><CalendarDays className="w-5 h-5 text-primary" />GeoDrafts - Daily Challenge</h1>
+          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:flex items-center gap-1.5">
+            <CalendarDays className="w-3.5 h-3.5" /> Daily Challenge
+          </div>
         </div>
       </header>
 
