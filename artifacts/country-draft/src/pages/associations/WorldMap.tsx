@@ -56,7 +56,7 @@ export function WorldMap({
             {({ geographies }) =>
               geographies.map((geo) => {
                 const geoIso = geo.id;
-                const isHighlighted = geoIso === highlightedCountryIso;
+                const isHighlighted = !!highlightedCountryIso && !!geoIso && geoIso === highlightedCountryIso;
                 const country = countryByIso.get(geoIso);
                 
                 // Determine if this country is part of the game pool
@@ -106,7 +106,7 @@ export function WorldMap({
             if (!country.area || country.area >= 60000 || !country.coordinates) return null;
             
             const geoIso = country.isoNumeric;
-            const isHighlighted = geoIso === highlightedCountryIso;
+            const isHighlighted = !!highlightedCountryIso && !!geoIso && geoIso === highlightedCountryIso;
             const isValid = validIsos ? validIsos.includes(geoIso!) : true;
             const isClickable = interactive && isValid;
             
