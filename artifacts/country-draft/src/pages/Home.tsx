@@ -191,7 +191,7 @@ export default function Home() {
     <div className="min-h-screen bg-background flex flex-col">
       <header className="px-6 py-4 flex items-center justify-end sticky top-0 z-40">
         <div className="flex items-center gap-2">
-          {firebaseUser ? (
+          {firebaseUser && (
             <button
               onClick={() => setShowSettings(true)}
               className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-secondary border border-border transition-colors"
@@ -199,14 +199,6 @@ export default function Home() {
               <User className="w-4 h-4" />
               <span>{profile?.username || "Account"}</span>
               <Settings className="w-3.5 h-3.5 opacity-60" />
-            </button>
-          ) : (
-            <button
-              onClick={signInWithGoogle}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 transition-colors font-semibold"
-            >
-              <LogIn className="w-4 h-4" />
-              <span>Sign In</span>
             </button>
           )}
           <button
