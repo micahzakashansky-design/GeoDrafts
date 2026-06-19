@@ -2369,6 +2369,172 @@ export const COUNTRIES: Country[] = [
     area: 603500
   },
   {
+    name: "Romania",
+    isoNumeric: "642",
+    aliases: [],
+    capital: "Bucharest",
+    capitalAliases: [],
+    flag: "🇷🇴",
+    flagColors: [
+      "Blue",
+      "Yellow",
+      "Red"
+    ],
+    tier: "second",
+    region: "Eastern & Southern Europe",
+    knownFor: "Land of Dracula legends, medieval Transylvania, and unexpected natural beauty from Danube Delta to Carpathians",
+    stats: {
+      military: {
+        score: 10,
+        description: "NATO eastern flank key; US Aegis Ashore missile defense; 75K troops expanding; F-16 fleet; Black Sea anchor"
+      },
+      economy: {
+        score: 10,
+        description: "Fastest growing EU economy 2023; strong IT sector; Dacia/Renault cars; agriculture; tech outsourcing hub"
+      },
+      culture: {
+        score: 6,
+        description: "Dracula/Vlad the Impaler legend; Brancusi sculpture; Enescu music; folklore embroidery; orthodox traditions"
+      },
+      healthcare: {
+        score: 7,
+        description: "Universal but underfunded; brain drain of doctors to Western Europe; EU funding improving infrastructure"
+      },
+      internationalRelationships: {
+        score: 7,
+        description: "NATO; EU since 2007; Black Sea security role; US military bases; aspires to Schengen; Moldova support"
+      },
+      government: {
+        score: 11,
+        description: "Parliamentary democracy; ongoing anti-corruption battle (DNA agency successful); political instability chronic"
+      },
+      climate: {
+        score: 7,
+        description: "Continental; Transylvania medieval atmosphere; Black Sea Mamaia resort; Danube Delta wetlands; Carpathian skiing"
+      },
+      technology: {
+        score: 8,
+        description: "Bucharest Metro limited; CFR rail slow and aging; digital gov.ro patchy; paradoxically fast fiber internet (top 10 globally); Cluj-Napoca smart city project; tech sector growing"
+      },
+      size: {
+        score: 6,
+        description: "238K km²; 12th largest in EU; Danube River border; Carpathian arc; Black Sea coast; rich in varied landscapes"
+      },
+      population: {
+        score: 5,
+        description: "19 million; declining due to emigration (3M+ left for Western Europe); young educated diaspora large"
+      },
+      history: {
+        score: 7,
+        description: "Dacian origins; Roman Dacia; medieval principalities; Ottoman suzerainty; Ceaușescu communist era; 1989 revolution"
+      },
+      tourism: {
+        score: 6,
+        description: "Transylvania, Bran Castle, painted monasteries of Bucovina, Peles Castle; underrated medieval Central Europe gem"
+      },
+      education: {
+        score: 8,
+        description: "Several universities but quality inconsistent; significant brain drain to Western Europe; EU funding improving slowly"
+      },
+      location: {
+        score: 7,
+        description: "NATO and EU Black Sea flank; borders Ukraine and Moldova; growing strategic value as eastern anchor; improving"
+      },
+      naturalResources: {
+        score: 4,
+        description: "Oil and gas (significant, declining); coal; gold and silver (Rosia Montana); salt; agricultural land; timber"
+      }
+    },
+    coordinates: [
+      25,
+      46
+    ],
+    area: 238391
+  },
+  {
+    name: "Hungary",
+    isoNumeric: "348",
+    aliases: [],
+    capital: "Budapest",
+    capitalAliases: [],
+    flag: "🇭🇺",
+    flagColors: [
+      "Red",
+      "White",
+      "Green"
+    ],
+    tier: "second",
+    region: "Eastern & Southern Europe",
+    knownFor: "Budapest thermal baths, paprika-spiced cuisine, and the Danube's most beautiful river city",
+    stats: {
+      military: {
+        score: 10,
+        description: "NATO member; JAS-39 Gripen jets; positioned between East and West; Orbán's complex Russia relationship complicates"
+      },
+      economy: {
+        score: 10,
+        description: "Growing manufacturing; Samsung, BMW, Mercedes plants; Budapest financial hub; but EU rule-of-law funds suspended"
+      },
+      culture: {
+        score: 6,
+        description: "Liszt, Bartók; paprika and goulash; Budapest ruin bars; thermal bath culture; Nobel Prize per capita leader"
+      },
+      healthcare: {
+        score: 9,
+        description: "Universal Egészségbiztosítás; doctor exodus to Western Europe; good urban hospitals; rural challenges"
+      },
+      internationalRelationships: {
+        score: 8,
+        description: "NATO; EU but isolationist Orbán; blocks Ukraine aid; pro-Russia stance; V4 Visegrad leader; complex EU relations"
+      },
+      government: {
+        score: 11,
+        description: "Orbán's illiberal democracy; Fidesz supermajority; press captured; NGO restrictions; EU rule-of-law concerns"
+      },
+      climate: {
+        score: 7,
+        description: "Continental; Budapest Danube River atmosphere; Tokay wine country; Lake Balaton summer resort; cold dry winters"
+      },
+      technology: {
+        score: 8,
+        description: "BKK Budapest transit decent; MAV rail underinvested; Nemzeti Mobilfizetes NFC payments; Ugyfelkapu digital ID; Budapest smart city limited; rural broadband improving with EU funds"
+      },
+      size: {
+        score: 4,
+        description: "93K km²; landlocked; Puszta Great Plain; Danube and Tisza rivers; Carpathian foothills; Lake Balaton largest in Central EU"
+      },
+      population: {
+        score: 4,
+        description: "9.7 million; declining; low birth rate; brain drain to Western EU; Roma minority largest in Europe (8%)"
+      },
+      history: {
+        score: 7,
+        description: "Huns and Magyars; medieval Kingdom; Ottoman conquest 150 years; Habsburg; Austro-Hungarian Empire; WWI-WWII; 1956 uprising"
+      },
+      tourism: {
+        score: 8,
+        description: "Budapest; one of Europe's most stunning capitals; thermal baths, ruin pubs, Danube panorama; 32M+ annual visitors"
+      },
+      education: {
+        score: 9,
+        description: "CEU (relocated); BME strong engineering; EU-funded improvements; but Orban media control affects academic freedom"
+      },
+      location: {
+        score: 3,
+        description: "Landlocked NATO member; Orban-Russia alignment reduces alliance value; surrounded by EU but diplomatically isolated"
+      },
+      naturalResources: {
+        score: 1,
+        description: "Bauxite; some coal and gas; manganese; agricultural land; thermal springs; limited by small size"
+      }
+    },
+    coordinates: [
+      20,
+      47
+    ],
+    area: 93028
+  },
+  {
     name: "Israel",
     isoNumeric: "376",
     aliases: [],
@@ -2616,6 +2782,89 @@ export const COUNTRIES: Country[] = [
     area: 45227
   },
   {
+    name: "Slovakia",
+    isoNumeric: "703",
+    aliases: [],
+    capital: "Bratislava",
+    capitalAliases: [],
+    flag: "🇸🇰",
+    flagColors: [
+      "White",
+      "Blue",
+      "Red"
+    ],
+    tier: "first",
+    region: "Eastern & Southern Europe",
+    knownFor: "Europe's car manufacturing capital per capita, with stunning Carpathian castles and emerging tech scene",
+    stats: {
+      military: {
+        score: 9,
+        description: "NATO member since 2004; small professional army; donated Soviet-era jets to Ukraine; modernizing with Western equipment"
+      },
+      economy: {
+        score: 9,
+        description: "World's highest car production per capita; Volkswagen, Kia, Jaguar Land Rover, Stellantis plants; strong EU manufacturing"
+      },
+      culture: {
+        score: 5,
+        description: "Carpathian folk traditions; wine culture; Bratislava old town; Slovak shepherd cheese; Easter painted eggs tradition"
+      },
+      healthcare: {
+        score: 9,
+        description: "Universal health insurance; good hospital network; improving since EU accession; some specialist wait times"
+      },
+      internationalRelationships: {
+        score: 6,
+        description: "NATO; EU; V4 Visegrad; pro-Fico Russian-sympathetic recent turn; Czech and Hungarian close ties"
+      },
+      government: {
+        score: 12,
+        description: "Parliamentary democracy; Fico assassination attempt 2024; political polarization; EU rule-of-law concerns now emerging"
+      },
+      climate: {
+        score: 7,
+        description: "Continental; High Tatras skiing world-class; Carpathian forests stunning; spring Bratislava Danube bloom; warm valleys"
+      },
+      technology: {
+        score: 8,
+        description: "IDS BK Bratislava transit card; ZSR rail aging; Slovensko.sk digital portal improving; 5G coverage in cities; limited smart infrastructure outside Bratislava"
+      },
+      size: {
+        score: 3,
+        description: "49K km²; landlocked; High Tatras mountain peak; Danube southern border; 1/4 forested; central EU location"
+      },
+      population: {
+        score: 3,
+        description: "5.5 million; homogeneous; Hungarian minority 10%; brain drain to Czech Republic and Austria challenge"
+      },
+      history: {
+        score: 6,
+        description: "Great Moravia 9th century; Hungarian Kingdom 900 years; WWI Czechoslovakia creation; WWII; communism; 1993 Velvet Divorce"
+      },
+      tourism: {
+        score: 6,
+        description: "Bratislava castle, Slovak Paradise gorges, Tatra hiking, Bojnice fairy-tale castle; affordable undiscovered Central Europe"
+      },
+      education: {
+        score: 9,
+        description: "Slovak Technical University; improving with EU structural funding; brain drain to Czech Republic and Austria ongoing"
+      },
+      location: {
+        score: 3,
+        description: "Central European NATO and EU; landlocked but surrounded by allies; Bratislava-Vienna economic corridor; stable"
+      },
+      naturalResources: {
+        score: 1,
+        description: "Some coal and oil; antimony; copper; magnesite; agricultural land; limited overall mineral diversity"
+      }
+    },
+    coordinates: [
+      19.5,
+      48.66666666
+    ],
+    area: 49037
+  },
+  {
     name: "Croatia",
     isoNumeric: "191",
     aliases: [],
@@ -2781,6 +3030,171 @@ export const COUNTRIES: Country[] = [
     area: 2724900
   },
   {
+    name: "Georgia",
+    isoNumeric: "268",
+    aliases: [],
+    capital: "Tbilisi",
+    capitalAliases: [],
+    flag: "🇬🇪",
+    flagColors: [
+      "White",
+      "Red"
+    ],
+    tier: "second",
+    region: "Middle East & Central Asia",
+    knownFor: "Ancient wine civilization (8,000 years of winemaking), breathtaking Caucasian mountains, and a bold pro-Western pivot",
+    stats: {
+      military: {
+        score: 7,
+        description: "NATO aspirant; US-trained; battle-hardened from 2008 Russo-Georgian War; growing capabilities; 20K active troops"
+      },
+      economy: {
+        score: 6,
+        description: "Fastest reforming economy; low flat tax; wine exports; tourism booming; Batumi Black Sea resort; Baku-Tbilisi-Ceyhan pipeline"
+      },
+      culture: {
+        score: 5,
+        description: "World's oldest wine culture (kvevri clay pots, UNESCO); polyphonic singing UNESCO; Georgian alphabet; khachapuri; Nino da Vinci"
+      },
+      healthcare: {
+        score: 6,
+        description: "Universal basic coverage growing; Tbilisi improving hospitals; medical tourism beginning; EU accession reforms"
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "NATO aspirant; EU candidate 2023; occupied territories (Abkhazia, S. Ossetia) by Russia; Western support growing"
+      },
+      government: {
+        score: 9,
+        description: "Georgian Dream oligarch-influenced; EU candidate but democratic backsliding 2024; Russian foreign agents law controversy"
+      },
+      climate: {
+        score: 6,
+        description: "Colchic subtropical west; continental east; Caucasian alpine zone; Black Sea Batumi tropical micro-climate; ski resorts"
+      },
+      technology: {
+        score: 5,
+        description: "Tbilisi Metro 2 lines; marshrutka city transport; my.gov.ge digital portal; Bolt ride-hailing ubiquitous; tech nomad hub growing; public infrastructure investment low"
+      },
+      size: {
+        score: 4,
+        description: "69K km²; plus occupied territories; Caucasus mountain drama; Black Sea coast; Borjomi mineral springs; diverse micro-climates"
+      },
+      population: {
+        score: 2,
+        description: "3.7 million; emigration challenge; large diaspora in Russia; significant Russian immigrant influx post-2022"
+      },
+      history: {
+        score: 7,
+        description: "Ancient Colchis (Golden Fleece myth); early Christianity; Medieval Georgian Kingdom; Mongol invasion; Russian Empire; Soviet; 1991"
+      },
+      tourism: {
+        score: 6,
+        description: "Tbilisi Old Town, Caucasus mountain roads, ancient cave cities, Kakheti wine country; off-the-beaten-path gem growing fast"
+      },
+      education: {
+        score: 6,
+        description: "Tbilisi State and Free University of Tbilisi strong; EU-oriented reforms; IDP program; improving despite instability"
+      },
+      location: {
+        score: 3,
+        description: "Russian-occupied Abkhazia and South Ossetia; non-NATO; Black Sea access but contested; EU aspirant but vulnerable"
+      },
+      naturalResources: {
+        score: 1,
+        description: "Some oil and gas (Black Sea offshore); manganese; copper; gold; hydropower potential; wine (world's oldest wine culture)"
+      }
+    },
+    coordinates: [
+      43.5,
+      42
+    ],
+    area: 69700
+  },
+  {
+    name: "Armenia",
+    isoNumeric: "051",
+    aliases: [],
+    capital: "Yerevan",
+    capitalAliases: [],
+    flag: "🇦🇲",
+    flagColors: [
+      "Red",
+      "Blue",
+      "Orange"
+    ],
+    tier: "second",
+    region: "Middle East & Central Asia",
+    knownFor: "World's first Christian nation, ancient monasteries, and a resilient people with one of the darkest histories in the world",
+    stats: {
+      military: {
+        score: 7,
+        description: "Battle-tested but Karabakh losses 2020-2023; CSTO member but seeking Western pivot; 45K troops; Israeli drones acquired"
+      },
+      economy: {
+        score: 6,
+        description: "Growing tech sector; Yerevan startup hub; diamond processing; cognac exports; Russia trade dependence challenged"
+      },
+      culture: {
+        score: 5,
+        description: "World's first Christian state (301 AD); khachkar cross-stones UNESCO; lavash bread UNESCO; Komitas music; duduk flute"
+      },
+      healthcare: {
+        score: 6,
+        description: "Universal basic coverage; Yerevan improving hospitals; Diaspora investment in healthcare; rural challenges"
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "CSTO pivot away; EU aspirant now; diaspora diplomacy (France, Russia, USA); Genocide recognition campaign"
+      },
+      government: {
+        score: 6,
+        description: "Pashinyan 2018 revolution democracy; improving transparency; EU reform alignment; complex geopolitical balancing act"
+      },
+      climate: {
+        score: 6,
+        description: "Continental highland; Mount Ararat views (in Turkey now); Lake Sevan high altitude; hot summers; cold winters"
+      },
+      technology: {
+        score: 5,
+        description: "Yerevan transit modernizing; e-government e-services good; EKENG digital infrastructure; Silicon Mountains tech hub; iDram digital payments; public tech investment limited"
+      },
+      size: {
+        score: 2,
+        description: "29K km²; landlocked; mountainous; Lake Sevan high-altitude lake; closed borders with Turkey and Azerbaijan"
+      },
+      population: {
+        score: 2,
+        description: "3 million; global diaspora 7-10M (more abroad than home); French, Russian, American Armenian communities strong"
+      },
+      history: {
+        score: 8,
+        description: "Urartu Kingdom 9th century BC; Armenian Apostolic Church; Genocide 1915 (1.5M killed); Soviet; 1991 independence; Karabakh wars"
+      },
+      tourism: {
+        score: 4,
+        description: "Yerevan, Geghard monastery, Mount Ararat views, ancient churches; niche pilgrimage and heritage tourism destination"
+      },
+      education: {
+        score: 6,
+        description: "American University of Armenia strong; diaspora connections globally; tech education improving; Yerevan hub emerging"
+      },
+      location: {
+        score: 3,
+        description: "Landlocked; Turkey border closed; Azerbaijan conflict losses; Russia dependency without NATO protection; very exposed"
+      },
+      naturalResources: {
+        score: 1,
+        description: "Copper; molybdenum; gold; zinc; lead; limited oil; agricultural brandy; modest reserves overall"
+      }
+    },
+    coordinates: [
+      45,
+      40
+    ],
+    area: 29743
+  },
+  {
     name: "Iceland",
     isoNumeric: "352",
     aliases: [],
@@ -2864,6 +3278,254 @@ export const COUNTRIES: Country[] = [
       65
     ],
     area: 103000
+  },
+  {
+    name: "Slovenia",
+    isoNumeric: "705",
+    aliases: [],
+    capital: "Ljubljana",
+    capitalAliases: [],
+    flag: "🇸🇮",
+    flagColors: [
+      "White",
+      "Blue",
+      "Red"
+    ],
+    tier: "first",
+    region: "Eastern & Southern Europe",
+    knownFor: "Europe's greenest country, Lake Bled fairy-tale scenery, and the most successful post-Yugoslav transition",
+    stats: {
+      military: {
+        score: 7,
+        description: "NATO member since 2004; small professional army; donated M-55S tanks to Ukraine; strong Alpine defense tradition"
+      },
+      economy: {
+        score: 8,
+        description: "Highest income in former Yugoslavia; strong manufacturing (Gorenje, Krka pharma); Trieste corridor; EU well-integrated"
+      },
+      culture: {
+        score: 5,
+        description: "Ljubljana Dragon Bridge; Prekmurje lace; Lipica white horses; Karst wine; only 40km from coast, Alps, and plains"
+      },
+      healthcare: {
+        score: 10,
+        description: "Universal ZZZS system; good outcomes; excellent primary care; well-funded by regional standards; low infant mortality"
+      },
+      internationalRelationships: {
+        score: 5,
+        description: "NATO; EU; Schengen; Eurozone; strong Western Balkans EU accession champion; good neighbor relations"
+      },
+      government: {
+        score: 12,
+        description: "Most stable post-Yugoslav democracy; low corruption; Golob pro-EU government 2022; strong rule of law; press freedom"
+      },
+      climate: {
+        score: 8,
+        description: "Alpine in north; Mediterranean in southwest Karst; continental east; 3 climates within tiny country; Bled lake magical"
+      },
+      technology: {
+        score: 9,
+        description: "LPP Ljubljana transit Urbana card; SZ rail; e-uprava digital government; excellent fiber coverage; EV charging network; compact country means good coverage nationwide"
+      },
+      size: {
+        score: 3,
+        description: "20K km² — tiny but geographically extraordinary; Alps, Adriatic Sea coast, Pannonian Plain all accessible from Ljubljana"
+      },
+      population: {
+        score: 2,
+        description: "2.1 million; highly educated; lowest emigration of ex-Yugoslav nations; Ljubljana charming compact capital"
+      },
+      history: {
+        score: 6,
+        description: "Illyrian; Celtic; Roman Emona; Habsburg; WWI Austria-Hungary; WWII Yugoslav partisans; 1991 Ten-Day War independence"
+      },
+      tourism: {
+        score: 6,
+        description: "Lake Bled (Europe's most photographed lake), Triglav, Postojna Cave, Ljubljana; compact alpine gem punching above its weight"
+      },
+      education: {
+        score: 11,
+        description: "University of Ljubljana quality; EU-funded improvements; high literacy; small but well-resourced system; STEM focus"
+      },
+      location: {
+        score: 3,
+        description: "Alpine NATO and EU; borders Austria, Italy, Croatia, Hungary all EU; Adriatic access via Koper; very stable"
+      },
+      naturalResources: {
+        score: 1,
+        description: "Coal (limited); some oil; timber; limestone; limited but efficient agricultural land; Alpine hydropower"
+      }
+    },
+    coordinates: [
+      14.81666666,
+      46.11666666
+    ],
+    area: 20273
+  },
+  {
+    name: "Latvia",
+    isoNumeric: "428",
+    aliases: [],
+    capital: "Riga",
+    capitalAliases: [],
+    flag: "🇱🇻",
+    flagColors: [
+      "Maroon",
+      "White"
+    ],
+    tier: "first",
+    region: "Western & Northern Europe",
+    knownFor: "Art Nouveau capital Riga, Amber Road heritage, and the singing revolution that broke the Soviet Union peacefully",
+    stats: {
+      military: {
+        score: 7,
+        description: "NATO eastern flank; highest defense spending per GDP (3%+); Canada leads NATO battle group; conscription restored"
+      },
+      economy: {
+        score: 7,
+        description: "Riga Baltic financial hub; strong IT and manufacturing; AirBaltic airline; timber exports; growing tech ecosystem"
+      },
+      culture: {
+        score: 5,
+        description: "Song and Dance Festival (UNESCO); Riga Art Nouveau (highest concentration globally); amber jewelry; midsummer Jāņi"
+      },
+      healthcare: {
+        score: 9,
+        description: "Universal health system; improving with EU funds; good Riga hospitals; rural access improving; low infant mortality"
+      },
+      internationalRelationships: {
+        score: 5,
+        description: "NATO; EU; Baltic assembly; strong US and Nordic ties; disinformation resilience leader; Russia threat awareness high"
+      },
+      government: {
+        score: 12,
+        description: "Parliamentary democracy; low corruption; NATO-EU committed; free press; Saeima coalition governance; Singing Revolution legacy"
+      },
+      climate: {
+        score: 6,
+        description: "Humid continental; cold winters with Baltic Sea ice; warm summers; birch forest landscapes; Gauja National Park river valley"
+      },
+      technology: {
+        score: 9,
+        description: "Rigas Satikusme transit e.talons card; LDz rail modernizing; e-Latvija digital services; 5G Riga; improving digital government; strong IT sector in Riga"
+      },
+      size: {
+        score: 3,
+        description: "64K km²; central Baltic; Gauja National Park; Gulf of Riga; 494km coastline; white sandy beaches; peat bogs"
+      },
+      population: {
+        score: 2,
+        description: "1.84 million; declining due to emigration; 25% Russian minority; Baltic most ethnically complex; EU labor mobility"
+      },
+      history: {
+        score: 6,
+        description: "Viking Daugava route; Teutonic Knights; Polish-Lithuanian; Swedish empire; Russian Empire; WWI independence; Soviet; 1991 singing"
+      },
+      tourism: {
+        score: 6,
+        description: "Riga art nouveau architecture (UNESCO), Jurmala beach, Gauja Valley; pleasant but limited draw outside Baltic circuit"
+      },
+      education: {
+        score: 9,
+        description: "Riga Technical University strong; EU integration lifting standards; some brain drain to Western Europe; improving"
+      },
+      location: {
+        score: 6,
+        description: "NATO Baltic member; direct Russia border elevates threat; Riga as Baltic commercial and cultural hub; enhanced NATO presence"
+      },
+      naturalResources: {
+        score: 1,
+        description: "Timber and wood products; amber (world-class Baltic amber); peat; some minerals; agriculture; Daugava hydropower"
+      }
+    },
+    coordinates: [
+      25,
+      57
+    ],
+    area: 64559
+  },
+  {
+    name: "Lithuania",
+    isoNumeric: "440",
+    aliases: [],
+    capital: "Vilnius",
+    capitalAliases: [],
+    flag: "🇱🇹",
+    flagColors: [
+      "Yellow",
+      "Green",
+      "Red"
+    ],
+    tier: "first",
+    region: "Western & Northern Europe",
+    knownFor: "Medieval Grand Duchy that once stretched from Baltic to Black Sea, and the first Soviet republic to declare independence",
+    stats: {
+      military: {
+        score: 8,
+        description: "NATO eastern flank; Germany leads NATO battle group in Vilnius; conscription restored; 3%+ GDP defense; Suwalki gap defender"
+      },
+      economy: {
+        score: 8,
+        description: "Fastest Baltic growth; Vilnius fintech hub; Vinted secondhand marketplace; strong IT outsourcing; tax-friendly for business"
+      },
+      culture: {
+        score: 5,
+        description: "Vilnius Baroque old town; Hill of Crosses UNESCO; amber; basketball obsession (NBA produces per capita most); Užgavėnės"
+      },
+      healthcare: {
+        score: 9,
+        description: "Universal TLK system; good urban outcomes; rural access improving; Vilnius University hospital research strong"
+      },
+      internationalRelationships: {
+        score: 5,
+        description: "NATO; EU; Baltic assembly; first to leave USSR 1990; Kaliningrad Russia direct border; Suwalki Corridor key NATO concern"
+      },
+      government: {
+        score: 13,
+        description: "Parliamentary democracy; low corruption; NATO-EU committed; first Soviet republic to declare independence (1990); free press"
+      },
+      climate: {
+        score: 6,
+        description: "Humid continental; cold winters; warm summers; Curonian Spit UNESCO dune landscape; Aukštaitija lake district; birch forests"
+      },
+      technology: {
+        score: 9,
+        description: "Vilnius public transit M-ticket app; LitRail growing; e-government VIISP; Revolut and NordVPN HQ; fastest internet in Baltics; strong fintech and digital services; 5G nationwide"
+      },
+      size: {
+        score: 3,
+        description: "65K km²; southernmost and largest Baltic state; Nemunas river; Curonian Spit; Lake Galvė; geographical center of Europe here"
+      },
+      population: {
+        score: 2,
+        description: "2.9 million; significant emigration to UK/Ireland; large return due to Ukraine war; geographically center of Europe"
+      },
+      history: {
+        score: 6,
+        description: "Grand Duchy of Lithuania 1230s — once largest state in Europe; Jogaila Poland union; Vilnius Jewish Jerusalem of Lithuania; 1918 independence"
+      },
+      tourism: {
+        score: 6,
+        description: "Vilnius baroque old town (UNESCO), Curonian Spit, Hill of Crosses; growing but still niche Baltic tourism destination"
+      },
+      education: {
+        score: 9,
+        description: "Vilnius University historic; Kaunas Tech strong; EU-connected; digital skills focus; improving STEM pipeline"
+      },
+      location: {
+        score: 6,
+        description: "NATO Baltic member; Suwalki Gap vulnerability (between Russia and Kaliningrad); Vilnius improving as tech hub"
+      },
+      naturalResources: {
+        score: 0,
+        description: "Limestone; clay; some oil; amber; peat; agricultural land; limited mineral diversity; wind energy potential"
+      }
+    },
+    coordinates: [
+      24,
+      56
+    ],
+    area: 65300
   },
   {
     name: "Saudi Arabia",
@@ -4122,6 +4784,173 @@ export const COUNTRIES: Country[] = [
     area: 36193
   },
   {
+    name: "Malaysia",
+    isoNumeric: "458",
+    aliases: [],
+    capital: "Kuala Lumpur",
+    capitalAliases: [],
+    flag: "🇲🇾",
+    flagColors: [
+      "Yellow",
+      "Blue",
+      "Red",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Asia-Pacific",
+    knownFor: "Petronas Twin Towers and diverse cultural heritage",
+    stats: {
+      military: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      education: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      healthcare: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 1,
+        description: "330K km²; divided into Peninsular Malaysia and East Malaysia on Borneo"
+      },
+      population: {
+        score: 1,
+        description: "34.3 million; multicultural society blending Malay, Chinese, and Indian influences"
+      }
+    },
+    coordinates: [
+      112.5,
+      2.5
+    ],
+    area: 330803
+  },
+  {
+    name: "Thailand",
+    isoNumeric: "764",
+    aliases: [],
+    capital: "Bangkok",
+    capitalAliases: [],
+    flag: "🇹🇭",
+    flagColors: [
+      "Red",
+      "White",
+      "Blue"
+    ],
+    tier: "fourth",
+    region: "Asia-Pacific",
+    knownFor: "Ornate temples, beautiful beaches, and vibrant street food",
+    stats: {
+      military: {
+        score: 12,
+        description: "World-class capabilities and global influence."
+      },
+      economy: {
+        score: 12,
+        description: "World-class capabilities and global influence."
+      },
+      government: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      healthcare: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      size: {
+        score: 1,
+        description: "513K km²; central plains, mountains in the north, and southern peninsula"
+      },
+      population: {
+        score: 1,
+        description: "71.8 million; strong tourism-driven economy and rich Buddhist culture"
+      }
+    },
+    coordinates: [
+      100,
+      15
+    ],
+    area: 513120
+  },
+  {
     name: "Colombia",
     isoNumeric: "170",
     aliases: [],
@@ -4205,6 +5034,171 @@ export const COUNTRIES: Country[] = [
     area: 1141748
   },
   {
+    name: "Vietnam",
+    isoNumeric: "704",
+    aliases: [],
+    capital: "Hanoi",
+    capitalAliases: [],
+    flag: "🇻🇳",
+    flagColors: [
+      "Red",
+      "Yellow"
+    ],
+    tier: "fourth",
+    region: "Asia-Pacific",
+    knownFor: "Halong Bay and rapid economic growth",
+    stats: {
+      military: {
+        score: 12,
+        description: "World-class capabilities and global influence."
+      },
+      economy: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      healthcare: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 1,
+        description: "331K km²; long, narrow country with extensive coastline along the South China Sea"
+      },
+      population: {
+        score: 1,
+        description: "100.3 million; young demographic and emerging manufacturing powerhouse"
+      }
+    },
+    coordinates: [
+      107.83333333,
+      16.16666666
+    ],
+    area: 331212
+  },
+  {
+    name: "Uruguay",
+    isoNumeric: "858",
+    aliases: [],
+    capital: "Montevideo",
+    capitalAliases: [],
+    flag: "🇺🇾",
+    flagColors: [
+      "Blue",
+      "White",
+      "Yellow"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Progressive social policies and high quality of life",
+    stats: {
+      military: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 14,
+        description: "World-class capabilities and global influence."
+      },
+      internationalRelationships: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 4,
+        description: "176K km²; rolling plains and coastal regions"
+      },
+      population: {
+        score: 2,
+        description: "3.4 million; highly urbanized population with strong European heritage"
+      }
+    },
+    coordinates: [
+      -56,
+      -33
+    ],
+    area: 181034
+  },
+  {
     name: "Morocco",
     isoNumeric: "504",
     aliases: [],
@@ -4285,6 +5279,507 @@ export const COUNTRIES: Country[] = [
       32
     ],
     area: 446550
+  },
+  {
+    name: "Costa Rica",
+    isoNumeric: "188",
+    aliases: [],
+    capital: "San José",
+    capitalAliases: [],
+    flag: "🇨🇷",
+    flagColors: [
+      "Blue",
+      "White",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Pioneering eco-tourism and abolished its army",
+    stats: {
+      military: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 14,
+        description: "World-class capabilities and global influence."
+      },
+      internationalRelationships: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      tourism: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 2,
+        description: "51K km²; rugged, volcanic geography covered by dense rainforests"
+      },
+      population: {
+        score: 2,
+        description: "5.2 million; high standard of living and long life expectancy"
+      }
+    },
+    coordinates: [
+      -84,
+      10
+    ],
+    area: 51100
+  },
+  {
+    name: "Cyprus",
+    isoNumeric: "196",
+    aliases: [],
+    capital: "Nicosia",
+    capitalAliases: [],
+    flag: "🇨🇾",
+    flagColors: [
+      "White",
+      "Orange",
+      "Green"
+    ],
+    tier: "fourth",
+    region: "Eastern & Southern Europe",
+    knownFor: "Mediterranean beaches and ancient archaeological sites",
+    stats: {
+      military: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 13,
+        description: "World-class capabilities and global influence."
+      },
+      internationalRelationships: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "9K km²; strategic island in the eastern Mediterranean"
+      },
+      population: {
+        score: 1,
+        description: "1.2 million; divided island with significant tourism and shipping industries"
+      }
+    },
+    coordinates: [
+      33,
+      35
+    ],
+    area: 9251
+  },
+  {
+    name: "Kuwait",
+    isoNumeric: "414",
+    aliases: [],
+    capital: "Kuwait City",
+    capitalAliases: [
+      "Kuwait"
+    ],
+    flag: "🇰🇼",
+    flagColors: [
+      "Green",
+      "White",
+      "Red",
+      "Black"
+    ],
+    tier: "fourth",
+    region: "Middle East & Central Asia",
+    knownFor: "Vast oil wealth and modern skyline",
+    stats: {
+      military: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      healthcare: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 2,
+        description: "17K km²; small desert nation at the tip of the Persian Gulf"
+      },
+      population: {
+        score: 2,
+        description: "4.3 million; high expat population working in oil and service sectors"
+      }
+    },
+    coordinates: [
+      45.75,
+      29.5
+    ],
+    area: 17818
+  },
+  {
+    name: "Oman",
+    isoNumeric: "512",
+    aliases: [],
+    capital: "Muscat",
+    capitalAliases: [],
+    flag: "🇴🇲",
+    flagColors: [
+      "Red",
+      "White",
+      "Green"
+    ],
+    tier: "fourth",
+    region: "Middle East & Central Asia",
+    knownFor: "Traditional Arabian culture and peaceful diplomacy",
+    stats: {
+      military: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      healthcare: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 4,
+        description: "309K km²; diverse landscape of deserts, mountains, and long coastlines"
+      },
+      population: {
+        score: 2,
+        description: "4.6 million; stable society with a growing focus on tourism and trade"
+      }
+    },
+    coordinates: [
+      57,
+      21
+    ],
+    area: 309500
+  },
+  {
+    name: "Bulgaria",
+    isoNumeric: "100",
+    aliases: [],
+    capital: "Sofia",
+    capitalAliases: [],
+    flag: "🇧🇬",
+    flagColors: [
+      "White",
+      "Green",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Eastern & Southern Europe",
+    knownFor: "Rose oil production and Black Sea resorts",
+    stats: {
+      military: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      healthcare: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "110K km²; Balkan mountains and fertile plains"
+      },
+      population: {
+        score: 1,
+        description: "6.4 million; aging population with strong Eastern Orthodox traditions"
+      }
+    },
+    coordinates: [
+      25,
+      43
+    ],
+    area: 110879
+  },
+  {
+    name: "Serbia",
+    isoNumeric: "688",
+    aliases: [],
+    capital: "Belgrade",
+    capitalAliases: [],
+    flag: "🇷🇸",
+    flagColors: [
+      "Red",
+      "Blue",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Eastern & Southern Europe",
+    knownFor: "Crossroads of the Balkans and rich history",
+    stats: {
+      military: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      healthcare: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 3,
+        description: "88K km²; landlocked with significant rivers including the Danube"
+      },
+      population: {
+        score: 3,
+        description: "6.6 million; recovering economy and vibrant capital city life"
+      }
+    },
+    coordinates: [
+      21,
+      44
+    ],
+    area: 88361
   },
   {
     name: "Iran",
@@ -4370,6 +5865,341 @@ export const COUNTRIES: Country[] = [
     area: 1648195
   },
   {
+    name: "Panama",
+    isoNumeric: "591",
+    aliases: [],
+    capital: "Panama City",
+    capitalAliases: [
+      "Panama"
+    ],
+    flag: "🇵🇦",
+    flagColors: [
+      "Blue",
+      "White",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "The Panama Canal connecting two oceans",
+    stats: {
+      military: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 3,
+        description: "75K km²; narrow isthmus with tropical rainforests"
+      },
+      population: {
+        score: 2,
+        description: "4.4 million; global logistics hub with a booming capital skyline"
+      }
+    },
+    coordinates: [
+      -80,
+      9
+    ],
+    area: 75417
+  },
+  {
+    name: "Jordan",
+    isoNumeric: "400",
+    aliases: [],
+    capital: "Amman",
+    capitalAliases: [],
+    flag: "🇯🇴",
+    flagColors: [
+      "Black",
+      "White",
+      "Green",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Middle East & Central Asia",
+    knownFor: "The ancient city of Petra and the Dead Sea",
+    stats: {
+      military: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      history: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "89K km²; mostly arid desert with strategic access to the Red Sea"
+      },
+      population: {
+        score: 1,
+        description: "11.3 million; hosts a massive refugee population in a stable monarchy"
+      }
+    },
+    coordinates: [
+      36,
+      31
+    ],
+    area: 89342
+  },
+  {
+    name: "Kenya",
+    isoNumeric: "404",
+    aliases: [],
+    capital: "Nairobi",
+    capitalAliases: [],
+    flag: "🇰🇪",
+    flagColors: [
+      "Black",
+      "Red",
+      "Green",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "Wildlife safaris and dominant distance runners",
+    stats: {
+      military: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      location: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 1,
+        description: "580K km²; encompasses savannah, lakelands, and the Great Rift Valley"
+      },
+      population: {
+        score: 1,
+        description: "54 million; regional economic powerhouse known as the 'Silicon Savannah'"
+      }
+    },
+    coordinates: [
+      38,
+      1
+    ],
+    area: 580367
+  },
+  {
+    name: "Bahrain",
+    isoNumeric: "048",
+    aliases: [],
+    capital: "Manama",
+    capitalAliases: [],
+    flag: "🇧🇭",
+    flagColors: [
+      "Red",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Middle East & Central Asia",
+    knownFor: "Financial hub and Formula 1 racing",
+    stats: {
+      military: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      technology: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      education: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "780 km²; small archipelago in the Persian Gulf"
+      },
+      population: {
+        score: 1,
+        description: "1.5 million; diverse expatriate workforce and progressive Gulf economy"
+      }
+    },
+    coordinates: [
+      50.55,
+      26
+    ],
+    area: 765
+  },
+  {
     name: "Pakistan",
     isoNumeric: "586",
     aliases: [],
@@ -4450,6 +6280,88 @@ export const COUNTRIES: Country[] = [
       30
     ],
     area: 881912
+  },
+  {
+    name: "Tunisia",
+    isoNumeric: "788",
+    aliases: [],
+    capital: "Tunis",
+    capitalAliases: [],
+    flag: "🇹🇳",
+    flagColors: [
+      "Red",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "Ancient ruins of Carthage and Mediterranean resorts",
+    stats: {
+      military: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "163K km²; northernmost country in Africa with access to the Sahara"
+      },
+      population: {
+        score: 1,
+        description: "12.4 million; highly educated workforce and significant tourism sector"
+      }
+    },
+    coordinates: [
+      9,
+      34
+    ],
+    area: 163610
   },
   {
     name: "Ecuador",
@@ -4535,6 +6447,341 @@ export const COUNTRIES: Country[] = [
     area: 276841
   },
   {
+    name: "Dominican Republic",
+    isoNumeric: "214",
+    aliases: [
+      "DR"
+    ],
+    capital: "Santo Domingo",
+    capitalAliases: [],
+    flag: "🇩🇴",
+    flagColors: [
+      "Blue",
+      "White",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Most visited destination in the Caribbean",
+    stats: {
+      military: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      economy: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      tourism: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 3,
+        description: "48K km²; shares the island of Hispaniola with Haiti"
+      },
+      population: {
+        score: 3,
+        description: "11.3 million; rapidly growing economy driven by tourism and agriculture"
+      }
+    },
+    coordinates: [
+      -70.66666666,
+      19
+    ],
+    area: 48671
+  },
+  {
+    name: "Jamaica",
+    isoNumeric: "388",
+    aliases: [],
+    capital: "Kingston",
+    capitalAliases: [],
+    flag: "🇯🇲",
+    flagColors: [
+      "Green",
+      "Yellow",
+      "Black"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Reggae music and vibrant Caribbean culture",
+    stats: {
+      military: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      economy: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      government: {
+        score: 12,
+        description: "World-class capabilities and global influence."
+      },
+      internationalRelationships: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      tourism: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      size: {
+        score: 1,
+        description: "10K km²; mountainous island nation known for its lush topography"
+      },
+      population: {
+        score: 1,
+        description: "2.8 million; significant global cultural influence despite small size"
+      }
+    },
+    coordinates: [
+      -77.5,
+      18.25
+    ],
+    area: 10991
+  },
+  {
+    name: "Sri Lanka",
+    isoNumeric: "144",
+    aliases: [],
+    capital: "Colombo",
+    capitalAliases: [],
+    flag: "🇱🇰",
+    flagColors: [
+      "Yellow",
+      "Maroon",
+      "Green",
+      "Orange"
+    ],
+    tier: "fourth",
+    region: "Asia-Pacific",
+    knownFor: "Ceylon tea, ancient ruins, and tropical beaches",
+    stats: {
+      military: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "65K km²; island nation south of India with diverse ecosystems"
+      },
+      population: {
+        score: 1,
+        description: "22.1 million; highly literate population recovering from economic crises"
+      }
+    },
+    coordinates: [
+      81,
+      7
+    ],
+    area: 65610
+  },
+  {
+    name: "Lebanon",
+    isoNumeric: "422",
+    aliases: [],
+    capital: "Beirut",
+    capitalAliases: [],
+    flag: "🇱🇧",
+    flagColors: [
+      "Red",
+      "White",
+      "Green"
+    ],
+    tier: "fourth",
+    region: "Middle East & Central Asia",
+    knownFor: "Cedar trees and vibrant Mediterranean culture",
+    stats: {
+      military: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      culture: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 2,
+        description: "10K km²; small, mountainous nation on the eastern Mediterranean"
+      },
+      population: {
+        score: 2,
+        description: "5.4 million; historically a major financial and cultural hub of the Middle East"
+      }
+    },
+    coordinates: [
+      35.83333333,
+      33.83333333
+    ],
+    area: 10452
+  },
+  {
     name: "Algeria",
     isoNumeric: "012",
     aliases: [],
@@ -4617,6 +6864,1504 @@ export const COUNTRIES: Country[] = [
     ],
     area: 2381741
   },
+  {
+    name: "Malta",
+    isoNumeric: "470",
+    aliases: [],
+    capital: "Valletta",
+    capitalAliases: [],
+    flag: "🇲🇹",
+    flagColors: [
+      "White",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Eastern & Southern Europe",
+    knownFor: "Historic fortresses and Mediterranean climate",
+    stats: {
+      military: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      economy: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      government: {
+        score: 13,
+        description: "World-class capabilities and global influence."
+      },
+      internationalRelationships: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      education: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 0,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "316 km²; highly dense archipelago south of Italy"
+      },
+      population: {
+        score: 1,
+        description: "530,000; booming tech, gaming, and tourism industries"
+      }
+    },
+    coordinates: [
+      14.58333333,
+      35.83333333
+    ],
+    area: 316
+  },
+  {
+    name: "Mauritius",
+    isoNumeric: "480",
+    aliases: [],
+    capital: "Port Louis",
+    capitalAliases: [],
+    flag: "🇲🇺",
+    flagColors: [
+      "Red",
+      "Blue",
+      "Yellow",
+      "Green"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "Luxury resorts and stable democracy",
+    stats: {
+      military: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      economy: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      government: {
+        score: 14,
+        description: "World-class capabilities and global influence."
+      },
+      internationalRelationships: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 0,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      tourism: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      culture: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "2K km²; volcanic island nation in the Indian Ocean"
+      },
+      population: {
+        score: 1,
+        description: "1.2 million; highly developed and diverse economy"
+      }
+    },
+    coordinates: [
+      57.55,
+      -20.28333333
+    ],
+    area: 2040
+  },
+  {
+    name: "Bangladesh",
+    isoNumeric: "050",
+    aliases: [],
+    capital: "Dhaka",
+    capitalAliases: [],
+    flag: "🇧🇩",
+    flagColors: [
+      "Green",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Asia-Pacific",
+    knownFor: "Massive garment industry and the Sundarbans",
+    stats: {
+      military: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      climate: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 1,
+        description: "148K km²; low-lying riverine country highly vulnerable to climate change"
+      },
+      population: {
+        score: 1,
+        description: "170 million; one of the world's most densely populated nations"
+      }
+    },
+    coordinates: [
+      90,
+      24
+    ],
+    area: 147570
+  },
+  {
+    name: "Ghana",
+    isoNumeric: "288",
+    aliases: [],
+    capital: "Accra",
+    capitalAliases: [],
+    flag: "🇬🇭",
+    flagColors: [
+      "Red",
+      "Yellow",
+      "Green",
+      "Black"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "Rich Gold Coast history and stable democracy",
+    stats: {
+      military: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 11,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      healthcare: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 4,
+        description: "238K km²; spans coastal plains to northern savannas"
+      },
+      population: {
+        score: 4,
+        description: "33.4 million; major exporter of cocoa, gold, and oil"
+      }
+    },
+    coordinates: [
+      -2,
+      8
+    ],
+    area: 238533
+  },
+  {
+    name: "Senegal",
+    isoNumeric: "686",
+    aliases: [],
+    capital: "Dakar",
+    capitalAliases: [],
+    flag: "🇸🇳",
+    flagColors: [
+      "Green",
+      "Yellow",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "Stable democracy and westernmost point of Africa",
+    stats: {
+      military: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      economy: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 4,
+        description: "196K km²; features Sahel landscapes and Atlantic coastline"
+      },
+      population: {
+        score: 4,
+        description: "17.3 million; vibrant arts scene and growing influence in West Africa"
+      }
+    },
+    coordinates: [
+      -14,
+      14
+    ],
+    area: 196722
+  },
+  {
+    name: "Tanzania",
+    isoNumeric: "834",
+    aliases: [],
+    capital: "Dodoma",
+    capitalAliases: [],
+    flag: "🇹🇿",
+    flagColors: [
+      "Green",
+      "Yellow",
+      "Blue",
+      "Black"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "Mount Kilimanjaro and the Serengeti",
+    stats: {
+      military: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      healthcare: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 5,
+        description: "947K km²; incredible wildlife reserves and the island of Zanzibar"
+      },
+      population: {
+        score: 5,
+        description: "65.4 million; rapidly growing population with diverse ethnic groups"
+      }
+    },
+    coordinates: [
+      35,
+      -6
+    ],
+    area: 945087
+  },
+  {
+    name: "Bolivia",
+    isoNumeric: "068",
+    aliases: [],
+    capital: "Sucre",
+    capitalAliases: [],
+    flag: "🇧🇴",
+    flagColors: [
+      "Red",
+      "Yellow",
+      "Green"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Salar de Uyuni, the world's largest salt flat",
+    stats: {
+      military: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      healthcare: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 6,
+        description: "1.09M km²; landlocked nation spanning high Andes to Amazon basin"
+      },
+      population: {
+        score: 3,
+        description: "12.2 million; largest proportion of indigenous peoples in South America"
+      }
+    },
+    coordinates: [
+      -65,
+      -17
+    ],
+    area: 1098581
+  },
+  {
+    name: "Cuba",
+    isoNumeric: "192",
+    aliases: [],
+    capital: "Havana",
+    capitalAliases: [],
+    flag: "🇨🇺",
+    flagColors: [
+      "Blue",
+      "White",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Classic cars, cigars, and revolutionary history",
+    stats: {
+      military: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      government: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      climate: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 1,
+        description: "109K km²; largest island in the Caribbean"
+      },
+      population: {
+        score: 1,
+        description: "11.2 million; strong healthcare and education systems despite economic embargoes"
+      }
+    },
+    coordinates: [
+      -80,
+      21.5
+    ],
+    area: 109884
+  },
+  {
+    name: "El Salvador",
+    isoNumeric: "222",
+    aliases: [],
+    capital: "San Salvador",
+    capitalAliases: [],
+    flag: "🇸🇻",
+    flagColors: [
+      "Blue",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Volcanoes and adoption of Bitcoin",
+    stats: {
+      military: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      tourism: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 2,
+        description: "21K km²; smallest and most densely populated country in Central America"
+      },
+      population: {
+        score: 3,
+        description: "6.3 million; large diaspora contributing heavily via remittances"
+      }
+    },
+    coordinates: [
+      -88.91666666,
+      13.83333333
+    ],
+    area: 21041
+  },
+  {
+    name: "Guatemala",
+    isoNumeric: "320",
+    aliases: [],
+    capital: "Guatemala City",
+    capitalAliases: [
+      "Guatemala"
+    ],
+    flag: "🇬🇹",
+    flagColors: [
+      "Blue",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Heart of the Mayan world and spectacular volcanoes",
+    stats: {
+      military: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      size: {
+        score: 3,
+        description: "108K km²; rugged, forested terrain and ancient ruins"
+      },
+      population: {
+        score: 4,
+        description: "17.1 million; largest economy in Central America with rich indigenous heritage"
+      }
+    },
+    coordinates: [
+      -90.25,
+      15.5
+    ],
+    area: 108889
+  },
+  {
+    name: "Honduras",
+    isoNumeric: "340",
+    aliases: [],
+    capital: "Tegucigalpa",
+    capitalAliases: [],
+    flag: "🇭🇳",
+    flagColors: [
+      "Blue",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Ancient Mayan ruins at Copán",
+    stats: {
+      military: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      tourism: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 3,
+        description: "112K km²; mountainous terrain with Caribbean and Pacific coastlines"
+      },
+      population: {
+        score: 3,
+        description: "10.4 million; economy heavily dependent on agriculture and remittances"
+      }
+    },
+    coordinates: [
+      -86.5,
+      15
+    ],
+    area: 112492
+  },
+  {
+    name: "Paraguay",
+    isoNumeric: "600",
+    aliases: [],
+    capital: "Asunción",
+    capitalAliases: [],
+    flag: "🇵🇾",
+    flagColors: [
+      "Red",
+      "White",
+      "Blue"
+    ],
+    tier: "fourth",
+    region: "Americas",
+    knownFor: "Guaraní culture and vast hydroelectric power",
+    stats: {
+      military: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "406K km²; landlocked nation divided by the Paraguay River"
+      },
+      population: {
+        score: 1,
+        description: "6.8 million; major exporter of soybeans and beef"
+      }
+    },
+    coordinates: [
+      -58,
+      -23
+    ],
+    area: 406752
+  },
+  {
+    name: "Uganda",
+    isoNumeric: "800",
+    aliases: [],
+    capital: "Kampala",
+    capitalAliases: [],
+    flag: "🇺🇬",
+    flagColors: [
+      "Black",
+      "Yellow",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "Mountain gorillas and Lake Victoria",
+    stats: {
+      military: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      internationalRelationships: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      location: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "241K km²; landlocked but water-rich 'Pearl of Africa'"
+      },
+      population: {
+        score: 1,
+        description: "47.2 million; extremely young population and rapidly growing economy"
+      }
+    },
+    coordinates: [
+      32,
+      1
+    ],
+    area: 241550
+  },
+  {
+    name: "Ivory Coast",
+    isoNumeric: "384",
+    aliases: [
+      "Cote d'Ivoire",
+      "Cote dIvoire"
+    ],
+    capital: "Yamoussoukro",
+    capitalAliases: [],
+    flag: "🇨🇮",
+    flagColors: [
+      "Orange",
+      "White",
+      "Green"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "World's leading producer of cocoa beans",
+    stats: {
+      military: {
+        score: 7,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      healthcare: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      location: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 1,
+        description: "322K km²; lush tropical coastlines and interior savannas"
+      },
+      population: {
+        score: 1,
+        description: "28.1 million; economic powerhouse of Francophone West Africa"
+      }
+    },
+    coordinates: [
+      -5,
+      8
+    ],
+    area: 322463
+  },
+  {
+    name: "Belarus",
+    isoNumeric: "112",
+    aliases: [],
+    capital: "Minsk",
+    capitalAliases: [],
+    flag: "🇧🇾",
+    flagColors: [
+      "Red",
+      "Green",
+      "White"
+    ],
+    tier: "fourth",
+    region: "Eastern & Southern Europe",
+    knownFor: "Heavy industry and strategic Eastern European location",
+    stats: {
+      military: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      education: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      location: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 5,
+        description: "207K km²; flat, landlocked country with extensive forests and lakes"
+      },
+      population: {
+        score: 3,
+        description: "9.2 million; highly industrialized economy with close ties to Russia"
+      }
+    },
+    coordinates: [
+      28,
+      53
+    ],
+    area: 207600
+  },
+  {
+    name: "Azerbaijan",
+    isoNumeric: "031",
+    aliases: [],
+    capital: "Baku",
+    capitalAliases: [],
+    flag: "🇦🇿",
+    flagColors: [
+      "Blue",
+      "Red",
+      "Green"
+    ],
+    tier: "fourth",
+    region: "Middle East & Central Asia",
+    knownFor: "Caspian Sea oil wealth and distinct regional culture",
+    stats: {
+      military: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      government: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      healthcare: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 4,
+        description: "86K km²; situated at the crossroads of Eastern Europe and Western Asia"
+      },
+      population: {
+        score: 3,
+        description: "10.1 million; rapidly modernizing capital fueled by energy exports"
+      }
+    },
+    coordinates: [
+      47.5,
+      40.5
+    ],
+    area: 86600
+  },
+  {
+    name: "Rwanda",
+    isoNumeric: "646",
+    aliases: [],
+    capital: "Kigali",
+    capitalAliases: [],
+    flag: "🇷🇼",
+    flagColors: [
+      "Blue",
+      "Yellow",
+      "Green"
+    ],
+    tier: "fourth",
+    region: "Africa",
+    knownFor: "Fastest-growing tech hub in Africa, 'Land of a Thousand Hills'",
+    stats: {
+      military: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      economy: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      government: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      education: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      naturalResources: {
+        score: 1,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      healthcare: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      location: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      history: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      culture: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 2,
+        description: "26K km²; highly elevated, dense, and green geography"
+      },
+      population: {
+        score: 3,
+        description: "13.2 million; remarkable post-conflict economic and social recovery"
+      }
+    },
+    coordinates: [
+      30,
+      -2
+    ],
+    area: 26338
+  },
+  {
+    name: "Uzbekistan",
+    isoNumeric: "860",
+    aliases: [],
+    capital: "Tashkent",
+    capitalAliases: [],
+    flag: "🇺🇿",
+    flagColors: [
+      "Blue",
+      "White",
+      "Green",
+      "Red"
+    ],
+    tier: "fourth",
+    region: "Middle East & Central Asia",
+    knownFor: "Heart of the ancient Silk Road and growing economy",
+    stats: {
+      military: {
+        score: 10,
+        description: "Strong regional presence and advanced development."
+      },
+      economy: {
+        score: 9,
+        description: "Strong regional presence and advanced development."
+      },
+      government: {
+        score: 6,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      internationalRelationships: {
+        score: 2,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      technology: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      education: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      naturalResources: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      healthcare: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      location: {
+        score: 3,
+        description: "Critical limitations restricting overall effectiveness."
+      },
+      tourism: {
+        score: 4,
+        description: "Developing sector with some systemic challenges."
+      },
+      climate: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      history: {
+        score: 8,
+        description: "Moderate infrastructure with ongoing modernization efforts."
+      },
+      culture: {
+        score: 5,
+        description: "Developing sector with some systemic challenges."
+      },
+      size: {
+        score: 4,
+        description: "448K km²; doubly landlocked country with vast deserts and historic cities"
+      },
+      population: {
+        score: 4,
+        description: "36.2 million; largest population in Central Asia undergoing rapid modernization"
+      }
+    },
+    coordinates: [
+      64,
+      41
+    ],
+    area: 447400
+  }
 ];
 
 export const CATEGORIES = [
