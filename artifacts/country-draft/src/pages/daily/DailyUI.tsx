@@ -527,7 +527,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                   const sizeCountry = Array.isArray(assigned) ? assigned[0] : assigned;
                   const popCountry = Array.isArray(roster.Population) ? roster.Population[0] : roster.Population;
                   return (
-                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
+                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"} col-span-1 md:col-span-2 lg:col-span-full`}>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-muted-foreground">
                           {CATEGORY_ICONS["Size"]}
@@ -545,7 +545,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           )}
                         </div>
                       </div>
-                      <div className="space-y-3 mt-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
                         <div className="space-y-1">
                           {!isHardMode && (
                             <div className="flex items-center gap-2">
