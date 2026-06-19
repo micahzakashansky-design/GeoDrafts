@@ -627,8 +627,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           {CATEGORY_ICONS["Size"]}
                           <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population Structure</span>
                         </div>
-                        <div className="font-bold text-foreground text-xs md:text-sm">
-                           +{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score} <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span>
+                        <div className="font-bold text-foreground text-base md:text-lg">
+                           <span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span>
                         </div>
                       </div>
                                             <div className="w-full mt-2">

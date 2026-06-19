@@ -550,8 +550,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           {CATEGORY_ICONS["Size"]}
                           <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population Structure</span>
                         </div>
-                        <div className="font-bold text-foreground text-xs md:text-sm">
-                           +{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score} <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span>
+                        <div className="font-bold text-foreground text-base md:text-lg">
+                           <span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span>
                         </div>
                       </div>
                       <div className="flex flex-col gap-4">
@@ -647,7 +647,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         <div className="space-y-2 mt-3">
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
-                              {!isBonus && !isSizeOrPop ? ( <><div className="flex items-center gap-2"><span className="text-lg md:text-xl font-black text-primary">{scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-muted-foreground font-semibold">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
+                              {!isBonus && !isSizeOrPop ? ( <><div className="flex items-center gap-2"><span className={`text-lg md:text-xl font-black ${getScoreLabel(scoreVal, maxScore).color.split(' ')[0]}`}>{scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-muted-foreground font-semibold">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
                               ) : isSizeOrPop ? (
                                 <div className="flex items-center gap-2">
                                   <span className="font-bold text-foreground text-xs">{extractBonusText(desc, actualCat)}</span>
