@@ -295,7 +295,7 @@ export function getCountryArchetype(roster: Partial<Record<Category, Country>>):
 
 // ─── UI Components ────────────────────────────────────────────────────────
 
-export function ExpandableDescription({ description }: { description: string }) {
+export function ExpandableDescription({ description, isHovered = false }: { description: string, isHovered?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -321,8 +321,10 @@ export function ExpandableDescription({ description }: { description: string }) 
       )}
 
       {expanded && (
-        <div className="absolute top-[-8px] left-[calc(-1rem-1px)] right-[calc(-1rem-1px)] md:left-[calc(-1.25rem-1px)] md:right-[calc(-1.25rem-1px)] bg-card border-x border-b border-border/50 rounded-b-2xl px-4 md:px-5 pt-[8px] pb-4 md:pb-5 z-50 shadow-2xl">
-          <p className="text-[11px] md:text-xs text-foreground/90 leading-relaxed italic">
+        <div className={`absolute top-[-8px] left-[calc(-1rem-1px)] right-[calc(-1rem-1px)] md:left-[calc(-1.25rem-1px)] md:right-[calc(-1.25rem-1px)] bg-card border-x border-b rounded-b-2xl px-4 md:px-5 pt-[8px] pb-4 md:pb-5 z-50 shadow-2xl ${isHovered ? "border-primary" : "border-border/50"}`}>
+          {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-b-2xl pointer-events-none" />}
+          <div className="relative z-10">
+            <p className="text-[11px] md:text-xs text-foreground/90 leading-relaxed italic">
             {description}
           </p>
           <button 
@@ -330,7 +332,8 @@ export function ExpandableDescription({ description }: { description: string }) 
             className="text-[10px] uppercase font-bold text-yellow-500 hover:text-yellow-400 mt-3 flex items-center gap-1 group w-max transition-colors"
           >
             Show Less <ChevronUp className="w-3 h-3 group-hover:-translate-y-0.5 transition-transform" />
-          </button>
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -519,7 +522,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                   )}
                   
                   <div className={!isHardMode ? "mt-1" : "mt-1"}>
-                    <ExpandableDescription description={stat.description} />
+                    <ExpandableDescription description={stat.description} isHovered={isHovered} />
                   </div>
                 </div>
               </div>
