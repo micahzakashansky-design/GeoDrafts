@@ -45,7 +45,7 @@ export function AuthModal({ onClose, title = "Sign In" }: { onClose: () => void,
         <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-secondary/30">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4 text-primary" />
-            <span className="font-serif text-lg font-bold text-foreground">{title}</span>
+            <span className="text-lg font-bold text-foreground">{title}</span>
           </div>
           <button onClick={onClose} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
             <X className="w-4 h-4" />
