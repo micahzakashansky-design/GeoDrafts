@@ -117,7 +117,8 @@ function MultiplayerModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-function LoginScreen({ onSignIn }: { onSignIn: () => void }) {
+function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onShowGuidebook: () => void }) {
+  const [, setLocation] = useLocation();
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-xl mx-auto w-full text-center">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }} className="space-y-8">
@@ -139,19 +140,13 @@ function LoginScreen({ onSignIn }: { onSignIn: () => void }) {
           Sign In to Play
         </button>
 
-        <div className="grid grid-cols-3 gap-3 pt-4">
-          <div className="p-4 rounded-xl border border-border bg-card/50">
-            <Users className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-            <div className="text-xs font-bold">Multiplayer</div>
-          </div>
-          <div className="p-4 rounded-xl border border-border bg-card/50">
-            <Trophy className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
-            <div className="text-xs font-bold">Global Rank</div>
-          </div>
-          <div className="p-4 rounded-xl border border-border bg-card/50">
-            <CalendarDays className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
-            <div className="text-xs font-bold">Daily Draft</div>
-          </div>
+        <div className="grid grid-cols-2 gap-3 pt-4">
+          <button onClick={() => setLocation("/leaderboard")} className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm">
+            <Trophy className="w-4 h-4 text-yellow-400" />Leaderboard
+          </button>
+          <button onClick={onShowGuidebook} className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm">
+            <BookOpen className="w-4 h-4 text-blue-400" />Guidebook
+          </button>
         </div>
       </motion.div>
     </div>
@@ -212,7 +207,7 @@ export default function Home() {
       </header>
 
       {!firebaseUser ? (
-        <LoginScreen onSignIn={signInWithGoogle} />
+        <LoginScreen onSignIn={signInWithGoogle} onShowGuidebook={() => setShowGuidebook(true)} />
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-3xl mx-auto w-full">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }} className="flex flex-col items-center w-full"><div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 mb-4">
@@ -220,7 +215,7 @@ export default function Home() {
             </div>
             <h1 className="font-serif text-5xl font-bold text-foreground mb-2 tracking-tight">GeoDrafts</h1>
             <p className="text-base text-muted-foreground mb-8 text-center max-w-md">Draft countries and build the ideal nation in various competitive and solo modes.</p>
-            <DailyCard /><div className="w-full space-y-8">
+            <div className="w-full space-y-8">
               <section><h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Star className="w-3.5 h-3.5" />Classic Experience</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-3"><button onClick={() => startGame("normal", false)} className="flex flex-col items-start p-5 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"><div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3 group-hover:scale-110 transition-transform"><Globe className="w-5 h-5" /></div><div className="font-bold text-lg">Easy Mode</div><div className="text-sm text-muted-foreground">See all ratings as you draft.</div></button><button onClick={() => startGame("normal", true)} className="flex flex-col items-start p-5 rounded-2xl bg-card border border-border hover:border-red-500/50 hover:bg-red-500/5 transition-all group"><div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 mb-3 group-hover:scale-110 transition-transform"><Shield className="w-5 h-5" /></div><div className="font-bold text-lg">Hard Mode</div><div className="text-sm text-muted-foreground">No ratings shown until assigned.</div></button></div></section>
               <section><h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Zap className="w-3.5 h-3.5" />Special Variants</h3><div className="space-y-6"><div className="p-5 rounded-2xl bg-card border border-border"><div className="flex items-center gap-4 mb-4"><div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400"><ArrowLeftRight className="w-6 h-6" /></div><div><div className="font-bold text-lg">Double Draft</div><div className="text-sm text-muted-foreground">Pick between two countries every round.</div></div></div><div className="grid grid-cols-2 gap-2"><button onClick={() => startGame("double", false)} className="py-2 rounded-lg bg-secondary/50 hover:bg-secondary text-sm font-bold transition-colors">Classic Difficulty</button><button onClick={() => startGame("double", true)} className="py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-sm font-bold transition-colors border border-red-500/20">Hard Difficulty</button></div></div><button onClick={() => startGame("guess", false)} className="w-full flex items-center gap-4 p-5 rounded-2xl bg-card border border-border hover:bg-secondary/50 transition-colors text-left"><div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400"><Search className="w-6 h-6" /></div><div><div className="font-bold text-lg">Guess the Country</div><div className="text-sm text-muted-foreground">Identify a nation by its stats alone.</div></div></button></div></section>
               <section><h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Users className="w-3.5 h-3.5" />Social Play</h3><button onClick={() => setShowMultiplayer(true)} className="w-full flex items-center justify-between p-6 rounded-2xl bg-gradient-to-r from-primary/20 to-blue-500/20 border border-primary/30 hover:opacity-90 transition-opacity"><div className="flex items-center gap-4"><div className="w-14 h-14 rounded-2xl bg-background/50 flex items-center justify-center"><Users className="w-8 h-8 text-primary" /></div><div className="text-left"><div className="font-bold text-xl">Multiplayer Hub</div><div className="text-sm text-foreground/80">Play Sabotage or Party mode with friends.</div></div></div><div className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-bold text-sm">Enter Hub</div></button></section>
