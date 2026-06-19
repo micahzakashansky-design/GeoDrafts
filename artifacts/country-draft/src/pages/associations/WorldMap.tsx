@@ -4,6 +4,7 @@ import {
   Geographies,
   Geography,
   ZoomableGroup,
+  Marker,
 } from "react-simple-maps";
 import { COUNTRIES, Country } from "@/data/countries";
 
@@ -15,6 +16,7 @@ interface WorldMapProps {
   highlightedCountryIso?: string;
   onCountryClick?: (country: Country) => void;
   validIsos?: string[]; // If provided, only these countries are interactive/highlighted
+  zoomToCountry?: Country;
 }
 
 export function WorldMap({
@@ -22,6 +24,7 @@ export function WorldMap({
   highlightedCountryIso,
   onCountryClick,
   validIsos,
+  zoomToCountry,
 }: WorldMapProps) {
   // Map our countries by ISO for quick lookup
   const countryByIso = useMemo(() => {
@@ -43,7 +46,12 @@ export function WorldMap({
         width={800}
         height={400}
       >
-        <ZoomableGroup zoom={1} maxZoom={8}>
+        <ZoomableGroup 
+          zoom={zoomToCountry ? 4 : 1} 
+          center={zoomToCountry?.coordinates || [0, 0]}
+          maxZoom={8}
+          translateExtent={[[0, 0], [800, 400]]}
+        >
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
               geographies.map((geo) => {
@@ -92,6 +100,40 @@ export function WorldMap({
               })
             }
           </Geographies>
+
+          {/* Dots for tiny countries */}
+          {Array.from(countryByIso.values()).map(country => {
+            if (!country.area || country.area >= 60000 || !country.coordinates) return null;
+            
+            const geoIso = country.isoNumeric;
+            const isHighlighted = geoIso === highlightedCountryIso;
+            const isValid = validIsos ? validIsos.includes(geoIso!) : true;
+            const isClickable = interactive && isValid;
+            
+            // Only show dots if they are either highlighted or valid
+            if (!isHighlighted && !isValid) return null;
+
+            let fill = "#71717a";
+            if (isHighlighted) fill = "#f59e0b";
+
+            return (
+              <Marker key={`marker-${geoIso}`} coordinates={country.coordinates}>
+                <circle 
+                  r={isHighlighted ? 3 : 1.5} 
+                  fill={fill} 
+                  stroke="#27272a" 
+                  strokeWidth={0.5}
+                  style={{
+                    cursor: isClickable ? "pointer" : "default",
+                    transition: "all 250ms"
+                  }}
+                  onClick={() => {
+                    if (isClickable && onCountryClick) onCountryClick(country);
+                  }}
+                />
+              </Marker>
+            );
+          })}
         </ZoomableGroup>
       </ComposableMap>
       <div className="absolute bottom-2 right-2 text-xs text-muted-foreground bg-background/80 p-1 rounded">

@@ -123,6 +123,7 @@ export function AssociationsUI({ question, onCorrect, onSkip, validIsos }: Assoc
                 <WorldMap 
                   highlightedCountryIso={country.isoNumeric}
                   interactive={false}
+                  zoomToCountry={country}
                 />
               </div>
             )}
