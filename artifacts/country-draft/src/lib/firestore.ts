@@ -110,7 +110,7 @@ export async function saveScore(
       createdAt: serverTimestamp(),
       date: today,
     });
-    await updateUserStats(uid, score);
+    updateUserStats(uid, score).catch(console.error);
     return dailyDocId;
   }
 
@@ -119,7 +119,7 @@ export async function saveScore(
     createdAt: serverTimestamp(),
     date: today,
   });
-  await updateUserStats(uid, score);
+  updateUserStats(uid, score).catch(console.error);
   return docRef.id;
 }
 
