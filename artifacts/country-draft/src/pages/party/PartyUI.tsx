@@ -511,9 +511,11 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                             <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-muted-foreground">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-foreground/80">{sCat}</span></div></div>
                             <div><div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
-                              <div className="space-y-1 mt-3">
-                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50`}>Bonus Contributor</div>
-                                <div className="font-bold text-foreground text-xs">{extractBonusText(stat.description, sCat)}</div>
+                              <div className="flex flex-col items-start gap-1 mt-3">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <div className="font-bold text-foreground text-xs">{extractBonusText(stat.description, sCat)}</div>
+                                  <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Bonus</div>
+                                </div>
                               </div>
                             )}
                             <p className="text-[9px] text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
