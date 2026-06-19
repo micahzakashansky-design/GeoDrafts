@@ -506,8 +506,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {(() => {
               const displayCats: string[] = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
-              if (roster.Size && roster.Population && !wildcardPhase) { displayCats.push("Population Structure"); }
-              else { if (roster.Size || wildcardPhase) displayCats.push("Size"); if (roster.Population || wildcardPhase) displayCats.push("Population"); }
+              if (roster.Size && roster.Population) { displayCats.push("Population Structure"); }
+              else { if (roster.Size) displayCats.push("Size"); if (roster.Population) displayCats.push("Population"); }
               return displayCats.map((cat, idx) => {
                 const isCombo = cat === "Population Structure"; const actualCat = isCombo ? "Size" : (cat as Category); const assigned = roster[actualCat];
                 if (!assigned) return null;

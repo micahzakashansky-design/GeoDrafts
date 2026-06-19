@@ -583,8 +583,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {(() => {
               const displayCats: string[] = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
-              if (roster.Size && roster.Population && !wildcardPhase) { displayCats.push("Population Structure"); }
-              else { if (roster.Size || wildcardPhase) displayCats.push("Size"); if (roster.Population || wildcardPhase) displayCats.push("Population"); }
+              if (roster.Size && roster.Population) { displayCats.push("Population Structure"); }
+              else { if (roster.Size) displayCats.push("Size"); if (roster.Population) displayCats.push("Population"); }
               return displayCats.map((cat, idx) => {
                 const isCombo = cat === "Population Structure"; const actualCat = isCombo ? "Size" : (cat as Category); const assigned = roster[actualCat];
                 if (!assigned) return null;
@@ -627,10 +627,15 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         </div>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{(sizeCountry as any).flag} {(sizeCountry as any).name}{(sizeCountry as any).name !== (popCountry as any).name && " (Size)"}</div>
-                        {(sizeCountry as any).name !== (popCountry as any).name && (
-                           <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2 mt-0.5">{(popCountry as any).flag} {(popCountry as any).name} (Population)</div>
-                        )}
+                        <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2 flex-wrap">
+                          {(sizeCountry as any).flag} {(sizeCountry as any).name}
+                          {(sizeCountry as any).name !== (popCountry as any).name && (
+                             <>
+                               <span className="text-muted-foreground font-medium">+</span>
+                               {(popCountry as any).flag} {(popCountry as any).name}
+                             </>
+                          )}
+                        </div>
                       </div>
                       <div className="space-y-3 mt-3">
                         <div className="space-y-1">
