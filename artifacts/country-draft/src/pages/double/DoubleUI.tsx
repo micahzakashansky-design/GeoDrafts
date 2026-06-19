@@ -557,42 +557,66 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           return (
                             <div key={idx} className="w-full mt-2">
                               {sizeCountry.name !== popCountry.name ? (
-                                <div className="flex items-center justify-between w-full">
-                                  <div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5 flex-1 min-w-0">
-                                    {sizeCountry.flag} <span className="truncate">{sizeCountry.name}</span>
+                                <div className="flex items-start justify-center w-full gap-2">
+                                  <div className="flex-1 flex flex-col items-center text-center gap-2">
+                                    <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-center gap-1.5 w-full">
+                                      {sizeCountry.flag} <span className="truncate">{sizeCountry.name}</span>
+                                    </div>
+                                    <div className="space-y-1 flex flex-col items-center">
+                                      {!isHardMode && (
+                                        <div className="flex flex-col gap-1 items-center">
+                                          <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText(sizeCountry.stats.size.description, "Size")}</span>
+                                          <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Size Bonus</div>
+                                        </div>
+                                      )}
+                                      <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{sizeCountry.stats.size.description}"</p>
+                                    </div>
                                   </div>
-                                  <span className="text-muted-foreground font-bold mx-2 shrink-0">+</span>
-                                  <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-end gap-1.5 flex-1 min-w-0 text-right">
-                                    <span className="truncate">{popCountry.name}</span> {popCountry.flag}
+                                  <div className="flex items-center justify-center pt-1">
+                                    <span className="text-muted-foreground font-bold shrink-0">+</span>
+                                  </div>
+                                  <div className="flex-1 flex flex-col items-center text-center gap-2">
+                                    <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-center gap-1.5 w-full">
+                                      <span className="truncate">{popCountry.name}</span> {popCountry.flag}
+                                    </div>
+                                    <div className="space-y-1 flex flex-col items-center">
+                                      {!isHardMode && (
+                                        <div className="flex flex-col gap-1 items-center">
+                                          <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText(popCountry.stats.population.description, "Population")}</span>
+                                          <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Pop Bonus</div>
+                                        </div>
+                                      )}
+                                      <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{popCountry.stats.population.description}"</p>
+                                    </div>
                                   </div>
                                 </div>
                               ) : (
-                                <div className="flex items-center justify-center w-full">
-                                  <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">
+                                <div className="flex flex-col items-center w-full gap-3">
+                                  <div className="text-base md:text-lg font-bold text-foreground flex items-center justify-center gap-2">
                                     {sizeCountry.flag} {sizeCountry.name}
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-3 w-full">
+                                    <div className="space-y-1 flex flex-col items-center text-center">
+                                      {!isHardMode && (
+                                        <div className="flex flex-col gap-1 items-center">
+                                          <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText(sizeCountry.stats.size.description, "Size")}</span>
+                                          <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Size Bonus</div>
+                                        </div>
+                                      )}
+                                      <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{sizeCountry.stats.size.description}"</p>
+                                    </div>
+                                    <div className="space-y-1 flex flex-col items-center text-center">
+                                      {!isHardMode && (
+                                        <div className="flex flex-col gap-1 items-center">
+                                          <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText(popCountry.stats.population.description, "Population")}</span>
+                                          <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Pop Bonus</div>
+                                        </div>
+                                      )}
+                                      <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{popCountry.stats.population.description}"</p>
+                                    </div>
                                   </div>
                                 </div>
                               )}
-                              <div className="grid grid-cols-2 gap-3 mt-3">
-                                <div className="space-y-1">
-                                  {!isHardMode && (
-                                    <div className="flex flex-col gap-1 items-start">
-                                      <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText(sizeCountry.stats.size.description, "Size")}</span>
-                                      <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Size Bonus</div>
-                                    </div>
-                                  )}
-                                  <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1">"{sizeCountry.stats.size.description}"</p>
-                                </div>
-                                <div className="space-y-1">
-                                  {!isHardMode && (
-                                    <div className="flex flex-col gap-1 items-end text-right">
-                                      <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText(popCountry.stats.population.description, "Population")}</span>
-                                      <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Pop Bonus</div>
-                                    </div>
-                                  )}
-                                  <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 text-right mt-1">"{popCountry.stats.population.description}"</p>
-                                </div>
-                              </div>
                             </div>
                           );
                         })}
