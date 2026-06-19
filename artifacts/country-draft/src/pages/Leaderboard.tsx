@@ -111,16 +111,15 @@ function LeaderboardRow({ rank, entry, isPersonal = false }: { rank: number; ent
   );
 }
 
+import { useQuery } from "@tanstack/react-query";
+
 type ModeFilter = "normal" | "hard" | "daily" | "double" | "guess";
 type ScopeFilter = "global" | "personal";
 
 export default function Leaderboard() {
   const [, navigate] = useLocation();
-  const [globalEntries, setGlobalEntries] = useState<LeaderboardEntry[]>([]);
   const [personalEntries, setPersonalEntries] = useState<PersonalLeaderboardEntry[]>([]);
   
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [modeFilter, setModeFilter] = useState<ModeFilter>("normal");
   const [scopeFilter, setScopeFilter] = useState<ScopeFilter>("global");
   
@@ -128,16 +127,16 @@ export default function Leaderboard() {
 
   const todayLabel = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
 
+  const { data: globalEntries = [], isLoading: globalLoading, error: globalError } = useQuery({
+    queryKey: ["leaderboard", modeFilter],
+    queryFn: () => getTopScores(modeFilter, 50),
+    enabled: scopeFilter === "global",
+    staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+  });
+
   useEffect(() => {
-    if (scopeFilter === "global") {
-      setLoading(true);
-      setError(null);
-      getTopScores(modeFilter, 50)
-        .then((data) => { setGlobalEntries(data); setLoading(false); })
-        .catch(() => { setError("Failed to load global leaderboard."); setLoading(false); });
-    } else {
+    if (scopeFilter === "personal") {
       setPersonalEntries(loadPersonalLeaderboard(modeFilter as GameMode));
-      setLoading(false);
     }
   }, [modeFilter, scopeFilter]);
 
@@ -243,13 +242,13 @@ export default function Leaderboard() {
           ))}
         </div>
 
-        {loading ? (
+        {globalLoading ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-muted-foreground text-sm animate-pulse">Loading scores…</div>
           </div>
-        ) : error && scopeFilter === "global" ? (
+        ) : globalError && scopeFilter === "global" ? (
           <div className="text-center py-20">
-            <div className="text-red-400 text-sm mb-3">{error}</div>
+            <div className="text-red-400 text-sm mb-3">{globalError instanceof Error ? globalError.message : "Failed to load global leaderboard."}</div>
             <button onClick={() => window.location.reload()} className="text-sm text-primary hover:underline">
               Try again
             </button>
