@@ -3,7 +3,7 @@ export function Logo({ className = "w-5 h-5" }: { className?: string }) {
     <img 
       src="/icon.svg" 
       alt="GeoDrafts Logo" 
-      className={className}
+      className={`rounded-full object-cover ${className}`}
     />
   );
 }
