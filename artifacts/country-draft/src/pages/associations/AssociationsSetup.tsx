@@ -4,7 +4,8 @@ import { motion } from "framer-motion";
 import { COUNTRIES, Country } from "@/data/countries";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft, Flag, Map as MapIcon, Globe, Brain, HelpCircle, CheckCircle2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Flag, Map as MapIcon, Globe, Brain, HelpCircle, CheckCircle2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export const TASK_TYPES = [
   { id: "identify_from_flag", label: "Identify a country from its flag", icon: <Flag className="w-4 h-4 text-red-400" /> },
@@ -108,36 +109,64 @@ export function AssociationsSetup() {
               <span className="text-sm text-muted-foreground">{selectedCountries.length} / {COUNTRIES.length} selected</span>
             </div>
             
-            <div className="space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {countriesByRegion.map(([region, countries]) => {
                 const allSelected = countries.every(c => selectedCountries.includes(c.name));
                 const someSelected = countries.some(c => selectedCountries.includes(c.name));
+                const selectedCount = countries.filter(c => selectedCountries.includes(c.name)).length;
                 
                 return (
-                  <div key={region} className="bg-card border border-border rounded-xl overflow-hidden">
-                    <div className="p-3 bg-secondary/30 border-b border-border flex justify-between items-center">
-                      <div className="font-bold">{region}</div>
-                      <Button 
-                        variant="secondary" 
-                        size="sm" 
-                        onClick={() => toggleRegion(region, countries)}
-                      >
-                        {allSelected ? "Deselect All" : "Select All"}
-                      </Button>
-                    </div>
-                    <div className="p-3 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {countries.map(country => (
-                        <label key={country.name} className="flex items-center gap-2 cursor-pointer group">
-                          <Checkbox 
-                            checked={selectedCountries.includes(country.name)}
-                            onCheckedChange={() => toggleCountry(country.name)}
-                          />
-                          <span className="text-sm truncate group-hover:text-primary transition-colors">
-                            {country.flag} {country.name}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
+                  <div key={region} className={`flex items-center border rounded-xl overflow-hidden transition-colors ${allSelected ? 'bg-primary/10 border-primary/30' : someSelected ? 'bg-primary/5 border-primary/20' : 'bg-card border-border'}`}>
+                    <button 
+                      className="flex-1 p-3 text-left flex items-center gap-3 hover:bg-secondary/50 transition-colors"
+                      onClick={() => toggleRegion(region, countries)}
+                    >
+                      <Checkbox 
+                        checked={allSelected ? true : someSelected ? "indeterminate" : false}
+                        onCheckedChange={() => toggleRegion(region, countries)}
+                        className="pointer-events-none"
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-bold leading-tight">{region}</span>
+                        <span className="text-xs text-muted-foreground">{selectedCount} / {countries.length}</span>
+                      </div>
+                    </button>
+                    
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button className="p-3 hover:bg-secondary/50 transition-colors border-l border-border/50 h-full flex items-center justify-center">
+                          <ChevronRight className="w-4 h-4 text-muted-foreground" />
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md max-h-[80vh] flex flex-col">
+                        <DialogHeader>
+                          <DialogTitle>{region} Countries</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex-1 overflow-y-auto pr-2 space-y-2 py-4">
+                          <Button 
+                            variant="secondary" 
+                            size="sm" 
+                            className="w-full mb-4"
+                            onClick={() => toggleRegion(region, countries)}
+                          >
+                            {allSelected ? "Deselect All" : "Select All"}
+                          </Button>
+                          <div className="grid grid-cols-2 gap-2">
+                            {countries.map(country => (
+                              <label key={country.name} className="flex items-center gap-2 cursor-pointer group p-2 rounded hover:bg-secondary/50 transition-colors border border-transparent hover:border-border">
+                                <Checkbox 
+                                  checked={selectedCountries.includes(country.name)}
+                                  onCheckedChange={() => toggleCountry(country.name)}
+                                />
+                                <span className="text-sm truncate group-hover:text-primary transition-colors">
+                                  {country.flag} {country.name}
+                                </span>
+                              </label>
+                            ))}
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 );
               })}
