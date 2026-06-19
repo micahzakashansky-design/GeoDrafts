@@ -132,9 +132,7 @@ function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onSh
     <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-xl mx-auto w-full text-center">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }} className="space-y-8">
         <div className="flex flex-col items-center">
-          <div className="p-5 rounded-3xl bg-primary/10 border border-primary/20 mb-6">
-            <Logo className="w-16 h-16" />
-          </div>
+          <Logo className="w-24 h-24 mb-6" />
           <h1 className="font-serif text-5xl font-bold text-foreground mb-4 tracking-tight">GeoDrafts</h1>
           <p className="text-lg text-muted-foreground max-w-md leading-relaxed">
             Draft countries, build the ultimate nation, and compete on global leaderboards. Join the world of GeoDrafts today.
@@ -220,9 +218,8 @@ export default function Home() {
         <LoginScreen onSignIn={() => setShowAuthModal(true)} onShowGuidebook={() => setShowGuidebook(true)} />
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-3xl mx-auto w-full">
-          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }} className="flex flex-col items-center w-full"><div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 mb-4">
-              <Logo className="w-12 h-12" />
-            </div>
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }} className="flex flex-col items-center w-full">
+            <Logo className="w-20 h-20 mb-4" />
             <h1 className="font-serif text-5xl font-bold text-foreground mb-2 tracking-tight">GeoDrafts</h1>
             <p className="text-base text-muted-foreground mb-8 text-center max-w-md">Draft countries and build the ideal nation in various competitive and solo modes.</p>
             <div className="w-full space-y-8">
