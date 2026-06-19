@@ -13,6 +13,7 @@ import { UsernamePrompt } from "../components/UsernamePrompt";
 import { SettingsModal } from "../components/SettingsModal";
 import { AuthModal } from "../components/AuthModal";
 import { ContactModal } from "../components/ContactModal";
+import { AboutModal } from "../components/AboutModal";
 import { Logo } from "../components/Logo";
 import { toast } from "sonner";
 
@@ -165,6 +166,7 @@ export default function Home() {
   const [showSettings, setShowSettings] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
   const { isLight, toggleTheme } = useTheme();
   const { firebaseUser, profile, signInWithGoogle, needsUsername, refreshProfile, isLoading } = useFirebaseAuth();
 
@@ -228,10 +230,11 @@ export default function Home() {
         </div>
       )}
 
-      <footer className="w-full py-8 border-t border-border mt-auto flex justify-center gap-6 bg-card/30">
-        <button onClick={() => navigate("/about")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
+      <footer className="w-full py-8 border-t border-border mt-auto flex items-center justify-center gap-6 bg-card/30">
+        <button onClick={() => setShowAboutModal(true)} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
           About GeoDrafts
         </button>
+        <span className="text-muted-foreground/50 text-xs font-black">&bull;</span>
         <button 
           onClick={() => setShowContactModal(true)}
           className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold"
@@ -245,6 +248,7 @@ export default function Home() {
         {showGuidebook && <GuidebookModal onClose={() => setShowGuidebook(false)} />}
         {showMultiplayer && <MultiplayerModal onClose={() => setShowMultiplayer(false)} onSignIn={() => setShowAuthModal(true)} />}
         {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
+        {showAboutModal && <AboutModal onClose={() => setShowAboutModal(false)} />}
         {needsUsername && firebaseUser && (
           <UsernamePrompt user={firebaseUser} onComplete={refreshProfile} />
         )}

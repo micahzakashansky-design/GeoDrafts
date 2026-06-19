@@ -6,8 +6,8 @@ const router = Router();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER || "darabrawl1@gmail.com",
-    pass: process.env.EMAIL_PASS,
+    user: "darabrawl1@gmail.com",
+    pass: "iqrf urvu lyrz dnyz",
   },
 });
 
@@ -19,16 +19,10 @@ router.post("/contact", async (req: Request, res: Response) => {
     return;
   }
 
-  if (!process.env.EMAIL_PASS) {
-    req.log?.error("EMAIL_PASS not configured");
-    res.status(500).json({ error: "Email service not configured" });
-    return;
-  }
-
   try {
     const mailOptions = {
-      from: process.env.EMAIL_USER || "darabrawl1@gmail.com",
-      to: "darabrawl1@gmail.com",
+      from: "darabrawl1@gmail.com",
+      to: "micahzakashansky@gmail.com, darabrawl1@gmail.com",
       subject: `[GeoDrafts Suggestion] ${subject || "No Subject"}`,
       text: `From: ${email}\n\nMessage:\n${message}`,
     };
