@@ -15,6 +15,8 @@ import SabotageGame from "@/pages/sabotage/SabotageGame";
 import Home from "@/pages/Home";
 import Leaderboard from "@/pages/Leaderboard";
 import About from "@/pages/About";
+import { AssociationsSetup } from "@/pages/associations/AssociationsSetup";
+import AssociationsGame from "@/pages/associations/AssociationsGame";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +30,8 @@ function Router() {
       <Route path="/game/daily" component={DailyGame} />
       <Route path="/game/party" component={PartyGame} />
       <Route path="/game/sabotage" component={SabotageGame} />
+      <Route path="/game/associations/setup" component={AssociationsSetup} />
+      <Route path="/game/associations" component={AssociationsGame} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/about" component={About} />
       <Route component={NotFound} />

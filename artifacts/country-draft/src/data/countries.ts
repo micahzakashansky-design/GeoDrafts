@@ -5,6 +5,9 @@ export type CategoryStats = {
 
 export type Country = {
   name: string;
+  isoNumeric: string;
+  aliases: string[];
+  capitalAliases: string[];
   flag: string;
   flagColors: string[];
   tier: "first" | "second" | "third" | "fourth";
@@ -33,10 +36,14 @@ export type Country = {
 export const COUNTRIES: Country[] = [
   {
     name: "United States",
+    isoNumeric: "840",
+    aliases: ["USA","US","America","United States of America"],
+    capital: "Washington D.C.",
+    capitalAliases: ["Washington","Washington DC","D.C.","DC"],
     flag: "🇺🇸",
     flagColors: ["Red","White","Blue"],
     tier: "first",
-    capital: "Washington D.C.",
+    
     region: "North America",
     knownFor: "World superpower with unmatched military reach, cultural exports, and technological innovation",
     stats: {
@@ -59,10 +66,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Germany",
+    isoNumeric: "276",
+    aliases: [],
+    capital: "Berlin",
+    capitalAliases: [],
     flag: "🇩🇪",
     flagColors: ["Black","Red","Gold"],
     tier: "first",
-    capital: "Berlin",
+    
     region: "Western Europe",
     knownFor: "Engineering excellence, economic powerhouse of Europe, and a nation that transformed itself after WWII",
     stats: {
@@ -85,10 +96,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Japan",
+    isoNumeric: "392",
+    aliases: [],
+    capital: "Tokyo",
+    capitalAliases: [],
     flag: "🇯🇵",
     flagColors: ["Red","White"],
     tier: "first",
-    capital: "Tokyo",
+    
     region: "East Asia",
     knownFor: "Ancient culture blended with futuristic technology, precision manufacturing, and unparalleled culinary tradition",
     stats: {
@@ -111,10 +126,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "United Kingdom",
+    isoNumeric: "826",
+    aliases: ["UK","Britain","Great Britain","England"],
+    capital: "London",
+    capitalAliases: [],
     flag: "🇬🇧",
     flagColors: ["Red","White","Blue"],
     tier: "first",
-    capital: "London",
+    
     region: "Western Europe",
     knownFor: "Former empire that shaped modern world through language, law, and institutions; cultural and financial powerhouse",
     stats: {
@@ -137,10 +156,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "France",
+    isoNumeric: "250",
+    aliases: [],
+    capital: "Paris",
+    capitalAliases: [],
     flag: "🇫🇷",
     flagColors: ["Blue","White","Red"],
     tier: "first",
-    capital: "Paris",
+    
     region: "Western Europe",
     knownFor: "Cultural capital of the world, nuclear power, and the birthplace of modern democracy and haute cuisine",
     stats: {
@@ -163,10 +186,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Sweden",
+    isoNumeric: "752",
+    aliases: [],
+    capital: "Stockholm",
+    capitalAliases: [],
     flag: "🇸🇪",
     flagColors: ["Blue","Yellow"],
     tier: "first",
-    capital: "Stockholm",
+    
     region: "Northern Europe",
     knownFor: "Pioneering social democracy, exceptional quality of life, and design innovation from IKEA to Spotify",
     stats: {
@@ -189,10 +216,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Norway",
+    isoNumeric: "578",
+    aliases: [],
+    capital: "Oslo",
+    capitalAliases: [],
     flag: "🇳🇴",
     flagColors: ["Red","White","Blue"],
     tier: "first",
-    capital: "Oslo",
+    
     region: "Northern Europe",
     knownFor: "Spectacular fjord landscape, sovereign wealth fund, and consistently the world's happiest country",
     stats: {
@@ -215,10 +246,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Switzerland",
+    isoNumeric: "756",
+    aliases: [],
+    capital: "Bern",
+    capitalAliases: [],
     flag: "🇨🇭",
     flagColors: ["Red","White"],
     tier: "first",
-    capital: "Bern",
+    
     region: "Western Europe",
     knownFor: "Banking secrecy, chocolate, watches, and Alpine neutrality that has lasted over 500 years",
     stats: {
@@ -241,10 +276,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Canada",
+    isoNumeric: "124",
+    aliases: [],
+    capital: "Ottawa",
+    capitalAliases: [],
     flag: "🇨🇦",
     flagColors: ["Red","White"],
     tier: "first",
-    capital: "Ottawa",
+    
     region: "North America",
     knownFor: "World's second largest country by area, multicultural mosaic, and extraordinary natural wilderness",
     stats: {
@@ -267,10 +306,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Australia",
+    isoNumeric: "036",
+    aliases: [],
+    capital: "Canberra",
+    capitalAliases: [],
     flag: "🇦🇺",
     flagColors: ["Blue","White","Red"],
     tier: "first",
-    capital: "Canberra",
+    
     region: "Oceania",
     knownFor: "Vast wilderness continent with world-class cities, unique wildlife, and an enviable outdoor lifestyle",
     stats: {
@@ -293,10 +336,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "South Korea",
+    isoNumeric: "410",
+    aliases: ["Korea","ROK","Republic of Korea"],
+    capital: "Seoul",
+    capitalAliases: [],
     flag: "🇰🇷",
     flagColors: ["White","Black","Red","Blue"],
     tier: "first",
-    capital: "Seoul",
+    
     region: "East Asia",
     knownFor: "Economic miracle from war-torn poverty to tech powerhouse in a single generation, with K-pop conquering the world",
     stats: {
@@ -319,10 +366,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Singapore",
+    isoNumeric: "000",
+    aliases: [],
+    capital: "Singapore",
+    capitalAliases: [],
     flag: "🇸🇬",
     flagColors: ["Red","White"],
     tier: "first",
-    capital: "Singapore",
+    
     region: "Southeast Asia",
     knownFor: "City-state miracle — the world's freest economy, cleanest city, and most efficient government per square kilometer",
     stats: {
@@ -345,10 +396,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Denmark",
+    isoNumeric: "208",
+    aliases: [],
+    capital: "Copenhagen",
+    capitalAliases: [],
     flag: "🇩🇰",
     flagColors: ["Red","White"],
     tier: "first",
-    capital: "Copenhagen",
+    
     region: "Northern Europe",
     knownFor: "Happiest country on earth, hygge lifestyle, and world-leading wind energy and social trust",
     stats: {
@@ -371,10 +426,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Finland",
+    isoNumeric: "246",
+    aliases: [],
+    capital: "Helsinki",
+    capitalAliases: [],
     flag: "🇫🇮",
     flagColors: ["White","Blue"],
     tier: "first",
-    capital: "Helsinki",
+    
     region: "Northern Europe",
     knownFor: "World's best education system, sauna culture, and extraordinary resilience that defeated the Soviet Union",
     stats: {
@@ -397,10 +456,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Netherlands",
+    isoNumeric: "528",
+    aliases: [],
+    capital: "Amsterdam",
+    capitalAliases: [],
     flag: "🇳🇱",
     flagColors: ["Red","White","Blue"],
     tier: "first",
-    capital: "Amsterdam",
+    
     region: "Western Europe",
     knownFor: "Trading nation that built an empire on water, and a liberal society of tulips, windmills, and global logistics",
     stats: {
@@ -423,10 +486,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "New Zealand",
+    isoNumeric: "554",
+    aliases: ["NZ"],
+    capital: "Wellington",
+    capitalAliases: [],
     flag: "🇳🇿",
     flagColors: ["Blue","White","Red"],
     tier: "first",
-    capital: "Wellington",
+    
     region: "Oceania",
     knownFor: "Middle-earth filming location with extraordinary landscapes, pioneering social policies, and Maori cultural heritage",
     stats: {
@@ -449,10 +516,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Austria",
+    isoNumeric: "040",
+    aliases: [],
+    capital: "Vienna",
+    capitalAliases: [],
     flag: "🇦🇹",
     flagColors: ["Red","White"],
     tier: "first",
-    capital: "Vienna",
+    
     region: "Western Europe",
     knownFor: "Former heart of a continental empire, birthplace of Mozart and Freud, and gateway between Eastern and Western Europe",
     stats: {
@@ -475,10 +546,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Belgium",
+    isoNumeric: "056",
+    aliases: [],
+    capital: "Brussels",
+    capitalAliases: [],
     flag: "🇧🇪",
     flagColors: ["Black","Yellow","Red"],
     tier: "first",
-    capital: "Brussels",
+    
     region: "Western Europe",
     knownFor: "Chocolate, waffles, NATO headquarters, and a country that somehow works despite speaking three different languages",
     stats: {
@@ -501,10 +576,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Ireland",
+    isoNumeric: "372",
+    aliases: [],
+    capital: "Dublin",
+    capitalAliases: [],
     flag: "🇮🇪",
     flagColors: ["Green","White","Orange"],
     tier: "first",
-    capital: "Dublin",
+    
     region: "Western Europe",
     knownFor: "Celtic culture, literary giants, and the surprising tax haven that became Europe's tech capital",
     stats: {
@@ -527,10 +606,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Italy",
+    isoNumeric: "380",
+    aliases: [],
+    capital: "Rome",
+    capitalAliases: [],
     flag: "🇮🇹",
     flagColors: ["Green","White","Red"],
     tier: "first",
-    capital: "Rome",
+    
     region: "Southern Europe",
     knownFor: "The cradle of Western civilization, unmatched art and architecture, and the greatest cuisine on earth",
     stats: {
@@ -553,10 +636,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Spain",
+    isoNumeric: "724",
+    aliases: [],
+    capital: "Madrid",
+    capitalAliases: [],
     flag: "🇪🇸",
     flagColors: ["Red","Yellow"],
     tier: "first",
-    capital: "Madrid",
+    
     region: "Southern Europe",
     knownFor: "Passionate culture, world-class football, Gaudi architecture, and the warm heart of the Mediterranean",
     stats: {
@@ -579,10 +666,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Portugal",
+    isoNumeric: "620",
+    aliases: [],
+    capital: "Lisbon",
+    capitalAliases: [],
     flag: "🇵🇹",
     flagColors: ["Green","Red","Yellow"],
     tier: "first",
-    capital: "Lisbon",
+    
     region: "Southern Europe",
     knownFor: "Age of Exploration pioneer that mapped the world, with melancholic Fado music and golden Atlantic beaches",
     stats: {
@@ -605,10 +696,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Czech Republic",
+    isoNumeric: "203",
+    aliases: ["Czechia"],
+    capital: "Prague",
+    capitalAliases: [],
     flag: "🇨🇿",
     flagColors: ["Blue","White","Red"],
     tier: "first",
-    capital: "Prague",
+    
     region: "Central Europe",
     knownFor: "The Golden City of Prague, world's highest beer consumption, and remarkable post-communist transformation",
     stats: {
@@ -631,10 +726,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Poland",
+    isoNumeric: "616",
+    aliases: [],
+    capital: "Warsaw",
+    capitalAliases: [],
     flag: "🇵🇱",
     flagColors: ["White","Red"],
     tier: "first",
-    capital: "Warsaw",
+    
     region: "Eastern Europe",
     knownFor: "Resilient nation that survived partition and Nazi occupation to become the economic engine of Eastern Europe",
     stats: {
@@ -657,10 +756,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Russia",
+    isoNumeric: "643",
+    aliases: [],
+    capital: "Moscow",
+    capitalAliases: [],
     flag: "🇷🇺",
     flagColors: ["White","Blue","Red"],
     tier: "second",
-    capital: "Moscow",
+    
     region: "Eastern Europe / North Asia",
     knownFor: "World's largest country by area, nuclear superpower, and a civilization that spans 11 time zones",
     stats: {
@@ -683,10 +786,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "China",
+    isoNumeric: "156",
+    aliases: [],
+    capital: "Beijing",
+    capitalAliases: [],
     flag: "🇨🇳",
     flagColors: ["Red","Yellow"],
     tier: "second",
-    capital: "Beijing",
+    
     region: "East Asia",
     knownFor: "Ancient civilization become modern manufacturing empire, now challenging USA for global superpower supremacy",
     stats: {
@@ -709,10 +816,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Turkey",
+    isoNumeric: "792",
+    aliases: [],
+    capital: "Ankara",
+    capitalAliases: [],
     flag: "🇹🇷",
     flagColors: ["Red","White"],
     tier: "second",
-    capital: "Ankara",
+    
     region: "Middle East / Southern Europe",
     knownFor: "Transcontinental bridge between Europe and Asia, inheritor of the Ottoman Empire, and NATO's strategic wild card",
     stats: {
@@ -735,10 +846,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Ukraine",
+    isoNumeric: "804",
+    aliases: [],
+    capital: "Kyiv",
+    capitalAliases: [],
     flag: "🇺🇦",
     flagColors: ["Blue","Yellow"],
     tier: "second",
-    capital: "Kyiv",
+    
     region: "Eastern Europe",
     knownFor: "Europe's breadbasket, birthplace of Kievan Rus civilization, and currently fighting a historic war of independence",
     stats: {
@@ -761,10 +876,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Romania",
+    isoNumeric: "642",
+    aliases: [],
+    capital: "Bucharest",
+    capitalAliases: [],
     flag: "🇷🇴",
     flagColors: ["Blue","Yellow","Red"],
     tier: "second",
-    capital: "Bucharest",
+    
     region: "Eastern Europe",
     knownFor: "Land of Dracula legends, medieval Transylvania, and unexpected natural beauty from Danube Delta to Carpathians",
     stats: {
@@ -787,10 +906,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Hungary",
+    isoNumeric: "348",
+    aliases: [],
+    capital: "Budapest",
+    capitalAliases: [],
     flag: "🇭🇺",
     flagColors: ["Red","White","Green"],
     tier: "second",
-    capital: "Budapest",
+    
     region: "Central Europe",
     knownFor: "Budapest thermal baths, paprika-spiced cuisine, and the Danube's most beautiful river city",
     stats: {
@@ -813,10 +936,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Israel",
+    isoNumeric: "376",
+    aliases: [],
+    capital: "Jerusalem",
+    capitalAliases: [],
     flag: "🇮🇱",
     flagColors: ["Blue","White"],
     tier: "first",
-    capital: "Jerusalem",
+    
     region: "Middle East",
     knownFor: "Startup Nation with advanced military technology, ancient holy sites, and an extraordinary story of modern state-building",
     stats: {
@@ -839,10 +966,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Greece",
+    isoNumeric: "300",
+    aliases: [],
+    capital: "Athens",
+    capitalAliases: [],
     flag: "🇬🇷",
     flagColors: ["Blue","White"],
     tier: "first",
-    capital: "Athens",
+    
     region: "Southern Europe",
     knownFor: "Birthplace of democracy, philosophy, and the Olympic Games — still the most historically significant small country on earth",
     stats: {
@@ -865,10 +996,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Estonia",
+    isoNumeric: "233",
+    aliases: [],
+    capital: "Tallinn",
+    capitalAliases: [],
     flag: "🇪🇪",
     flagColors: ["Blue","Black","White"],
     tier: "first",
-    capital: "Tallinn",
+    
     region: "Northern Europe",
     knownFor: "World's most digitally advanced society — born the same year as the internet, it now runs the entire government online",
     stats: {
@@ -891,10 +1026,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Slovakia",
+    isoNumeric: "703",
+    aliases: [],
+    capital: "Bratislava",
+    capitalAliases: [],
     flag: "🇸🇰",
     flagColors: ["White","Blue","Red"],
     tier: "first",
-    capital: "Bratislava",
+    
     region: "Central Europe",
     knownFor: "Europe's car manufacturing capital per capita, with stunning Carpathian castles and emerging tech scene",
     stats: {
@@ -917,10 +1056,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Croatia",
+    isoNumeric: "191",
+    aliases: [],
+    capital: "Zagreb",
+    capitalAliases: [],
     flag: "🇭🇷",
     flagColors: ["Red","White","Blue"],
     tier: "second",
-    capital: "Zagreb",
+    
     region: "Southeast Europe",
     knownFor: "1,200 Adriatic islands, walled medieval cities, and the filming location of Game of Thrones",
     stats: {
@@ -943,10 +1086,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Kazakhstan",
+    isoNumeric: "398",
+    aliases: [],
+    capital: "Astana",
+    capitalAliases: [],
     flag: "🇰🇿",
     flagColors: ["Light Blue","Yellow"],
     tier: "second",
-    capital: "Astana",
+    
     region: "Central Asia",
     knownFor: "World's largest landlocked country, vast steppe heartland, and the launchpad of humanity's journey to space",
     stats: {
@@ -969,10 +1116,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Georgia",
+    isoNumeric: "268",
+    aliases: [],
+    capital: "Tbilisi",
+    capitalAliases: [],
     flag: "🇬🇪",
     flagColors: ["White","Red"],
     tier: "second",
-    capital: "Tbilisi",
+    
     region: "Caucasus",
     knownFor: "Ancient wine civilization (8,000 years of winemaking), breathtaking Caucasian mountains, and a bold pro-Western pivot",
     stats: {
@@ -995,10 +1146,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Armenia",
+    isoNumeric: "051",
+    aliases: [],
+    capital: "Yerevan",
+    capitalAliases: [],
     flag: "🇦🇲",
     flagColors: ["Red","Blue","Orange"],
     tier: "second",
-    capital: "Yerevan",
+    
     region: "Caucasus",
     knownFor: "World's first Christian nation, ancient monasteries, and a resilient people with one of the darkest histories in the world",
     stats: {
@@ -1021,10 +1176,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Iceland",
+    isoNumeric: "352",
+    aliases: [],
+    capital: "Reykjavik",
+    capitalAliases: ["Reykjavík"],
     flag: "🇮🇸",
     flagColors: ["Blue","White","Red"],
     tier: "first",
-    capital: "Reykjavik",
+    
     region: "Northern Europe",
     knownFor: "Land of fire and ice — geysers, volcanoes, Northern Lights, and the purest air and water on earth",
     stats: {
@@ -1047,10 +1206,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Slovenia",
+    isoNumeric: "705",
+    aliases: [],
+    capital: "Ljubljana",
+    capitalAliases: [],
     flag: "🇸🇮",
     flagColors: ["White","Blue","Red"],
     tier: "first",
-    capital: "Ljubljana",
+    
     region: "Central Europe",
     knownFor: "Europe's greenest country, Lake Bled fairy-tale scenery, and the most successful post-Yugoslav transition",
     stats: {
@@ -1073,10 +1236,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Latvia",
+    isoNumeric: "428",
+    aliases: [],
+    capital: "Riga",
+    capitalAliases: [],
     flag: "🇱🇻",
     flagColors: ["Maroon","White"],
     tier: "first",
-    capital: "Riga",
+    
     region: "Northern Europe",
     knownFor: "Art Nouveau capital Riga, Amber Road heritage, and the singing revolution that broke the Soviet Union peacefully",
     stats: {
@@ -1099,10 +1266,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Lithuania",
+    isoNumeric: "440",
+    aliases: [],
+    capital: "Vilnius",
+    capitalAliases: [],
     flag: "🇱🇹",
     flagColors: ["Yellow","Green","Red"],
     tier: "first",
-    capital: "Vilnius",
+    
     region: "Northern Europe",
     knownFor: "Medieval Grand Duchy that once stretched from Baltic to Black Sea, and the first Soviet republic to declare independence",
     stats: {
@@ -1125,10 +1296,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Saudi Arabia",
+    isoNumeric: "682",
+    aliases: ["KSA"],
+    capital: "Riyadh",
+    capitalAliases: [],
     flag: "🇸🇦",
     flagColors: ["Green","White"],
     tier: "second",
-    capital: "Riyadh",
+    
     region: "Middle East",
     knownFor: "Birthplace of Islam and custodian of Mecca; world oil hegemon transforming via Vision 2030 megaprojects",
     stats: {
@@ -1151,10 +1326,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "United Arab Emirates",
+    isoNumeric: "784",
+    aliases: [],
+    capital: "Abu Dhabi",
+    capitalAliases: [],
     flag: "🇦🇪",
     flagColors: ["Red","Green","White","Black"],
     tier: "second",
-    capital: "Abu Dhabi",
+    
     region: "Middle East",
     knownFor: "Dubai's iconic skyline meets Emirati tradition; global aviation and trade hub that reinvented desert living",
     stats: {
@@ -1177,10 +1356,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Qatar",
+    isoNumeric: "634",
+    aliases: [],
+    capital: "Doha",
+    capitalAliases: [],
     flag: "🇶🇦",
     flagColors: ["Maroon","White"],
     tier: "second",
-    capital: "Doha",
+    
     region: "Middle East",
     knownFor: "World Cup 2022 host and LNG export titan; Education City of branch universities and Al Jazeera media power",
     stats: {
@@ -1203,10 +1386,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "India",
+    isoNumeric: "356",
+    aliases: [],
+    capital: "New Delhi",
+    capitalAliases: [],
     flag: "🇮🇳",
     flagColors: ["Saffron","White","Green","Blue"],
     tier: "second",
-    capital: "New Delhi",
+    
     region: "South Asia",
     knownFor: "World's most populous democracy; ancient civilizations to Bollywood to IT superpower — a civilization of contradictions",
     stats: {
@@ -1229,10 +1416,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Mexico",
+    isoNumeric: "484",
+    aliases: [],
+    capital: "Mexico City",
+    capitalAliases: ["CDMX"],
     flag: "🇲🇽",
     flagColors: ["Green","White","Red"],
     tier: "second",
-    capital: "Mexico City",
+    
     region: "North America",
     knownFor: "Land of Aztec pyramids and Caribbean beaches; the US's top trading partner riding a nearshoring manufacturing boom",
     stats: {
@@ -1255,10 +1446,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Brazil",
+    isoNumeric: "076",
+    aliases: [],
+    capital: "Brasilia",
+    capitalAliases: ["Brasília"],
     flag: "🇧🇷",
     flagColors: ["Green","Yellow","Blue","White"],
     tier: "second",
-    capital: "Brasilia",
+    
     region: "South America",
     knownFor: "Amazon custodian and Carnival host; South America's sleeping giant rising through agriculture, fintech, and soft power",
     stats: {
@@ -1281,10 +1476,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Argentina",
+    isoNumeric: "032",
+    aliases: [],
+    capital: "Buenos Aires",
+    capitalAliases: [],
     flag: "🇦🇷",
     flagColors: ["Light Blue","White","Yellow"],
     tier: "second",
-    capital: "Buenos Aires",
+    
     region: "South America",
     knownFor: "Tango, asado, and Lionel Messi; a European-influenced Southern Cone nation cycling between boom and economic crisis",
     stats: {
@@ -1307,10 +1506,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Chile",
+    isoNumeric: "152",
+    aliases: [],
+    capital: "Santiago",
+    capitalAliases: [],
     flag: "🇨🇱",
     flagColors: ["Red","White","Blue"],
     tier: "second",
-    capital: "Santiago",
+    
     region: "South America",
     knownFor: "Earth's driest desert to Patagonian glaciers; South America's most stable economy backed by copper and lithium",
     stats: {
@@ -1333,10 +1536,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Peru",
+    isoNumeric: "604",
+    aliases: [],
+    capital: "Lima",
+    capitalAliases: [],
     flag: "🇵🇪",
     flagColors: ["Red","White"],
     tier: "second",
-    capital: "Lima",
+    
     region: "South America",
     knownFor: "Home of the Inca Empire and Machu Picchu; Lima crowned the culinary capital of the Americas",
     stats: {
@@ -1359,10 +1566,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Indonesia",
+    isoNumeric: "360",
+    aliases: [],
+    capital: "Jakarta",
+    capitalAliases: [],
     flag: "🇮🇩",
     flagColors: ["Red","White"],
     tier: "second",
-    capital: "Jakarta",
+    
     region: "Southeast Asia",
     knownFor: "17,000 islands; world's largest Muslim nation; Bali spiritual mysticism meeting Jakarta's billion-dollar startup boom",
     stats: {
@@ -1385,10 +1596,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Philippines",
+    isoNumeric: "608",
+    aliases: [],
+    capital: "Manila",
+    capitalAliases: [],
     flag: "🇵🇭",
     flagColors: ["Blue","Red","White","Yellow"],
     tier: "second",
-    capital: "Manila",
+    
     region: "Southeast Asia",
     knownFor: "7,641 islands of fiestas and Spanish-Catholic heritage; English-speaking global workforce powering BPO and remittances",
     stats: {
@@ -1411,10 +1626,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Egypt",
+    isoNumeric: "818",
+    aliases: [],
+    capital: "Cairo",
+    capitalAliases: [],
     flag: "🇪🇬",
     flagColors: ["Red","White","Black","Gold"],
     tier: "second",
-    capital: "Cairo",
+    
     region: "Middle East",
     knownFor: "Mother of civilization; pharaohs and pyramids meet the Suez Canal chokepoint where Africa connects the world",
     stats: {
@@ -1437,10 +1656,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Nigeria",
+    isoNumeric: "566",
+    aliases: [],
+    capital: "Abuja",
+    capitalAliases: [],
     flag: "🇳🇬",
     flagColors: ["Green","White"],
     tier: "second",
-    capital: "Abuja",
+    
     region: "Africa",
     knownFor: "Africa's most populous nation; Nollywood, Afrobeats, and Lagos fintech leading a continental renaissance",
     stats: {
@@ -1463,10 +1686,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "South Africa",
+    isoNumeric: "710",
+    aliases: ["RSA"],
+    capital: "Pretoria",
+    capitalAliases: [],
     flag: "🇿🇦",
     flagColors: ["Red","Blue","Green","Yellow","Black","White"],
     tier: "second",
-    capital: "Pretoria",
+    
     region: "Africa",
     knownFor: "Rainbow Nation of Mandela; from Table Mountain to Kruger safaris; Africa's most industrialized and diversified economy",
     stats: {
@@ -1489,10 +1716,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Taiwan",
+    isoNumeric: "158",
+    aliases: [],
+    capital: "Taipei",
+    capitalAliases: [],
     flag: "🇹🇼",
     flagColors: ["Red","Blue","White"],
     tier: "fourth",
-    capital: "Taipei",
+    
     region: "Asia",
     knownFor: "Leading producer of advanced semiconductors",
     stats: {
@@ -1515,10 +1746,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Malaysia",
+    isoNumeric: "458",
+    aliases: [],
+    capital: "Kuala Lumpur",
+    capitalAliases: [],
     flag: "🇲🇾",
     flagColors: ["Yellow","Blue","Red","White"],
     tier: "fourth",
-    capital: "Kuala Lumpur",
+    
     region: "Asia",
     knownFor: "Petronas Twin Towers and diverse cultural heritage",
     stats: {
@@ -1541,10 +1776,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Thailand",
+    isoNumeric: "764",
+    aliases: [],
+    capital: "Bangkok",
+    capitalAliases: [],
     flag: "🇹🇭",
     flagColors: ["Red","White","Blue"],
     tier: "fourth",
-    capital: "Bangkok",
+    
     region: "Asia",
     knownFor: "Ornate temples, beautiful beaches, and vibrant street food",
     stats: {
@@ -1567,10 +1806,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Colombia",
+    isoNumeric: "170",
+    aliases: [],
+    capital: "Bogotá",
+    capitalAliases: [],
     flag: "🇨🇴",
     flagColors: ["Yellow","Blue","Red"],
     tier: "fourth",
-    capital: "Bogotá",
+    
     region: "South America",
     knownFor: "High-quality coffee and rich biodiversity",
     stats: {
@@ -1593,10 +1836,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Vietnam",
+    isoNumeric: "704",
+    aliases: [],
+    capital: "Hanoi",
+    capitalAliases: [],
     flag: "🇻🇳",
     flagColors: ["Red","Yellow"],
     tier: "fourth",
-    capital: "Hanoi",
+    
     region: "Asia",
     knownFor: "Halong Bay and rapid economic growth",
     stats: {
@@ -1619,10 +1866,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Uruguay",
+    isoNumeric: "858",
+    aliases: [],
+    capital: "Montevideo",
+    capitalAliases: [],
     flag: "🇺🇾",
     flagColors: ["Blue","White","Yellow"],
     tier: "fourth",
-    capital: "Montevideo",
+    
     region: "South America",
     knownFor: "Progressive social policies and high quality of life",
     stats: {
@@ -1645,10 +1896,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Morocco",
+    isoNumeric: "504",
+    aliases: [],
+    capital: "Rabat",
+    capitalAliases: [],
     flag: "🇲🇦",
     flagColors: ["Red","Green"],
     tier: "fourth",
-    capital: "Rabat",
+    
     region: "Africa",
     knownFor: "Historic medinas, the Sahara Desert, and vibrant souks",
     stats: {
@@ -1671,10 +1926,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Costa Rica",
+    isoNumeric: "188",
+    aliases: [],
+    capital: "San José",
+    capitalAliases: [],
     flag: "🇨🇷",
     flagColors: ["Blue","White","Red"],
     tier: "fourth",
-    capital: "San José",
+    
     region: "North America",
     knownFor: "Pioneering eco-tourism and abolished its army",
     stats: {
@@ -1697,10 +1956,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Cyprus",
+    isoNumeric: "000",
+    aliases: [],
+    capital: "Nicosia",
+    capitalAliases: [],
     flag: "🇨🇾",
     flagColors: ["White","Orange","Green"],
     tier: "fourth",
-    capital: "Nicosia",
+    
     region: "Europe",
     knownFor: "Mediterranean beaches and ancient archaeological sites",
     stats: {
@@ -1723,10 +1986,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Kuwait",
+    isoNumeric: "414",
+    aliases: [],
+    capital: "Kuwait City",
+    capitalAliases: ["Kuwait"],
     flag: "🇰🇼",
     flagColors: ["Green","White","Red","Black"],
     tier: "fourth",
-    capital: "Kuwait City",
+    
     region: "Asia",
     knownFor: "Vast oil wealth and modern skyline",
     stats: {
@@ -1749,10 +2016,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Oman",
+    isoNumeric: "512",
+    aliases: [],
+    capital: "Muscat",
+    capitalAliases: [],
     flag: "🇴🇲",
     flagColors: ["Red","White","Green"],
     tier: "fourth",
-    capital: "Muscat",
+    
     region: "Asia",
     knownFor: "Traditional Arabian culture and peaceful diplomacy",
     stats: {
@@ -1775,10 +2046,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bulgaria",
+    isoNumeric: "100",
+    aliases: [],
+    capital: "Sofia",
+    capitalAliases: [],
     flag: "🇧🇬",
     flagColors: ["White","Green","Red"],
     tier: "fourth",
-    capital: "Sofia",
+    
     region: "Europe",
     knownFor: "Rose oil production and Black Sea resorts",
     stats: {
@@ -1801,10 +2076,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Serbia",
+    isoNumeric: "688",
+    aliases: [],
+    capital: "Belgrade",
+    capitalAliases: [],
     flag: "🇷🇸",
     flagColors: ["Red","Blue","White"],
     tier: "fourth",
-    capital: "Belgrade",
+    
     region: "Europe",
     knownFor: "Crossroads of the Balkans and rich history",
     stats: {
@@ -1827,10 +2106,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Iran",
+    isoNumeric: "364",
+    aliases: [],
+    capital: "Tehran",
+    capitalAliases: [],
     flag: "🇮🇷",
     flagColors: ["Green","White","Red"],
     tier: "fourth",
-    capital: "Tehran",
+    
     region: "Asia",
     knownFor: "Ancient Persian history and vast energy reserves",
     stats: {
@@ -1853,10 +2136,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Panama",
+    isoNumeric: "591",
+    aliases: [],
+    capital: "Panama City",
+    capitalAliases: ["Panama"],
     flag: "🇵🇦",
     flagColors: ["Blue","White","Red"],
     tier: "fourth",
-    capital: "Panama City",
+    
     region: "North America",
     knownFor: "The Panama Canal connecting two oceans",
     stats: {
@@ -1879,10 +2166,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Jordan",
+    isoNumeric: "400",
+    aliases: [],
+    capital: "Amman",
+    capitalAliases: [],
     flag: "🇯🇴",
     flagColors: ["Black","White","Green","Red"],
     tier: "fourth",
-    capital: "Amman",
+    
     region: "Asia",
     knownFor: "The ancient city of Petra and the Dead Sea",
     stats: {
@@ -1905,10 +2196,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Kenya",
+    isoNumeric: "404",
+    aliases: [],
+    capital: "Nairobi",
+    capitalAliases: [],
     flag: "🇰🇪",
     flagColors: ["Black","Red","Green","White"],
     tier: "fourth",
-    capital: "Nairobi",
+    
     region: "Africa",
     knownFor: "Wildlife safaris and dominant distance runners",
     stats: {
@@ -1931,10 +2226,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bahrain",
+    isoNumeric: "000",
+    aliases: [],
+    capital: "Manama",
+    capitalAliases: [],
     flag: "🇧🇭",
     flagColors: ["Red","White"],
     tier: "fourth",
-    capital: "Manama",
+    
     region: "Asia",
     knownFor: "Financial hub and Formula 1 racing",
     stats: {
@@ -1957,10 +2256,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Pakistan",
+    isoNumeric: "586",
+    aliases: [],
+    capital: "Islamabad",
+    capitalAliases: [],
     flag: "🇵🇰",
     flagColors: ["Green","White"],
     tier: "fourth",
-    capital: "Islamabad",
+    
     region: "Asia",
     knownFor: "K2 mountain and rich cultural history",
     stats: {
@@ -1983,10 +2286,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Tunisia",
+    isoNumeric: "788",
+    aliases: [],
+    capital: "Tunis",
+    capitalAliases: [],
     flag: "🇹🇳",
     flagColors: ["Red","White"],
     tier: "fourth",
-    capital: "Tunis",
+    
     region: "Africa",
     knownFor: "Ancient ruins of Carthage and Mediterranean resorts",
     stats: {
@@ -2009,10 +2316,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Ecuador",
+    isoNumeric: "218",
+    aliases: [],
+    capital: "Quito",
+    capitalAliases: [],
     flag: "🇪🇨",
     flagColors: ["Yellow","Blue","Red"],
     tier: "fourth",
-    capital: "Quito",
+    
     region: "South America",
     knownFor: "The Galápagos Islands and the equator",
     stats: {
@@ -2035,10 +2346,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Dominican Republic",
+    isoNumeric: "214",
+    aliases: ["DR"],
+    capital: "Santo Domingo",
+    capitalAliases: [],
     flag: "🇩🇴",
     flagColors: ["Blue","White","Red"],
     tier: "fourth",
-    capital: "Santo Domingo",
+    
     region: "North America",
     knownFor: "Most visited destination in the Caribbean",
     stats: {
@@ -2061,10 +2376,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Jamaica",
+    isoNumeric: "388",
+    aliases: [],
+    capital: "Kingston",
+    capitalAliases: [],
     flag: "🇯🇲",
     flagColors: ["Green","Yellow","Black"],
     tier: "fourth",
-    capital: "Kingston",
+    
     region: "North America",
     knownFor: "Reggae music and vibrant Caribbean culture",
     stats: {
@@ -2087,10 +2406,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Sri Lanka",
+    isoNumeric: "144",
+    aliases: [],
+    capital: "Colombo",
+    capitalAliases: [],
     flag: "🇱🇰",
     flagColors: ["Yellow","Maroon","Green","Orange"],
     tier: "fourth",
-    capital: "Colombo",
+    
     region: "Asia",
     knownFor: "Ceylon tea, ancient ruins, and tropical beaches",
     stats: {
@@ -2113,10 +2436,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Lebanon",
+    isoNumeric: "422",
+    aliases: [],
+    capital: "Beirut",
+    capitalAliases: [],
     flag: "🇱🇧",
     flagColors: ["Red","White","Green"],
     tier: "fourth",
-    capital: "Beirut",
+    
     region: "Asia",
     knownFor: "Cedar trees and vibrant Mediterranean culture",
     stats: {
@@ -2139,10 +2466,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Algeria",
+    isoNumeric: "012",
+    aliases: [],
+    capital: "Algiers",
+    capitalAliases: [],
     flag: "🇩🇿",
     flagColors: ["Green","White","Red"],
     tier: "fourth",
-    capital: "Algiers",
+    
     region: "Africa",
     knownFor: "Largest country in Africa and vast Sahara landscapes",
     stats: {
@@ -2165,10 +2496,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Malta",
+    isoNumeric: "000",
+    aliases: [],
+    capital: "Valletta",
+    capitalAliases: [],
     flag: "🇲🇹",
     flagColors: ["White","Red"],
     tier: "fourth",
-    capital: "Valletta",
+    
     region: "Europe",
     knownFor: "Historic fortresses and Mediterranean climate",
     stats: {
@@ -2191,10 +2526,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Mauritius",
+    isoNumeric: "000",
+    aliases: [],
+    capital: "Port Louis",
+    capitalAliases: [],
     flag: "🇲🇺",
     flagColors: ["Red","Blue","Yellow","Green"],
     tier: "fourth",
-    capital: "Port Louis",
+    
     region: "Africa",
     knownFor: "Luxury resorts and stable democracy",
     stats: {
@@ -2217,10 +2556,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bangladesh",
+    isoNumeric: "050",
+    aliases: [],
+    capital: "Dhaka",
+    capitalAliases: [],
     flag: "🇧🇩",
     flagColors: ["Green","Red"],
     tier: "fourth",
-    capital: "Dhaka",
+    
     region: "Asia",
     knownFor: "Massive garment industry and the Sundarbans",
     stats: {
@@ -2243,10 +2586,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Ghana",
+    isoNumeric: "288",
+    aliases: [],
+    capital: "Accra",
+    capitalAliases: [],
     flag: "🇬🇭",
     flagColors: ["Red","Yellow","Green","Black"],
     tier: "fourth",
-    capital: "Accra",
+    
     region: "Africa",
     knownFor: "Rich Gold Coast history and stable democracy",
     stats: {
@@ -2269,10 +2616,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Senegal",
+    isoNumeric: "686",
+    aliases: [],
+    capital: "Dakar",
+    capitalAliases: [],
     flag: "🇸🇳",
     flagColors: ["Green","Yellow","Red"],
     tier: "fourth",
-    capital: "Dakar",
+    
     region: "Africa",
     knownFor: "Stable democracy and westernmost point of Africa",
     stats: {
@@ -2295,10 +2646,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Tanzania",
+    isoNumeric: "834",
+    aliases: [],
+    capital: "Dodoma",
+    capitalAliases: [],
     flag: "🇹🇿",
     flagColors: ["Green","Yellow","Blue","Black"],
     tier: "fourth",
-    capital: "Dodoma",
+    
     region: "Africa",
     knownFor: "Mount Kilimanjaro and the Serengeti",
     stats: {
@@ -2321,10 +2676,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Bolivia",
+    isoNumeric: "068",
+    aliases: [],
+    capital: "Sucre",
+    capitalAliases: [],
     flag: "🇧🇴",
     flagColors: ["Red","Yellow","Green"],
     tier: "fourth",
-    capital: "Sucre",
+    
     region: "South America",
     knownFor: "Salar de Uyuni, the world's largest salt flat",
     stats: {
@@ -2347,10 +2706,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Cuba",
+    isoNumeric: "192",
+    aliases: [],
+    capital: "Havana",
+    capitalAliases: [],
     flag: "🇨🇺",
     flagColors: ["Blue","White","Red"],
     tier: "fourth",
-    capital: "Havana",
+    
     region: "North America",
     knownFor: "Classic cars, cigars, and revolutionary history",
     stats: {
@@ -2373,10 +2736,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "El Salvador",
+    isoNumeric: "222",
+    aliases: [],
+    capital: "San Salvador",
+    capitalAliases: [],
     flag: "🇸🇻",
     flagColors: ["Blue","White"],
     tier: "fourth",
-    capital: "San Salvador",
+    
     region: "North America",
     knownFor: "Volcanoes and adoption of Bitcoin",
     stats: {
@@ -2399,10 +2766,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Guatemala",
+    isoNumeric: "320",
+    aliases: [],
+    capital: "Guatemala City",
+    capitalAliases: ["Guatemala"],
     flag: "🇬🇹",
     flagColors: ["Blue","White"],
     tier: "fourth",
-    capital: "Guatemala City",
+    
     region: "North America",
     knownFor: "Heart of the Mayan world and spectacular volcanoes",
     stats: {
@@ -2425,10 +2796,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Honduras",
+    isoNumeric: "340",
+    aliases: [],
+    capital: "Tegucigalpa",
+    capitalAliases: [],
     flag: "🇭🇳",
     flagColors: ["Blue","White"],
     tier: "fourth",
-    capital: "Tegucigalpa",
+    
     region: "North America",
     knownFor: "Ancient Mayan ruins at Copán",
     stats: {
@@ -2451,10 +2826,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Paraguay",
+    isoNumeric: "600",
+    aliases: [],
+    capital: "Asunción",
+    capitalAliases: [],
     flag: "🇵🇾",
     flagColors: ["Red","White","Blue"],
     tier: "fourth",
-    capital: "Asunción",
+    
     region: "South America",
     knownFor: "Guaraní culture and vast hydroelectric power",
     stats: {
@@ -2477,10 +2856,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Uganda",
+    isoNumeric: "800",
+    aliases: [],
+    capital: "Kampala",
+    capitalAliases: [],
     flag: "🇺🇬",
     flagColors: ["Black","Yellow","Red"],
     tier: "fourth",
-    capital: "Kampala",
+    
     region: "Africa",
     knownFor: "Mountain gorillas and Lake Victoria",
     stats: {
@@ -2503,10 +2886,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Ivory Coast",
+    isoNumeric: "384",
+    aliases: ["Cote d'Ivoire","Cote dIvoire"],
+    capital: "Yamoussoukro",
+    capitalAliases: [],
     flag: "🇨🇮",
     flagColors: ["Orange","White","Green"],
     tier: "fourth",
-    capital: "Yamoussoukro",
+    
     region: "Africa",
     knownFor: "World's leading producer of cocoa beans",
     stats: {
@@ -2529,10 +2916,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Belarus",
+    isoNumeric: "112",
+    aliases: [],
+    capital: "Minsk",
+    capitalAliases: [],
     flag: "🇧🇾",
     flagColors: ["Red","Green","White"],
     tier: "fourth",
-    capital: "Minsk",
+    
     region: "Europe",
     knownFor: "Heavy industry and strategic Eastern European location",
     stats: {
@@ -2555,10 +2946,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Azerbaijan",
+    isoNumeric: "031",
+    aliases: [],
+    capital: "Baku",
+    capitalAliases: [],
     flag: "🇦🇿",
     flagColors: ["Blue","Red","Green"],
     tier: "fourth",
-    capital: "Baku",
+    
     region: "Asia",
     knownFor: "Caspian Sea oil wealth and distinct regional culture",
     stats: {
@@ -2581,10 +2976,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Rwanda",
+    isoNumeric: "646",
+    aliases: [],
+    capital: "Kigali",
+    capitalAliases: [],
     flag: "🇷🇼",
     flagColors: ["Blue","Yellow","Green"],
     tier: "fourth",
-    capital: "Kigali",
+    
     region: "Africa",
     knownFor: "Fastest-growing tech hub in Africa, 'Land of a Thousand Hills'",
     stats: {
@@ -2607,10 +3006,14 @@ export const COUNTRIES: Country[] = [
   },
   {
     name: "Uzbekistan",
+    isoNumeric: "860",
+    aliases: [],
+    capital: "Tashkent",
+    capitalAliases: [],
     flag: "🇺🇿",
     flagColors: ["Blue","White","Green","Red"],
     tier: "fourth",
-    capital: "Tashkent",
+    
     region: "Asia",
     knownFor: "Heart of the ancient Silk Road and growing economy",
     stats: {
