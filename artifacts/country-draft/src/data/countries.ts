@@ -8739,36 +8739,6 @@ export const ALL_COUNTRIES: Country[] = [
     excludeFromDraft: true
   },
   {
-    name: "French Southern and Antarctic Lands",
-    isoNumeric: "260",
-    aliases: [],
-    capitalAliases: [],
-    flag: "🇹🇫",
-    flagColors: [],
-    tier: "fourth",
-    capital: "Port-aux-Français",
-    region: "Antarctic",
-    knownFor: "Not available",
-    stats: {
-      military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
-      culture: { score: 0, description: "Not available for drafting." },
-      healthcare: { score: 0, description: "Not available for drafting." },
-      internationalRelationships: { score: 0, description: "Not available for drafting." },
-      government: { score: 0, description: "Not available for drafting." },
-      climate: { score: 0, description: "Not available for drafting." },
-      technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
-      history: { score: 0, description: "Not available for drafting." },
-      tourism: { score: 0, description: "Not available for drafting." },
-      education: { score: 0, description: "Not available for drafting." },
-      location: { score: 0, description: "Not available for drafting." },
-      naturalResources: { score: 0, description: "Not available for drafting." }
-    },
-    excludeFromDraft: true
-  },
-  {
     name: "Timor-Leste",
     isoNumeric: "626",
     aliases: [],
