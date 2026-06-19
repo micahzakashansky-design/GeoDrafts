@@ -72,7 +72,7 @@ export function pngRatingLabel(total: number): string {
   if (total >= 110) return "Regional Power"; if (total >= 80) return "Developing Nation";
   return "Struggling State";
 }
-export async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalScore: number, bonus: number, isHardMode: boolean = false): Promise<void> {
+export async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalScore: number, bonus: number): Promise<void> {
   const DPR = 2, W = 1180, HDR = 88, PAD = 20, GAP = 10, COLS = 2;
   const CARD_W = (W - PAD * 3) / COLS; const CARD_H = 112; const ROWS = Math.ceil(CATEGORIES.length / COLS);
   const H = HDR + PAD + ROWS * (CARD_H + GAP) - GAP + PAD;
@@ -117,7 +117,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
     ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
   }
   const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
-  if (!isHardMode && roster.Size && roster.Population) { displayCats.push("Population Structure" as any); }
+  if (roster.Size && roster.Population) { displayCats.push("Population Structure" as any); }
   else { if (roster.Size) displayCats.push("Size" as any); if (roster.Population) displayCats.push("Population" as any); }
 
   displayCats.forEach((cat, i) => {
@@ -491,7 +491,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {(() => {
               const displayCats: string[] = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
-              if (!isHardMode && roster.Size && roster.Population) { displayCats.push("Population Structure"); }
+              if (roster.Size && roster.Population) { displayCats.push("Population Structure"); }
               else { if (roster.Size) displayCats.push("Size"); if (roster.Population) displayCats.push("Population"); }
               return displayCats.map((cat, idx) => {
                 const isCombo = cat === "Population Structure"; const actualCat = isCombo ? "Size" : (cat as Category); const assigned = roster[actualCat];
@@ -536,7 +536,9 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population Structure</span>
                         </div>
                         <div className="font-bold text-foreground text-base md:text-lg">
-                           <span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span>
+                           {!isHardMode && (
+                             <><span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span></>
+                           )}
                         </div>
                       </div>
                                             <div className="w-full mt-2">
