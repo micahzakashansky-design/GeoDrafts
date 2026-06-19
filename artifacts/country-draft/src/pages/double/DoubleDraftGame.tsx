@@ -10,6 +10,7 @@ import {
 } from "./DoubleUI";
 import { SidebarRoster } from "./SidebarRoster";
 import { Home, Globe as GlobeIcon } from "lucide-react";
+import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 
@@ -112,7 +113,7 @@ export default function DoubleDraftGame() {
       <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <GlobeIcon className="w-5 h-5 text-primary" />GeoDrafts
+            <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
           <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:block">
