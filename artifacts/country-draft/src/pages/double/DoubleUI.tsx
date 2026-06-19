@@ -431,7 +431,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                   </div>
                   
                   {!isHardMode && (
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center justify-between mb-1">
                       <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
                       <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>
                         {BONUS_CATEGORIES.includes(cat) 
@@ -441,7 +441,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                     </div>
                   )}
                   
-                  <div className={!isHardMode ? "mt-3" : "mt-1"}>
+                  <div className={!isHardMode ? "mt-1" : "mt-1"}>
                     <ExpandableDescription description={stat.description} />
                   </div>
                 </div>
