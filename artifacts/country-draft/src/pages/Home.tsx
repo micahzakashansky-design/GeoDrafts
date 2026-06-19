@@ -11,6 +11,7 @@ import { useFirebaseAuth } from "../lib/use-firebase-auth";
 import { checkDailySubmitted, getDailyState, createRoom, joinRoom } from "../lib/firestore";
 import { UsernamePrompt } from "../components/UsernamePrompt";
 import { SettingsModal } from "../components/SettingsModal";
+import { AuthModal } from "../components/AuthModal";
 
 const NATION_RANKS = [
   { label: "Superpower", range: "165+", color: "text-yellow-400" },
@@ -95,8 +96,8 @@ function DailyCard() {
   );
 }
 
-function MultiplayerModal({ onClose }: { onClose: () => void }) {
-  const [, navigate] = useLocation(); const { firebaseUser, profile, signInWithGoogle } = useFirebaseAuth(); const [loading, setLoading] = useState(false); const [error, setError] = useState<string | null>(null); const [joinCode, setJoinCode] = useState(""); const [isJoining, setIsJoining] = useState(false); const [difficulty, setDifficulty] = useState<"easy" | "hard">("easy");
+function MultiplayerModal({ onClose, onSignIn }: { onClose: () => void, onSignIn: () => void }) {
+  const [, navigate] = useLocation(); const { firebaseUser, profile } = useFirebaseAuth(); const [loading, setLoading] = useState(false); const [error, setError] = useState<string | null>(null); const [joinCode, setJoinCode] = useState(""); const [isJoining, setIsJoining] = useState(false); const [difficulty, setDifficulty] = useState<"easy" | "hard">("easy");
   async function handleHost(mode: "sabotage" | "party") { if (!firebaseUser || !profile) return; setLoading(true); try { const code = await createRoom(firebaseUser.uid, profile.username, mode, difficulty); localStorage.setItem("countryDraftRoomCode", code); navigate(`/game/${mode}?room=${code}`); } catch (e) { setError(e instanceof Error ? e.message : "Failed to create room"); } finally { setLoading(false); } }
   async function handleJoin() { if (!firebaseUser || !profile) return; if (joinCode.length !== 6) return; setLoading(true); try { const room = await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username); localStorage.setItem("countryDraftRoomCode", joinCode.toUpperCase()); navigate(`/game/${room.mode}?room=${joinCode.toUpperCase()}`); } catch (e) { setError(e instanceof Error ? e.message : "Failed to join room"); } finally { setLoading(false); } }
   return (
@@ -104,7 +105,14 @@ function MultiplayerModal({ onClose }: { onClose: () => void }) {
       <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="bg-card border border-border w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
         <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-secondary/30"><div className="flex items-center gap-2"><Users className="w-5 h-5 text-primary" /><h2 className="font-serif text-xl font-bold">Multiplayer Hub</h2></div><button onClick={onClose} className="p-1 rounded-lg hover:bg-secondary transition-colors"><X className="w-5 h-5" /></button></div>
         {!firebaseUser ? (
-          <div className="p-8 text-center space-y-4"><div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2"><Users className="w-8 h-8 text-primary" /></div><h3 className="text-xl font-bold">Sign in Required</h3><p className="text-muted-foreground">You need an account to play with others and save your progress.</p><button onClick={signInWithGoogle} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity">Sign in with Google</button></div>
+          <div className="p-8 text-center space-y-4">
+            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+              <Users className="w-8 h-8 text-primary" />
+            </div>
+            <h3 className="text-xl font-bold">Sign in Required</h3>
+            <p className="text-muted-foreground">You need an account to play with others and save your progress.</p>
+            <button onClick={onSignIn} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity">Sign in to Continue</button>
+          </div>
         ) : isJoining ? (
           <div className="p-6 space-y-6"><div className="space-y-2 text-center"><h3 className="text-lg font-bold">Join Game</h3><p className="text-sm text-muted-foreground">Enter the 6-character room code</p></div>{error && <div className="p-3 rounded-lg bg-red-500/10 text-red-400 text-xs border border-red-500/20">{error}</div>}<div className="flex justify-center"><input value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())} maxLength={6} className="w-48 bg-secondary border border-border rounded-xl px-4 py-3 text-xl font-bold text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="ABCDEF" /></div><button onClick={handleJoin} disabled={loading} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-50">{loading ? "Joining..." : "Join Game"}</button><button onClick={() => setIsJoining(false)} className="w-full text-sm text-muted-foreground hover:text-foreground">Back to Hosting</button></div>
         ) : (
@@ -158,6 +166,7 @@ export default function Home() {
   const [showGuidebook, setShowGuidebook] = useState(false);
   const [showMultiplayer, setShowMultiplayer] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { isLight, toggleTheme } = useTheme();
   const { firebaseUser, profile, signInWithGoogle, needsUsername, refreshProfile, isLoading } = useFirebaseAuth();
 
@@ -207,7 +216,7 @@ export default function Home() {
       </header>
 
       {!firebaseUser ? (
-        <LoginScreen onSignIn={signInWithGoogle} onShowGuidebook={() => setShowGuidebook(true)} />
+        <LoginScreen onSignIn={() => setShowAuthModal(true)} onShowGuidebook={() => setShowGuidebook(true)} />
       ) : (
         <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-3xl mx-auto w-full">
           <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }} className="flex flex-col items-center w-full"><div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 mb-4">
@@ -226,8 +235,9 @@ export default function Home() {
       )}
 
       <AnimatePresence>
+        {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
         {showGuidebook && <GuidebookModal onClose={() => setShowGuidebook(false)} />}
-        {showMultiplayer && <MultiplayerModal onClose={() => setShowMultiplayer(false)} />}
+        {showMultiplayer && <MultiplayerModal onClose={() => setShowMultiplayer(false)} onSignIn={() => setShowAuthModal(true)} />}
         {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
         {needsUsername && firebaseUser && (
           <UsernamePrompt user={firebaseUser} onComplete={refreshProfile} />
