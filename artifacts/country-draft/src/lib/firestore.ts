@@ -1,7 +1,7 @@
 import { where,
   collection, doc, getDoc, setDoc, addDoc, updateDoc,
   query, orderBy, limit, getDocs, serverTimestamp,
-  onSnapshot, type Timestamp,
+  onSnapshot, type Timestamp, deleteDoc,
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -121,6 +121,32 @@ export async function saveScore(
   });
   updateUserStats(uid, score).catch(console.error);
   return docRef.id;
+}
+
+export async function saveCloudPersonalScore(uid: string, mode: string, entryData: any): Promise<void> {
+  await addDoc(collection(firestore, "personal_records"), {
+    uid,
+    mode,
+    ...entryData,
+    createdAt: serverTimestamp(),
+  });
+}
+
+export async function getCloudPersonalScores(uid: string, mode: string): Promise<any[]> {
+  const isAsc = mode === "guess";
+  const q = query(
+    collection(firestore, "personal_records"),
+    where("uid", "==", uid),
+    where("mode", "==", mode),
+    orderBy("score", isAsc ? "asc" : "desc")
+  );
+  
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
+export async function deleteCloudPersonalScore(id: string): Promise<void> {
+  await deleteDoc(doc(firestore, "personal_records", id));
 }
 
 export async function getTopScores(modeFilter?: string, topN = 10): Promise<LeaderboardEntry[]> {

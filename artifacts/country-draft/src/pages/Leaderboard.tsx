@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, User, Medal } from "lucide-react";
+import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, User, Medal, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme-context";
 import { Logo } from "@/components/Logo";
-import { getTopScores, type LeaderboardEntry } from "@/lib/firestore";
-import { loadPersonalLeaderboard, type GameMode, type PersonalLeaderboardEntry } from "@/lib/local-leaderboard";
+import { getTopScores, getCloudPersonalScores, deleteCloudPersonalScore, type LeaderboardEntry } from "@/lib/firestore";
+import { loadPersonalLeaderboard, deleteLocalPersonalScore, type GameMode, type PersonalLeaderboardEntry } from "@/lib/local-leaderboard";
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
-function LeaderboardRow({ rank, entry, isPersonal = false }: { rank: number; entry: LeaderboardEntry | PersonalLeaderboardEntry; isPersonal?: boolean }) {
+function LeaderboardRow({ rank, entry, isPersonal = false, onDelete }: { rank: number; entry: LeaderboardEntry | PersonalLeaderboardEntry; isPersonal?: boolean; onDelete?: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const medal = rank === 1 ? <Medal className="w-5 h-5 text-yellow-400" /> : rank === 2 ? <Medal className="w-5 h-5 text-slate-300" /> : rank === 3 ? <Medal className="w-5 h-5 text-amber-600" /> : null;
   const rankColor =
@@ -108,11 +109,21 @@ function LeaderboardRow({ rank, entry, isPersonal = false }: { rank: number; ent
           </motion.div>
         )}
       </AnimatePresence>
+      
+      {isPersonal && onDelete && (
+        <button 
+          onClick={(e) => { e.stopPropagation(); onDelete(); }}
+          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors bg-card/80 backdrop-blur-sm"
+          title="Delete record"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      )}
     </div>
   );
 }
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type ModeFilter = "normal" | "hard" | "daily" | "double" | "guess";
 type ScopeFilter = "global" | "personal";
@@ -127,6 +138,18 @@ export default function Leaderboard() {
   const { isLight, toggleTheme } = useTheme();
 
   const todayLabel = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const { firebaseUser } = useFirebaseAuth();
+  const queryClient = useQueryClient();
+
+  const handleDeletePersonalScore = async (entry: any) => {
+    if (entry.id) {
+      await deleteCloudPersonalScore(entry.id);
+      queryClient.invalidateQueries({ queryKey: ["personal_leaderboard", modeFilter, firebaseUser?.uid] });
+    } else {
+      deleteLocalPersonalScore(modeFilter as GameMode, entry.timestamp);
+      setPersonalEntries(loadPersonalLeaderboard(modeFilter as GameMode));
+    }
+  };
 
   const { data: globalEntries = [], isLoading: globalLoading, error: globalError } = useQuery({
     queryKey: ["leaderboard", modeFilter],
@@ -135,11 +158,22 @@ export default function Leaderboard() {
     staleTime: 1000 * 60 * 5, // Cache for 5 minutes
   });
 
+  const { data: cloudPersonalEntries = [], isLoading: cloudPersonalLoading } = useQuery({
+    queryKey: ["personal_leaderboard", modeFilter, firebaseUser?.uid],
+    queryFn: () => getCloudPersonalScores(firebaseUser!.uid, modeFilter),
+    enabled: scopeFilter === "personal" && !!firebaseUser,
+    staleTime: 1000 * 60 * 5,
+  });
+
   useEffect(() => {
     if (scopeFilter === "personal") {
-      setPersonalEntries(loadPersonalLeaderboard(modeFilter as GameMode));
+      if (firebaseUser) {
+        setPersonalEntries(cloudPersonalEntries as PersonalLeaderboardEntry[]);
+      } else {
+        setPersonalEntries(loadPersonalLeaderboard(modeFilter as GameMode));
+      }
     }
-  }, [modeFilter, scopeFilter]);
+  }, [modeFilter, scopeFilter, firebaseUser, cloudPersonalEntries]);
 
   const modeTabs: { key: ModeFilter; label: string; activeClass: string }[] = [
     { key: "normal", label: "Normal (Easy)", activeClass: "bg-primary/20 text-primary border-primary/40" },
@@ -227,7 +261,7 @@ export default function Leaderboard() {
           ))}
         </div>
 
-        {globalLoading ? (
+        {globalLoading || (scopeFilter === "personal" && !!firebaseUser && cloudPersonalLoading) ? (
           <div className="flex items-center justify-center py-20">
             <div className="text-muted-foreground text-sm animate-pulse">Loading scores…</div>
           </div>
@@ -256,7 +290,9 @@ export default function Leaderboard() {
         ) : (
           <div className="space-y-2">
             {entriesToDisplay.map((entry, i) => (
-              <LeaderboardRow key={"id" in entry ? entry.id : `${entry.timestamp}-${i}`} rank={i + 1} entry={entry} isPersonal={scopeFilter === "personal"} />
+              <div key={"id" in entry ? entry.id : `${entry.timestamp}-${i}`} className="relative">
+                <LeaderboardRow rank={i + 1} entry={entry} isPersonal={scopeFilter === "personal"} onDelete={scopeFilter === "personal" ? () => handleDeletePersonalScore(entry) : undefined} />
+              </div>
             ))}
           </div>
         )}
