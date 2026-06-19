@@ -4,11 +4,11 @@ import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, User, Medal, Trash
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme-context";
 import { Logo } from "@/components/Logo";
-import { getTopScores, getCloudPersonalScores, deleteCloudPersonalScore, type LeaderboardEntry } from "@/lib/firestore";
+import { getTopScores, getCloudPersonalScores, deleteCloudPersonalScore, deleteGlobalScore, type LeaderboardEntry } from "@/lib/firestore";
 import { loadPersonalLeaderboard, deleteLocalPersonalScore, type GameMode, type PersonalLeaderboardEntry } from "@/lib/local-leaderboard";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
-function LeaderboardRow({ rank, entry, isPersonal = false, onDelete }: { rank: number; entry: LeaderboardEntry | PersonalLeaderboardEntry; isPersonal?: boolean; onDelete?: () => void }) {
+function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDelete }: { rank: number; entry: LeaderboardEntry | PersonalLeaderboardEntry; isPersonal?: boolean; isOwner?: boolean; onDelete?: () => void }) {
   const [expanded, setExpanded] = useState(false);
   const medal = rank === 1 ? <Medal className="w-5 h-5 text-yellow-400" /> : rank === 2 ? <Medal className="w-5 h-5 text-slate-300" /> : rank === 3 ? <Medal className="w-5 h-5 text-amber-600" /> : null;
   const rankColor =
@@ -110,7 +110,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false, onDelete }: { rank: n
         )}
       </AnimatePresence>
       
-      {isPersonal && onDelete && (
+      {(isPersonal || isOwner) && onDelete && (
         <button 
           onClick={(e) => { e.stopPropagation(); onDelete(); }}
           className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors bg-card/80 backdrop-blur-sm"
@@ -149,6 +149,11 @@ export default function Leaderboard() {
       deleteLocalPersonalScore(modeFilter as GameMode, entry.timestamp);
       setPersonalEntries(loadPersonalLeaderboard(modeFilter as GameMode));
     }
+  };
+
+  const handleDeleteGlobalScore = async (entry: LeaderboardEntry) => {
+    await deleteGlobalScore(entry.id);
+    queryClient.invalidateQueries({ queryKey: ["leaderboard", modeFilter] });
   };
 
   const { data: globalEntries = [], isLoading: globalLoading, error: globalError } = useQuery({
@@ -289,11 +294,26 @@ export default function Leaderboard() {
           </div>
         ) : (
           <div className="space-y-2">
-            {entriesToDisplay.map((entry, i) => (
-              <div key={"id" in entry ? entry.id : `${entry.timestamp}-${i}`} className="relative">
-                <LeaderboardRow rank={i + 1} entry={entry} isPersonal={scopeFilter === "personal"} onDelete={scopeFilter === "personal" ? () => handleDeletePersonalScore(entry) : undefined} />
-              </div>
-            ))}
+            {entriesToDisplay.map((entry, i) => {
+              const isOwner = scopeFilter === "global" && !!firebaseUser && 'uid' in entry && entry.uid === firebaseUser.uid;
+              const handleDelete = scopeFilter === "personal" 
+                ? () => handleDeletePersonalScore(entry) 
+                : isOwner 
+                  ? () => handleDeleteGlobalScore(entry as LeaderboardEntry) 
+                  : undefined;
+
+              return (
+                <div key={"id" in entry ? entry.id : `${entry.timestamp}-${i}`} className="relative">
+                  <LeaderboardRow 
+                    rank={i + 1} 
+                    entry={entry} 
+                    isPersonal={scopeFilter === "personal"} 
+                    isOwner={isOwner}
+                    onDelete={handleDelete} 
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

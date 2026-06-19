@@ -149,6 +149,10 @@ export async function deleteCloudPersonalScore(id: string): Promise<void> {
   await deleteDoc(doc(firestore, "personal_records", id));
 }
 
+export async function deleteGlobalScore(id: string): Promise<void> {
+  await deleteDoc(doc(firestore, "leaderboard", id));
+}
+
 export async function getTopScores(modeFilter?: string, topN = 10): Promise<LeaderboardEntry[]> {
   const isAsc = modeFilter === "guess";
   
