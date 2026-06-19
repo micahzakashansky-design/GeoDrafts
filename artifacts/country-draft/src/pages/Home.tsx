@@ -235,10 +235,13 @@ export default function Home() {
         </div>
       )}
 
-      <footer className="w-full py-8 border-t border-border mt-auto flex justify-center bg-card/30">
+      <footer className="w-full py-8 border-t border-border mt-auto flex justify-center gap-6 bg-card/30">
         <button onClick={() => navigate("/about")} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
           About GeoDrafts
         </button>
+        <a href="mailto:darabrawl1@gmail.com?subject=GeoDrafts%20Suggestion" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
+          Contact the Devs
+        </a>
       </footer>
 
       <AnimatePresence>

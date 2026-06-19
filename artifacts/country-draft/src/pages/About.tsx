@@ -33,6 +33,15 @@ export default function About() {
           </p>
         </div>
       </main>
+
+      <footer className="w-full py-8 border-t border-border mt-auto flex justify-center gap-6 bg-card/30">
+        <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
+          About GeoDrafts
+        </Link>
+        <a href="mailto:darabrawl1@gmail.com?subject=GeoDrafts%20Suggestion" className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
+          Contact the Devs
+        </a>
+      </footer>
     </div>
   );
 }
