@@ -258,27 +258,35 @@ export function getRating(total: number): { label: string; color: string; icon: 
   if (total >= 80) return { label: "Developing Nation", color: "text-orange-400", icon: <TrendingUp className="w-5 h-5 text-orange-400" />, desc: "Growing capabilities and emerging potential." };
   return { label: "Struggling State", color: "text-red-400", icon: <Building className="w-5 h-5 text-red-400" />, desc: "Facing significant challenges and limitations." };
 }
+function getRawPopulation(desc: string): number {
+  const match = desc.match(/^(?:Pre-war\s*)?([\d,.]+)\s*(million|billion|K|M|B)?/i);
+  if (!match) return 5000000;
+  let val = parseFloat(match[1].replace(/,/g, ''));
+  const unit = match[2] ? match[2].toLowerCase() : '';
+  if (unit === 'million' || unit === 'm') val *= 1000000;
+  if (unit === 'billion' || unit === 'b') val *= 1000000000;
+  if (unit === 'k') val *= 1000;
+  return val;
+}
+
 export function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
   if (!roster.Size || !roster.Population) return 0;
   
-  const sizeScore = roster.Size.stats.size.score;
-  const popScore = roster.Population.stats.population.score;
-  const density = popScore / sizeScore;
-
-  let agriMult = 1.0;
-  if (density > 0.5) agriMult = Math.max(0.1, 1.0 - ((density - 0.5) / 1.5) * 0.9);
+  const pop = getRawPopulation(roster.Population.stats.population.description);
+  const size = roster.Size.area || 100000;
+  const rawDensity = pop / size;
+  const maxCap = size <= 2500 ? 20000 : 1500;
 
   let techMult = 1.0;
-  if (density < 2.0) techMult = Math.max(0.1, 1.0 - ((2.0 - density) / 1.5) * 0.9);
+  if (rawDensity < 300) techMult = Math.max(0.1, rawDensity / 300);
+  else if (rawDensity > maxCap) techMult = Math.max(0.1, maxCap / rawDensity);
 
-  let extMult = 0.1;
-  if (density >= 0.8 && density <= 1.2) {
-    extMult = 1.0;
-  } else if (density > 0.3 && density < 0.8) {
-    extMult = 0.1 + ((density - 0.3) / 0.5) * 0.9;
-  } else if (density > 1.2 && density < 2.5) {
-    extMult = Math.max(0.1, 1.0 - ((density - 1.2) / 1.3) * 0.9);
-  }
+  let agriMult = 1.0;
+  if (rawDensity > 100) agriMult = Math.max(0.1, 100 / rawDensity);
+
+  let extMult = 1.0;
+  if (rawDensity < 50) extMult = Math.max(0.1, rawDensity / 50);
+  else if (rawDensity > 300) extMult = Math.max(0.1, 300 / rawDensity);
 
   const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
   const climateScore = roster.Climate?.stats.climate?.score || 0;
@@ -292,21 +300,24 @@ export function computeSizePopBonus(roster: Partial<Record<Category, Country>>):
   return Math.floor(Math.max(agriBonus, techBonus, extBonus));
 }
 
-export type Archetype = { name: string; icon: React.ReactNode; desc: string };
 export function getBonusPath(roster: Partial<Record<Category, Country>>): "agricultural" | "urban" | "extraction" | null {
   if (!roster.Size || !roster.Population) return null;
-  const sizeScore = roster.Size.stats.size.score;
-  const popScore = roster.Population.stats.population.score;
-  const density = popScore / sizeScore;
+
+  const pop = getRawPopulation(roster.Population.stats.population.description);
+  const size = roster.Size.area || 100000;
+  const rawDensity = pop / size;
+  const maxCap = size <= 2500 ? 20000 : 1500;
+
+  let techMult = 1.0;
+  if (rawDensity < 300) techMult = Math.max(0.1, rawDensity / 300);
+  else if (rawDensity > maxCap) techMult = Math.max(0.1, maxCap / rawDensity);
 
   let agriMult = 1.0;
-  if (density > 0.5) agriMult = Math.max(0.1, 1.0 - ((density - 0.5) / 1.5) * 0.9);
-  let techMult = 1.0;
-  if (density < 2.0) techMult = Math.max(0.1, 1.0 - ((2.0 - density) / 1.5) * 0.9);
-  let extMult = 0.1;
-  if (density >= 0.8 && density <= 1.2) extMult = 1.0;
-  else if (density > 0.3 && density < 0.8) extMult = 0.1 + ((density - 0.3) / 0.5) * 0.9;
-  else if (density > 1.2 && density < 2.5) extMult = Math.max(0.1, 1.0 - ((density - 1.2) / 1.3) * 0.9);
+  if (rawDensity > 100) agriMult = Math.max(0.1, 100 / rawDensity);
+
+  let extMult = 1.0;
+  if (rawDensity < 50) extMult = Math.max(0.1, rawDensity / 50);
+  else if (rawDensity > 300) extMult = Math.max(0.1, 300 / rawDensity);
 
   const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
   const climateScore = roster.Climate?.stats.climate?.score || 0;
@@ -317,12 +328,13 @@ export function getBonusPath(roster: Partial<Record<Category, Country>>): "agric
   const techBonus = 25 * ((techScore + locationScore) / 22) * techMult;
   const extBonus = 25 * ((resourcesScore + techScore) / 24) * extMult;
 
-  const max = Math.max(agriBonus, techBonus, extBonus);
-  if (max === 0) return null;
-  if (max === agriBonus) return "agricultural";
-  if (max === techBonus) return "urban";
+  const maxBonus = Math.max(agriBonus, techBonus, extBonus);
+  if (maxBonus === agriBonus) return "agricultural";
+  if (maxBonus === techBonus) return "urban";
   return "extraction";
 }
+
+export type Archetype = { name: string; icon: React.ReactNode; desc: string };
 
 export function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archetype {
   const m = roster.Military?.stats.military.score ?? 0;
