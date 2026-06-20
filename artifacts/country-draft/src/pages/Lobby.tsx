@@ -76,7 +76,7 @@ export default function Lobby() {
         </div>
       </header>
 
-      <main className="flex-1 p-6 relative flex flex-col md:flex-row gap-8">
+      <main className="flex-1 p-8 md:p-12 relative flex flex-col md:flex-row justify-between gap-8">
         {/* Left Side: Room Code & Players */}
         <div className="flex-1 max-w-2xl">
           <div className="mb-8">
@@ -105,7 +105,7 @@ export default function Lobby() {
         </div>
 
         {/* Right Side: Settings (Bottom Right pinned on desktop) */}
-        <div className="md:w-[400px] flex flex-col justify-end">
+        <div className="md:w-[400px] shrink-0 flex flex-col justify-end ml-auto mt-auto">
           <div className="space-y-6 bg-card/50 p-6 rounded-3xl border border-border/50 shadow-xl">
             {/* Difficulty Radio (Pills) */}
             <div className="flex bg-[#1E2330] rounded-xl p-1 shadow-inner border border-white/5">
