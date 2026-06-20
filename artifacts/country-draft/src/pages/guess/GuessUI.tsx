@@ -73,7 +73,7 @@ export function pngRatingLabel(total: number): string {
   if (total >= 110) return "Regional Power"; if (total >= 80) return "Developing Nation";
   return "Struggling State";
 }
-export async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalScore: number, bonus: number): Promise<void> {
+export async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalScore: number, bonus: number, isHardMode: boolean = false): Promise<void> {
   const DPR = 2, W = 1180, HDR = 88, PAD = 20, GAP = 10, COLS = 2;
   const CARD_W = (W - PAD * 3) / COLS; const CARD_H = 112; const ROWS = Math.ceil(CATEGORIES.length / COLS);
   const H = HDR + PAD + ROWS * (CARD_H + GAP) - GAP + PAD;
@@ -164,27 +164,29 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
 
       const isBonus = BONUS_CATEGORIES.includes(actualCat) || isCombo;
 
-      if (!isBonus) {
-        ctx.fillStyle = pngScoreBar(scoreVal);
-        ctx.font = "bold 13px sans-serif";
-        const wScore = scoreVal;
-        ctx.fillText(`${wScore} pts`, x + CARD_W - 60, y + 20);
+      if (!isHardMode) {
+        if (!isBonus) {
+          ctx.fillStyle = pngScoreBar(scoreVal);
+          ctx.font = "bold 13px sans-serif";
+          const wScore = scoreVal;
+          ctx.fillText(`${wScore} pts`, x + CARD_W - 60, y + 20);
 
-        const sl = pngScoreLabel(scoreVal);
-        ctx.fillStyle = C.fgDim;
-        ctx.font = "10px sans-serif";
-        ctx.fillText(sl, x + CARD_W - 12 - ctx.measureText(sl).width, y + 34);
+          const sl = pngScoreLabel(scoreVal);
+          ctx.fillStyle = C.fgDim;
+          ctx.font = "10px sans-serif";
+          ctx.fillText(sl, x + CARD_W - 12 - ctx.measureText(sl).width, y + 34);
 
-        ctx.fillStyle = C.border;
-        canvasRoundRect(ctx, x + 12, y + 54, CARD_W - 24, 4, 2);
-        ctx.fill();
-        ctx.fillStyle = pngScoreBar(scoreVal);
-        canvasRoundRect(ctx, x + 12, y + 54, ((CARD_W - 24) * scoreVal) / weight, 4, 2);
-        ctx.fill();
-      } else {
-        ctx.fillStyle = C.gold;
-        ctx.font = "bold 13px sans-serif";
-        ctx.fillText(isCombo ? `+${bonus} pts` : `+${Math.floor(scoreVal/2)} pts`, x + CARD_W - 60, y + 20);
+          ctx.fillStyle = C.border;
+          canvasRoundRect(ctx, x + 12, y + 54, CARD_W - 24, 4, 2);
+          ctx.fill();
+          ctx.fillStyle = pngScoreBar(scoreVal);
+          canvasRoundRect(ctx, x + 12, y + 54, ((CARD_W - 24) * scoreVal) / weight, 4, 2);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = C.gold;
+          ctx.font = "bold 13px sans-serif";
+          ctx.fillText(isCombo ? `+${bonus} pts` : `+${Math.floor(scoreVal/2)} pts`, x + CARD_W - 60, y + 20);
+        }
       }
 
       ctx.fillStyle = C.fgDim;

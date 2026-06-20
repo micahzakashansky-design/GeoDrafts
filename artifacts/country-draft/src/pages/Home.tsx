@@ -96,34 +96,7 @@ function DailyCard() {
   );
 }
 
-function MultiplayerModal({ onClose, onSignIn }: { onClose: () => void, onSignIn: () => void }) {
-  const [, navigate] = useLocation(); const { firebaseUser, profile } = useFirebaseAuth(); const [loading, setLoading] = useState(false); const [error, setError] = useState<string | null>(null); const [joinCode, setJoinCode] = useState(""); const [isJoining, setIsJoining] = useState(false); const [difficulty, setDifficulty] = useState<"easy" | "hard">("easy");
-  async function handleHost(mode: "sabotage" | "party") { if (!firebaseUser || !profile) return; setLoading(true); try { const code = await createRoom(firebaseUser.uid, profile.username, mode, difficulty); localStorage.setItem("countryDraftRoomCode", code); navigate(`/game/${mode}?room=${code}`); } catch (e) { setError(e instanceof Error ? e.message : "Failed to create room"); } finally { setLoading(false); } }
-  async function handleJoin() { if (!firebaseUser || !profile) return; if (joinCode.length !== 6) return; setLoading(true); try { const room = await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username); localStorage.setItem("countryDraftRoomCode", joinCode.toUpperCase()); navigate(`/game/${room.mode}?room=${joinCode.toUpperCase()}`); } catch (e) { setError(e instanceof Error ? e.message : "Failed to join room"); } finally { setLoading(false); } }
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
-      <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="bg-card border border-border w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-secondary/30"><div className="flex items-center gap-2"><Users className="w-5 h-5 text-primary" /><h2 className="font-serif text-xl font-bold">Multiplayer Hub</h2></div><button onClick={onClose} className="p-1 rounded-lg hover:bg-secondary transition-colors"><X className="w-5 h-5" /></button></div>
-        {!firebaseUser ? (
-          <div className="p-8 text-center space-y-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
-              <Users className="w-8 h-8 text-primary" />
-            </div>
-            <h3 className="text-xl font-bold">Sign in Required</h3>
-            <p className="text-muted-foreground">You need an account to play with others and save your progress.</p>
-            <button onClick={onSignIn} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity">Sign in to Continue</button>
-          </div>
-        ) : isJoining ? (
-          <div className="p-6 space-y-6"><div className="space-y-2 text-center"><h3 className="text-lg font-bold">Join Game</h3><p className="text-sm text-muted-foreground">Enter the 6-character room code</p></div>{error && <div className="p-3 rounded-lg bg-red-500/10 text-red-400 text-xs border border-red-500/20">{error}</div>}<div className="flex justify-center"><input value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())} maxLength={6} className="w-48 bg-secondary border border-border rounded-xl px-4 py-3 text-xl font-bold text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="ABCDEF" /></div><button onClick={handleJoin} disabled={loading} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-50">{loading ? "Joining..." : "Join Game"}</button><button onClick={() => setIsJoining(false)} className="w-full text-sm text-muted-foreground hover:text-foreground">Back to Hosting</button></div>
-        ) : (
-          <div className="space-y-6 p-6"><div className="space-y-3"><h3 className="text-sm font-semibold text-muted-foreground uppercase">Host Difficulty</h3><div className="flex gap-2 p-1 bg-secondary/30 rounded-xl border border-border"><button onClick={() => setDifficulty("easy")} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${difficulty === "easy" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>Classic</button><button onClick={() => setDifficulty("hard")} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${difficulty === "hard" ? "bg-red-500 text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>Hard</button></div></div>
-            <div className="space-y-3"><h3 className="text-sm font-semibold text-muted-foreground uppercase">Host a Game</h3><div className="grid grid-cols-1 gap-3"><button onClick={() => handleHost("sabotage")} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/20 hover:bg-secondary/40 transition-colors text-left"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center text-red-400"><Swords className="w-5 h-5" /></div><div><div className="font-bold">Sabotage (2 Player)</div><div className="text-xs text-muted-foreground">Pick for your opponent</div></div></div><ChevronRight className="w-4 h-4 text-muted-foreground" /></button><button onClick={() => handleHost("party")} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/20 hover:bg-secondary/40 transition-colors text-left"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400"><PartyPopper className="w-5 h-5" /></div><div><div className="font-bold">Party (No Limit)</div><div className="text-xs text-muted-foreground">Same countries for everyone</div></div></div><ChevronRight className="w-4 h-4 text-muted-foreground" /></button></div></div>
-            <div className="flex items-center gap-2"><div className="h-px flex-1 bg-border" /><span className="text-xs text-muted-foreground uppercase">or</span><div className="h-px flex-1 bg-border" /></div><button onClick={() => setIsJoining(true)} className="w-full py-3 rounded-xl border border-primary/30 bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors">Join Existing Game</button></div>
-        )}
-      </motion.div>
-    </motion.div>
-  );
-}
+
 
 function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onShowGuidebook: () => void }) {
   const [, setLocation] = useLocation();
@@ -162,13 +135,47 @@ function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onSh
 export default function Home() {
   const [, navigate] = useLocation();
   const [showGuidebook, setShowGuidebook] = useState(false);
-  const [showMultiplayer, setShowMultiplayer] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const { isLight, toggleTheme } = useTheme();
   const { firebaseUser, profile, signInWithGoogle, needsUsername, refreshProfile, isLoading } = useFirebaseAuth();
+
+  const [joinCode, setJoinCode] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
+  const [isHosting, setIsHosting] = useState(false);
+
+  async function handleHost() {
+    if (!firebaseUser || !profile) return;
+    setIsHosting(true);
+    try {
+      const code = await createRoom(firebaseUser.uid, profile.username, "party", "easy");
+      navigate(`/lobby?room=${code}`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to create room");
+    } finally {
+      setIsHosting(false);
+    }
+  }
+
+  async function handleJoin(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    if (!firebaseUser || !profile) return;
+    if (joinCode.length !== 6) {
+      toast.error("Room code must be 6 characters");
+      return;
+    }
+    setIsJoining(true);
+    try {
+      await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username);
+      navigate(`/lobby?room=${joinCode.toUpperCase()}`);
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to join room");
+    } finally {
+      setIsJoining(false);
+    }
+  }
 
   function startGame(mode: string, hardMode: boolean) {
     localStorage.setItem("countryDraftHardMode", String(hardMode));
@@ -223,7 +230,37 @@ export default function Home() {
             <DailyCard /><div className="w-full space-y-8">
               <section><h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Star className="w-3.5 h-3.5" />Classic Experience</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-3"><button onClick={() => startGame("normal", false)} className="flex flex-col items-start p-5 rounded-2xl bg-card border border-border hover:border-primary/50 hover:bg-primary/5 transition-all group"><div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary mb-3 group-hover:scale-110 transition-transform"><Globe className="w-5 h-5" /></div><div className="font-bold text-lg">Easy Mode</div><div className="text-sm text-muted-foreground">See all ratings as you draft.</div></button><button onClick={() => startGame("normal", true)} className="flex flex-col items-start p-5 rounded-2xl bg-card border border-border hover:border-red-500/50 hover:bg-red-500/5 transition-all group"><div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 mb-3 group-hover:scale-110 transition-transform"><Shield className="w-5 h-5" /></div><div className="font-bold text-lg">Hard Mode</div><div className="text-sm text-muted-foreground">No ratings shown until assigned.</div></button></div></section>
               <section><h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Zap className="w-3.5 h-3.5" />Special Variants</h3><div className="space-y-6"><div className="p-5 rounded-2xl bg-card border border-border"><div className="flex items-center gap-4 mb-4"><div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400"><ArrowLeftRight className="w-6 h-6" /></div><div><div className="font-bold text-lg">Double Draft</div><div className="text-sm text-muted-foreground">Pick between two countries every round.</div></div></div><div className="grid grid-cols-2 gap-2"><button onClick={() => startGame("double", false)} className="py-2 rounded-lg bg-secondary/50 hover:bg-secondary text-sm font-bold transition-colors">Classic Difficulty</button><button onClick={() => startGame("double", true)} className="py-2 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 text-sm font-bold transition-colors border border-red-500/20">Hard Difficulty</button></div></div><button onClick={() => startGame("guess", false)} className="w-full flex items-center gap-4 p-5 rounded-2xl bg-card border border-border hover:bg-secondary/50 transition-colors text-left"><div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400"><Search className="w-6 h-6" /></div><div><div className="font-bold text-lg">Guess the Country</div><div className="text-sm text-muted-foreground">Identify a nation by its stats alone.</div></div></button><button onClick={() => navigate("/game/associations/setup")} className="w-full flex items-center gap-4 p-5 rounded-2xl bg-card border border-border hover:bg-secondary/50 transition-colors text-left"><div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400"><Brain className="w-6 h-6" /></div><div><div className="font-bold text-lg">Associations</div><div className="text-sm text-muted-foreground">Test your knowledge mapping flags, capitals, and countries.</div></div></button></div></section>
-              <section><h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Users className="w-3.5 h-3.5" />Social Play</h3><button onClick={() => setShowMultiplayer(true)} className="w-full flex items-center justify-between p-6 rounded-2xl bg-gradient-to-r from-primary/20 to-blue-500/20 border border-primary/30 hover:opacity-90 transition-opacity"><div className="flex items-center gap-4"><div className="w-14 h-14 rounded-2xl bg-background/50 flex items-center justify-center"><Users className="w-8 h-8 text-primary" /></div><div className="text-left"><div className="font-bold text-xl">Multiplayer Hub</div><div className="text-sm text-foreground/80">Play Sabotage or Party mode with friends.</div></div></div><div className="px-4 py-2 rounded-lg bg-primary text-primary-foreground font-bold text-sm">Enter Hub</div></button></section>
+              <section>
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-widest mb-4 flex items-center gap-2"><Users className="w-3.5 h-3.5" />Social Play</h3>
+                <div className="p-6 rounded-2xl bg-gradient-to-r from-primary/10 to-blue-500/10 border border-border">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center">
+                      <Users className="w-8 h-8 text-primary" />
+                    </div>
+                    <div className="text-left">
+                      <div className="font-bold text-xl">Multiplayer</div>
+                      <div className="text-sm text-foreground/80">Play Sabotage or Party mode with friends.</div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button onClick={handleHost} disabled={isHosting} className="w-full flex items-center justify-center p-4 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-50">
+                      {isHosting ? "Creating..." : "Host Game"}
+                    </button>
+                    <form onSubmit={handleJoin} className="relative flex">
+                      <input
+                        value={joinCode}
+                        onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
+                        maxLength={6}
+                        placeholder="Room Code"
+                        className="w-full bg-secondary border border-border rounded-xl px-4 py-3 font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-primary/50 uppercase"
+                      />
+                      <button type="submit" disabled={isJoining || joinCode.length !== 6} className="absolute right-2 top-2 bottom-2 px-4 rounded-lg bg-primary/20 text-primary font-bold hover:bg-primary/30 disabled:opacity-50 transition-colors">
+                        {isJoining ? "..." : "Join"}
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </section>
               <div className="grid grid-cols-2 gap-3 pt-4"><button onClick={() => navigate("/leaderboard")} className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm"><Trophy className="w-4 h-4 text-yellow-400" />Leaderboard</button><button onClick={() => setShowGuidebook(true)} className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-card border border-border text-foreground hover:bg-secondary transition-colors font-semibold text-sm"><BookOpen className="w-4 h-4 text-blue-400" />Guidebook</button></div>
             </div>
           </motion.div>
@@ -246,7 +283,6 @@ export default function Home() {
       <AnimatePresence>
         {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
         {showGuidebook && <GuidebookModal onClose={() => setShowGuidebook(false)} />}
-        {showMultiplayer && <MultiplayerModal onClose={() => setShowMultiplayer(false)} onSignIn={() => setShowAuthModal(true)} />}
         {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
         {showAboutModal && <AboutModal onClose={() => setShowAboutModal(false)} />}
         {needsUsername && firebaseUser && (

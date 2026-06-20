@@ -15,6 +15,7 @@ import SabotageGame from "@/pages/sabotage/SabotageGame";
 import Home from "@/pages/Home";
 import Leaderboard from "@/pages/Leaderboard";
 import About from "@/pages/About";
+import Lobby from "@/pages/Lobby";
 import { AssociationsSetup } from "@/pages/associations/AssociationsSetup";
 import AssociationsGame from "@/pages/associations/AssociationsGame";
 
@@ -24,6 +25,7 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/lobby" component={Lobby} />
       <Route path="/game/normal" component={NormalGame} />
       <Route path="/game/double" component={DoubleDraftGame} />
       <Route path="/game/guess" component={GuessGame} />

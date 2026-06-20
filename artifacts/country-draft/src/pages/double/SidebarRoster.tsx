@@ -3,7 +3,7 @@ import { Category, Country, CATEGORIES, getCategoryKey } from "@/data/countries"
 import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, computeSizePopBonus, BONUS_CATEGORIES } from "./DoubleUI";
 import { Users, Plus } from "lucide-react";
 
-export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Country>> }) {
+export function SidebarRoster({ roster, isHardMode }: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean }) {
   const assignedCategories = CATEGORIES.filter((c: Category) => roster[c]);
   const hasSizeAndPop = roster["Size"] && roster["Population"];
 
@@ -46,7 +46,7 @@ export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Cou
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <span className="text-[9px] text-yellow-400/40">{stars}</span>
-                    {!isBonus && score !== null && (
+                    {!isBonus && score !== null && !isHardMode && (
                       <span className="text-[10px] font-bold text-primary">{getPtsDisplay(score, category)}</span>
                     )}
                   </div>
@@ -72,7 +72,7 @@ export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Cou
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1 shrink-0">
-                <span className="text-[10px] font-bold text-yellow-500">+{computeSizePopBonus(roster)} pts</span>
+                {!isHardMode && <span className="text-[10px] font-bold text-yellow-500">+{computeSizePopBonus(roster)} pts</span>}
               </div>
             </div>
           </div>

@@ -117,7 +117,7 @@ export default function NormalGame() {
         {!state.gameOver && (
           <div className="hidden md:flex w-80 bg-card/30 border-r border-border/50 flex-col overflow-y-auto">
              <div className="p-5 space-y-6">
-                <SidebarRoster roster={state.roster} />
+                <SidebarRoster roster={state.roster} isHardMode={state.isHardMode} />
              </div>
           </div>
         )}
