@@ -184,7 +184,7 @@ export default function Lobby() {
             {isHost ? (
               <button
                 onClick={handlePlay}
-                disabled={room.mode === "sabotage" && players.length < 2}
+                disabled={players.length < 2}
                 className="w-full py-4 rounded-xl bg-[#FBBF24] text-[#111827] font-black text-xl hover:bg-[#FBBF24]/90 transition-all shadow-[0_0_20px_rgba(251,191,36,0.3)] disabled:opacity-50 disabled:shadow-none uppercase tracking-widest mt-4"
               >
                 Play
