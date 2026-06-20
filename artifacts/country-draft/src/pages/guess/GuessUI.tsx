@@ -115,7 +115,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
   if (bonus > 0) {
     ctx.fillStyle = C.fgDim;
     ctx.font = "12px sans-serif";
-    ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
+    ctx.fillText(`(incl. +${bonus} population structure bonus)`, PAD, 76);
   }
   const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
   if (roster.Size && roster.Population) { displayCats.push("Population Structure" as any); }
@@ -260,24 +260,71 @@ export function getRating(total: number): { label: string; color: string; icon: 
   return { label: "Struggling State", color: "text-red-400", icon: <Building className="w-5 h-5 text-red-400" />, desc: "Facing significant challenges and limitations." };
 }
 export function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
-  let b = 0;
-  if (roster.Size) b += Math.floor(roster.Size.stats.size.score / 2);
-  if (roster.Population) b += Math.floor(roster.Population.stats.population.score / 2);
-  if (roster.Size && roster.Population) {
-    if (roster.Size.stats.size.score >= 8 && roster.Population.stats.population.score >= 8) b += 5;
-    else if (roster.Size.stats.size.score <= 3 && roster.Population.stats.population.score <= 3) b += 5;
+  if (!roster.Size || !roster.Population) return 0;
+  
+  const sizeScore = roster.Size.stats.size.score;
+  const popScore = roster.Population.stats.population.score;
+  const density = popScore / sizeScore;
+
+  let agriMult = 1.0;
+  if (density > 0.5) agriMult = Math.max(0.1, 1.0 - ((density - 0.5) / 1.5) * 0.9);
+
+  let techMult = 1.0;
+  if (density < 2.0) techMult = Math.max(0.1, 1.0 - ((2.0 - density) / 1.5) * 0.9);
+
+  let extMult = 0.1;
+  if (density >= 0.8 && density <= 1.2) {
+    extMult = 1.0;
+  } else if (density > 0.3 && density < 0.8) {
+    extMult = 0.1 + ((density - 0.3) / 0.5) * 0.9;
+  } else if (density > 1.2 && density < 2.5) {
+    extMult = Math.max(0.1, 1.0 - ((density - 1.2) / 1.3) * 0.9);
   }
-  return b;
+
+  const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
+  const climateScore = roster.Climate?.stats.climate?.score || 0;
+  const techScore = roster.Technology?.stats.technology?.score || 0;
+  const locationScore = roster.Location?.stats.location?.score || 0;
+
+  const agriBonus = 25 * ((resourcesScore + climateScore) / 22) * agriMult;
+  const techBonus = 25 * ((techScore + locationScore) / 22) * techMult;
+  const extBonus = 25 * ((resourcesScore + techScore) / 24) * extMult;
+
+  return Math.floor(Math.max(agriBonus, techBonus, extBonus));
 }
 
 export type Archetype = { name: string; icon: React.ReactNode; desc: string };
-export function getBonusPath(roster: Partial<Record<Category, Country>>): "agricultural" | "urban" | null {
-  const size = roster.Size?.stats.size.score ?? 5;
-  const pop = roster.Population?.stats.population.score ?? 5;
-  if (size >= 8 && pop <= 4) return "agricultural";
-  if (size <= 4 && pop >= 8) return "urban";
-  return null;
+export function getBonusPath(roster: Partial<Record<Category, Country>>): "agricultural" | "urban" | "extraction" | null {
+  if (!roster.Size || !roster.Population) return null;
+  const sizeScore = roster.Size.stats.size.score;
+  const popScore = roster.Population.stats.population.score;
+  const density = popScore / sizeScore;
+
+  let agriMult = 1.0;
+  if (density > 0.5) agriMult = Math.max(0.1, 1.0 - ((density - 0.5) / 1.5) * 0.9);
+  let techMult = 1.0;
+  if (density < 2.0) techMult = Math.max(0.1, 1.0 - ((2.0 - density) / 1.5) * 0.9);
+  let extMult = 0.1;
+  if (density >= 0.8 && density <= 1.2) extMult = 1.0;
+  else if (density > 0.3 && density < 0.8) extMult = 0.1 + ((density - 0.3) / 0.5) * 0.9;
+  else if (density > 1.2 && density < 2.5) extMult = Math.max(0.1, 1.0 - ((density - 1.2) / 1.3) * 0.9);
+
+  const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
+  const climateScore = roster.Climate?.stats.climate?.score || 0;
+  const techScore = roster.Technology?.stats.technology?.score || 0;
+  const locationScore = roster.Location?.stats.location?.score || 0;
+
+  const agriBonus = 25 * ((resourcesScore + climateScore) / 22) * agriMult;
+  const techBonus = 25 * ((techScore + locationScore) / 22) * techMult;
+  const extBonus = 25 * ((resourcesScore + techScore) / 24) * extMult;
+
+  const max = Math.max(agriBonus, techBonus, extBonus);
+  if (max === 0) return null;
+  if (max === agriBonus) return "agricultural";
+  if (max === techBonus) return "urban";
+  return "extraction";
 }
+
 export function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archetype {
   const m = roster.Military?.stats.military.score ?? 0;
   const e = roster.Economy?.stats.economy.score ?? 0;
@@ -562,8 +609,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           </div>
           {bPath && (
             <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-              <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{bPath === "agricultural" ? <Leaf className="w-5 h-5 text-yellow-400" /> : <Building className="w-5 h-5 text-yellow-400" />}</div>
-              <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{bPath === "agricultural" ? "Agricultural Giant" : "Urban Powerhouse"}</h3><p className="text-xs text-muted-foreground">{bPath === "agricultural" ? "Vast lands with sparse population." : "Dense population in a compact area."}</p></div>
+              <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{bPath === "agricultural" ? <Leaf className="w-5 h-5 text-yellow-400" /> : bPath === "extraction" ? <Mountain className="w-5 h-5 text-yellow-400" /> : <Building className="w-5 h-5 text-yellow-400" />}</div>
+              <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{bPath === "agricultural" ? "Agricultural Giant" : bPath === "extraction" ? "Resource Extraction Titan" : "Urban Powerhouse"}</h3><p className="text-xs text-muted-foreground">{bPath === "agricultural" ? "Vast lands with sparse population." : bPath === "extraction" ? "Massive nation built for resource extraction." : "Dense population in a compact area."}</p></div>
             </div>
           )}
         </div>
