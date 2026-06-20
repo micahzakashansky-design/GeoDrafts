@@ -10,7 +10,7 @@ import {
   CountryCard, GameOver, SelectionPhase, GameState, computeSizePopBonus,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./SabotageUI";
-import { ChevronLeft, Home, Globe as GlobeIcon, Users, UserX, Skull } from "lucide-react";
+import { Home, Globe as GlobeIcon, Users, UserX, Skull } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SidebarRoster } from "./SidebarRoster";
 
@@ -137,17 +137,14 @@ export default function SabotageGame() {
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
-            <header className="h-14 md:h-16 shrink-0 border-b border-white/5 bg-card/30 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20 relative">
-        <button
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-muted-foreground hover:text-white transition-colors font-bold text-sm uppercase tracking-widest z-10"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          Leave Game
-        </button>
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="flex items-center gap-3 font-serif font-bold text-xl">
-            <Logo className="w-6 h-6" /> GeoDrafts
+      <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+            <Logo className="w-5 h-5" />GeoDrafts
+          </button>
+          <div className="h-4 w-px bg-border hidden md:block" />
+          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:flex items-center gap-1.5">
+            <Skull className="w-3.5 h-3.5" /> Sabotage Mode
           </div>
         </div>
       </header>
