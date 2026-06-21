@@ -105,7 +105,7 @@ function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onSh
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="space-y-12 w-full">
         <div className="flex flex-col items-center">
           <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
-            <img src="/logo.svg" alt="GeoDrafts Logo" className="w-32 h-32 mb-8 rounded-full object-cover shadow-2xl ring-4 ring-white/10" />
+            <img src="/logo.svg" alt="GeoDrafts Logo" className="w-32 h-32 mb-8 rounded-full object-cover shadow-2xl" />
           </motion.div>
           <h1 className="font-sans text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">GeoDrafts</h1>
           <p className="text-xl md:text-2xl text-white/40 max-w-2xl leading-relaxed font-medium">
@@ -235,7 +235,7 @@ export default function Home() {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8 text-center md:text-left">
               <div className="flex items-center gap-6">
-                <img src="/logo.svg" alt="GeoDrafts Logo" className="w-20 h-20 rounded-full object-cover shadow-lg ring-2 ring-white/10" />
+                <img src="/logo.svg" alt="GeoDrafts Logo" className="w-20 h-20 rounded-full object-cover shadow-lg" />
                 <div>
                   <h1 className="font-sans text-5xl md:text-6xl font-black text-white tracking-tighter mb-2">GeoDrafts</h1>
                   <p className="text-lg text-white/40 font-medium">Draft your way to a superpower.</p>
