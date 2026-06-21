@@ -42,14 +42,14 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
         exit={{ opacity: 0 }} 
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-background/80 backdrop-blur-xl"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/40 backdrop-blur-sm"
       >
         <motion.div 
           initial={{ scale: 0.95, opacity: 0, y: 20 }} 
           animate={{ scale: 1, opacity: 1, y: 0 }} 
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
           transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          className="bg-card/90 backdrop-blur-3xl border border-border/50 w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row h-[85vh] md:h-[600px] relative"
+          className="bg-card/95 backdrop-blur-3xl border border-border/50 w-full max-w-3xl rounded-[2rem] shadow-[0_0_100px_rgba(0,0,0,0.2)] overflow-hidden flex flex-col md:flex-row h-[80vh] md:h-[500px] relative"
         >
           {/* Header for mobile, hidden on md */}
           <div className="md:hidden flex items-center justify-between p-4 border-b border-border/50 bg-muted/20">
