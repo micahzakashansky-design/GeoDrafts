@@ -1,16 +1,16 @@
-import React, { useState, useCallback, useRef, useMemo } from "react";
+import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import {
   COUNTRIES, CATEGORIES, getCategoryKey, shuffleArray,
   type Country, type Category,
 } from "@/data/countries";
 import {
-  CountryCard, GameOver, GameState, computeSizePopBonus,
+  CountryCard, GameOver, GameState, computeSizePopBonus, seededShuffle, dateStrToSeed,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./NormalUI";
-import { Home, Globe as GlobeIcon } from "lucide-react";
-import { Logo } from "../../components/Logo";
 import { SidebarRoster } from "./SidebarRoster";
+import { Home, Globe as GlobeIcon, CalendarDays } from "lucide-react";
+import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 
@@ -19,11 +19,16 @@ export default function NormalGame() {
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
+    
     let pool = shuffleArray([...COUNTRIES]);
+    
     const currentCountry = pool.pop() || null;
+
+    
+
     return {
       pool, currentCountry, selectionOptions: null, mysteryCountry: null, guesses: [],
-      roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
+      roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: true,
       dailyDate: "", leaderboardSubmitted: false, mode: "normal", isHardMode,
       roomCode: null, poolSeed: 0
     };
@@ -34,6 +39,8 @@ export default function NormalGame() {
   const [showSubmitDialog, setShowSubmitDialog] = useState(false);
   const rosterRef = useRef<HTMLDivElement>(null);
   const localSavedRef = useRef(false);
+
+  
 
   const totalScore = useMemo(() => {
     return CATEGORIES.reduce((sum, cat) => {
@@ -51,9 +58,10 @@ export default function NormalGame() {
   React.useEffect(() => {
     if (state.gameOver && !localSavedRef.current) {
       savePersonalScore(state.isHardMode ? "hard" : "normal", { score: finalScore, roster: formatRoster(state.roster) });
+      
       localSavedRef.current = true;
     }
-  }, [state.gameOver, state.isHardMode, finalScore, state.roster]);
+  }, [state.gameOver, finalScore, state.roster, state.isHardMode]);
 
   const assignCountry = useCallback((category: Category) => {
     if (state.roster[category]) return;
@@ -89,16 +97,9 @@ export default function NormalGame() {
   }, [wildcardPhase, state.wildcardUsed]);
 
   const doReset = useCallback(() => {
-    const isHardMode = state.isHardMode;
-    let pool = shuffleArray([...COUNTRIES]);
-    setState({
-      pool, currentCountry: pool.pop() || null, selectionOptions: null, mysteryCountry: null, guesses: [],
-      roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
-      dailyDate: "", leaderboardSubmitted: false, mode: "normal", isHardMode,
-      roomCode: null, poolSeed: 0
-    });
-    localSavedRef.current = false;
-  }, [state.isHardMode]);
+     localSavedRef.current = false;
+     navigate("/");
+  }, [navigate]);
 
   return (
     <div className="flex flex-col h-screen bg-[#000000] text-white selection:bg-white/20 overflow-hidden font-sans">
@@ -125,7 +126,7 @@ export default function NormalGame() {
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="normal" leaderboardSubmitted={state.leaderboardSubmitted} />
+            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="daily" leaderboardSubmitted={state.leaderboardSubmitted} />
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (

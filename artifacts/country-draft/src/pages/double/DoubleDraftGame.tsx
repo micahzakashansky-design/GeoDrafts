@@ -63,12 +63,23 @@ export default function DoubleDraftGame() {
 
   const applyWildcard = useCallback((cat: Category) => {
     if (!wildcardPhase || state.wildcardUsed) return;
+    localSavedRef.current = false;
     setState(prev => {
       const newRoster = { ...prev.roster };
       delete newRoster[cat];
       const newPool = [...prev.pool];
-      const nextCountry = newPool.pop() || null;
-      return { ...prev, roster: newRoster, currentCountry: nextCountry, pool: newPool, wildcardUsed: true, selectionOptions: null };
+      const c1 = newPool.pop();
+      const c2 = newPool.pop();
+      const options = c1 && c2 ? [c1, c2] : null;
+      return { 
+        ...prev, 
+        roster: newRoster, 
+        selectionOptions: options, 
+        currentCountry: null, 
+        pool: newPool, 
+        wildcardUsed: true, 
+        gameOver: false 
+      };
     });
     setWildcardPhase(false);
   }, [wildcardPhase, state.wildcardUsed]);
