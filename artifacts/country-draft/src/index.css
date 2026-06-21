@@ -309,3 +309,34 @@
     50% { box-shadow: 0 0 0 6px rgba(218, 165, 32, 0.15); }
   }
 }
+
+@layer base {
+  ::view-transition-group(root) {
+    animation-duration: 0.7s;
+  }
+  
+  ::view-transition-new(root),
+  ::view-transition-old(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  
+  /* The transition runs when the theme is toggled */
+  .transition-theme-switch::view-transition-old(root) {
+    z-index: 1;
+  }
+  
+  .transition-theme-switch::view-transition-new(root) {
+    z-index: 2;
+    animation: wipe-down 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  @keyframes wipe-down {
+    from {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+    }
+    to {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
+  }
+}

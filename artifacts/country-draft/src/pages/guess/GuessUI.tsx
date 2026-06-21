@@ -694,13 +694,18 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                   const sizeCountry = Array.isArray(assigned) ? assigned[0] : assigned;
                   const popCountry = Array.isArray(roster.Population) ? roster.Population[0] : roster.Population;
                   return (
-                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-white/10/50 bg-card" : "bg-card border-white/10/50"}`}>
+                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border bg-card" : "bg-card border-border"}`}>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-white/40">
+                        <div className="flex items-center gap-1.5 text-muted-foreground">
                           {CATEGORY_ICONS["Size"]}
-                          <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/80">Population Structure</span>
+                          <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population Structure</span>
+                          {categoryTimes && categoryTimes.Size !== undefined && categoryTimes.Population !== undefined && (
+                            <span className="ml-2 text-[8px] md:text-[9px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                              {(categoryTimes.Size / 1000).toFixed(1)}s + {(categoryTimes.Population / 1000).toFixed(1)}s
+                            </span>
+                          )}
                         </div>
-                        <div className="font-bold text-white text-base md:text-lg">
+                        <div className="font-bold text-foreground text-base md:text-lg">
                            {!isHardMode && (
                              <><span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span></>
                            )}
@@ -710,7 +715,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         {(sizeCountry as any).name !== (popCountry as any).name ? (
                           <div className="flex items-start justify-center w-full gap-2">
                             <div className="flex-1 flex flex-col items-center text-center gap-2">
-                              <div className="text-sm md:text-base font-bold text-white flex items-center justify-center gap-1.5 w-full">
+                              <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-center gap-1.5 w-full">
                                 {(sizeCountry as any).flag} <span className="truncate">{(sizeCountry as any).name}</span>
                               </div>
                               <div className="space-y-1 flex flex-col items-center">

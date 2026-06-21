@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, User, Medal, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,8 +28,8 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
   const isGuess = mode === "guess";
 
   const roster = isGlobal ? (entry as LeaderboardEntry).roster : (entry as PersonalLeaderboardEntry).roster;
-  const guesses = !isGlobal ? (entry as PersonalLeaderboardEntry).guesses : undefined;
-  const mysteryCountry = !isGlobal ? (entry as PersonalLeaderboardEntry).mysteryCountry : undefined;
+  const guesses = isGlobal ? (entry as LeaderboardEntry).guesses : (entry as PersonalLeaderboardEntry).guesses;
+  const mysteryCountry = isGlobal ? (entry as LeaderboardEntry).mysteryCountry : (entry as PersonalLeaderboardEntry).mysteryCountry;
 
   return (
     <motion.div 
@@ -73,14 +73,14 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
 
         <span className="text-sm font-medium text-white/40 mr-2 hidden sm:block">{date}</span>
         
-        {(roster || guesses) && (
+        {((roster && Object.keys(roster).length > 0) || (guesses && guesses.length > 0)) && (
           <ChevronDown
             className={`w-4 h-4 text-white/40 transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`}
           />
         )}
       </button>
       <AnimatePresence>
-        {expanded && (roster || guesses) && (
+        {expanded && ((roster && Object.keys(roster).length > 0) || (guesses && guesses.length > 0)) && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -89,7 +89,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
             className="overflow-hidden"
           >
             <div className="px-5 pb-5 pt-2 border-t border-white/5 bg-[#000000]/50">
-               {roster ? (
+               {roster && Object.keys(roster).length > 0 ? (
                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                    {Object.entries(roster).map(([cat, name]) => (
                      <div key={cat} className="flex flex-col gap-0.5">
@@ -128,15 +128,23 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
   );
 }
 
-type ModeFilter = "normal" | "hard" | "daily" | "double" | "guess";
+type ModeFilter = "normal" | "hard" | "daily" | "double" | "double_hard" | "guess";
+type ParentMode = "classic" | "double" | "guess" | "daily";
 type ScopeFilter = "global" | "personal";
 
 export default function Leaderboard() {
   const [, navigate] = useLocation();
   const [personalEntries, setPersonalEntries] = useState<PersonalLeaderboardEntry[]>([]);
   
-  const [modeFilter, setModeFilter] = useState<ModeFilter>("normal");
+  const [parentMode, setParentMode] = useState<ParentMode>("classic");
+  const [difficulty, setDifficulty] = useState<"normal" | "hard">("normal");
   const [scopeFilter, setScopeFilter] = useState<ScopeFilter>("global");
+  
+  const modeFilter = useMemo<ModeFilter>(() => {
+    if (parentMode === "classic") return difficulty === "normal" ? "normal" : "hard";
+    if (parentMode === "double") return difficulty === "normal" ? "double" : "double_hard";
+    return parentMode as ModeFilter;
+  }, [parentMode, difficulty]);
   
   const { isLight, toggleTheme } = useTheme();
 
@@ -183,12 +191,11 @@ export default function Leaderboard() {
     }
   }, [modeFilter, scopeFilter, firebaseUser, cloudPersonalEntries]);
 
-  const modeTabs: { key: ModeFilter; label: string; activeClass: string }[] = [
-    { key: "normal", label: "Normal", activeClass: "bg-white text-black font-black" },
-    { key: "hard",   label: "Hard",      activeClass: "bg-red-500 text-white font-black" },
-    { key: "double", label: "Double Draft", activeClass: "bg-purple-500 text-white font-black" },
-    { key: "guess",  label: "Guess Country", activeClass: "bg-emerald-500 text-white font-black" },
-    { key: "daily",  label: `Daily`,   activeClass: "bg-amber-400 text-black font-black" },
+  const modeTabs: { key: ParentMode; label: string; activeClass: string }[] = [
+    { key: "classic", label: "Classic Draft", activeClass: "bg-white text-black font-black" },
+    { key: "double",  label: "Double Draft", activeClass: "bg-purple-500 text-white font-black" },
+    { key: "guess",   label: "Guess Country", activeClass: "bg-emerald-500 text-white font-black" },
+    { key: "daily",   label: `Daily`,   activeClass: "bg-amber-400 text-black font-black" },
   ];
 
   const entriesToDisplay = scopeFilter === "global" ? globalEntries : personalEntries;
@@ -207,7 +214,7 @@ export default function Leaderboard() {
             <Logo className="w-6 h-6 opacity-90" />GeoDrafts
           </motion.button>
           <div className="h-6 w-px bg-white/10 hidden md:block" />
-          <div className="px-3 py-1.5 rounded-full bg-white/5 text-xs font-bold text-white/50 border border-white/10 hidden sm:block tracking-widest uppercase">
+          <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:block tracking-widest uppercase">
             Leaderboards
           </div>
         </div>
@@ -263,23 +270,59 @@ export default function Leaderboard() {
           </motion.div>
         )}
 
-        <div className="flex gap-2 mb-8 flex-wrap">
-          {modeTabs.map((tab) => (
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              key={tab.key}
-              onClick={() => setModeFilter(tab.key)}
-              className={`px-5 py-2.5 rounded-full text-sm uppercase tracking-widest transition-colors border ${
-                modeFilter === tab.key
-                  ? tab.activeClass + " border-transparent"
-                  : "text-white/40 font-bold border-white/10 hover:text-white hover:bg-white/5 bg-[#080808]"
-              }`}
-            >
-              {tab.label}
-            </motion.button>
-          ))}
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex gap-2 flex-wrap">
+            {modeTabs.map((tab) => (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                key={tab.key}
+                onClick={() => setParentMode(tab.key)}
+                className={`px-5 py-2.5 rounded-full text-sm uppercase tracking-widest transition-colors border ${
+                  parentMode === tab.key
+                    ? tab.activeClass + " border-transparent"
+                    : "text-white/40 font-bold border-white/10 hover:text-white hover:bg-white/5 bg-[#080808]"
+                }`}
+              >
+                {tab.label}
+              </motion.button>
+            ))}
+          </div>
+
+          <AnimatePresence mode="popLayout">
+            {(parentMode === "classic" || parentMode === "double") && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0, y: -10 }}
+                animate={{ opacity: 1, height: "auto", y: 0 }}
+                exit={{ opacity: 0, height: 0, y: -10 }}
+                className="flex gap-2"
+              >
+                <div className="flex bg-[#080808] p-1.5 rounded-full border border-white/10">
+                  <button
+                    onClick={() => setDifficulty("normal")}
+                    className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${
+                      difficulty === "normal" 
+                        ? (parentMode === "classic" ? "bg-white text-black" : "bg-purple-500 text-white") 
+                        : "text-white/40 hover:text-white"
+                    }`}
+                  >
+                    Normal
+                  </button>
+                  <button
+                    onClick={() => setDifficulty("hard")}
+                    className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${
+                      difficulty === "hard" 
+                        ? "bg-red-500 text-white" 
+                        : "text-white/40 hover:text-white"
+                    }`}
+                  >
+                    Hard Mode
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {globalLoading || (scopeFilter === "personal" && !!firebaseUser && cloudPersonalLoading) ? (

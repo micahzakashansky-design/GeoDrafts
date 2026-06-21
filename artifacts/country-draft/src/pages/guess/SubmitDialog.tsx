@@ -6,7 +6,7 @@ import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { saveScore } from "@/lib/firestore";
 import type { Country, Category } from "@/data/countries";
 
-export function SubmitDialog({ score, mode, roster, onClose, onSuccess }: { score: number; mode: string; roster: Partial<Record<Category, Country>>; onClose: () => void; onSuccess: () => void; }) {
+export function SubmitDialog({ score, mode, roster, guesses, mysteryCountry, onClose, onSuccess }: { score: number; mode: string; roster: Partial<Record<Category, Country>>; guesses?: string[]; mysteryCountry?: string; onClose: () => void; onSuccess: () => void; }) {
   const [, navigate] = useLocation(); const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
   const [loading, setLoading] = useState(false); const [done, setDone] = useState(false); const [error, setError] = useState<string | null>(null);
   const [showEmail, setShowEmail] = useState(false); const [isSignUp, setIsSignUp] = useState(false); const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
@@ -19,7 +19,7 @@ export function SubmitDialog({ score, mode, roster, onClose, onSuccess }: { scor
   async function handleSubmit() {
     if (!firebaseUser || !profile) return; setLoading(true); setError(null); try {
       const rosterMap = Object.fromEntries(Object.entries(roster).filter(([, c]) => c).map(([cat, c]) => [cat, c!.name]));
-      await saveScore(firebaseUser.uid, profile.username, score, mode, rosterMap); setDone(true); onSuccess();
+      await saveScore(firebaseUser.uid, profile.username, score, mode, rosterMap, guesses, mysteryCountry); setDone(true); onSuccess();
     } catch (e: any) { const code = e?.code ?? ""; if (code === "already-submitted") { setError("You've already submitted a daily score today."); } else { setError("Failed to submit. Please try again."); } } finally { setLoading(false); }
   }
   return (

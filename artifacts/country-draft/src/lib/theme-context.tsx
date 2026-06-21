@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { flushSync } from "react-dom";
 
 type ThemeContextType = {
   isLight: boolean;
@@ -25,7 +26,22 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [isLight]);
 
   const toggleTheme = useCallback(() => {
-    setIsLight((prev) => !prev);
+    if (!document.startViewTransition) {
+      setIsLight((prev) => !prev);
+      return;
+    }
+    
+    document.documentElement.classList.add("transition-theme-switch");
+    
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        setIsLight((prev) => !prev);
+      });
+    });
+    
+    transition.finished.finally(() => {
+      document.documentElement.classList.remove("transition-theme-switch");
+    });
   }, []);
 
   return (

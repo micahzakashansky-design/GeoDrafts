@@ -10,7 +10,7 @@ import {
   CountryCard, GameOver, SelectionPhase, GameState, computeSizePopBonus,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./SabotageUI";
-import { Home, Globe as GlobeIcon, Users, UserX, Skull } from "lucide-react";
+import { Home, Globe as GlobeIcon, Users, UserX, Skull, Bomb, Target, ShieldAlert, ShieldPlus } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SidebarRoster } from "./SidebarRoster";
 
@@ -140,22 +140,22 @@ export default function SabotageGame() {
   }, [navigate]);
 
   return (
-    <div className="flex flex-col h-screen bg-background text-white overflow-hidden font-sans">
-      <header className="h-14 md:h-16 shrink-0 border-b border-white/10/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
+    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
+      <header className="h-14 md:h-16 shrink-0 border-b border-border bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-white/10 text-xs font-semibold text-white/40 border border-white/10 hidden sm:flex items-center gap-1.5">
-            <Skull className="w-3.5 h-3.5" /> Sabotage Mode
+          <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
+            <UserX className="w-3.5 h-3.5 text-red-400" /> Sabotage Mode {state.isHardMode ? <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> : <ShieldPlus className="w-3.5 h-3.5 text-emerald-400" />}
           </div>
         </div>
       </header>
 
       <main className="flex-1 flex overflow-hidden relative">
         {room && room.status === "playing" && !state.gameOver && (
-          <div className="hidden md:flex w-80 bg-card/30 border-r border-white/10/50 flex-col overflow-y-auto">
+          <div className="hidden md:flex w-80 bg-card border-r border-border flex-col overflow-y-auto">
              <div className="p-5 space-y-6">
                 <SidebarRoster roster={state.roster} categoryTimes={state.categoryTimes} isHardMode={state.isHardMode} />
              </div>
@@ -166,13 +166,13 @@ export default function SabotageGame() {
           {state.gameOver ? (
             <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="sabotage" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
           ) : room && room.status === "playing" && players.find(p => p.uid === firebaseUser?.uid)?.finishedRound && !players.every(p => p.finishedRound) ? (
-             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-6" /><h2 className="text-2xl font-sans font-bold mb-2">Waiting for others...</h2><p className="text-white/40">The next country will be revealed once everyone finishes this round.</p></div>
+             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-6" /><h2 className="text-2xl font-sans font-bold mb-2">Waiting for others...</h2><p className="text-muted-foreground">The next country will be revealed once everyone finishes this round.</p></div>
           ) : state.selectionOptions ? (
              <SelectionPhase options={state.selectionOptions} onPick={onSelectionPick} isHardMode={state.isHardMode} mode="sabotage" />
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (
-            <div className="flex-1 flex items-center justify-center text-white/40">Loading game...</div>
+            <div className="flex-1 flex items-center justify-center text-muted-foreground">Loading game...</div>
           )}
         </div>
       </main>

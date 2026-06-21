@@ -18,6 +18,7 @@ import About from "@/pages/About";
 import Lobby from "@/pages/Lobby";
 import { AssociationsSetup } from "@/pages/associations/AssociationsSetup";
 import AssociationsGame from "@/pages/associations/AssociationsGame";
+import { Agentation } from "agentation";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +53,7 @@ function App() {
           </WouterRouter>
           <Toaster />
           <SonnerToaster />
+          {import.meta.env.DEV && <Agentation />}
           </AuthProvider>
         </ThemeProvider>
       </TooltipProvider>

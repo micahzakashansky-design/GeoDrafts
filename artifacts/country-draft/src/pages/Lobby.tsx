@@ -81,8 +81,8 @@ export default function Lobby() {
             <Logo className="w-6 h-6 opacity-90" />GeoDrafts
           </motion.button>
           <div className="h-6 w-px bg-white/10 hidden md:block" />
-          <div className="px-3 py-1.5 rounded-full bg-white/5 text-xs font-bold text-white/50 border border-white/10 hidden sm:flex items-center gap-2">
-            <Users className="w-4 h-4" /> Multiplayer Lobby
+          <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
+            <Users className="w-3.5 h-3.5" /> Multiplayer Lobby
           </div>
         </div>
       </header>

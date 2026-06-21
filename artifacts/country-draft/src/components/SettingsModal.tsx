@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, User, LogOut, Check, Loader2 } from "lucide-react";
+import { X, User, LogOut, Check, Loader2, Moon, Sun, Settings } from "lucide-react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { updateUsername, checkUsernameExists } from "@/lib/firestore";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/lib/theme-context";
 
 interface Props {
   onClose: () => void;
@@ -15,6 +16,7 @@ export function SettingsModal({ onClose }: Props) {
   const [newUsername, setNewUsername] = useState(profile?.username || "");
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { isLight, toggleTheme } = useTheme();
 
   async function handleUpdateUsername() {
     if (!firebaseUser || !newUsername.trim()) return;
@@ -80,70 +82,83 @@ export function SettingsModal({ onClose }: Props) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-    >
+    <>
+      <div 
+        className="fixed inset-0 z-50" 
+        onClick={onClose} 
+      />
       <motion.div
-        initial={{ scale: 0.95, opacity: 0, y: 20 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        exit={{ scale: 0.95, opacity: 0, y: 20 }}
-        className="bg-[#000000] border border-white/10 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+        initial={{ opacity: 0, scale: 0.95, y: -10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: -10 }}
+        className="fixed top-16 right-6 z-50 bg-card border border-border rounded-2xl w-[360px] shadow-2xl overflow-hidden"
       >
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
+        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <User className="w-5 h-5 text-primary" />
-            <h2 className="font-sans text-xl font-bold text-white">Account Settings</h2>
+            <Settings className="w-5 h-5 text-primary" />
+            <h2 className="font-sans text-lg font-bold text-card-foreground">Settings</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-white/10 transition-colors"
+            className="p-1.5 rounded-md text-muted-foreground hover:bg-muted transition-colors"
           >
-            <X className="w-5 h-5 text-white/40" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
-          <div className="space-y-4">
-            <label className="text-sm font-semibold text-white/40 uppercase tracking-wider">
-              Change Username
-            </label>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={newUsername}
-                onChange={(e) => setNewUsername(e.target.value)}
-                placeholder="New username"
-                className="flex-1 px-4 py-2 rounded-xl bg-white/10 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
-              />
-              <button
-                onClick={handleUpdateUsername}
-                disabled={isUpdating || !newUsername.trim() || newUsername === profile?.username}
-                className="px-4 py-2 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
-              >
-                {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                Update
-              </button>
-            </div>
-            <p className="text-xs text-white/40">
-              This name will be visible to other players on the leaderboard.
-            </p>
-          </div>
-
-          <div className="pt-4 border-t border-white/10">
+        <div className="p-5 space-y-5">
+          <div className="space-y-3">
             <button
-              onClick={handleLogout}
-              disabled={isLoggingOut}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 font-bold hover:bg-red-500/20 transition-all disabled:opacity-50"
+              onClick={toggleTheme}
+              className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/50 border border-border hover:bg-muted transition-colors font-bold text-sm text-foreground"
             >
-              {isLoggingOut ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogOut className="w-5 h-5" />}
-              Sign Out
+              {isLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+              {isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
             </button>
           </div>
+
+          {firebaseUser && (
+            <>
+              <div className="space-y-3 pt-5 border-t border-border">
+                <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  Change Username
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newUsername}
+                    onChange={(e) => setNewUsername(e.target.value)}
+                    placeholder="New username"
+                    className="flex-1 px-3 py-2 text-sm rounded-xl bg-card border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground min-w-0"
+                  />
+                  <button
+                    onClick={handleUpdateUsername}
+                    disabled={isUpdating || !newUsername.trim() || newUsername === profile?.username}
+                    className="px-3 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
+                  >
+                    {isUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+                    Update
+                  </button>
+                </div>
+                <p className="text-[11px] text-muted-foreground">
+                  This name will be visible to other players on the leaderboard.
+                </p>
+              </div>
+
+              <div className="pt-5 border-t border-border">
+                <button
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 text-red-500 border border-red-500/20 text-sm font-bold hover:bg-red-500/20 transition-all disabled:opacity-50"
+                >
+                  {isLoggingOut ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
+                  Sign Out
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </motion.div>
-    </motion.div>
+    </>
   );
 }

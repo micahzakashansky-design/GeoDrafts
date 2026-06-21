@@ -75,8 +75,8 @@ export function AssociationsSetup() {
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-white/10 text-xs font-semibold text-white/40 border border-white/10 hidden sm:block">
-            Associations Mode
+          <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:block tracking-widest uppercase">
+            Associations Setup
           </div>
         </div>
       </header>

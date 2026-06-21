@@ -9,7 +9,7 @@ import {
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./DoubleUI";
 import { SidebarRoster } from "./SidebarRoster";
-import { Home, Globe as GlobeIcon } from "lucide-react";
+import { Home, ShieldAlert, ShieldPlus } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
@@ -51,7 +51,7 @@ export default function DoubleDraftGame() {
 
   React.useEffect(() => {
     if (state.gameOver && !localSavedRef.current) {
-      savePersonalScore("double", { score: finalScore, roster: formatRoster(state.roster) });
+      savePersonalScore(state.isHardMode ? "double_hard" : "double", { score: finalScore, roster: formatRoster(state.roster) });
       localSavedRef.current = true;
     }
   }, [state.gameOver, finalScore, state.roster]);
@@ -142,22 +142,22 @@ export default function DoubleDraftGame() {
   }, [state.isHardMode]);
 
   return (
-    <div className="flex flex-col h-screen bg-[#000000] text-white selection:bg-white/20 overflow-hidden font-sans">
-      <header className="h-14 md:h-16 shrink-0 border-b border-white/10 bg-[#000000] px-4 md:px-6 flex items-center justify-between z-20">
+    <div className="flex flex-col h-screen bg-background text-foreground selection:bg-primary/20 overflow-hidden font-sans">
+      <header className="h-14 md:h-16 shrink-0 border-b border-border bg-background px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
-          <div className="h-4 w-px bg-white/20 hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-[#111111] text-xs font-semibold text-white/70 border border-white/10 hidden sm:block">
-            Double Draft {state.isHardMode ? "(Hard)" : "(Easy)"}
+          <div className="h-4 w-px bg-border hidden md:block" />
+          <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
+            Double Draft {state.isHardMode ? <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> : <ShieldPlus className="w-3.5 h-3.5 text-emerald-400" />}
           </div>
         </div>
       </header>
 
       <main className="flex-1 flex overflow-hidden relative">
         {!state.gameOver && (
-          <div className="hidden md:flex w-80 bg-[#080808] border-r border-white/10 flex-col overflow-y-auto">
+          <div className="hidden md:flex w-80 bg-card border-r border-border flex-col overflow-y-auto">
              <div className="p-5 space-y-6">
                 <SidebarRoster roster={state.roster} categoryTimes={state.categoryTimes} isHardMode={state.isHardMode} />
              </div>
@@ -172,7 +172,7 @@ export default function DoubleDraftGame() {
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (
-            <div className="flex-1 flex items-center justify-center text-white/40">Loading game...</div>
+            <div className="flex-1 flex items-center justify-center text-muted-foreground">Loading game...</div>
           )}
         </div>
       </main>

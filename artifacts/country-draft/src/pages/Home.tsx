@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import {
-  Globe, Shield, Trophy, BookOpen, CalendarDays, X,
+  Globe, ShieldAlert, ShieldPlus, Trophy, BookOpen, CalendarDays, X,
   Moon, Sun, Users, Swords, PartyPopper, ArrowLeftRight,
   Search, Zap, Star, Calculator, ChevronRight, Settings, LogIn, User, Loader2, Brain
 } from "lucide-react";
@@ -29,14 +29,14 @@ const NATION_RANKS = [
 function GuidebookModal({ onClose }: { onClose: () => void }) {
   const [activeTab, setActiveTab] = useState<"basics" | "scoring" | "bonus">("basics");
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-[#000000] border border-white/10 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5"><div className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-primary" /><h2 className="font-sans text-xl font-bold text-white">Game Guidebook</h2></div><button onClick={onClose} className="p-1 rounded-lg hover:bg-white/10 transition-colors text-white"><X className="w-5 h-5" /></button></div>
-        <div className="flex border-b border-white/10 bg-black">{(["basics", "scoring", "bonus"] as const).map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-3 text-sm font-semibold capitalize transition-all border-b-2 ${activeTab === tab ? "border-primary text-primary bg-primary/5" : "border-transparent text-white/40 hover:text-white"}`}>{tab}</button>))}</div>
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {activeTab === "basics" && (<div className="space-y-4"><div className="space-y-2"><h3 className="text-lg font-semibold flex items-center gap-2 text-white"><Zap className="w-4 h-4 text-amber-400" />How to Play</h3><p className="text-sm text-white/40 leading-relaxed">You are presented with countries one-by-one from a randomized pool. For each country, you must assign it to one of 15 available category slots. Once a slot is filled, it cannot be changed.</p></div></div>)}
-          {activeTab === "scoring" && (<div className="space-y-4"><div className="space-y-2"><h3 className="text-lg font-semibold flex items-center gap-2 text-white"><Calculator className="w-4 h-4 text-emerald-400" />Point System</h3><p className="text-sm text-white/40">Each category is scored from 1 to 10 based on real data.</p></div></div>)}
-          {activeTab === "bonus" && (<div><h3 className="text-sm font-semibold text-white mb-3">Nation Rankings</h3><div className="space-y-1.5">{NATION_RANKS.map((r) => (<div key={r.label} className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2"><span className={`text-sm font-semibold ${r.color}`}>{r.label}</span><span className="text-xs text-white/40">{r.range}</span></div>))}</div></div>)}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
+      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-card border border-border w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-foreground/5"><div className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-primary" /><h2 className="font-sans text-xl font-bold text-foreground">Game Guidebook</h2></div><button onClick={onClose} className="p-1 rounded-lg hover:bg-foreground/10 transition-colors text-foreground"><X className="w-5 h-5" /></button></div>
+        <div className="flex border-b border-border bg-card">{(["basics", "scoring", "bonus"] as const).map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-3 text-sm font-semibold capitalize transition-all border-b-2 ${activeTab === tab ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"}`}>{tab}</button>))}</div>
+        <div className="p-6 overflow-y-auto flex-1">
+          {activeTab === "basics" && (<div className="space-y-4"><div className="space-y-2"><h3 className="text-lg font-semibold flex items-center gap-2 text-foreground"><Zap className="w-4 h-4 text-amber-400" />How to Play</h3><p className="text-sm text-muted-foreground leading-relaxed">You are presented with countries one-by-one from a randomized pool. For each country, you must assign it to one of 15 available category slots. Once a slot is filled, it cannot be changed.</p></div></div>)}
+          {activeTab === "scoring" && (<div className="space-y-4"><div className="space-y-2"><h3 className="text-lg font-semibold flex items-center gap-2 text-foreground"><Calculator className="w-4 h-4 text-emerald-400" />Point System</h3><p className="text-sm text-muted-foreground">Each category is scored from 1 to 10 based on real data.</p></div></div>)}
+          {activeTab === "bonus" && (<div><h3 className="text-sm font-semibold text-foreground mb-3">Nation Rankings</h3><div className="space-y-1.5">{NATION_RANKS.map((r) => (<div key={r.label} className="flex items-center justify-between rounded-lg bg-foreground/5 px-3 py-2"><span className={`text-sm font-semibold ${r.color}`}>{r.label}</span><span className="text-xs text-muted-foreground">{r.range}</span></div>))}</div></div>)}
         </div>
       </motion.div>
     </motion.div>
@@ -73,10 +73,10 @@ function DailyCard() {
               </div>
               <div>
                 <h2 className={`font-sans text-2xl font-bold tracking-tight ${alreadyCompleted ? "text-emerald-400" : "text-amber-400"}`}>Daily Challenge</h2>
-                <p className="text-sm text-white/40 font-medium">{todayLabel}</p>
+                <p className="text-sm text-muted-foreground font-medium">{todayLabel}</p>
               </div>
             </div>
-            <p className="text-base text-white/40 leading-relaxed max-w-md">Everyone drafts the exact same pool of countries today. Compare your strategy against the world.</p>
+            <p className="text-base text-muted-foreground leading-relaxed max-w-md">Everyone drafts the exact same pool of countries today. Compare your strategy against the world.</p>
           </div>
           
           <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -106,10 +106,10 @@ function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onSh
       <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="space-y-12 w-full">
         <div className="flex flex-col items-center">
           <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
-            <img src="/logo.svg" alt="GeoDrafts Logo" className="w-32 h-32 mb-8 rounded-full object-cover shadow-2xl" />
+            <img src="/logo.svg" alt="GeoDrafts Logo" className="w-32 h-32 mb-8 rounded-full object-cover" />
           </motion.div>
-          <h1 className="font-sans text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">GeoDrafts</h1>
-          <p className="text-xl md:text-2xl text-white/40 max-w-2xl leading-relaxed font-medium">
+          <h1 className="font-sans text-6xl md:text-8xl font-black text-foreground mb-6 tracking-tighter leading-none">GeoDrafts</h1>
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-medium">
             The premier strategic geography game. Draft real countries, maximize your stats, and build the ultimate nation.
           </p>
         </div>
@@ -120,14 +120,14 @@ function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onSh
             className="w-full flex items-center justify-center gap-3 px-8 py-6 rounded-3xl bg-primary text-primary-foreground font-bold text-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20 group"
           >
             <LogIn className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            Enter the Draft
+            Sign In
           </button>
 
           <div className="grid grid-cols-2 gap-4">
-            <button onClick={() => setLocation("/leaderboard")} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-[#000000] border border-white/10 text-white hover:bg-[#0a0a0a] active:scale-[0.98] transition-all font-bold shadow-sm">
+            <button onClick={() => setLocation("/leaderboard")} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-card border border-border text-card-foreground hover:bg-muted active:scale-[0.98] transition-all font-bold shadow-sm">
               <Trophy className="w-5 h-5 text-yellow-400" />Ranks
             </button>
-            <button onClick={onShowGuidebook} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-[#000000] border border-white/10 text-white hover:bg-[#0a0a0a] active:scale-[0.98] transition-all font-bold shadow-sm">
+            <button onClick={() => onShowGuidebook()} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-card border border-border text-card-foreground hover:bg-muted active:scale-[0.98] transition-all font-bold shadow-sm">
               <BookOpen className="w-5 h-5 text-blue-400" />Guide
             </button>
           </div>
@@ -220,25 +220,13 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="px-6 py-3 flex items-center justify-end bg-transparent sticky top-0 z-40">
-        <div className="flex items-center gap-2">
-          {firebaseUser && (
-            <button
-              onClick={() => setShowSettings(true)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-white/40 hover:text-white hover:bg-white/10 border border-white/10 transition-colors"
-            >
-              <User className="w-4 h-4" />
-              <span>{profile?.username || "Account"}</span>
-              <Settings className="w-3.5 h-3.5 opacity-60" />
-            </button>
-          )}
-          <button
-            onClick={toggleTheme}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm text-white/40 hover:text-white hover:bg-white/10 border border-white/10 transition-colors"
-          >
-            {isLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-            <span>{isLight ? "Dark" : "Light"}</span>
-          </button>
-        </div>
+        <button
+          onClick={() => setShowSettings(true)}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-semibold bg-card border border-border text-card-foreground hover:bg-muted transition-colors shadow-sm"
+        >
+          <Settings className="w-4 h-4 opacity-70" />
+          <span>{firebaseUser ? profile?.username || "Account" : "Settings"}</span>
+        </button>
       </header>
 
       {!firebaseUser ? (
@@ -250,88 +238,88 @@ export default function Home() {
             {/* Header Section */}
             <div className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8 text-center md:text-left">
               <div className="flex items-center gap-6">
-                <img src="/logo.svg" alt="GeoDrafts Logo" className="w-20 h-20 rounded-full object-cover shadow-lg" />
+                <img src="/logo.svg" alt="GeoDrafts Logo" className="w-20 h-20 rounded-full object-cover" />
                 <div>
-                  <h1 className="font-sans text-5xl md:text-6xl font-black text-white tracking-tighter mb-2">GeoDrafts</h1>
-                  <p className="text-lg text-white/40 font-medium">Draft your way to a superpower.</p>
+                  <h1 className="font-sans text-5xl md:text-6xl font-black text-foreground tracking-tighter mb-2">GeoDrafts</h1>
+                  <p className="text-lg text-muted-foreground font-medium">Draft your way to a superpower.</p>
                 </div>
               </div>
               <div className="flex gap-3">
-                <button onClick={() => navigate("/leaderboard")} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-[#000000] border border-white/10 text-white hover:bg-[#0a0a0a] active:scale-95 transition-all font-bold shadow-sm"><Trophy className="w-5 h-5 text-yellow-400" />Ranks</button>
-                <button onClick={() => setShowGuidebook(true)} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-[#000000] border border-white/10 text-white hover:bg-[#0a0a0a] active:scale-95 transition-all font-bold shadow-sm"><BookOpen className="w-5 h-5 text-blue-400" />Guide</button>
+                <button onClick={() => navigate("/leaderboard")} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-card border border-border text-card-foreground hover:bg-muted active:scale-95 transition-all font-bold shadow-sm"><Trophy className="w-5 h-5 text-yellow-400" />Ranks</button>
+                <button onClick={() => setShowGuidebook(true)} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-card border border-border text-card-foreground hover:bg-muted active:scale-95 transition-all font-bold shadow-sm"><BookOpen className="w-5 h-5 text-blue-400" />Guide</button>
               </div>
             </div>
 
             <DailyCard />
 
             {/* Gapless Bento Grid */}
-            <div className="border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden mt-8 bg-[#000000]">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+            <div className="border border-border rounded-[2rem] shadow-2xl overflow-hidden mt-8 bg-card text-card-foreground">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
                 
-                {/* Classic Mode - Spans 2 cols on Desktop */}
-                <button onClick={() => startGame("normal", false)} className="col-span-1 md:col-span-2 relative bg-[#000000] border-b md:border-r border-white/10 p-8 md:p-12 hover:bg-[#0a0a0a] transition-colors group text-left active:scale-[0.99] duration-300">
-                  <div className="absolute top-8 right-8 w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
-                    <Globe className="w-8 h-8" />
-                  </div>
-                  <h3 className="font-sans text-4xl font-bold mb-4 text-white">Classic Draft</h3>
-                  <p className="text-lg text-white/40 max-w-sm leading-relaxed">The original experience. See all ratings before assigning them to slots to carefully construct your nation.</p>
-                </button>
-
-                {/* Hard Mode */}
-                <button onClick={() => startGame("normal", true)} className="col-span-1 bg-[#000000] border-b border-white/10 p-8 md:p-12 hover:bg-red-500/5 transition-colors group text-left active:scale-[0.99] duration-300">
-                  <div className="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400 mb-6 group-hover:scale-110 transition-transform duration-500">
-                    <Shield className="w-7 h-7" />
-                  </div>
-                  <h3 className="font-sans text-3xl font-bold mb-3 text-white">Hard Mode</h3>
-                  <p className="text-base text-white/40 leading-relaxed">No ratings shown until assigned. Pure geography knowledge.</p>
-                </button>
-
-                {/* Special Variants - Row 2 */}
-                <div className="col-span-1 bg-[#000000] border-b md:border-b-0 md:border-r border-white/10 p-8 hover:bg-[#0a0a0a] transition-colors group flex flex-col justify-between">
+                {/* Row 1: Classic Mode & Double Draft */}
+                <div className="col-span-1 relative bg-card border-b md:border-r border-border p-8 transition-colors flex flex-col justify-between">
                   <div>
-                    <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-5 group-hover:scale-110 transition-transform duration-500">
-                      <ArrowLeftRight className="w-6 h-6" />
+                    <div className="w-12 h-12 rounded-xl bg-foreground/5 flex items-center justify-center text-foreground mb-5 transition-transform duration-500">
+                      <Globe className="w-6 h-6" />
                     </div>
-                    <h3 className="font-sans text-2xl font-bold mb-2 text-white">Double Draft</h3>
-                    <p className="text-sm text-white/40 leading-relaxed mb-8">Pick between two countries every single round.</p>
+                    <h3 className="font-sans text-2xl font-bold mb-2 text-card-foreground">Classic Draft</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-8">The original experience. See all ratings before assigning them to slots to carefully construct your nation.</p>
                   </div>
+                  
                   <div className="grid grid-cols-2 gap-2 mt-auto">
-                    <button onClick={(e) => { e.stopPropagation(); startGame("double", false); }} className="py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white text-sm font-bold transition-colors">Normal</button>
-                    <button onClick={(e) => { e.stopPropagation(); startGame("double", true); }} className="py-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 text-sm font-bold transition-colors">Hard</button>
+                    <button onClick={() => startGame("normal", false)} className="py-3 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldPlus className="w-3.5 h-3.5"/> Normal</button>
+                    <button onClick={() => startGame("normal", true)} className="py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldAlert className="w-3.5 h-3.5"/> Hard Mode</button>
                   </div>
                 </div>
 
-                <button onClick={() => startGame("guess", false)} className="col-span-1 bg-[#000000] border-b md:border-b-0 md:border-r border-white/10 p-8 hover:bg-[#0a0a0a] transition-colors group text-left active:scale-[0.99] duration-300">
-                  <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-5 group-hover:scale-110 transition-transform duration-500">
-                    <Search className="w-6 h-6" />
+                <div className="col-span-1 bg-card border-b border-border p-8 transition-colors flex flex-col justify-between">
+                  <div>
+                    <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-5 transition-transform duration-500">
+                      <ArrowLeftRight className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-sans text-2xl font-bold mb-2 text-card-foreground">Double Draft</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed mb-8">Pick between two randomly generated countries each round. Adapt your strategy on the fly to build the strongest nation possible.</p>
                   </div>
-                  <h3 className="font-sans text-2xl font-bold mb-2 text-white">Guess the Country</h3>
-                  <p className="text-sm text-white/40 leading-relaxed">Identify a mystery nation by looking solely at its stats.</p>
-                </button>
+                  <div className="grid grid-cols-2 gap-2 mt-auto">
+                    <button onClick={() => startGame("double", false)} className="py-3 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldPlus className="w-3.5 h-3.5"/> Normal</button>
+                    <button onClick={() => startGame("double", true)} className="py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldAlert className="w-3.5 h-3.5"/> Hard</button>
+                  </div>
+                </div>
 
-                <button onClick={() => navigate("/game/associations/setup")} className="col-span-1 bg-[#000000] border-b md:border-b-0 border-white/10 p-8 hover:bg-[#0a0a0a] transition-colors group text-left active:scale-[0.99] duration-300">
-                  <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400 mb-5 group-hover:scale-110 transition-transform duration-500">
-                    <Brain className="w-6 h-6" />
-                  </div>
-                  <h3 className="font-sans text-2xl font-bold mb-2 text-white">Associations</h3>
-                  <p className="text-sm text-white/40 leading-relaxed">Test your knowledge by mapping flags, capitals, and countries together.</p>
-                </button>
+                {/* Row 2: Guess the Country & Associations */}
+                <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 border-b border-border">
+                  <button onClick={() => startGame("guess", false)} className="col-span-1 bg-card border-b md:border-b-0 md:border-r border-border p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-5 group-hover:scale-110 transition-transform duration-500">
+                      <Search className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-sans text-2xl font-bold mb-2 text-card-foreground">Guess the Country</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">Identify a mystery nation by looking solely at its stats.</p>
+                  </button>
+
+                  <button onClick={() => navigate("/game/associations/setup")} className="col-span-1 bg-card p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-500 mb-5 group-hover:scale-110 transition-transform duration-500">
+                      <Brain className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-sans text-2xl font-bold mb-2 text-card-foreground">Associations</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">Test your knowledge by mapping flags, capitals, and countries together.</p>
+                  </button>
+                </div>
 
                 {/* Multiplayer Section - Full Width */}
-                <div className="col-span-1 md:col-span-3 bg-[#080808] border-t border-white/10 p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-blue-500/5 pointer-events-none" />
+                <div className="col-span-1 md:col-span-2 bg-muted/30 border-t border-border p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="absolute inset-0 bg-gradient-to-r from-foreground/5 to-blue-500/5 pointer-events-none" />
                   <div className="relative z-10 flex items-center gap-6">
-                    <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center">
-                      <Users className="w-8 h-8 text-white" />
+                    <div className="w-16 h-16 rounded-2xl bg-foreground/10 flex items-center justify-center">
+                      <Users className="w-8 h-8 text-foreground" />
                     </div>
                     <div>
-                      <h3 className="font-sans text-3xl font-bold mb-2 text-white">Multiplayer Mode</h3>
-                      <p className="text-lg text-white/40 max-w-sm">Host a Party or Sabotage game with your friends in real-time.</p>
+                      <h3 className="font-sans text-3xl font-bold mb-2 text-card-foreground">Multiplayer Mode</h3>
+                      <p className="text-lg text-muted-foreground max-w-sm">Host a Party or Sabotage game with your friends in real-time.</p>
                     </div>
                   </div>
                   
                   <div className="relative z-10 w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
-                    <button onClick={handleHost} disabled={isHosting} className="w-full sm:w-auto px-8 py-5 rounded-2xl bg-white text-black font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-lg disabled:opacity-50">
+                    <button onClick={handleHost} disabled={isHosting} className="w-full sm:w-auto px-8 py-5 rounded-2xl bg-foreground text-background font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-lg disabled:opacity-50">
                       {isHosting ? "Hosting..." : "Host Game"}
                     </button>
                     <form onSubmit={handleJoin} className="w-full sm:w-auto relative flex items-center">
@@ -340,9 +328,9 @@ export default function Home() {
                         onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                         maxLength={6}
                         placeholder="CODE"
-                        className="w-full sm:w-40 bg-[#000000] text-white placeholder-white/20 border border-white/10 rounded-2xl px-6 py-5 font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-white/20 uppercase text-center text-lg"
+                        className="w-full sm:w-40 bg-card text-foreground placeholder-muted-foreground border border-border rounded-2xl px-6 py-5 font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-ring uppercase text-center text-lg"
                       />
-                      <button type="submit" disabled={isJoining || joinCode.length !== 6} className="absolute right-2 top-2 bottom-2 px-5 rounded-xl bg-white text-black font-bold hover:bg-white/90 active:scale-95 transition-all disabled:opacity-0 disabled:scale-90 duration-300">
+                      <button type="submit" disabled={isJoining || joinCode.length !== 6} className="absolute right-2 top-2 bottom-2 px-5 rounded-xl bg-foreground text-background font-bold hover:bg-foreground/90 active:scale-95 transition-all disabled:opacity-0 disabled:scale-90 duration-300">
                         Join
                       </button>
                     </form>
@@ -356,14 +344,14 @@ export default function Home() {
         </div>
       )}
 
-      <footer className="w-full py-8 border-t border-white/10 mt-auto flex items-center justify-center gap-6 bg-card/30">
-        <button onClick={() => setShowAboutModal(true)} className="text-sm text-white/40 hover:text-white transition-colors font-semibold">
-          About GeoDrafts
+      <footer className="py-8 text-center flex items-center justify-center gap-4">
+        <button onClick={() => setShowAboutModal(true)} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
+          About
         </button>
-        <span className="text-white/40/50 text-xs font-black">&bull;</span>
+        <span className="text-muted-foreground/50 text-xs font-black">&bull;</span>
         <button 
           onClick={() => setShowContactModal(true)}
-          className="text-sm text-white/40 hover:text-white transition-colors font-semibold"
+          className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold"
         >
           Contact the Devs
         </button>

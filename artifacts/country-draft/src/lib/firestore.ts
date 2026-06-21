@@ -20,6 +20,8 @@ export type LeaderboardEntry = {
   score: number;
   mode: string;
   roster: Record<string, string>;
+  guesses?: string[];
+  mysteryCountry?: string;
   createdAt: Timestamp | null;
   date: string;
 };
@@ -93,7 +95,9 @@ export async function saveScore(
   username: string,
   score: number,
   mode: string,
-  roster: Record<string, string>
+  roster: Record<string, string>,
+  guesses?: string[],
+  mysteryCountry?: string
 ): Promise<string> {
   const today = new Date().toISOString().slice(0, 10);
 
@@ -107,6 +111,8 @@ export async function saveScore(
     }
     await setDoc(doc(firestore, "leaderboard", dailyDocId), {
       uid, username, score, mode, roster,
+      ...(guesses && { guesses }),
+      ...(mysteryCountry && { mysteryCountry }),
       createdAt: serverTimestamp(),
       date: today,
     });
@@ -116,6 +122,8 @@ export async function saveScore(
 
   const docRef = await addDoc(collection(firestore, "leaderboard"), {
     uid, username, score, mode, roster,
+    ...(guesses && { guesses }),
+    ...(mysteryCountry && { mysteryCountry }),
     createdAt: serverTimestamp(),
     date: today,
   });

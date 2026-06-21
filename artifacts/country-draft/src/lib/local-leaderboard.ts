@@ -11,7 +11,7 @@ export type PersonalLeaderboardEntry = {
   mysteryCountry?: string; // Used for guess the country
 };
 
-export type GameMode = "normal" | "hard" | "daily" | "double" | "guess";
+export type GameMode = "normal" | "hard" | "daily" | "double" | "double_hard" | "guess";
 
 function getStorageKey(mode: GameMode): string {
   return `countryDraftPersonal_${mode}`;
