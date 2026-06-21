@@ -95,7 +95,7 @@ export function SettingsModal({ onClose }: Props) {
         <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="w-5 h-5 text-primary" />
-            <h2 className="font-serif text-xl font-bold text-white">Account Settings</h2>
+            <h2 className="font-sans text-xl font-bold text-white">Account Settings</h2>
           </div>
           <button
             onClick={onClose}

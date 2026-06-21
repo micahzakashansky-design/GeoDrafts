@@ -139,7 +139,7 @@ export default function SabotageGame() {
     <div className="flex flex-col h-screen bg-background text-white overflow-hidden font-sans">
       <header className="h-14 md:h-16 shrink-0 border-b border-white/10/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+          <button onClick={() => navigate("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
@@ -162,7 +162,7 @@ export default function SabotageGame() {
           {state.gameOver ? (
             <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="sabotage" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
           ) : room && room.status === "playing" && players.find(p => p.uid === firebaseUser?.uid)?.finishedRound && !players.every(p => p.finishedRound) ? (
-             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-6" /><h2 className="text-2xl font-serif font-bold mb-2">Waiting for others...</h2><p className="text-white/40">The next country will be revealed once everyone finishes this round.</p></div>
+             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-6" /><h2 className="text-2xl font-sans font-bold mb-2">Waiting for others...</h2><p className="text-white/40">The next country will be revealed once everyone finishes this round.</p></div>
           ) : state.selectionOptions ? (
              <SelectionPhase options={state.selectionOptions} onPick={onSelectionPick} isHardMode={state.isHardMode} mode="sabotage" />
           ) : state.currentCountry ? (

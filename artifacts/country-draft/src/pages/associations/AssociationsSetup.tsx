@@ -71,7 +71,7 @@ export function AssociationsSetup() {
     <div className="flex flex-col h-screen bg-background text-white overflow-hidden font-sans">
       <header className="h-14 md:h-16 shrink-0 border-b border-white/10/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
-          <button onClick={() => setLocation("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+          <button onClick={() => setLocation("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />

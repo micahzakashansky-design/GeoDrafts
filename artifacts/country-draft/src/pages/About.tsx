@@ -18,7 +18,7 @@ export default function About() {
             className="flex items-center gap-3 cursor-pointer"
           >
             <img src="/logo.svg" alt="GeoDrafts Logo" className="w-8 h-8 opacity-90" />
-            <span className="font-serif text-xl font-bold text-white tracking-tighter">GeoDrafts</span>
+            <span className="font-sans text-xl font-bold text-white tracking-tighter">GeoDrafts</span>
           </motion.div>
         </Link>
         <Link href="/">
@@ -45,7 +45,7 @@ export default function About() {
             <img src="/logo.svg" alt="GeoDrafts Logo" className="w-24 h-24" />
           </div>
           
-          <h1 className="font-serif text-6xl md:text-8xl font-black text-white mb-16 tracking-tighter text-center leading-[0.9]">
+          <h1 className="font-sans text-6xl md:text-8xl font-black text-white mb-16 tracking-tighter text-center leading-[0.9]">
             The Ultimate <br/><span className="text-white/40">Geography Engine.</span>
           </h1>
           

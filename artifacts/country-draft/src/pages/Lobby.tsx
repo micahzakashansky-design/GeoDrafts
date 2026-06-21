@@ -76,7 +76,7 @@ export default function Lobby() {
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             onClick={() => navigate("/")} 
-            className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center gap-3 hover:opacity-80 transition-opacity"
+            className="font-sans text-xl md:text-2xl font-black tracking-tighter flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <Logo className="w-6 h-6 opacity-90" />GeoDrafts
           </motion.button>

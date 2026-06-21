@@ -103,7 +103,7 @@ export default function AssociationsGame() {
           className="max-w-md w-full bg-[#000000] border border-white/10 p-8 rounded-2xl text-center space-y-6"
         >
           <div className="text-6xl mb-4">🏆</div>
-          <h1 className="text-3xl font-bold font-serif">Game Over!</h1>
+          <h1 className="text-3xl font-bold font-sans">Game Over!</h1>
           <p className="text-white/40 text-lg">
             You scored <span className="font-bold text-white">{score}</span> out of {questions.length}.
           </p>
@@ -126,7 +126,7 @@ export default function AssociationsGame() {
     <div className="min-h-screen bg-background text-white flex flex-col">
       <header className="h-14 md:h-16 shrink-0 border-b border-white/10/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
-          <button onClick={() => setLocation("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+          <button onClick={() => setLocation("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />

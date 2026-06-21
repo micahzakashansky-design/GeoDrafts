@@ -97,7 +97,7 @@ export function AssociationsUI({ question, onCorrect, onSkip, validIsos }: Assoc
       <motion.h2 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-2xl md:text-3xl font-bold font-serif text-center"
+        className="text-2xl md:text-3xl font-bold font-sans text-center"
       >
         {renderTaskPrompt()}
       </motion.h2>
@@ -159,7 +159,7 @@ export function AssociationsUI({ question, onCorrect, onSkip, validIsos }: Assoc
             )}
 
             {task === "identify_country_from_capital" && (
-              <div className="text-4xl md:text-6xl font-serif font-bold text-primary">
+              <div className="text-4xl md:text-6xl font-sans font-bold text-primary">
                 {country.capital}
               </div>
             )}

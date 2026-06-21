@@ -82,7 +82,7 @@ export default function GuessGame() {
     <div className="flex flex-col h-screen bg-background text-white overflow-hidden font-sans">
       <header className="h-14 md:h-16 shrink-0 border-b border-white/10/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+          <button onClick={() => navigate("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
@@ -102,7 +102,7 @@ export default function GuessGame() {
                  ) : (
                     <div className="p-4 rounded-full bg-red-500/20 text-red-500 w-fit mx-auto mb-4 border border-red-500/30"><span className="text-4xl font-bold">X</span></div>
                  )}
-                 <h2 className="text-4xl font-serif font-bold mb-2">
+                 <h2 className="text-4xl font-sans font-bold mb-2">
                     {state.guesses[state.guesses.length - 1].toLowerCase() === state.mysteryCountry?.name.toLowerCase() ? "Correct!" : "Game Over"}
                  </h2>
                  {state.guesses[state.guesses.length - 1].toLowerCase() !== state.mysteryCountry?.name.toLowerCase() && (
@@ -209,7 +209,7 @@ export default function GuessGame() {
               <div className="p-8">
                 <div className="flex flex-col items-center text-center mb-8">
                   <div className="text-8xl mb-4 drop-shadow-lg">{state.mysteryCountry.flag}</div>
-                  <h2 className="text-4xl font-serif font-bold tracking-tight mb-2">{state.mysteryCountry.name}</h2>
+                  <h2 className="text-4xl font-sans font-bold tracking-tight mb-2">{state.mysteryCountry.name}</h2>
                   <p className="text-sm text-white/40 uppercase tracking-widest font-semibold flex items-center gap-1.5"><MapPin className="w-4 h-4" />{state.mysteryCountry.region}</p>
                 </div>
 

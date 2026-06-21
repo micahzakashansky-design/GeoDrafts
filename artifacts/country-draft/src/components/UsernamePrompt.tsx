@@ -59,7 +59,7 @@ export function UsernamePrompt({ user, onComplete }: Props) {
       >
         <div className="px-5 py-4 border-b border-white/10 flex items-center gap-2">
           <Globe className="w-5 h-5 text-primary" />
-          <span className="font-serif text-lg font-bold text-white">
+          <span className="font-sans text-lg font-bold text-white">
             Choose a username
           </span>
         </div>

@@ -58,7 +58,6 @@
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
   --font-sans: var(--app-font-sans);
-  --font-serif: var(--app-font-serif);
   --font-mono: var(--app-font-mono);
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -111,7 +110,6 @@
   --chart-5: 0 72% 51%;
 
   --app-font-sans: 'Inter', sans-serif;
-  --app-font-serif: 'Playfair Display', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: .5rem;
   --shadow-2xs: 0px 2px 0px 0px rgba(0,0,0,0.5);

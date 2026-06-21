@@ -399,11 +399,11 @@ export function ExpandableDescription({ description, isHovered = false }: { desc
 export function SelectionPhase({ options, onPick, isHardMode, mode }: { options: Country[]; onPick: (c: Country) => void; isHardMode: boolean; mode: string; }) {
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1">
-      <div className="text-center"><h2 className="text-3xl font-serif font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-white/40 text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
+      <div className="text-center"><h2 className="text-3xl font-sans font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-white/40 text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {options.map((country, idx) => (
           <motion.button key={country.name + idx} whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }} onClick={() => onPick(country)} className="bg-[#000000] border border-white/10 rounded-2xl overflow-hidden shadow-xl text-left group">
-            <div className="p-8 border-b border-white/10 bg-white/5 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-serif font-bold text-white">{country.name}</h3><p className="text-xs text-white/40 uppercase tracking-widest mt-1">{country.region}</p></div>
+            <div className="p-8 border-b border-white/10 bg-white/5 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-sans font-bold text-white">{country.name}</h3><p className="text-xs text-white/40 uppercase tracking-widest mt-1">{country.region}</p></div>
             <div className="p-5 space-y-4"><p className="text-sm text-white/70 leading-relaxed italic line-clamp-2">"{country.knownFor}"</p>
                {!isHardMode && (<div className="grid grid-cols-3 gap-2">{["Military", "Economy", "Government"].map(cat => { const score = country.stats[getCategoryKey(cat as Category)].score; return (<div key={cat} className="text-center p-2 rounded-lg bg-white/5 border border-white/10/40"><div className="text-[9px] uppercase font-bold text-white/40">{cat}</div><div className="text-sm font-bold text-primary">{score}/10</div></div>) })}</div>)}
                <div className="w-full py-2.5 rounded-xl bg-primary/10 text-primary text-center font-bold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-primary/20">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div>
@@ -421,7 +421,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
   const stats = mysteryCountry.stats; const categories = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full">
-      <div className="text-center"><h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2><p className="text-white/40 text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
+      <div className="text-center"><h2 className="text-4xl font-sans font-bold mb-2">Guess the Country</h2><p className="text-white/40 text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
       <div className="w-full max-w-md relative mt-4 mb-6">
         <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-white/40 group-focus-within:text-primary transition-colors" /></div>
           <input type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-white/10 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
@@ -444,7 +444,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
         <div className="flex items-start gap-4 md:gap-6">
           <div className="text-4xl md:text-5xl mt-1 drop-shadow-md">{country.flag}</div>
           <div>
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-white tracking-tight">{country.name}</h2>
+            <h2 className="text-2xl md:text-3xl font-sans font-bold text-white tracking-tight">{country.name}</h2>
             <p className="text-sm text-white/40 mt-0.5">{country.capital} &bull; {country.region}</p>
             <div className="mt-4 max-w-2xl text-sm text-white/80 leading-relaxed">
               {country.knownFor}
@@ -506,7 +506,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
     <div className="p-4 md:p-8 flex-1 overflow-y-auto" ref={rosterRef}>
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 pb-20">
         <div className="text-center space-y-3 md:space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-700">
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-white">Draft Complete</h2>
+          <h2 className="text-3xl md:text-5xl font-sans font-bold text-white">Draft Complete</h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm md:text-base">
             <span className="text-white/40 font-medium tracking-wide">Final Score:</span>
             <div className="flex items-center gap-3">
@@ -531,7 +531,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           )}
         </div>
         <div className="space-y-4">
-          <h3 className="text-lg md:text-xl font-serif font-bold text-white px-2 flex items-center justify-between">
+          <h3 className="text-lg md:text-xl font-sans font-bold text-white px-2 flex items-center justify-between">
             <span>Your Nation's Roster</span>
             {!wildcardUsed && !wildcardPhase && (
               <button onClick={onWildcard} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 font-semibold hover:bg-blue-500/20 transition-colors border border-blue-500/30">

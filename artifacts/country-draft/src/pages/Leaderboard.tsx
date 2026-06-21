@@ -202,7 +202,7 @@ export default function Leaderboard() {
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             onClick={() => navigate("/")} 
-            className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center gap-3 hover:opacity-80 transition-opacity text-white"
+            className="font-sans text-xl md:text-2xl font-black tracking-tighter flex items-center gap-3 hover:opacity-80 transition-opacity text-white"
           >
             <Logo className="w-6 h-6 opacity-90" />GeoDrafts
           </motion.button>
@@ -241,7 +241,7 @@ export default function Leaderboard() {
           className="flex items-center gap-4 mb-10"
         >
           <Trophy className={`w-10 h-10 ${scopeFilter === "global" ? "text-yellow-400" : "text-white/80"}`} />
-          <h1 className="font-serif text-5xl md:text-6xl font-black text-white tracking-tighter leading-none">
+          <h1 className="font-sans text-5xl md:text-6xl font-black text-white tracking-tighter leading-none">
              {scopeFilter === "global" ? "Global Rankings" : "Personal Records"}
           </h1>
         </motion.div>

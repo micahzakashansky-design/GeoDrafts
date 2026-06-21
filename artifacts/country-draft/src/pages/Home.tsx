@@ -30,7 +30,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
       <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-[#000000] border border-white/10 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5"><div className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-primary" /><h2 className="font-serif text-xl font-bold text-white">Game Guidebook</h2></div><button onClick={onClose} className="p-1 rounded-lg hover:bg-white/10 transition-colors text-white"><X className="w-5 h-5" /></button></div>
+        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between bg-white/5"><div className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-primary" /><h2 className="font-sans text-xl font-bold text-white">Game Guidebook</h2></div><button onClick={onClose} className="p-1 rounded-lg hover:bg-white/10 transition-colors text-white"><X className="w-5 h-5" /></button></div>
         <div className="flex border-b border-white/10 bg-black">{(["basics", "scoring", "bonus"] as const).map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-3 text-sm font-semibold capitalize transition-all border-b-2 ${activeTab === tab ? "border-primary text-primary bg-primary/5" : "border-transparent text-white/40 hover:text-white"}`}>{tab}</button>))}</div>
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {activeTab === "basics" && (<div className="space-y-4"><div className="space-y-2"><h3 className="text-lg font-semibold flex items-center gap-2 text-white"><Zap className="w-4 h-4 text-amber-400" />How to Play</h3><p className="text-sm text-white/40 leading-relaxed">You are presented with countries one-by-one from a randomized pool. For each country, you must assign it to one of 15 available category slots. Once a slot is filled, it cannot be changed.</p></div></div>)}
@@ -71,7 +71,7 @@ function DailyCard() {
                 <CalendarDays className="w-6 h-6" />
               </div>
               <div>
-                <h2 className={`font-serif text-2xl font-bold tracking-tight ${alreadyCompleted ? "text-emerald-400" : "text-amber-400"}`}>Daily Challenge</h2>
+                <h2 className={`font-sans text-2xl font-bold tracking-tight ${alreadyCompleted ? "text-emerald-400" : "text-amber-400"}`}>Daily Challenge</h2>
                 <p className="text-sm text-white/40 font-medium">{todayLabel}</p>
               </div>
             </div>
@@ -81,7 +81,7 @@ function DailyCard() {
           <div className="flex items-center gap-4 w-full sm:w-auto">
             {alreadyCompleted && (
               <div className="flex-1 sm:flex-none bg-emerald-500/10 border border-emerald-500/20 rounded-2xl px-8 py-4 text-center backdrop-blur-md">
-                <div className="font-serif text-3xl font-bold text-emerald-400 group-hover:scale-105 transition-transform duration-500">{dailyResult?.score || cloudState?.totalScore || 0} pts</div>
+                <div className="font-sans text-3xl font-bold text-emerald-400 group-hover:scale-105 transition-transform duration-500">{dailyResult?.score || cloudState?.totalScore || 0} pts</div>
                 <div className="text-xs font-bold uppercase tracking-widest text-emerald-400/60 mt-1">Your Score</div>
               </div>
             )}
@@ -107,7 +107,7 @@ function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onSh
           <motion.div whileHover={{ scale: 1.05 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
             <img src="/logo.svg" alt="GeoDrafts Logo" className="w-32 h-32 mb-8 rounded-full object-cover shadow-2xl ring-4 ring-white/10" />
           </motion.div>
-          <h1 className="font-serif text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">GeoDrafts</h1>
+          <h1 className="font-sans text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-none">GeoDrafts</h1>
           <p className="text-xl md:text-2xl text-white/40 max-w-2xl leading-relaxed font-medium">
             The premier strategic geography game. Draft real countries, maximize your stats, and build the ultimate nation.
           </p>
@@ -237,7 +237,7 @@ export default function Home() {
               <div className="flex items-center gap-6">
                 <img src="/logo.svg" alt="GeoDrafts Logo" className="w-20 h-20 rounded-full object-cover shadow-lg ring-2 ring-white/10" />
                 <div>
-                  <h1 className="font-serif text-5xl md:text-6xl font-black text-white tracking-tighter mb-2">GeoDrafts</h1>
+                  <h1 className="font-sans text-5xl md:text-6xl font-black text-white tracking-tighter mb-2">GeoDrafts</h1>
                   <p className="text-lg text-white/40 font-medium">Draft your way to a superpower.</p>
                 </div>
               </div>
@@ -258,7 +258,7 @@ export default function Home() {
                   <div className="absolute top-8 right-8 w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-white group-hover:scale-110 group-hover:rotate-3 transition-transform duration-500">
                     <Globe className="w-8 h-8" />
                   </div>
-                  <h3 className="font-serif text-4xl font-bold mb-4 text-white">Classic Draft</h3>
+                  <h3 className="font-sans text-4xl font-bold mb-4 text-white">Classic Draft</h3>
                   <p className="text-lg text-white/40 max-w-sm leading-relaxed">The original experience. See all ratings before assigning them to slots to carefully construct your nation.</p>
                 </button>
 
@@ -267,7 +267,7 @@ export default function Home() {
                   <div className="w-14 h-14 rounded-2xl bg-red-500/10 flex items-center justify-center text-red-400 mb-6 group-hover:scale-110 transition-transform duration-500">
                     <Shield className="w-7 h-7" />
                   </div>
-                  <h3 className="font-serif text-3xl font-bold mb-3 text-white">Hard Mode</h3>
+                  <h3 className="font-sans text-3xl font-bold mb-3 text-white">Hard Mode</h3>
                   <p className="text-base text-white/40 leading-relaxed">No ratings shown until assigned. Pure geography knowledge.</p>
                 </button>
 
@@ -277,7 +277,7 @@ export default function Home() {
                     <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 mb-5 group-hover:scale-110 transition-transform duration-500">
                       <ArrowLeftRight className="w-6 h-6" />
                     </div>
-                    <h3 className="font-serif text-2xl font-bold mb-2 text-white">Double Draft</h3>
+                    <h3 className="font-sans text-2xl font-bold mb-2 text-white">Double Draft</h3>
                     <p className="text-sm text-white/40 leading-relaxed mb-8">Pick between two countries every single round.</p>
                   </div>
                   <div className="grid grid-cols-2 gap-2 mt-auto">
@@ -290,7 +290,7 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-5 group-hover:scale-110 transition-transform duration-500">
                     <Search className="w-6 h-6" />
                   </div>
-                  <h3 className="font-serif text-2xl font-bold mb-2 text-white">Guess the Country</h3>
+                  <h3 className="font-sans text-2xl font-bold mb-2 text-white">Guess the Country</h3>
                   <p className="text-sm text-white/40 leading-relaxed">Identify a mystery nation by looking solely at its stats.</p>
                 </button>
 
@@ -298,7 +298,7 @@ export default function Home() {
                   <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400 mb-5 group-hover:scale-110 transition-transform duration-500">
                     <Brain className="w-6 h-6" />
                   </div>
-                  <h3 className="font-serif text-2xl font-bold mb-2 text-white">Associations</h3>
+                  <h3 className="font-sans text-2xl font-bold mb-2 text-white">Associations</h3>
                   <p className="text-sm text-white/40 leading-relaxed">Test your knowledge by mapping flags, capitals, and countries together.</p>
                 </button>
 
@@ -310,7 +310,7 @@ export default function Home() {
                       <Users className="w-8 h-8 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-serif text-3xl font-bold mb-2 text-white">Multiplayer Mode</h3>
+                      <h3 className="font-sans text-3xl font-bold mb-2 text-white">Multiplayer Mode</h3>
                       <p className="text-lg text-white/40 max-w-sm">Host a Party or Sabotage game with your friends in real-time.</p>
                     </div>
                   </div>

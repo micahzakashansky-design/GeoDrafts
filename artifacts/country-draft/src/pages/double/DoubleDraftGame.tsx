@@ -124,7 +124,7 @@ export default function DoubleDraftGame() {
     <div className="flex flex-col h-screen bg-[#000000] text-white selection:bg-white/20 overflow-hidden font-sans">
       <header className="h-14 md:h-16 shrink-0 border-b border-white/10 bg-[#000000] px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+          <button onClick={() => navigate("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-white/20 hidden md:block" />
