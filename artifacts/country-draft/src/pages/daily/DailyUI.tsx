@@ -606,6 +606,26 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
             </div>
           )}
         </div>
+        {!isDailyMode && (
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 mb-12">
+            <button onClick={onReset} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-base hover:opacity-90 transition-opacity shadow-lg">
+              <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again <span className="ml-1 text-xs opacity-60 bg-black/20 px-1.5 py-0.5 rounded font-mono">[R]</span>
+            </button>
+            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-foreground font-bold text-sm md:text-base hover:bg-muted/80 transition-colors border border-border shadow-sm">
+              <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
+            </button>
+            {!leaderboardSubmitted && (
+              <button onClick={onSubmitLeaderboard} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary/20 text-primary border border-primary/40 font-bold text-sm md:text-base hover:bg-primary/30 transition-colors shadow-sm">
+                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Submit Score
+              </button>
+            )}
+            {leaderboardSubmitted && (
+              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground border border-border font-bold text-sm md:text-base">
+                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
+              </div>
+            )}
+          </div>
+        )}
         <div className="space-y-4">
           <h3 className="text-lg md:text-xl font-sans font-bold text-foreground px-2 flex items-center justify-between">
             <span>Your Nation's Roster</span>
@@ -788,26 +808,6 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
             })()}
           </div>
         </div>
-        {!isDailyMode && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 md:pt-8 border-t border-border mb-12">
-            <button onClick={onReset} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-base hover:opacity-90 transition-opacity shadow-lg">
-              <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again <span className="ml-1 text-xs opacity-60 bg-black/20 px-1.5 py-0.5 rounded font-mono">[R]</span>
-            </button>
-            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-foreground font-bold text-sm md:text-base hover:bg-muted/80 transition-colors border border-border shadow-sm">
-              <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
-            </button>
-            {!leaderboardSubmitted && (
-              <button onClick={onSubmitLeaderboard} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary/20 text-primary border border-primary/40 font-bold text-sm md:text-base hover:bg-primary/30 transition-colors shadow-sm">
-                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Submit Score
-              </button>
-            )}
-            {leaderboardSubmitted && (
-              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground border border-border font-bold text-sm md:text-base">
-                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
-              </div>
-            )}
-          </div>
-        )}
       </div>
 
       <button
