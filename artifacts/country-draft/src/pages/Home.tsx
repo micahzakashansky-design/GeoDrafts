@@ -141,12 +141,15 @@ export default function Home() {
   const queryClient = useQueryClient();
   
   useEffect(() => {
-    // Pre-load the default leaderboard
-    queryClient.prefetchQuery({
-      queryKey: ["leaderboard", "normal"],
-      queryFn: () => getTopScores("normal"),
-      staleTime: 1000 * 60 * 5,
-    });
+    // Pre-load all leaderboards
+    const modes = ["normal", "hard", "daily", "double", "guess"];
+    for (const mode of modes) {
+      queryClient.prefetchQuery({
+        queryKey: ["leaderboard", mode],
+        queryFn: () => getTopScores(mode),
+        staleTime: 1000 * 60 * 5,
+      });
+    }
   }, [queryClient]);
 
   const [, navigate] = useLocation();
