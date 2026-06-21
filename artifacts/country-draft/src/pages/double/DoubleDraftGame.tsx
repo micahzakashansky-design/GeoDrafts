@@ -88,12 +88,9 @@ export default function DoubleDraftGame() {
     setState(prev => {
       if (!prev.wildcardTargetCategory) return prev;
       const newRoster = { ...prev.roster };
-      const timeTaken = Date.now() - (prev.currentTurnStartTime || Date.now());
-      const newCategoryTimes = { ...(prev.categoryTimes || {}), [prev.wildcardTargetCategory]: timeTaken };
       newRoster[prev.wildcardTargetCategory] = country;
       return {
         ...prev,
-        categoryTimes: newCategoryTimes,
         currentTurnStartTime: Date.now(),
         roster: newRoster,
         selectionOptions: null,
