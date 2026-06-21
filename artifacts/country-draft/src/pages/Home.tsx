@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, Link } from "wouter";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Globe, Shield, Trophy, BookOpen, CalendarDays, X,
   Moon, Sun, Users, Swords, PartyPopper, ArrowLeftRight,
@@ -8,7 +9,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "../lib/theme-context";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
-import { checkDailySubmitted, getDailyState, createRoom, joinRoom } from "../lib/firestore";
+import { checkDailySubmitted, getDailyState, createRoom, joinRoom, getTopScores } from "../lib/firestore";
 import { UsernamePrompt } from "../components/UsernamePrompt";
 import { SettingsModal } from "../components/SettingsModal";
 import { AuthModal } from "../components/AuthModal";
@@ -137,6 +138,17 @@ function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onSh
 }
 
 export default function Home() {
+  const queryClient = useQueryClient();
+  
+  useEffect(() => {
+    // Pre-load the default leaderboard
+    queryClient.prefetchQuery({
+      queryKey: ["leaderboard", "normal"],
+      queryFn: () => getTopScores("normal"),
+      staleTime: 1000 * 60 * 5,
+    });
+  }, [queryClient]);
+
   const [, navigate] = useLocation();
   const [showGuidebook, setShowGuidebook] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
