@@ -159,46 +159,54 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                       <div>
                         <h3 className="text-3xl font-black tracking-tight text-foreground mb-4">Point System</h3>
                         <p className="text-lg text-muted-foreground leading-relaxed">
-                          Every category evaluates a different real-world metric. Scores are normalized on a scale from <strong className="text-foreground">1 to 10</strong>.
+                          Every category evaluates a different real-world metric. Your raw score depends on the category's <strong className="text-foreground">Impact Rating</strong>.
                         </p>
                       </div>
 
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-foreground/5">
-                          <div className="w-16 text-center">
-                            <span className="text-xl font-black text-emerald-400">10</span>
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-bold text-foreground text-sm">Exceptional</h4>
-                            <p className="text-xs text-muted-foreground">Top 5% globally in this category (e.g., China in Population)</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-foreground/5">
-                          <div className="w-16 text-center">
-                            <span className="text-xl font-black text-blue-400">7-9</span>
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-bold text-foreground text-sm">Strong</h4>
-                            <p className="text-xs text-muted-foreground">Above average performer</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-foreground/5">
-                          <div className="w-16 text-center">
-                            <span className="text-xl font-black text-orange-400">4-6</span>
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-bold text-foreground text-sm">Average</h4>
-                            <p className="text-xs text-muted-foreground">Middle of the pack globally</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-foreground/5">
-                          <div className="w-16 text-center">
-                            <span className="text-xl font-black text-red-400">1-3</span>
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-bold text-foreground text-sm">Weak</h4>
-                            <p className="text-xs text-muted-foreground">Bottom percentiles globally</p>
-                          </div>
+                      <div className="overflow-hidden rounded-xl border border-border/50 bg-card">
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-sm text-left whitespace-nowrap">
+                            <thead className="bg-muted/30 text-muted-foreground text-xs uppercase">
+                              <tr>
+                                <th className="px-4 py-3 font-semibold">Rating</th>
+                                <th className="px-4 py-3 font-semibold text-center text-yellow-500">★★★ (Max 15)</th>
+                                <th className="px-4 py-3 font-semibold text-center text-blue-400">★★ (Max 12)</th>
+                                <th className="px-4 py-3 font-semibold text-center text-muted-foreground">★ (Max 10)</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-border/50">
+                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                                <td className="px-4 py-3 font-bold text-emerald-400">World-Class</td>
+                                <td className="px-4 py-3 text-center font-mono">14-15</td>
+                                <td className="px-4 py-3 text-center font-mono">11-12</td>
+                                <td className="px-4 py-3 text-center font-mono">9-10</td>
+                              </tr>
+                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                                <td className="px-4 py-3 font-bold text-green-400">Strong</td>
+                                <td className="px-4 py-3 text-center font-mono">12-13</td>
+                                <td className="px-4 py-3 text-center font-mono">9-10</td>
+                                <td className="px-4 py-3 text-center font-mono">7-8</td>
+                              </tr>
+                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                                <td className="px-4 py-3 font-bold text-yellow-400">Moderate</td>
+                                <td className="px-4 py-3 text-center font-mono">8-11</td>
+                                <td className="px-4 py-3 text-center font-mono">6-8</td>
+                                <td className="px-4 py-3 text-center font-mono">5-6</td>
+                              </tr>
+                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                                <td className="px-4 py-3 font-bold text-orange-400">Weak</td>
+                                <td className="px-4 py-3 text-center font-mono">4-7</td>
+                                <td className="px-4 py-3 text-center font-mono">4-5</td>
+                                <td className="px-4 py-3 text-center font-mono">3-4</td>
+                              </tr>
+                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                                <td className="px-4 py-3 font-bold text-red-400">Critical</td>
+                                <td className="px-4 py-3 text-center font-mono">1-3</td>
+                                <td className="px-4 py-3 text-center font-mono">1-3</td>
+                                <td className="px-4 py-3 text-center font-mono">1-2</td>
+                              </tr>
+                            </tbody>
+                          </table>
                         </div>
                       </div>
                       
