@@ -132,10 +132,10 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
       {isPersonal && onPublish && (
         <button 
           onClick={(e) => { e.stopPropagation(); onPublish(); }}
-          className="absolute right-4 top-4 px-4 py-1.5 text-xs font-black uppercase tracking-widest text-primary hover:bg-primary/10 rounded-full transition-colors bg-card/80 backdrop-blur-sm z-10 border border-primary/20"
+          className="absolute right-4 top-4 p-2 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full transition-colors bg-card/80 backdrop-blur-sm z-10"
           title="Publish to Global Leaderboard"
         >
-          Publish
+          <Upload className="w-4 h-4" />
         </button>
       )}
     </motion.div>
