@@ -38,7 +38,7 @@ export function WorldMap({
   }, []);
 
   return (
-    <div className="w-full h-full bg-secondary/20 rounded-xl overflow-hidden border border-border relative">
+    <div className="w-full h-full bg-white/5 rounded-xl overflow-hidden border border-white/10 relative">
       <ComposableMap
         projectionConfig={{
           scale: 140,
@@ -136,7 +136,7 @@ export function WorldMap({
           })}
         </ZoomableGroup>
       </ComposableMap>
-      <div className="absolute bottom-2 right-2 text-xs text-muted-foreground bg-background/80 p-1 rounded">
+      <div className="absolute bottom-2 right-2 text-xs text-white/40 bg-black/80 p-1 rounded">
         Scroll to zoom, drag to pan
       </div>
     </div>

@@ -144,7 +144,7 @@ export function AssociationsUI({ question, onCorrect, onSkip, validIsos }: Assoc
                   <button
                     key={i}
                     onClick={() => handleFlagClick(opt)}
-                    className="text-6xl md:text-8xl hover:scale-110 transition-transform active:scale-95 bg-secondary/20 p-6 rounded-2xl border border-border"
+                    className="text-6xl md:text-8xl hover:scale-110 transition-transform active:scale-95 bg-white/5 p-6 rounded-2xl border border-white/10"
                   >
                     {opt.flag}
                   </button>
@@ -176,7 +176,7 @@ export function AssociationsUI({ question, onCorrect, onSkip, validIsos }: Assoc
             placeholder="Type your answer..."
             value={input}
             onChange={e => setInput(e.target.value)}
-            className="text-center text-lg h-14 bg-secondary/50 border-border"
+            className="text-center text-lg h-14 bg-white/10 border-white/10"
           />
         )}
         

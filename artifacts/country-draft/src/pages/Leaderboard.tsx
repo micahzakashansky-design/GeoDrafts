@@ -7,12 +7,13 @@ import { Logo } from "@/components/Logo";
 import { getTopScores, getCloudPersonalScores, deleteCloudPersonalScore, deleteGlobalScore, type LeaderboardEntry } from "@/lib/firestore";
 import { loadPersonalLeaderboard, deleteLocalPersonalScore, type GameMode, type PersonalLeaderboardEntry } from "@/lib/local-leaderboard";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDelete }: { rank: number; entry: LeaderboardEntry | PersonalLeaderboardEntry; isPersonal?: boolean; isOwner?: boolean; onDelete?: () => void }) {
   const [expanded, setExpanded] = useState(false);
-  const medal = rank === 1 ? <Medal className="w-5 h-5 text-yellow-400" /> : rank === 2 ? <Medal className="w-5 h-5 text-slate-300" /> : rank === 3 ? <Medal className="w-5 h-5 text-amber-600" /> : null;
+  const medal = rank === 1 ? <Medal className="w-6 h-6 text-yellow-400" /> : rank === 2 ? <Medal className="w-6 h-6 text-slate-300" /> : rank === 3 ? <Medal className="w-6 h-6 text-amber-600" /> : null;
   const rankColor =
-    rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-muted-foreground";
+    rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-white/40";
 
   const isGlobal = "username" in entry;
   
@@ -31,46 +32,50 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
   const mysteryCountry = !isGlobal ? (entry as PersonalLeaderboardEntry).mysteryCountry : undefined;
 
   return (
-    <div className="rounded-lg border border-border/60 bg-card/30 overflow-hidden transition-colors">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border border-white/5 bg-[#080808] overflow-hidden transition-colors relative"
+    >
       <button
-        className="w-full flex items-center gap-3 px-4 py-2.5 text-left hover:bg-secondary/20 transition-colors"
+        className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-white/5 transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
-        <span className={`text-sm font-bold w-6 text-center shrink-0 ${rankColor}`}>
+        <span className={`text-base font-black w-8 text-center shrink-0 flex justify-center ${rankColor}`}>
           {medal ?? `#${rank}`}
         </span>
         
         {isGlobal ? (
-          <span className="font-bold text-foreground text-base flex-1">{(entry as LeaderboardEntry).username}</span>
+          <span className="font-bold text-white text-lg tracking-tight flex-1">{(entry as LeaderboardEntry).username}</span>
         ) : (
-          <span className="font-bold text-foreground text-base flex-1">You</span>
+          <span className="font-bold text-white text-lg tracking-tight flex-1">You</span>
         )}
 
-        <span className="text-primary font-bold text-sm">{entry.score} pts</span>
+        <span className="text-white font-black text-lg tracking-tight">{entry.score} pts</span>
         
         {isGlobal && (
           <span
-            className={`text-xs px-2 py-0.5 rounded font-semibold mr-1 ${
+            className={`text-xs px-3 py-1 rounded-full font-black uppercase tracking-widest mr-2 ${
               isDaily
-                ? "bg-amber-400/20 text-amber-400"
+                ? "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                 : isHard
-                ? "bg-red-500/20 text-red-400"
+                ? "bg-red-500/10 text-red-400 border border-red-500/20"
                 : isDouble
-                ? "bg-purple-500/20 text-purple-400"
+                ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
                 : isGuess
-                ? "bg-emerald-500/20 text-emerald-400"
-                : "bg-primary/20 text-primary"
+                ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                : "bg-white/10 text-white/70 border border-white/20"
             }`}
           >
             {isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isGuess ? "Guess" : "Easy"}
           </span>
         )}
 
-        <span className="text-xs text-muted-foreground mr-1 hidden sm:block">{date}</span>
+        <span className="text-sm font-medium text-white/40 mr-2 hidden sm:block">{date}</span>
         
         {(roster || guesses) && (
           <ChevronDown
-            className={`w-3.5 h-3.5 text-muted-foreground transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`}
+            className={`w-4 h-4 text-white/40 transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`}
           />
         )}
       </button>
@@ -80,25 +85,25 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <div className="px-4 pb-3 pt-2 border-t border-border/40">
+            <div className="px-5 pb-5 pt-2 border-t border-white/5 bg-[#000000]/50">
                {roster ? (
-                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-1.5">
+                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                    {Object.entries(roster).map(([cat, name]) => (
-                     <div key={cat} className="flex items-center gap-1.5 text-xs">
-                       <span className="text-muted-foreground shrink-0 truncate">{cat}:</span>
-                       <span className="text-foreground font-medium truncate">{name}</span>
+                     <div key={cat} className="flex flex-col gap-0.5">
+                       <span className="text-[10px] font-black uppercase tracking-widest text-white/30 truncate">{cat}</span>
+                       <span className="text-white font-bold text-sm truncate">{name}</span>
                      </div>
                    ))}
                  </div>
                ) : guesses ? (
                  <div className="text-sm">
-                   <div className="mb-2 text-muted-foreground">Mystery Country: <span className="font-bold text-foreground">{mysteryCountry}</span></div>
+                   <div className="mb-3 text-white/50 text-xs font-black tracking-widest uppercase">Mystery Country: <span className="font-bold text-white capitalize tracking-normal">{mysteryCountry}</span></div>
                    <div className="flex gap-2 flex-wrap">
                      {guesses.map((g, i) => (
-                       <span key={i} className="px-2 py-1 bg-secondary/50 rounded-md text-xs font-medium border border-border">
+                       <span key={i} className="px-3 py-1.5 bg-white/5 rounded-lg text-xs font-bold border border-white/10 text-white/80">
                          {i + 1}. {g}
                        </span>
                      ))}
@@ -113,17 +118,15 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
       {(isPersonal || isOwner) && onDelete && (
         <button 
           onClick={(e) => { e.stopPropagation(); onDelete(); }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full transition-colors bg-card/80 backdrop-blur-sm"
+          className="absolute right-4 top-4 p-2 text-white/30 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors bg-[#080808]/80 backdrop-blur-sm z-10"
           title="Delete record"
         >
           <Trash2 className="w-4 h-4" />
         </button>
       )}
-    </div>
+    </motion.div>
   );
 }
-
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 type ModeFilter = "normal" | "hard" | "daily" | "double" | "guess";
 type ScopeFilter = "global" | "personal";
@@ -181,68 +184,78 @@ export default function Leaderboard() {
   }, [modeFilter, scopeFilter, firebaseUser, cloudPersonalEntries]);
 
   const modeTabs: { key: ModeFilter; label: string; activeClass: string }[] = [
-    { key: "normal", label: "Normal (Easy)", activeClass: "bg-primary/20 text-primary border-primary/40" },
-    { key: "hard",   label: "Hard",      activeClass: "bg-red-500/20 text-red-400 border-red-500/40" },
-    { key: "double", label: "Double Draft", activeClass: "bg-purple-500/20 text-purple-400 border-purple-500/40" },
-    { key: "guess",  label: "Guess Country", activeClass: "bg-emerald-500/20 text-emerald-400 border-emerald-500/40" },
-    { key: "daily",  label: `Daily`,   activeClass: "bg-amber-400/20 text-amber-400 border-amber-400/40" },
+    { key: "normal", label: "Normal", activeClass: "bg-white text-black font-black" },
+    { key: "hard",   label: "Hard",      activeClass: "bg-red-500 text-white font-black" },
+    { key: "double", label: "Double Draft", activeClass: "bg-purple-500 text-white font-black" },
+    { key: "guess",  label: "Guess Country", activeClass: "bg-emerald-500 text-white font-black" },
+    { key: "daily",  label: `Daily`,   activeClass: "bg-amber-400 text-black font-black" },
   ];
 
   const entriesToDisplay = scopeFilter === "global" ? globalEntries : personalEntries;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
-            <Logo className="w-5 h-5" />GeoDrafts
-          </button>
-          <div className="h-4 w-px bg-border hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:block">
+    <div className="min-h-screen bg-[#000000] flex flex-col font-sans selection:bg-white/20">
+      <header className="h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 mix-blend-difference sticky top-0">
+        <div className="flex items-center gap-4">
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            onClick={() => navigate("/")} 
+            className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center gap-3 hover:opacity-80 transition-opacity text-white"
+          >
+            <Logo className="w-6 h-6 opacity-90" />GeoDrafts
+          </motion.button>
+          <div className="h-6 w-px bg-white/10 hidden md:block" />
+          <div className="px-3 py-1.5 rounded-full bg-white/5 text-xs font-bold text-white/50 border border-white/10 hidden sm:block tracking-widest uppercase">
             Leaderboards
           </div>
         </div>
       </header>
 
-      <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-8">
+      <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-12">
         
         {/* Scope Toggle: Global vs Personal */}
-        <div className="flex bg-secondary/50 p-1.5 rounded-xl mb-6">
+        <div className="flex bg-[#080808] p-1.5 rounded-2xl mb-12 border border-white/5">
           <button
             onClick={() => setScopeFilter("global")}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
-              scopeFilter === "global" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
+              scopeFilter === "global" ? "bg-white shadow-sm text-black" : "text-white/40 hover:text-white/80"
             }`}
           >
             <Globe className="w-4 h-4" /> Global
           </button>
           <button
             onClick={() => setScopeFilter("personal")}
-            className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-lg text-sm font-bold transition-all ${
-              scopeFilter === "personal" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+            className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
+              scopeFilter === "personal" ? "bg-white shadow-sm text-black" : "text-white/40 hover:text-white/80"
             }`}
           >
             <User className="w-4 h-4" /> Personal
           </button>
         </div>
 
-        <div className="flex items-center gap-3 mb-6">
-          <Trophy className={`w-6 h-6 ${scopeFilter === "global" ? "text-yellow-400" : "text-primary"}`} />
-          <h1 className="font-serif text-2xl font-bold text-foreground">
-             {scopeFilter === "global" ? "Global Leaderboard" : "Personal Records"}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-4 mb-10"
+        >
+          <Trophy className={`w-10 h-10 ${scopeFilter === "global" ? "text-yellow-400" : "text-white/80"}`} />
+          <h1 className="font-serif text-5xl md:text-6xl font-black text-white tracking-tighter leading-none">
+             {scopeFilter === "global" ? "Global Rankings" : "Personal Records"}
           </h1>
-        </div>
+        </motion.div>
 
         {modeFilter === "daily" && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-4 rounded-xl border border-amber-400/30 bg-amber-400/5 px-4 py-3 flex items-center gap-3"
+            className="mb-8 rounded-2xl border border-amber-400/20 bg-amber-400/5 px-6 py-5 flex items-center gap-4"
           >
-            <CalendarDays className="w-5 h-5 text-amber-400 shrink-0" />
+            <CalendarDays className="w-6 h-6 text-amber-400 shrink-0" />
             <div>
-              <div className="text-sm font-semibold text-amber-300">Daily Challenge</div>
-              <div className="text-xs text-muted-foreground">
+              <div className="text-base font-black text-amber-400 uppercase tracking-widest">Daily Challenge</div>
+              <div className="text-sm text-amber-400/60 font-medium mt-1">
                 {scopeFilter === "global" ? "Everyone drafts the same pool today — " : "Your previous daily records. Today is "}
                 {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
               </div>
@@ -250,50 +263,61 @@ export default function Leaderboard() {
           </motion.div>
         )}
 
-        <div className="flex gap-2 mb-6 flex-wrap">
+        <div className="flex gap-2 mb-8 flex-wrap">
           {modeTabs.map((tab) => (
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 30 }}
               key={tab.key}
               onClick={() => setModeFilter(tab.key)}
-              className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-colors border ${
+              className={`px-5 py-2.5 rounded-full text-sm uppercase tracking-widest transition-colors border ${
                 modeFilter === tab.key
-                  ? tab.activeClass
-                  : "text-muted-foreground border-border hover:text-foreground hover:bg-secondary"
+                  ? tab.activeClass + " border-transparent"
+                  : "text-white/40 font-bold border-white/10 hover:text-white hover:bg-white/5 bg-[#080808]"
               }`}
             >
               {tab.label}
-            </button>
+            </motion.button>
           ))}
         </div>
 
         {globalLoading || (scopeFilter === "personal" && !!firebaseUser && cloudPersonalLoading) ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="text-muted-foreground text-sm animate-pulse">Loading scores…</div>
+          <div className="flex items-center justify-center py-32">
+            <motion.div 
+              animate={{ opacity: [0.3, 1, 0.3] }} 
+              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              className="text-white/40 font-black tracking-widest text-sm uppercase"
+            >
+              Loading scores...
+            </motion.div>
           </div>
         ) : globalError && scopeFilter === "global" ? (
-          <div className="text-center py-20">
-            <div className="text-red-400 text-sm mb-3">{globalError instanceof Error ? globalError.message : "Failed to load global leaderboard."}</div>
-            <button onClick={() => window.location.reload()} className="text-sm text-primary hover:underline">
+          <div className="text-center py-32">
+            <div className="text-red-500 font-bold mb-4">{globalError instanceof Error ? globalError.message : "Failed to load global leaderboard."}</div>
+            <button onClick={() => window.location.reload()} className="text-sm text-white/50 font-bold uppercase tracking-widest hover:text-white transition-colors">
               Try again
             </button>
           </div>
         ) : entriesToDisplay.length === 0 ? (
-          <div className="text-center py-20">
-            {scopeFilter === "global" ? <Globe className="w-12 h-12 mx-auto mb-3 opacity-20" /> : <User className="w-12 h-12 mx-auto mb-3 opacity-20" />}
-            <p className="text-muted-foreground text-sm">
+          <div className="text-center py-32">
+            {scopeFilter === "global" ? <Globe className="w-16 h-16 mx-auto mb-6 opacity-10 text-white" /> : <User className="w-16 h-16 mx-auto mb-6 opacity-10 text-white" />}
+            <p className="text-white/40 font-bold text-lg tracking-tight">
               {modeFilter === "daily"
-                ? `No daily scores yet — be the first today!`
+                ? `No daily scores yet. Be the first today!`
                 : `No scores yet. Play a game to record a score!`}
             </p>
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/")}
-              className="mt-4 px-4 py-2 rounded-lg bg-primary/20 text-primary border border-primary/40 text-sm font-semibold hover:bg-primary/30 transition-colors"
+              className="mt-8 px-8 py-3 rounded-xl bg-white text-black text-sm font-black uppercase tracking-widest transition-colors shadow-[0_0_20px_rgba(255,255,255,0.2)]"
             >
               Play Now
-            </button>
+            </motion.button>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="grid gap-2">
             {entriesToDisplay.map((entry, i) => {
               const isOwner = scopeFilter === "global" && !!firebaseUser && 'uid' in entry && entry.uid === firebaseUser.uid;
               const handleDelete = scopeFilter === "personal" 
@@ -303,15 +327,14 @@ export default function Leaderboard() {
                   : undefined;
 
               return (
-                <div key={"id" in entry ? entry.id : `${entry.timestamp}-${i}`} className="relative">
-                  <LeaderboardRow 
-                    rank={i + 1} 
-                    entry={entry} 
-                    isPersonal={scopeFilter === "personal"} 
-                    isOwner={isOwner}
-                    onDelete={handleDelete} 
-                  />
-                </div>
+                <LeaderboardRow 
+                  key={"id" in entry ? entry.id : `${entry.timestamp}-${i}`} 
+                  rank={i + 1} 
+                  entry={entry} 
+                  isPersonal={scopeFilter === "personal"} 
+                  isOwner={isOwner}
+                  onDelete={handleDelete} 
+                />
               );
             })}
           </div>

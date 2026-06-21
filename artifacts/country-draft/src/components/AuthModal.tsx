@@ -41,23 +41,23 @@ export function AuthModal({ onClose, title = "Sign In" }: { onClose: () => void,
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4" onClick={onClose}>
-      <motion.div initial={{ scale: 0.92, y: 16 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.92, y: 16 }} className="bg-card border border-border w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
-        <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-secondary/30">
+      <motion.div initial={{ scale: 0.92, y: 16 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.92, y: 16 }} className="bg-[#000000] border border-white/10 w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+        <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-white/5">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4 text-primary" />
-            <span className="text-lg font-bold text-foreground">{title}</span>
+            <span className="text-lg font-bold text-white">{title}</span>
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+          <button onClick={onClose} className="p-1.5 rounded-lg text-white/40 hover:text-white hover:bg-white/10 transition-colors">
             <X className="w-4 h-4" />
           </button>
         </div>
         
         <div className="px-5 py-5 space-y-3">
           <div className="text-center mb-2">
-            <div className="p-3 rounded-full bg-secondary w-fit mx-auto mb-3">
-              <Lock className="w-6 h-6 text-muted-foreground" />
+            <div className="p-3 rounded-full bg-white/10 w-fit mx-auto mb-3">
+              <Lock className="w-6 h-6 text-white/40" />
             </div>
-            <div className="font-semibold text-foreground">Sign in to continue</div>
+            <div className="font-semibold text-white">Sign in to continue</div>
           </div>
           {!showEmail ? (
             <>
@@ -72,25 +72,25 @@ export function AuthModal({ onClose, title = "Sign In" }: { onClose: () => void,
               </button>
               <div className="flex items-center gap-2">
                 <div className="h-px flex-1 bg-border" />
-                <span className="text-xs text-muted-foreground">or</span>
+                <span className="text-xs text-white/40">or</span>
                 <div className="h-px flex-1 bg-border" />
               </div>
-              <button onClick={() => { setShowEmail(true); setIsSignUp(false); }} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-secondary/40 text-foreground border border-border font-semibold text-sm hover:bg-secondary transition-colors">
+              <button onClick={() => { setShowEmail(true); setIsSignUp(false); }} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-white/5 text-white border border-white/10 font-semibold text-sm hover:bg-white/10 transition-colors">
                 <LogIn className="w-4 h-4" />
                 Sign in with Email
               </button>
             </>
           ) : (
             <div className="space-y-2">
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full px-3 py-2 rounded-lg border border-border bg-secondary/40 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
-              <input type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()} placeholder="Password" className="w-full px-3 py-2 rounded-lg border border-border bg-secondary/40 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
+              <input type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()} placeholder="Password" className="w-full px-3 py-2 rounded-lg border border-white/10 bg-white/5 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
               {error && <p className="text-xs text-red-400">{error}</p>}
               <button onClick={handleEmailAuth} disabled={loading} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50">
                 <Send className="w-4 h-4" />
                 {loading ? "…" : isSignUp ? "Create Account" : "Sign In"}
               </button>
               <div className="flex items-center justify-between text-xs">
-                <button onClick={() => setShowEmail(false)} className="text-muted-foreground hover:text-foreground">← Back</button>
+                <button onClick={() => setShowEmail(false)} className="text-white/40 hover:text-white">← Back</button>
                 <button onClick={() => { setIsSignUp(!isSignUp); setError(null); }} className="text-primary hover:underline">
                   {isSignUp ? "Have an account? Sign in" : "New here? Create account"}
                 </button>

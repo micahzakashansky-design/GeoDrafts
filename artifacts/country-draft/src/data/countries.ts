@@ -1,5 +1,5 @@
 export type CategoryStats = {
-  score: number;
+  score?: number;
   description: string;
 };
 
@@ -96,11 +96,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Uneven public tech; Silicon Valley leads but cities car-dependent; NYC/SF transit acceptable; most cities tech-poor for public infrastructure; strong private consumer tech"
       },
       size: {
-        score: 9,
         description: "3rd largest country at 9.8M km²; vast natural resources, coastlines on two oceans, and abundant arable land"
       },
       population: {
-        score: 8,
         description: "334 million people; highly educated workforce; major immigration hub; world's 3rd most populous nation"
       },
       history: {
@@ -179,11 +177,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Efficient DB rail network; growing digitization (but paper-heavy government); strong industrial automation; autobahn smart management; excellent engineering infrastructure"
       },
       size: {
-        score: 5,
         description: "357K km² — compact but efficiently organized; dense infrastructure network; central European location"
       },
       population: {
-        score: 7,
         description: "84 million people; highly skilled workforce; aging population offset by immigration; world's 2nd immigration destination"
       },
       history: {
@@ -261,11 +257,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "World's most advanced public tech; Shinkansen perfection; IC card transit everywhere; robotics in public spaces; smart traffic systems; cashless infrastructure; earthquake-resilient smart grid"
       },
       size: {
-        score: 4,
         description: "377K km² of mountainous islands; 70% uninhabitable terrain; archipelago of 6,852 islands"
       },
       population: {
-        score: 7,
         description: "125 million people; aging rapidly; one of world's most educated; intense urban density in Tokyo metro (37M)"
       },
       history: {
@@ -349,11 +343,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "London TfL Oyster card excellent; rest of UK aging rail; NHS app and digital health decent; smart motorway system; government digitization improving but lagging"
       },
       size: {
-        score: 4,
         description: "242K km²; island nation with no point more than 113km from sea; densely populated with excellent connectivity"
       },
       population: {
-        score: 6,
         description: "67 million; multicultural society; London one of world's most diverse cities; strong immigration from Commonwealth"
       },
       history: {
@@ -432,11 +424,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "TGV high-speed rail; Paris Metro world-class; contactless payments widespread; strong digital state services; Minitel legacy now reversed into strong digital infrastructure"
       },
       size: {
-        score: 6,
         description: "551K km² — largest country in Western Europe; diverse landscapes from Alps to beaches; DOM-TOM territories worldwide"
       },
       population: {
-        score: 7,
         description: "68 million; multicultural; aging but fertility rate higher than EU average; 5th most visited country on earth"
       },
       history: {
@@ -514,11 +504,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Swish mobile payments universal; digital ID BankID; Stockholm smart city; cashless society furthest in EU; excellent fiber coverage; SJ rail growing; strong e-government"
       },
       size: {
-        score: 6,
         description: "450K km² — 4th largest in Europe; vast northern forests; long coastline; only 22% arable; sparsely populated north"
       },
       population: {
-        score: 4,
         description: "10.5 million; one of world's most educated; high immigration rate; aging population well-managed by welfare system"
       },
       history: {
@@ -597,11 +585,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "World's highest EV charging density; BankID digital identity; strong e-government; excellent public transport in Oslo; Ruter app; fully digital public services"
       },
       size: {
-        score: 6,
         description: "385K km² of mostly mountains, fjords, and Arctic; Svalbard territory; 25,000km coastline — most dramatic in Europe"
       },
       population: {
-        score: 3,
         description: "5.4 million; most prosperous small nation on earth; high immigration; oil wealth distributed to entire population"
       },
       history: {
@@ -679,11 +665,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "SBB Swiss rail precision legendary; SwissPass integrated transit card; excellent nationwide public transport; strong e-government; precise infrastructure maintenance; high reliability"
       },
       size: {
-        score: 3,
         description: "41K km² — tiny landlocked Alpine nation; no coast; but exceptional infrastructure density and mountain accessibility"
       },
       population: {
-        score: 3,
         description: "8.7 million; 26% foreign-born; four linguistic groups; highest quality of life metrics; extremely low unemployment"
       },
       history: {
@@ -761,11 +745,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Decent urban transit in Toronto/Vancouver/Montreal; digital government services improving; PRESTO transit card growing; 5G expanding; but vast rural digital divide"
       },
       size: {
-        score: 10,
         description: "9.98M km² — world's 2nd largest country; 20% of world's fresh water; vast boreal forest and Arctic territory"
       },
       population: {
-        score: 5,
         description: "40 million; world's highest immigration per capita; highly educated; concentrated in southern corridor near US border"
       },
       history: {
@@ -844,11 +826,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Opal/Myki transit cards; smart city initiatives in Sydney/Melbourne; digital government services modernizing; NBN broadband (controversial rollout); large distances challenge connectivity"
       },
       size: {
-        score: 10,
         description: "7.69M km² — world's 6th largest, continent-sized; vast outback; but 86% of population live in coastal cities"
       },
       population: {
-        score: 4,
         description: "26 million; one of world's most successful immigration models; cosmopolitan cities; very low population density"
       },
       history: {
@@ -932,11 +912,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "T-money contactless transit universal; 5G density highest globally; smart city Songdo; fully paperless digital government; KTX bullet trains; AI traffic management; fastest average internet"
       },
       size: {
-        score: 3,
         description: "100K km² — roughly the size of Indiana; but extraordinarily dense infrastructure; high-speed rail connecting all cities"
       },
       population: {
-        score: 5,
         description: "52 million; world's most educated; extremely low birth rate crisis; hyper-urbanized (Seoul metro = 25M)"
       },
       history: {
@@ -1014,11 +992,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Smart Nation initiative benchmark; EZ-Link seamless transit; autonomous test vehicles deployed; digital government 100%; sensor-laden infrastructure; cashless economy; world's most connected city"
       },
       size: {
-        score: 1,
         description: "733 km² — smaller than New York City; land-scarce; relies on land reclamation; but maximally efficient use of space"
       },
       population: {
-        score: 2,
         description: "5.9 million; 40% foreign-born; world's highest GDP per capita PPP; education system ranked #1 globally (PISA)"
       },
       history: {
@@ -1096,11 +1072,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Copenhagen Rejsekort transit card; smart city Copenhagen; digital government MitID; bike superhighways; district heating smart grid; excellent digital public services"
       },
       size: {
-        score: 3,
         description: "43K km²; flat peninsula plus 443 islands; Greenland autonomous territory is 2.1M km²; strategic Arctic position"
       },
       population: {
-        score: 3,
         description: "5.9 million; very high social trust; homogeneous but increasingly diverse; happiest population metrics consistently"
       },
       history: {
@@ -1178,11 +1152,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Whim mobility-as-a-service world's first; HSL Helsinki transit excellent; digital government excellent; fastest average internet in EU; 5G leading; strong digital ID infrastructure"
       },
       size: {
-        score: 5,
         description: "338K km²; 1/3 above Arctic Circle; world's most lakes per area; vast boreal forest; 1,300km Russian border"
       },
       population: {
-        score: 3,
         description: "5.5 million; world's happiest 2023; highly educated; Finnish language isolates from EU linguistically"
       },
       history: {
@@ -1261,11 +1233,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "OV-chipkaart nationwide transit integration; Amsterdam smart city; excellent cycling infrastructure tech; digital government DigiD; advanced water management sensors; strong e-services"
       },
       size: {
-        score: 3,
         description: "41K km² but 1/4 below sea level; world's most sophisticated water management; densest country in large EU nations"
       },
       population: {
-        score: 4,
         description: "17.9 million; highly educated; multicultural legacy from colonial era; excellent English proficiency; progressive society"
       },
       history: {
@@ -1346,11 +1316,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "AT HOP transit cards in Auckland; government digital services; geographic isolation limits infra density; rural broadband investment ongoing; smart city infrastructure growing"
       },
       size: {
-        score: 5,
         description: "268K km² of two islands; plus subantarctic territories; dramatic mountain-to-coast landscapes throughout"
       },
       population: {
-        score: 2,
         description: "5 million; highly multicultural; 16% Maori; growing Asian community; immigration-friendly; low density"
       },
       history: {
@@ -1428,11 +1396,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "OBB Austrian rail among Europe's best; Wiener Linien Vienna transit world-class; klimaticket integrated national pass; e-government modernizing; excellent alpine infrastructure maintenance"
       },
       size: {
-        score: 4,
         description: "83K km²; landlocked; 62% mountainous Alps; strategic Central European crossroads position"
       },
       population: {
-        score: 3,
         description: "9.1 million; highly educated; 20% foreign-born; Vienna consistently ranked world's most livable city"
       },
       history: {
@@ -1511,11 +1477,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "STIB/De Lijn transit systems; aging rail infrastructure (frequent delays); 5G growing; digital government itsme app; Brussels smart city project; digital divide between regions"
       },
       size: {
-        score: 2,
         description: "30K km² — one of Europe's smallest nations; but punches far above its weight as NATO/EU capital location"
       },
       population: {
-        score: 3,
         description: "11.6 million; trilingual society (Dutch/French/German); 25% born abroad; Brussels most international city in EU"
       },
       history: {
@@ -1594,11 +1558,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Leap Card Dublin transit; TFI Live app; poor public transport outside Dublin; government MyGovID digital; fiber rollout ongoing; tech cluster but public infra lags private sector"
       },
       size: {
-        score: 3,
         description: "70K km²; island nation; stunning coastal ring road; Connemara wilderness; Giant's Causeway in Northern Ireland"
       },
       population: {
-        score: 3,
         description: "5.1 million; global diaspora 70M+ worldwide; strong immigration reversal from emigration nation; young demographics"
       },
       history: {
@@ -1677,11 +1639,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Frecciarossa excellent but limited routes; regional variance massive; aging metro systems; CIE digital ID growing; Telepass road tolls smart; paper bureaucracy stubbornly persistent"
       },
       size: {
-        score: 5,
         description: "301K km²; peninsula plus Sicily and Sardinia; Alps to toe; 7,600km coastline; densely populated and highly varied"
       },
       population: {
-        score: 6,
         description: "60 million; aging crisis; low birth rate; emigration of youth; Italian diaspora 80M worldwide; rich regional identity"
       },
       history: {
@@ -1759,11 +1719,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "AVE high-speed rail world's 2nd largest network; Madrid Metro excellent; Tarjeta Transporte integrated; Barcelona smart city pioneer; government Cl@ve digital; strong contactless adoption"
       },
       size: {
-        score: 6,
         description: "505K km²; 2nd largest in EU; diverse geography from Pyrenees to desert; plus Canary Islands and Balearics"
       },
       population: {
-        score: 6,
         description: "47 million; aging; low birth rate; 15% foreign-born; strong Latin American immigration; regional languages complex"
       },
       history: {
@@ -1842,11 +1800,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Andante/Navegante transit cards; Lisboa Metro decent; CP rail improving; digital e.gov growing; fiber expanding; but significant rural gaps and older infrastructure remain"
       },
       size: {
-        score: 4,
         description: "92K km²; westernmost European mainland country; Azores and Madeira archipelagos; Atlantic-facing position"
       },
       population: {
-        score: 3,
         description: "10.2 million; declining due to emigration; large diaspora 5M worldwide; strong immigration from Brazil/Africa now"
       },
       history: {
@@ -1927,11 +1883,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Prague Metro excellent; Litacka Prague transit card; PID integrated transport system; Czech POINT digital citizen services; 5G growing; good fiber coverage in cities"
       },
       size: {
-        score: 4,
         description: "78K km²; landlocked; Bohemia basin; Moravia wine plains; Sudeten mountains border; central EU crossroads"
       },
       population: {
-        score: 4,
         description: "10.9 million; homogeneous; low immigration historically; one of region's most skilled workforces"
       },
       history: {
@@ -2009,11 +1963,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Warsaw Metro and SKM growing fast; mObywatel digital ID app; PKP Intercity rail improving; ZTM transit cards; strong IT talent but public digital services still modernizing"
       },
       size: {
-        score: 6,
         description: "312K km²; 9th largest in Europe; flat northern plains; Tatra Mountains south; 524km Baltic coastline"
       },
       population: {
-        score: 6,
         description: "38 million; highly educated; Catholic-majority; 1M+ Ukrainians now resident; large diaspora in UK/Germany"
       },
       history: {
@@ -2092,11 +2044,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moscow Metro world-class (deep, fast, ornate); Troika card; but outside Moscow/St.Pete poor; Gosuslugi digital services widely used; sovereign internet concerns; high urban-rural gap"
       },
       size: {
-        score: 10,
         description: "17.1M km² — world's largest country by far; 11 time zones; from Baltic to Pacific; massive natural resources"
       },
       population: {
-        score: 7,
         description: "145 million; declining due to war losses and emigration; multi-ethnic 190+ groups; highly educated but brain-draining"
       },
       history: {
@@ -2174,11 +2124,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Largest bullet train network globally (40,000km); Alipay/WeChat Pay ubiquitous everywhere; facial recognition transit boarding; smart city pilots nationwide; 5G blanket coverage in cities"
       },
       size: {
-        score: 9,
         description: "9.6M km² — 3rd/4th largest; world's longest border; diverse terrain; South China Sea claims contested; rich resources"
       },
       population: {
-        score: 10,
         description: "1.4 billion people; world's largest until 2023; massive urbanization; aging; one-child policy legacy; 56 ethnic groups"
       },
       history: {
@@ -2258,11 +2206,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Istanbul Metrobus BRT excellent; Istanbulkart contactless; Marmaray tunnel; e-Devlet digital government improving; but Ankara/Izmir transit limited; digital government growing"
       },
       size: {
-        score: 7,
         description: "783K km²; transcontinental; Anatolia plateau; 8,000km coastline; Bosphorus and Dardanelles global choke points"
       },
       population: {
-        score: 7,
         description: "85 million; young demographics; Istanbul 15M megacity; majority Muslim; secular tradition vs. Islamist tension"
       },
       history: {
@@ -2335,11 +2281,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Kyiv Metro still functional; Diia digital government app world-leading (wartime resilience); e-services record; drone integration for defense; tech-forward despite war disruption"
       },
       size: {
-        score: 7,
         description: "603K km² — largest country entirely within Europe; vast agricultural plains; Carpathian Mountains; Black Sea coastline"
       },
       population: {
-        score: 6,
         description: "Pre-war 44M; significantly reduced by displacement; 8M+ refugees in Europe; multilingual; young educated diaspora"
       },
       history: {
@@ -2419,11 +2363,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Bucharest Metro limited; CFR rail slow and aging; digital gov.ro patchy; paradoxically fast fiber internet (top 10 globally); Cluj-Napoca smart city project; tech sector growing"
       },
       size: {
-        score: 6,
         description: "238K km²; 12th largest in EU; Danube River border; Carpathian arc; Black Sea coast; rich in varied landscapes"
       },
       population: {
-        score: 5,
         description: "19 million; declining due to emigration (3M+ left for Western Europe); young educated diaspora large"
       },
       history: {
@@ -2503,11 +2445,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "BKK Budapest transit decent; MAV rail underinvested; Nemzeti Mobilfizetes NFC payments; Ugyfelkapu digital ID; Budapest smart city limited; rural broadband improving with EU funds"
       },
       size: {
-        score: 4,
         description: "93K km²; landlocked; Puszta Great Plain; Danube and Tisza rivers; Carpathian foothills; Lake Balaton largest in Central EU"
       },
       population: {
-        score: 4,
         description: "9.7 million; declining; low birth rate; brain drain to Western EU; Roma minority largest in Europe (8%)"
       },
       history: {
@@ -2585,11 +2525,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "New Tel Aviv light rail; Rav Kav transit card; digital government e-citizen; autonomous vehicle testing; strong tech infrastructure in cities; innovative public safety tech systems"
       },
       size: {
-        score: 2,
         description: "22K km² — smaller than New Jersey; but compactly packs extraordinary geographic, historical and cultural diversity"
       },
       population: {
-        score: 2,
         description: "9.7 million; Jewish majority; Arab citizens 20%; rapid natural growth; immigration from global diaspora continues"
       },
       history: {
@@ -2667,11 +2605,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Athens Metro modern and clean; OASTH Thessaloniki transit old; digital gov.gr improving; e-prescription medical; aging infrastructure overall; fiber rollout slow outside Athens"
       },
       size: {
-        score: 5,
         description: "132K km²; 1,400 islands; 14,000km coastline (10th longest globally); mountainous mainland; Mt. Olympus"
       },
       population: {
-        score: 4,
         description: "10.7 million; significant emigration during debt crisis; aging; immigration from Middle East; Orthodox Christian majority"
       },
       history: {
@@ -2750,11 +2686,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "World leader in e-governance; X-Road digital backbone; digital voting since 2005; e-Residency program; Tallinn free public transit; 99% public services online; ID-kaart everywhere; digital prescriptions"
       },
       size: {
-        score: 3,
         description: "45K km²; 1,500 islands; forested; Saaremaa largest island; flat northern plain; Pepsi-blue Baltic coastline"
       },
       population: {
-        score: 1,
         description: "1.37 million; one of world's smallest; 25% Russian minority; brain drain challenge; world's most digitally literate"
       },
       history: {
@@ -2834,11 +2768,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "IDS BK Bratislava transit card; ZSR rail aging; Slovensko.sk digital portal improving; 5G coverage in cities; limited smart infrastructure outside Bratislava"
       },
       size: {
-        score: 3,
         description: "49K km²; landlocked; High Tatras mountain peak; Danube southern border; 1/4 forested; central EU location"
       },
       population: {
-        score: 3,
         description: "5.5 million; homogeneous; Hungarian minority 10%; brain drain to Czech Republic and Austria challenge"
       },
       history: {
@@ -2917,11 +2849,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "ZET Zagreb transit; HZ rail scenic but slow; m-parking digital; e-Gradani digital government; Dubrovnik smart tourism management; EU funds improving connectivity"
       },
       size: {
-        score: 4,
         description: "56K km²; plus 1,246 islands; 1,777km Adriatic coastline; Dinaric Alps; Plitvice Lakes National Park"
       },
       population: {
-        score: 3,
         description: "3.9 million; emigration challenge (500K to Germany/Austria); tourism-dependent seasonal economy; Catholic majority"
       },
       history: {
@@ -2999,11 +2929,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Astana smart city ambitious LRT; digital government eGov.kz; 5G in Astana and Almaty; smart buildings; Starlink available; vast steppe connectivity challenge"
       },
       size: {
-        score: 10,
         description: "2.72M km² — 9th largest country; world's largest landlocked state; vast steppe, desert, and mountain ranges"
       },
       population: {
-        score: 4,
         description: "19 million; multi-ethnic (Kazakhs 70%, Russians 15%); nomadic heritage; rapid Astana urbanization; Baikonur city"
       },
       history: {
@@ -3082,11 +3010,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Tbilisi Metro 2 lines; marshrutka city transport; my.gov.ge digital portal; Bolt ride-hailing ubiquitous; tech nomad hub growing; public infrastructure investment low"
       },
       size: {
-        score: 4,
         description: "69K km²; plus occupied territories; Caucasus mountain drama; Black Sea coast; Borjomi mineral springs; diverse micro-climates"
       },
       population: {
-        score: 2,
         description: "3.7 million; emigration challenge; large diaspora in Russia; significant Russian immigrant influx post-2022"
       },
       history: {
@@ -3166,11 +3092,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Yerevan transit modernizing; e-government e-services good; EKENG digital infrastructure; Silicon Mountains tech hub; iDram digital payments; public tech investment limited"
       },
       size: {
-        score: 2,
         description: "29K km²; landlocked; mountainous; Lake Sevan high-altitude lake; closed borders with Turkey and Azerbaijan"
       },
       population: {
-        score: 2,
         description: "3 million; global diaspora 7-10M (more abroad than home); French, Russian, American Armenian communities strong"
       },
       history: {
@@ -3251,11 +3175,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "100% renewable geothermal grid; Straeto bus digital app; digital government Island.is excellent; world's first cashless society push; clean tech public systems; Starlink early adopter"
       },
       size: {
-        score: 4,
         description: "103K km²; 3rd largest island in Europe; active volcanoes; largest glacier in Europe; less than 1% arable"
       },
       population: {
-        score: 1,
         description: "376,000 — Europe's most sparsely populated capital; world's most genetically tracked population (deCODE genetics)"
       },
       history: {
@@ -3335,11 +3257,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "LPP Ljubljana transit Urbana card; SZ rail; e-uprava digital government; excellent fiber coverage; EV charging network; compact country means good coverage nationwide"
       },
       size: {
-        score: 3,
         description: "20K km² — tiny but geographically extraordinary; Alps, Adriatic Sea coast, Pannonian Plain all accessible from Ljubljana"
       },
       population: {
-        score: 2,
         description: "2.1 million; highly educated; lowest emigration of ex-Yugoslav nations; Ljubljana charming compact capital"
       },
       history: {
@@ -3418,11 +3338,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Rigas Satikusme transit e.talons card; LDz rail modernizing; e-Latvija digital services; 5G Riga; improving digital government; strong IT sector in Riga"
       },
       size: {
-        score: 3,
         description: "64K km²; central Baltic; Gauja National Park; Gulf of Riga; 494km coastline; white sandy beaches; peat bogs"
       },
       population: {
-        score: 2,
         description: "1.84 million; declining due to emigration; 25% Russian minority; Baltic most ethnically complex; EU labor mobility"
       },
       history: {
@@ -3502,11 +3420,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Vilnius public transit M-ticket app; LitRail growing; e-government VIISP; Revolut and NordVPN HQ; fastest internet in Baltics; strong fintech and digital services; 5G nationwide"
       },
       size: {
-        score: 3,
         description: "65K km²; southernmost and largest Baltic state; Nemunas river; Curonian Spit; Lake Galvė; geographical center of Europe here"
       },
       population: {
-        score: 2,
         description: "2.9 million; significant emigration to UK/Ireland; large return due to Ukraine war; geographically center of Europe"
       },
       history: {
@@ -3586,11 +3502,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Neom smart city project; Saudi Digital Academy; e-government expanding; smart governance app Absher"
       },
       size: {
-        score: 8,
         description: "2.15M km²; largest country in Middle East; Arabian Peninsula dominance; vast desert territories"
       },
       population: {
-        score: 4,
         description: "35 million people; young population; 40% expats; rapidly urbanizing; Riyadh mega-city growth"
       },
       history: {
@@ -3670,11 +3584,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Smart Dubai initiative; DIFC FinTech Hive; Hope Probe Mars mission; AI strategy 2031; cashless society leader"
       },
       size: {
-        score: 3,
         description: "83K km²; small but strategically positioned; 7 emirates from desert interior to Arabian Gulf coastline"
       },
       population: {
-        score: 2,
         description: "10 million people; 90% expatriates; Emirati citizens a minority in their own country; diverse expat workforce"
       },
       history: {
@@ -3752,11 +3664,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Qatar Science and Technology Park; smart city Lusail built from scratch; 5G leader; Aspire Zone innovation hub"
       },
       size: {
-        score: 2,
         description: "11K km²; tiny peninsula jutting into Persian Gulf; one of world's smallest countries by land area"
       },
       population: {
-        score: 2,
         description: "3 million people; only 350,000 Qatari citizens (12%); vast South Asian and other expat workforce"
       },
       history: {
@@ -3836,11 +3746,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Bangalore global IT hub; UPI payments digital revolution; ISRO cost-effective space missions; Aadhaar biometric system"
       },
       size: {
-        score: 7,
         description: "7th largest country at 3.29M km²; Himalayan north, Deccan plateau, Gangetic plains, tropical south; two coastlines"
       },
       population: {
-        score: 10,
         description: "1.44 billion people; world's most populous nation (surpassed China 2023); youngest major workforce; 1.2B mobile users"
       },
       history: {
@@ -3921,11 +3829,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Guadalajara Silicon Valley of Mexico; OXXO fintech; growing startup scene; but public infrastructure tech limited"
       },
       size: {
-        score: 7,
         description: "14th largest country at 1.96M km²; Pacific + Atlantic Gulf coasts; Sierra Madre ranges; Yucatan peninsula"
       },
       population: {
-        score: 7,
         description: "130 million people; 4th most populous in Americas; young median age; 60M Mexicans and diaspora in US"
       },
       history: {
@@ -4007,11 +3913,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Nubank world's largest digital bank; Embraer aerospace; agricultural tech precision farming; Pix instant payment system"
       },
       size: {
-        score: 10,
         description: "5th largest country at 8.5M km²; Amazon basin; Atlantic coast 7,500km; world's largest river system; massive biodiversity"
       },
       population: {
-        score: 8,
         description: "215 million people; 6th most populous; diverse from indigenous to German-Brazilians; Sao Paulo megacity 22M"
       },
       history: {
@@ -4090,11 +3994,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Strong software export sector; Mercado Libre e-commerce giant; Buenos Aires tech scene; Satellogic satellite company"
       },
       size: {
-        score: 9,
         description: "8th largest country at 2.78M km²; Andes to Atlantic; Patagonia to Iguazu; long coastline with Antarctic claim"
       },
       population: {
-        score: 6,
         description: "46 million people; highly educated; European-descended majority; Buenos Aires primate city of 15M; aging demographics"
       },
       history: {
@@ -4173,11 +4075,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Atacama solar energy world's cheapest; Santiago growing tech hub; Cornershop acquired by Uber; green hydrogen potential"
       },
       size: {
-        score: 6,
         description: "756K km² but extremely narrow (avg 180km wide); 4,300km long Pacific coast; Andes to Pacific dramatic geography"
       },
       population: {
-        score: 5,
         description: "19 million people; highly urbanized (87%); Santiago dominates; significant Venezuelan and Haitian immigration recently"
       },
       history: {
@@ -4255,11 +4155,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Lima startup scene growing; Yape digital payment popular; but rural connectivity severely limited; infrastructure gaps"
       },
       size: {
-        score: 7,
         description: "4th largest in South America at 1.28M km²; Amazon basin to Andes to Pacific coast; diverse geography extremes"
       },
       population: {
-        score: 6,
         description: "33 million people; 10M in Lima; significant indigenous Quechua and Aymara populations; highland to coastal migration"
       },
       history: {
@@ -4337,11 +4235,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "GoTo (Gojek+Tokopedia) $40B+ tech giant; Sea Group gaming; Traveloka; largest startup ecosystem in Southeast Asia"
       },
       size: {
-        score: 8,
         description: "Archipelago 1.9M km²; stretches 5,100km; 17,508 islands; 4th most extensive EEZ; Borneo, Java, Sumatra, Sulawesi, Papua"
       },
       population: {
-        score: 9,
         description: "280 million people; 4th most populous nation; Java densest major island; 64M in greater Jakarta metro area"
       },
       history: {
@@ -4421,11 +4317,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "BPO tech infrastructure strong; Maya and GCash fintech growing; Jollibee global expansion; startup scene emerging in BGC Manila"
       },
       size: {
-        score: 5,
         description: "300K km² archipelago; 7,641 islands; Luzon, Visayas, Mindanao main groups; dispersed geography complicates governance"
       },
       population: {
-        score: 7,
         description: "115 million people; 12th most populous; young median age 25; 10M OFWs abroad; Manila metro 24M; rapid urbanization"
       },
       history: {
@@ -4505,11 +4399,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Fawry fintech and digital payments growing; Smart Egypt initiative; Cairo tech scene; Egypt Vision 2030 digital transformation"
       },
       size: {
-        score: 7,
         description: "1.01M km²; 10th largest in Africa; but 95% uninhabited desert; population concentrated in 4% Nile Valley"
       },
       population: {
-        score: 7,
         description: "107 million people; most populous Arab country; 22M in Cairo megacity; Nile Delta extremely dense; young population"
       },
       history: {
@@ -4587,11 +4479,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Africa's #1 fintech hub; Flutterwave unicorn; Paystack acquired by Stripe; Lagos as Silicon Lagoon; 10M+ developers by 2030 goal"
       },
       size: {
-        score: 6,
         description: "923K km²; size of Texas and California combined; Niger Delta oil-rich; Lake Chad basin; diverse terrain"
       },
       population: {
-        score: 8,
         description: "220 million people; most populous in Africa; by 2050 projected 400M; median age 18; Lagos 25M megacity; fastest growing"
       },
       history: {
@@ -4675,11 +4565,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Naspers and Prosus global media venture capital; Cape Town startup scene; African fintech pioneer; load-shedding energy crisis"
       },
       size: {
-        score: 7,
         description: "1.22M km²; southern Africa; borders Atlantic and Indian Oceans; Lesotho landlocked inside; Drakensberg to Karoo diversity"
       },
       population: {
-        score: 6,
         description: "62 million people; highly urbanized; Johannesburg 10M; Cape Town 5M; diverse ethnic mosaic; aging HIV demographic impact"
       },
       history: {
@@ -4778,11 +4666,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "36K km²; mountainous island nation off the coast of China"
       },
       population: {
-        score: 1,
         description: "23.5 million; densely populated and highly developed tech workforce"
       }
     },
@@ -4863,11 +4749,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "330K km²; divided into Peninsular Malaysia and East Malaysia on Borneo"
       },
       population: {
-        score: 1,
         description: "34.3 million; multicultural society blending Malay, Chinese, and Indian influences"
       }
     },
@@ -4947,11 +4831,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Strong regional presence and advanced development."
       },
       size: {
-        score: 1,
         description: "513K km²; central plains, mountains in the north, and southern peninsula"
       },
       population: {
-        score: 1,
         description: "71.8 million; strong tourism-driven economy and rich Buddhist culture"
       }
     },
@@ -5030,11 +4912,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "1.14M km²; spans Andes mountains, Amazon rainforest, and two coastlines"
       },
       population: {
-        score: 1,
         description: "52 million; diverse culture shaped by indigenous, Spanish, and African roots"
       }
     },
@@ -5113,11 +4993,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "331K km²; long, narrow country with extensive coastline along the South China Sea"
       },
       population: {
-        score: 1,
         description: "100.3 million; young demographic and emerging manufacturing powerhouse"
       }
     },
@@ -5197,11 +5075,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 4,
         description: "176K km²; rolling plains and coastal regions"
       },
       population: {
-        score: 2,
         description: "3.4 million; highly urbanized population with strong European heritage"
       }
     },
@@ -5279,11 +5155,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "446K km²; spans Atlas Mountains to the Atlantic and Mediterranean coasts"
       },
       population: {
-        score: 1,
         description: "37.8 million; strategic gateway between Europe and Africa"
       }
     },
@@ -5363,11 +5237,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 2,
         description: "51K km²; rugged, volcanic geography covered by dense rainforests"
       },
       population: {
-        score: 2,
         description: "5.2 million; high standard of living and long life expectancy"
       }
     },
@@ -5447,11 +5319,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "9K km²; strategic island in the eastern Mediterranean"
       },
       population: {
-        score: 1,
         description: "1.2 million; divided island with significant tourism and shipping industries"
       }
     },
@@ -5534,11 +5404,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 2,
         description: "17K km²; small desert nation at the tip of the Persian Gulf"
       },
       population: {
-        score: 2,
         description: "4.3 million; high expat population working in oil and service sectors"
       }
     },
@@ -5618,11 +5486,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 4,
         description: "309K km²; diverse landscape of deserts, mountains, and long coastlines"
       },
       population: {
-        score: 2,
         description: "4.6 million; stable society with a growing focus on tourism and trade"
       }
     },
@@ -5702,11 +5568,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "110K km²; Balkan mountains and fertile plains"
       },
       population: {
-        score: 1,
         description: "6.4 million; aging population with strong Eastern Orthodox traditions"
       }
     },
@@ -5786,11 +5650,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 3,
         description: "88K km²; landlocked with significant rivers including the Danube"
       },
       population: {
-        score: 3,
         description: "6.6 million; recovering economy and vibrant capital city life"
       }
     },
@@ -5869,11 +5731,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "1.64M km²; highly mountainous terrain and extensive central deserts"
       },
       population: {
-        score: 1,
         description: "88.5 million; large, young, and highly educated urban population"
       }
     },
@@ -5955,11 +5815,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 3,
         description: "75K km²; narrow isthmus with tropical rainforests"
       },
       population: {
-        score: 2,
         description: "4.4 million; global logistics hub with a booming capital skyline"
       }
     },
@@ -6040,11 +5898,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "89K km²; mostly arid desert with strategic access to the Red Sea"
       },
       population: {
-        score: 1,
         description: "11.3 million; hosts a massive refugee population in a stable monarchy"
       }
     },
@@ -6125,11 +5981,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "580K km²; encompasses savannah, lakelands, and the Great Rift Valley"
       },
       population: {
-        score: 1,
         description: "54 million; regional economic powerhouse known as the 'Silicon Savannah'"
       }
     },
@@ -6208,11 +6062,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "780 km²; small archipelago in the Persian Gulf"
       },
       population: {
-        score: 1,
         description: "1.5 million; diverse expatriate workforce and progressive Gulf economy"
       }
     },
@@ -6290,11 +6142,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "881K km²; diverse terrain from Arabian Sea coast to the Himalayas"
       },
       population: {
-        score: 1,
         description: "240 million; world's 5th most populous nation with a young demographic"
       }
     },
@@ -6373,11 +6223,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "163K km²; northernmost country in Africa with access to the Sahara"
       },
       population: {
-        score: 1,
         description: "12.4 million; highly educated workforce and significant tourism sector"
       }
     },
@@ -6456,11 +6304,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 4,
         description: "283K km²; features the Andes, Amazon basin, and Pacific coast"
       },
       population: {
-        score: 4,
         description: "18.1 million; rich indigenous culture and heavy reliance on oil exports"
       }
     },
@@ -6542,11 +6388,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 3,
         description: "48K km²; shares the island of Hispaniola with Haiti"
       },
       population: {
-        score: 3,
         description: "11.3 million; rapidly growing economy driven by tourism and agriculture"
       }
     },
@@ -6626,11 +6470,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Strong regional presence and advanced development."
       },
       size: {
-        score: 1,
         description: "10K km²; mountainous island nation known for its lush topography"
       },
       population: {
-        score: 1,
         description: "2.8 million; significant global cultural influence despite small size"
       }
     },
@@ -6711,11 +6553,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "65K km²; island nation south of India with diverse ecosystems"
       },
       population: {
-        score: 1,
         description: "22.1 million; highly literate population recovering from economic crises"
       }
     },
@@ -6795,11 +6635,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 2,
         description: "10K km²; small, mountainous nation on the eastern Mediterranean"
       },
       population: {
-        score: 2,
         description: "5.4 million; historically a major financial and cultural hub of the Middle East"
       }
     },
@@ -6878,11 +6716,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "2.38M km²; dominated by the Sahara Desert with a fertile northern coast"
       },
       population: {
-        score: 1,
         description: "45.4 million; economy heavily reliant on significant oil and gas reserves"
       }
     },
@@ -6961,11 +6797,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "316 km²; highly dense archipelago south of Italy"
       },
       population: {
-        score: 1,
         description: "530,000; booming tech, gaming, and tourism industries"
       }
     },
@@ -7046,11 +6880,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "2K km²; volcanic island nation in the Indian Ocean"
       },
       population: {
-        score: 1,
         description: "1.2 million; highly developed and diverse economy"
       }
     },
@@ -7129,11 +6961,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "148K km²; low-lying riverine country highly vulnerable to climate change"
       },
       population: {
-        score: 1,
         description: "170 million; one of the world's most densely populated nations"
       }
     },
@@ -7214,11 +7044,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 4,
         description: "238K km²; spans coastal plains to northern savannas"
       },
       population: {
-        score: 4,
         description: "33.4 million; major exporter of cocoa, gold, and oil"
       }
     },
@@ -7298,11 +7126,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 4,
         description: "196K km²; features Sahel landscapes and Atlantic coastline"
       },
       population: {
-        score: 4,
         description: "17.3 million; vibrant arts scene and growing influence in West Africa"
       }
     },
@@ -7383,11 +7209,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 5,
         description: "947K km²; incredible wildlife reserves and the island of Zanzibar"
       },
       population: {
-        score: 5,
         description: "65.4 million; rapidly growing population with diverse ethnic groups"
       }
     },
@@ -7467,11 +7291,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 6,
         description: "1.09M km²; landlocked nation spanning high Andes to Amazon basin"
       },
       population: {
-        score: 3,
         description: "12.2 million; largest proportion of indigenous peoples in South America"
       }
     },
@@ -7551,11 +7373,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 1,
         description: "109K km²; largest island in the Caribbean"
       },
       population: {
-        score: 1,
         description: "11.2 million; strong healthcare and education systems despite economic embargoes"
       }
     },
@@ -7634,11 +7454,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 2,
         description: "21K km²; smallest and most densely populated country in Central America"
       },
       population: {
-        score: 3,
         description: "6.3 million; large diaspora contributing heavily via remittances"
       }
     },
@@ -7719,11 +7537,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       size: {
-        score: 3,
         description: "108K km²; rugged, forested terrain and ancient ruins"
       },
       population: {
-        score: 4,
         description: "17.1 million; largest economy in Central America with rich indigenous heritage"
       }
     },
@@ -7802,11 +7618,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 3,
         description: "112K km²; mountainous terrain with Caribbean and Pacific coastlines"
       },
       population: {
-        score: 3,
         description: "10.4 million; economy heavily dependent on agriculture and remittances"
       }
     },
@@ -7886,11 +7700,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "406K km²; landlocked nation divided by the Paraguay River"
       },
       population: {
-        score: 1,
         description: "6.8 million; major exporter of soybeans and beef"
       }
     },
@@ -7970,11 +7782,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "241K km²; landlocked but water-rich 'Pearl of Africa'"
       },
       population: {
-        score: 1,
         description: "47.2 million; extremely young population and rapidly growing economy"
       }
     },
@@ -8057,11 +7867,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 1,
         description: "322K km²; lush tropical coastlines and interior savannas"
       },
       population: {
-        score: 1,
         description: "28.1 million; economic powerhouse of Francophone West Africa"
       }
     },
@@ -8141,11 +7949,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 5,
         description: "207K km²; flat, landlocked country with extensive forests and lakes"
       },
       population: {
-        score: 3,
         description: "9.2 million; highly industrialized economy with close ties to Russia"
       }
     },
@@ -8225,11 +8031,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 4,
         description: "86K km²; situated at the crossroads of Eastern Europe and Western Asia"
       },
       population: {
-        score: 3,
         description: "10.1 million; rapidly modernizing capital fueled by energy exports"
       }
     },
@@ -8309,11 +8113,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 2,
         description: "26K km²; highly elevated, dense, and green geography"
       },
       population: {
-        score: 3,
         description: "13.2 million; remarkable post-conflict economic and social recovery"
       }
     },
@@ -8394,11 +8196,9 @@ export const ALL_COUNTRIES: Country[] = [
         description: "Developing sector with some systemic challenges."
       },
       size: {
-        score: 4,
         description: "448K km²; doubly landlocked country with vast deserts and historic cities"
       },
       population: {
-        score: 4,
         description: "36.2 million; largest population in Central Asia undergoing rapid modernization"
       }
     },
@@ -8428,8 +8228,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8458,8 +8260,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8488,8 +8292,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8518,8 +8324,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8548,8 +8356,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8578,8 +8388,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8608,8 +8420,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8638,8 +8452,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8668,8 +8484,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8698,8 +8516,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8728,8 +8548,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8758,8 +8580,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8788,8 +8612,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8818,8 +8644,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8848,8 +8676,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8878,8 +8708,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8908,8 +8740,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8938,8 +8772,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8968,8 +8804,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -8998,8 +8836,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9028,8 +8868,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9058,8 +8900,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9088,8 +8932,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9118,8 +8964,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9148,8 +8996,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9178,8 +9028,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9208,8 +9060,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9238,8 +9092,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9268,8 +9124,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9298,8 +9156,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9328,8 +9188,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9358,8 +9220,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9388,8 +9252,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9418,8 +9284,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9448,8 +9316,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9478,8 +9348,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9508,8 +9380,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9538,8 +9412,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9568,8 +9444,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9598,8 +9476,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9628,8 +9508,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9658,8 +9540,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9688,8 +9572,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9718,8 +9604,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9748,8 +9636,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9778,8 +9668,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9808,8 +9700,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9838,8 +9732,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9868,8 +9764,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9898,8 +9796,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9928,8 +9828,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9958,8 +9860,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -9988,8 +9892,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10018,8 +9924,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10048,8 +9956,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10078,8 +9988,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10108,8 +10020,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10138,8 +10052,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10168,8 +10084,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10198,8 +10116,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10228,8 +10148,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10258,8 +10180,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10288,8 +10212,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10318,8 +10244,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10348,8 +10276,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10378,8 +10308,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10408,8 +10340,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10438,8 +10372,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10468,8 +10404,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10498,8 +10436,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10528,8 +10468,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10558,8 +10500,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10588,8 +10532,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10618,8 +10564,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10648,8 +10596,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10678,8 +10628,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10708,8 +10660,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10738,8 +10692,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },
@@ -10768,8 +10724,10 @@ export const ALL_COUNTRIES: Country[] = [
       government: { score: 0, description: "Not available for drafting." },
       climate: { score: 0, description: "Not available for drafting." },
       technology: { score: 0, description: "Not available for drafting." },
-      size: { score: 0, description: "Not available for drafting." },
-      population: { score: 0, description: "Not available for drafting." },
+      size: {
+        description: "Not available for drafting." },
+      population: {
+        description: "Not available for drafting." },
       history: { score: 0, description: "Not available for drafting." },
       tourism: { score: 0, description: "Not available for drafting." },
       education: { score: 0, description: "Not available for drafting." },

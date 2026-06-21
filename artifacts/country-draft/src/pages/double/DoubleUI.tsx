@@ -151,12 +151,12 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
 
       let scoreVal = 0, weight = 1, desc = "", maxScore = 10;
       if (isCombo) {
-        scoreVal = (assigned.stats.size.score + roster.Population!.stats.population.score) / 2;
+        scoreVal = 0;
         weight = 1;
         desc = "Combined structure bonus applied";
       } else {
         const ck = getCategoryKey(actualCat);
-        scoreVal = assigned.stats[ck].score;
+        scoreVal = assigned.stats[ck].score ?? 0;
         weight = CATEGORY_MAX_SCORES[actualCat] ?? 10;
         desc = assigned.stats[ck].description;
       }
@@ -184,7 +184,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
         } else {
           ctx.fillStyle = C.gold;
           ctx.font = "bold 13px sans-serif";
-          ctx.fillText(isCombo ? `+${bonus} pts` : `+${Math.floor(scoreVal/2)} pts`, x + CARD_W - 60, y + 20);
+          ctx.fillText(isCombo ? `+${bonus} pts` : `Pending`, x + CARD_W - 60, y + 20);
         }
       }
 
@@ -277,25 +277,23 @@ export function computeSizePopBonus(roster: Partial<Record<Category, Country>>):
   const rawDensity = pop / size;
   const maxCap = size <= 2500 ? 20000 : 1500;
 
-  let techMult = 1.0;
-  if (rawDensity < 300) techMult = Math.max(0.1, rawDensity / 300);
-  else if (rawDensity > maxCap) techMult = Math.max(0.1, maxCap / rawDensity);
+  let techMult = 2.5;
+  if (rawDensity < 300) techMult = Math.max(1.0, 2.5 * (rawDensity / 300));
+  else if (rawDensity > maxCap) techMult = Math.max(1.0, 2.5 * (maxCap / rawDensity));
 
-  let agriMult = 1.0;
-  if (rawDensity > 100) agriMult = Math.max(0.1, 100 / rawDensity);
+  let agriMult = 2.5;
+  if (rawDensity > 100) agriMult = Math.max(1.0, 2.5 * (100 / rawDensity));
 
-  let extMult = 1.0;
-  if (rawDensity < 50) extMult = Math.max(0.1, rawDensity / 50);
-  else if (rawDensity > 300) extMult = Math.max(0.1, 300 / rawDensity);
+  let extMult = 2.5;
+  if (rawDensity < 50) extMult = Math.max(1.0, 2.5 * (rawDensity / 50));
+  else if (rawDensity > 300) extMult = Math.max(1.0, 2.5 * (300 / rawDensity));
 
   const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
   const climateScore = roster.Climate?.stats.climate?.score || 0;
   const techScore = roster.Technology?.stats.technology?.score || 0;
-  const locationScore = roster.Location?.stats.location?.score || 0;
-
-  const agriBonus = 25 * ((resourcesScore + climateScore) / 22) * agriMult;
-  const techBonus = 25 * ((techScore + locationScore) / 22) * techMult;
-  const extBonus = 25 * ((resourcesScore + techScore) / 24) * extMult;
+  const agriBonus = (climateScore * 10 / 10) * agriMult;
+  const techBonus = (techScore * 10 / 12) * techMult;
+  const extBonus = (resourcesScore * 10 / 12) * extMult;
 
   return Math.floor(Math.max(agriBonus, techBonus, extBonus));
 }
@@ -308,25 +306,23 @@ export function getBonusPath(roster: Partial<Record<Category, Country>>): "agric
   const rawDensity = pop / size;
   const maxCap = size <= 2500 ? 20000 : 1500;
 
-  let techMult = 1.0;
-  if (rawDensity < 300) techMult = Math.max(0.1, rawDensity / 300);
-  else if (rawDensity > maxCap) techMult = Math.max(0.1, maxCap / rawDensity);
+  let techMult = 2.5;
+  if (rawDensity < 300) techMult = Math.max(1.0, 2.5 * (rawDensity / 300));
+  else if (rawDensity > maxCap) techMult = Math.max(1.0, 2.5 * (maxCap / rawDensity));
 
-  let agriMult = 1.0;
-  if (rawDensity > 100) agriMult = Math.max(0.1, 100 / rawDensity);
+  let agriMult = 2.5;
+  if (rawDensity > 100) agriMult = Math.max(1.0, 2.5 * (100 / rawDensity));
 
-  let extMult = 1.0;
-  if (rawDensity < 50) extMult = Math.max(0.1, rawDensity / 50);
-  else if (rawDensity > 300) extMult = Math.max(0.1, 300 / rawDensity);
+  let extMult = 2.5;
+  if (rawDensity < 50) extMult = Math.max(1.0, 2.5 * (rawDensity / 50));
+  else if (rawDensity > 300) extMult = Math.max(1.0, 2.5 * (300 / rawDensity));
 
   const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
   const climateScore = roster.Climate?.stats.climate?.score || 0;
   const techScore = roster.Technology?.stats.technology?.score || 0;
-  const locationScore = roster.Location?.stats.location?.score || 0;
-
-  const agriBonus = 25 * ((resourcesScore + climateScore) / 22) * agriMult;
-  const techBonus = 25 * ((techScore + locationScore) / 22) * techMult;
-  const extBonus = 25 * ((resourcesScore + techScore) / 24) * extMult;
+  const agriBonus = (climateScore * 10 / 10) * agriMult;
+  const techBonus = (techScore * 10 / 12) * techMult;
+  const extBonus = (resourcesScore * 10 / 12) * extMult;
 
   const maxBonus = Math.max(agriBonus, techBonus, extBonus);
   if (maxBonus === agriBonus) return "agricultural";
@@ -347,8 +343,8 @@ export function getCountryArchetype(roster: Partial<Record<Category, Country>>):
   if (e >= 8 && t >= 8 && ed >= 8) return { name: "Techno-Utopia", icon: <Laptop className="w-5 h-5 text-blue-400" />, desc: "A beacon of innovation." };
   if (h >= 8 && ed >= 8 && g >= 8) return { name: "Nordic Model", icon: <Heart className="w-5 h-5 text-green-400" />, desc: "World-leading quality of life." };
   if (roster.Size && roster.Population) {
-    const s = roster.Size.stats.size.score; const p = roster.Population.stats.population.score;
-    if (s <= 3 && p <= 3 && e >= 7) return { name: "Wealthy City-State", icon: <Building className="w-5 h-5 text-yellow-400" />, desc: "Small but mighty." };
+    const size = roster.Size.area || 100000; const pop = getRawPopulation(roster.Population.stats.population.description);
+    if (size <= 50000 && pop <= 15000000 && e >= 7) return { name: "Wealthy City-State", icon: <Building className="w-5 h-5 text-yellow-400" />, desc: "Small but mighty." };
   }
   return { name: "Balanced Republic", icon: <Globe className="w-5 h-5 text-primary" />, desc: "A well-rounded nation." };
 }
@@ -367,7 +363,7 @@ export function ExpandableDescription({ description, isHovered = false }: { desc
   
   return (
     <div className="relative">
-      <p ref={textRef} className={`text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2 ${expanded ? "opacity-0 pointer-events-none" : ""}`}>
+      <p ref={textRef} className={`text-[11px] md:text-xs text-white/40/80 leading-relaxed italic line-clamp-2 ${expanded ? "opacity-0 pointer-events-none" : ""}`}>
         {description}
       </p>
       
@@ -384,7 +380,7 @@ export function ExpandableDescription({ description, isHovered = false }: { desc
         <div className={`absolute top-[-8px] left-[calc(-1rem-1px)] right-[calc(-1rem-1px)] md:left-[calc(-1.25rem-1px)] md:right-[calc(-1.25rem-1px)] bg-card border-x border-b rounded-b-2xl px-4 md:px-5 pt-[8px] pb-4 md:pb-5 z-50 shadow-2xl ${isHovered ? "border-primary" : "border-border/50"}`}>
           {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-b-2xl pointer-events-none" />}
           <div className="relative z-10">
-            <p className="text-[11px] md:text-xs text-foreground/90 leading-relaxed italic">
+            <p className="text-[11px] md:text-xs text-white/90 leading-relaxed italic">
             {description}
           </p>
           <button 
@@ -403,29 +399,35 @@ export function ExpandableDescription({ description, isHovered = false }: { desc
 export function SelectionPhase({ options, onPick, isHardMode, mode }: { options: Country[]; onPick: (c: Country) => void; isHardMode: boolean; mode: string; }) {
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-start flex-1 overflow-y-auto w-full">
-      <div className="text-center"><h2 className="text-3xl font-serif font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-muted-foreground text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
+      <div className="text-center"><h2 className="text-3xl font-serif font-bold mb-1 text-white">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-white/40 text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {options.map((country, idx) => (
-          <motion.div key={country.name + idx} whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }} onClick={() => onPick(country)} className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl text-left group cursor-pointer">
-            <div className="p-8 border-b border-border bg-secondary/10 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-serif font-bold text-foreground">{country.name}</h3><p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{country.region}</p></div>
+          <motion.div 
+            key={country.name + idx} 
+            whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }} 
+            onClick={() => onPick(country)} 
+            className="bg-[#000000] border border-white/10 rounded-2xl overflow-hidden shadow-xl text-left group cursor-pointer"
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          >
+            <div className="p-8 border-b border-white/10 bg-white/5 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-serif font-bold text-white">{country.name}</h3><p className="text-xs text-white/40 uppercase tracking-widest mt-1">{country.region}</p></div>
             <div className="p-5 space-y-4">
                <ExpandableDescription description={country.knownFor} />
                {!isHardMode && (() => {
                  const threeStars = ["Military", "Economy", "Government"] as Category[];
                  const twoStars = ["International Relationships", "Technology", "Education", "Natural Resources", "Healthcare"] as Category[];
                  const oneStars = ["Location", "Size", "Population", "Culture", "Climate", "History", "Tourism"] as Category[];
-                 const avg3 = Math.round(threeStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / threeStars.length);
-                 const avg2 = Math.round(twoStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / twoStars.length);
-                 const avg1 = Math.round(oneStars.reduce((acc, cat) => acc + country.stats[getCategoryKey(cat)].score, 0) / oneStars.length);
+                 const avg3 = Math.round(threeStars.reduce((acc, cat) => acc + (country.stats[getCategoryKey(cat)].score ?? 0), 0) / threeStars.length);
+                 const avg2 = Math.round(twoStars.reduce((acc, cat) => acc + (country.stats[getCategoryKey(cat)].score ?? 0), 0) / twoStars.length);
+                 const avg1 = Math.round(oneStars.reduce((acc, cat) => acc + (country.stats[getCategoryKey(cat)].score ?? 0), 0) / oneStars.length);
                  return (
                    <div className="grid grid-cols-3 gap-2">
-                     <div className="text-center p-2 rounded-lg bg-secondary/30 border border-border/40"><div className="text-[9px] uppercase font-bold text-muted-foreground">3-Star Avg</div><div className="text-sm font-bold text-primary">{avg3}/15</div></div>
-                     <div className="text-center p-2 rounded-lg bg-secondary/30 border border-border/40"><div className="text-[9px] uppercase font-bold text-muted-foreground">2-Star Avg</div><div className="text-sm font-bold text-primary">{avg2}/12</div></div>
-                     <div className="text-center p-2 rounded-lg bg-secondary/30 border border-border/40"><div className="text-[9px] uppercase font-bold text-muted-foreground">1-Star Avg</div><div className="text-sm font-bold text-primary">{avg1}/10</div></div>
+                     <div className="text-center p-2 rounded-lg bg-white/5 border border-white/10"><div className="text-[9px] uppercase font-bold text-white/40">3-Star Avg</div><div className="text-sm font-bold text-white">{avg3}/15</div></div>
+                     <div className="text-center p-2 rounded-lg bg-white/5 border border-white/10"><div className="text-[9px] uppercase font-bold text-white/40">2-Star Avg</div><div className="text-sm font-bold text-white">{avg2}/12</div></div>
+                     <div className="text-center p-2 rounded-lg bg-white/5 border border-white/10"><div className="text-[9px] uppercase font-bold text-white/40">1-Star Avg</div><div className="text-sm font-bold text-white">{avg1}/10</div></div>
                    </div>
                  );
                })()}
-               <div className="mt-auto pt-4"><div className="w-full py-2.5 rounded-xl bg-primary/10 text-primary text-center font-bold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-primary/20">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div></div>
+               <div className="mt-auto pt-4"><div className="w-full py-2.5 rounded-xl bg-white/10 text-white text-center font-bold text-sm group-hover:bg-white group-hover:text-black transition-colors border border-white/20">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div></div>
             </div>
           </motion.div>
         ))}
@@ -440,15 +442,15 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
   const stats = mysteryCountry.stats; const categories = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full">
-      <div className="text-center"><h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2><p className="text-muted-foreground text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
+      <div className="text-center"><h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2><p className="text-white/40 text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
       <div className="w-full max-w-md relative mt-4 mb-6">
-        <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" /></div>
-          <input type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-secondary/50 border border-border rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
-          {showSuggestions && suggestions.length > 0 && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-full left-0 w-full mb-3 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-50">{suggestions.map(s => (<button key={s.name} onClick={() => { onGuess(s.name); setInput(""); setShowSuggestions(false); }} className="w-full px-5 py-4 text-left hover:bg-primary/10 transition-colors border-b border-border last:border-0 flex items-center justify-between group"><div className="flex items-center gap-4"><span className="text-2xl">{s.flag}</span><span className="font-bold text-foreground">{s.name}</span></div><ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" /></button>))}</motion.div>)}
+        <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-white/40 group-focus-within:text-primary transition-colors" /></div>
+          <input type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-white/10 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
+          {showSuggestions && suggestions.length > 0 && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-full left-0 w-full mb-3 bg-[#000000] border border-white/10 rounded-2xl shadow-2xl overflow-hidden z-50">{suggestions.map(s => (<button key={s.name} onClick={() => { onGuess(s.name); setInput(""); setShowSuggestions(false); }} className="w-full px-5 py-4 text-left hover:bg-primary/10 transition-colors border-b border-white/10 last:border-0 flex items-center justify-between group"><div className="flex items-center gap-4"><span className="text-2xl">{s.flag}</span><span className="font-bold text-white">{s.name}</span></div><ChevronRight className="w-4 h-4 text-white/40 group-hover:text-primary transition-colors" /></button>))}</motion.div>)}
         </div>
-        {guesses.length > 0 && (<div className="mt-8 space-y-3"><div className="flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div><div className="flex flex-wrap gap-2 justify-center">{guesses.map((g, i) => (<motion.div key={i} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold shadow-sm">{g}</motion.div>))}</div></div>)}
+        {guesses.length > 0 && (<div className="mt-8 space-y-3"><div className="flex items-center justify-center gap-2 text-xs font-bold text-white/40 uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div><div className="flex flex-wrap gap-2 justify-center">{guesses.map((g, i) => (<motion.div key={i} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold shadow-sm">{g}</motion.div>))}</div></div>)}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">{categories.map(cat => { const key = getCategoryKey(cat); const score = stats[key].score; return (<div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm"><div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div><div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div><div className="text-3xl font-bold text-foreground tracking-tighter">{score}</div></div>); })}</div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">{categories.map(cat => { const key = getCategoryKey(cat); const score = stats[key].score; return (<div key={cat} className="p-4 rounded-xl border border-white/10 bg-card/40 flex flex-col items-center text-center shadow-sm"><div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div><div className="text-[10px] uppercase font-bold text-white/40 tracking-wider mb-1">{cat}</div><div className="text-3xl font-bold text-white tracking-tighter">{score}</div></div>); })}</div>
     </div>
   );
 }
@@ -463,9 +465,9 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
         <div className="flex items-start gap-4 md:gap-6">
           <div className="text-4xl md:text-5xl mt-1 drop-shadow-md">{country.flag}</div>
           <div>
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground tracking-tight">{country.name}</h2>
-            <p className="text-sm text-muted-foreground mt-0.5">{country.capital} &bull; {country.region}</p>
-            <div className="mt-4 max-w-2xl text-sm text-foreground/80 leading-relaxed">
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-white tracking-tight">{country.name}</h2>
+            <p className="text-sm text-white/40 mt-0.5">{country.capital} &bull; {country.region}</p>
+            <div className="mt-4 max-w-2xl text-sm text-white/80 leading-relaxed">
               {country.knownFor}
             </div>
           </div>
@@ -477,15 +479,15 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
             const stat = country.stats[getCategoryKey(cat)];
             const isHovered = hoveredCategory === cat;
             const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
-            const scoreLabel = getScoreLabel(stat.score, maxScore);
+            const scoreLabel = getScoreLabel(stat.score ?? 0, maxScore);
             
             return (
-              <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
+              <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-white/10/60 hover:bg-white/5 cursor-pointer shadow-sm"}`}>
                 {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-xl" />}
                 
                 <div className="relative z-10 flex flex-col h-full">
                   <div className={`flex items-center justify-between ${!isHardMode ? "mb-4" : "mb-2"}`}>
-                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-start justify-between gap-2">
+                    <div className="text-[10px] font-bold text-white/40 uppercase tracking-widest flex items-start justify-between gap-2">
                       <div className="flex items-start gap-2">
                         <div className="shrink-0 mt-0.5">{CATEGORY_ICONS[cat]}</div>
                         <span className="leading-tight">{cat}</span>
@@ -496,11 +498,11 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                   
                   {!isHardMode && (
                     <div className="flex items-center justify-between mb-1">
-                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
-                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>
+                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-white" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
+                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-white" : scoreLabel.color}`}>
                         {BONUS_CATEGORIES.includes(cat) 
                           ? extractBonusText(stat.description, cat) 
-                          : getPtsDisplay(stat.score, cat)}
+                          : getPtsDisplay(stat.score ?? 0, cat)}
                       </div>
                     </div>
                   )}
@@ -525,32 +527,32 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
     <div className="p-4 md:p-8 flex-1 overflow-y-auto" ref={rosterRef}>
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 pb-20">
         <div className="text-center space-y-3 md:space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-700">
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Draft Complete</h2>
+          <h2 className="text-3xl md:text-5xl font-serif font-bold text-white">Draft Complete</h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm md:text-base">
-            <span className="text-muted-foreground font-medium tracking-wide">Final Score:</span>
+            <span className="text-white/40 font-medium tracking-wide">Final Score:</span>
             <div className="flex items-center gap-3">
-              <span className="text-2xl md:text-3xl font-bold text-primary">{totalScore} <span className="text-sm text-primary/60">pts</span></span>
+              <span className="text-2xl md:text-3xl font-bold text-primary">{totalScore} <span className="text-sm text-primary/60">pts</span> {bonus > 0 && <span className="text-sm text-yellow-500 font-bold ml-2">(+{bonus} bonus)</span>}</span>
               </div>
           </div>
           </div>
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${bPath ? "lg:grid-cols-3" : ""} gap-4 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200`}>
-          <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-            <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{archetype.icon}</div>
-            <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{archetype.name}</h3><p className="text-xs text-muted-foreground">{archetype.desc}</p></div>
+          <div className="p-4 md:p-5 rounded-2xl bg-[#000000] border border-white/10 shadow-sm flex items-start gap-4">
+            <div className="p-3 bg-white/5 rounded-xl shrink-0">{archetype.icon}</div>
+            <div><h3 className="font-bold text-white text-sm md:text-base mb-1">{archetype.name}</h3><p className="text-xs text-white/40">{archetype.desc}</p></div>
           </div>
-          <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-            <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{rating.icon}</div>
-            <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{rating.label}</h3><p className="text-xs text-muted-foreground">{rating.desc}</p></div>
+          <div className="p-4 md:p-5 rounded-2xl bg-[#000000] border border-white/10 shadow-sm flex items-start gap-4">
+            <div className="p-3 bg-white/5 rounded-xl shrink-0">{rating.icon}</div>
+            <div><h3 className="font-bold text-white text-sm md:text-base mb-1">{rating.label}</h3><p className="text-xs text-white/40">{rating.desc}</p></div>
           </div>
           {bPath && (
-            <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-              <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{bPath === "agricultural" ? <Leaf className="w-5 h-5 text-yellow-400" /> : bPath === "extraction" ? <Mountain className="w-5 h-5 text-yellow-400" /> : <Building className="w-5 h-5 text-yellow-400" />}</div>
-              <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{bPath === "agricultural" ? "Agricultural Giant" : bPath === "extraction" ? "Resource Extraction Titan" : "Urban Powerhouse"}</h3><p className="text-xs text-muted-foreground">{bPath === "agricultural" ? "Vast lands with sparse population." : bPath === "extraction" ? "Massive nation built for resource extraction." : "Dense population in a compact area."}</p></div>
+            <div className="p-4 md:p-5 rounded-2xl bg-[#000000] border border-white/10 shadow-sm flex items-start gap-4">
+              <div className="p-3 bg-white/5 rounded-xl shrink-0">{bPath === "agricultural" ? <Leaf className="w-5 h-5 text-yellow-400" /> : bPath === "extraction" ? <Mountain className="w-5 h-5 text-yellow-400" /> : <Building className="w-5 h-5 text-yellow-400" />}</div>
+              <div><h3 className="font-bold text-white text-sm md:text-base mb-1">{bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : "Tech Megacity"}</h3><p className="text-xs text-white/40">{bPath === "agricultural" ? "Vast lands with sparse population." : bPath === "extraction" ? "Massive nation built for resource extraction." : "Dense population in a compact area."}</p></div>
             </div>
           )}
         </div>
         <div className="space-y-4">
-          <h3 className="text-lg md:text-xl font-serif font-bold text-foreground px-2 flex items-center justify-between">
+          <h3 className="text-lg md:text-xl font-serif font-bold text-white px-2 flex items-center justify-between">
             <span>Your Nation's Roster</span>
             {!wildcardUsed && !wildcardPhase && (
               <button onClick={onWildcard} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 font-semibold hover:bg-blue-500/20 transition-colors border border-blue-500/30">
@@ -558,7 +560,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
               </button>
             )}
             {wildcardPhase && (
-              <button onClick={() => setWildcardPhase(false)} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-muted-foreground font-semibold hover:text-foreground transition-colors">
+              <button onClick={() => setWildcardPhase(false)} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-white/40 font-semibold hover:text-white transition-colors">
                 Cancel
               </button>
             )}
@@ -583,18 +585,18 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         const ck = getCategoryKey(sCat);
                         const stat = splitAssigned.stats[ck];
                         return (
-                          <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card">
-                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-muted-foreground">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-foreground/80">{sCat}</span></div></div>
-                            <div><div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
+                          <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-white/10/50 bg-card">
+                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-white/40">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-white/80">{sCat}</span></div></div>
+                            <div><div className="text-sm md:text-base font-bold text-white flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
                               <div className="flex flex-col items-start gap-1 mt-3">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <div className="font-bold text-foreground text-xs">{extractBonusText(stat.description, sCat)}</div>
-                                  <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Bonus</div>
+                                  <div className="font-bold text-white text-xs">{extractBonusText(stat.description, sCat)}</div>
+                                  <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-white/10">Bonus</div>
                                 </div>
                               </div>
                             )}
-                            <p className="text-[9px] text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
+                            <p className="text-[9px] text-white/40/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
                           </div>
                         );
                       })}
@@ -605,15 +607,15 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                   const sizeCountry = Array.isArray(assigned) ? assigned[0] : assigned;
                   const popCountry = Array.isArray(roster.Population) ? roster.Population[0] : roster.Population;
                   return (
-                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
+                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-white/10/50 bg-card" : "bg-card border-white/10/50"}`}>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-muted-foreground">
+                        <div className="flex items-center gap-2 text-white/40">
                           {CATEGORY_ICONS["Size"]}
-                          <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population Structure</span>
+                          <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/80">Population Structure</span>
                         </div>
-                        <div className="font-bold text-foreground text-base md:text-lg">
+                        <div className="font-bold text-white text-base md:text-lg">
                            {!isHardMode && (
-                             <><span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span></>
+                             <><span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{bonus}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span></>
                            )}
                         </div>
                       </div>
@@ -621,60 +623,60 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         {(sizeCountry as any).name !== (popCountry as any).name ? (
                           <div className="flex items-start justify-center w-full gap-2">
                             <div className="flex-1 flex flex-col items-center text-center gap-2">
-                              <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-center gap-1.5 w-full">
+                              <div className="text-sm md:text-base font-bold text-white flex items-center justify-center gap-1.5 w-full">
                                 {(sizeCountry as any).flag} <span className="truncate">{(sizeCountry as any).name}</span>
                               </div>
                               <div className="space-y-1 flex flex-col items-center">
                                 {!isHardMode && (
                                   <div className="flex flex-col gap-1 items-center">
-                                    <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
-                                    <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Size Bonus</div>
+                                    <span className="font-bold text-white text-[11px] leading-tight">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
+                                    <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-white/10">Size Bonus</div>
                                   </div>
                                 )}
-                                <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(sizeCountry as any).stats.size.description}"</p>
+                                <p className="text-[10px] md:text-xs text-white/40/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(sizeCountry as any).stats.size.description}"</p>
                               </div>
                             </div>
                             <div className="flex items-center justify-center pt-1">
-                              <span className="text-muted-foreground font-bold shrink-0">+</span>
+                              <span className="text-white/40 font-bold shrink-0">+</span>
                             </div>
                             <div className="flex-1 flex flex-col items-center text-center gap-2">
-                              <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-center gap-1.5 w-full">
+                              <div className="text-sm md:text-base font-bold text-white flex items-center justify-center gap-1.5 w-full">
                                 <span className="truncate">{(popCountry as any).name}</span> {(popCountry as any).flag}
                               </div>
                               <div className="space-y-1 flex flex-col items-center">
                                 {!isHardMode && (
                                   <div className="flex flex-col gap-1 items-center">
-                                    <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
-                                    <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Pop Bonus</div>
+                                    <span className="font-bold text-white text-[11px] leading-tight">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
+                                    <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-white/10">Pop Bonus</div>
                                   </div>
                                 )}
-                                <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(popCountry as any).stats.population.description}"</p>
+                                <p className="text-[10px] md:text-xs text-white/40/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(popCountry as any).stats.population.description}"</p>
                               </div>
                             </div>
                           </div>
                         ) : (
                           <div className="flex flex-col items-center w-full gap-3">
-                            <div className="text-base md:text-lg font-bold text-foreground flex items-center justify-center gap-2">
+                            <div className="text-base md:text-lg font-bold text-white flex items-center justify-center gap-2">
                               {(sizeCountry as any).flag} {(sizeCountry as any).name}
                             </div>
                             <div className="grid grid-cols-2 gap-3 w-full">
                               <div className="space-y-1 flex flex-col items-center text-center">
                                 {!isHardMode && (
                                   <div className="flex flex-col gap-1 items-center">
-                                    <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
-                                    <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Size Bonus</div>
+                                    <span className="font-bold text-white text-[11px] leading-tight">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
+                                    <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-white/10">Size Bonus</div>
                                   </div>
                                 )}
-                                <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(sizeCountry as any).stats.size.description}"</p>
+                                <p className="text-[10px] md:text-xs text-white/40/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(sizeCountry as any).stats.size.description}"</p>
                               </div>
                               <div className="space-y-1 flex flex-col items-center text-center">
                                 {!isHardMode && (
                                   <div className="flex flex-col gap-1 items-center">
-                                    <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
-                                    <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Pop Bonus</div>
+                                    <span className="font-bold text-white text-[11px] leading-tight">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
+                                    <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-white/10">Pop Bonus</div>
                                   </div>
                                 )}
-                                <p className="text-[10px] md:text-xs text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(popCountry as any).stats.population.description}"</p>
+                                <p className="text-[10px] md:text-xs text-white/40/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(popCountry as any).stats.population.description}"</p>
                               </div>
                             </div>
                           </div>
@@ -685,13 +687,13 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                 }
 
                 return (
-                  <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
-                    <div className="flex items-center justify-between"><div className="flex items-center gap-2 text-muted-foreground">{CATEGORY_ICONS[actualCat]}<span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span></div></div>
-                    <div><div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{assigned.flag} {assigned.name}</div></div>
+                  <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-white/10/50 bg-card" : "bg-card border-white/10/50"}`}>
+                    <div className="flex items-center justify-between"><div className="flex items-center gap-2 text-white/40">{CATEGORY_ICONS[actualCat]}<span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/80">{cat}</span></div></div>
+                    <div><div className="text-base md:text-lg font-bold text-white flex items-center gap-2">{assigned.flag} {assigned.name}</div></div>
                     {(() => {
                       let scoreVal = 0, weight = 1, desc = "", maxScore = 10;
                       const ck = getCategoryKey(actualCat); 
-                      scoreVal = assigned.stats[ck].score; 
+                      scoreVal = assigned.stats[ck].score ?? 0; 
                       maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; 
                       desc = assigned.stats[ck].description;
                       const isBonus = BONUS_CATEGORIES.includes(actualCat);
@@ -701,16 +703,16 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         <div className="space-y-2 mt-3">
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
-                              {!isBonus && !isSizeOrPop ? ( <><div className="flex items-center gap-2"><span className={`text-lg md:text-xl font-black ${getScoreLabel(scoreVal, maxScore).color.split(' ')[0]}`}>{scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-muted-foreground font-semibold">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
+                              {!isBonus && !isSizeOrPop ? ( <><div className="flex items-center gap-2"><span className={`text-lg md:text-xl font-black ${getScoreLabel(scoreVal, maxScore).color.split(' ')[0]}`}>{scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-white/40 font-semibold">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-white/10`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
                               ) : isSizeOrPop ? (
                                 <div className="flex items-center gap-2">
-                                  <span className="font-bold text-foreground text-xs">{extractBonusText(desc, actualCat)}</span>
-                                  <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50`}>Bonus Contributor</div>
+                                  <span className="font-bold text-white text-xs">{extractBonusText(desc, actualCat)}</span>
+                                  <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-white/10`}>Bonus Contributor</div>
                                 </div>
                               ) : ( <span className="text-lg md:text-xl font-black text-yellow-400">+{Math.floor(scoreVal / 2)} <span className="text-[11px] md:text-xs text-yellow-400/60 font-semibold">pts</span></span> )}
                             </div>
                           )}
-                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{desc}"</p>
+                          <p className="text-[11px] md:text-xs text-white/40/80 leading-relaxed italic line-clamp-2">"{desc}"</p>
                         </div>
                       );
                     })()}
@@ -721,11 +723,11 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           </div>
         </div>
         {!isDailyMode && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 md:pt-8 border-t border-border">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 md:pt-8 border-t border-white/10">
             <button onClick={onReset} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-base hover:opacity-90 transition-opacity shadow-lg">
               <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again
             </button>
-            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-secondary text-foreground font-bold text-sm md:text-base hover:bg-secondary/80 transition-colors border border-border shadow-sm">
+            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-white/10 text-white font-bold text-sm md:text-base hover:bg-white/10/80 transition-colors border border-white/10 shadow-sm">
               <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
             </button>
             {!leaderboardSubmitted && (
@@ -734,7 +736,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
               </button>
             )}
             {leaderboardSubmitted && (
-              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-secondary/50 text-muted-foreground border border-border font-bold text-sm md:text-base">
+              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-white/10 text-white/40 border border-white/10 font-bold text-sm md:text-base">
                 <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
               </div>
             )}

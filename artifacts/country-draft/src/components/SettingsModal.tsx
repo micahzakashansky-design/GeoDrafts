@@ -90,24 +90,24 @@ export function SettingsModal({ onClose }: Props) {
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
-        className="bg-card border border-border rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
+        className="bg-[#000000] border border-white/10 rounded-2xl w-full max-w-md shadow-2xl overflow-hidden"
       >
-        <div className="px-6 py-4 border-b border-border flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-white/10 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <User className="w-5 h-5 text-primary" />
-            <h2 className="font-serif text-xl font-bold text-foreground">Account Settings</h2>
+            <h2 className="font-serif text-xl font-bold text-white">Account Settings</h2>
           </div>
           <button
             onClick={onClose}
-            className="p-1 rounded-full hover:bg-secondary transition-colors"
+            className="p-1 rounded-full hover:bg-white/10 transition-colors"
           >
-            <X className="w-5 h-5 text-muted-foreground" />
+            <X className="w-5 h-5 text-white/40" />
           </button>
         </div>
 
         <div className="p-6 space-y-6">
           <div className="space-y-4">
-            <label className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+            <label className="text-sm font-semibold text-white/40 uppercase tracking-wider">
               Change Username
             </label>
             <div className="flex gap-2">
@@ -116,7 +116,7 @@ export function SettingsModal({ onClose }: Props) {
                 value={newUsername}
                 onChange={(e) => setNewUsername(e.target.value)}
                 placeholder="New username"
-                className="flex-1 px-4 py-2 rounded-xl bg-secondary/50 border border-border focus:outline-none focus:ring-2 focus:ring-primary/50 text-foreground"
+                className="flex-1 px-4 py-2 rounded-xl bg-white/10 border border-white/10 focus:outline-none focus:ring-2 focus:ring-primary/50 text-white"
               />
               <button
                 onClick={handleUpdateUsername}
@@ -127,12 +127,12 @@ export function SettingsModal({ onClose }: Props) {
                 Update
               </button>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/40">
               This name will be visible to other players on the leaderboard.
             </p>
           </div>
 
-          <div className="pt-4 border-t border-border">
+          <div className="pt-4 border-t border-white/10">
             <button
               onClick={handleLogout}
               disabled={isLoggingOut}

@@ -79,14 +79,14 @@ export default function GuessGame() {
   }, [state.isHardMode]);
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
-      <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
+    <div className="flex flex-col h-screen bg-background text-white overflow-hidden font-sans">
+      <header className="h-14 md:h-16 shrink-0 border-b border-white/10/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:block">
+          <div className="px-2.5 py-1 rounded-md bg-white/10 text-xs font-semibold text-white/40 border border-white/10 hidden sm:block">
             Guess the Country
           </div>
         </div>
@@ -106,18 +106,18 @@ export default function GuessGame() {
                     {state.guesses[state.guesses.length - 1].toLowerCase() === state.mysteryCountry?.name.toLowerCase() ? "Correct!" : "Game Over"}
                  </h2>
                  {state.guesses[state.guesses.length - 1].toLowerCase() !== state.mysteryCountry?.name.toLowerCase() && (
-                    <p className="text-xl text-muted-foreground">The country was <span className="font-bold text-foreground text-2xl ml-1">{state.mysteryCountry?.flag} {state.mysteryCountry?.name}</span></p>
+                    <p className="text-xl text-white/40">The country was <span className="font-bold text-white text-2xl ml-1">{state.mysteryCountry?.flag} {state.mysteryCountry?.name}</span></p>
                  )}
                  {isWin && (
                     <div className="flex flex-col items-center justify-center my-4 p-4 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto">
                       <div className="text-3xl font-bold text-primary">{guessScore} Points</div>
-                      <div className="text-sm text-muted-foreground mt-1">({state.guesses.length} guesses + {state.hintsRevealed || 0} hints)</div>
+                      <div className="text-sm text-white/40 mt-1">({state.guesses.length} guesses + {state.hintsRevealed || 0} hints)</div>
                     </div>
                  )}
                </div>
 
                <div className="w-full max-w-md mx-auto mt-2 flex flex-col items-center">
-                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-6">Your Guess Path:</h3>
+                  <h3 className="text-sm font-bold text-white/40 uppercase tracking-widest mb-6">Your Guess Path:</h3>
                   <div className="flex flex-col items-center w-full relative">
                      {state.guesses.map((g, i) => {
                         const isLast = i === state.guesses.length - 1;
@@ -131,7 +131,7 @@ export default function GuessGame() {
                                   flex items-center justify-center text-center font-bold border shadow-sm relative group
                                   ${isLast && isCorrect 
                                     ? "p-6 rounded-2xl bg-emerald-500/20 border-emerald-500/50 text-emerald-400 text-3xl w-full scale-110 my-4 shadow-emerald-500/20" 
-                                    : "px-6 py-3 rounded-xl bg-secondary/50 border-border text-muted-foreground w-3/4"}
+                                    : "px-6 py-3 rounded-xl bg-white/10 border-white/10 text-white/40 w-3/4"}
                                 `}
                               >
                                 {g}
@@ -152,7 +152,7 @@ export default function GuessGame() {
                                     className="w-0.5 bg-border my-2 relative"
                                  >
                                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 bg-background rounded-full">
-                                       <ChevronDown className="w-4 h-4 text-muted-foreground" />
+                                       <ChevronDown className="w-4 h-4 text-white/40" />
                                     </div>
                                  </motion.div>
                               )}
@@ -182,7 +182,7 @@ export default function GuessGame() {
               onRevealHint={() => setState(prev => ({ ...prev, hintsRevealed: (prev.hintsRevealed || 0) + 1 }))}
             />
           ) : (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground">Loading game...</div>
+            <div className="flex-1 flex items-center justify-center text-white/40">Loading game...</div>
           )}
         </div>
       </main>
@@ -191,43 +191,43 @@ export default function GuessGame() {
         {showStatsModal && state.mysteryCountry && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
           >
             <motion.div 
               initial={{ scale: 0.95, opacity: 0, y: 20 }} 
               animate={{ scale: 1, opacity: 1, y: 0 }} 
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto relative"
+              className="bg-[#000000] border border-white/10 rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto relative"
             >
               <button 
                 onClick={() => setShowStatsModal(false)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-secondary transition-colors"
+                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors"
               >
-                <X className="w-6 h-6 text-muted-foreground" />
+                <X className="w-6 h-6 text-white/40" />
               </button>
               
               <div className="p-8">
                 <div className="flex flex-col items-center text-center mb-8">
                   <div className="text-8xl mb-4 drop-shadow-lg">{state.mysteryCountry.flag}</div>
                   <h2 className="text-4xl font-serif font-bold tracking-tight mb-2">{state.mysteryCountry.name}</h2>
-                  <p className="text-sm text-muted-foreground uppercase tracking-widest font-semibold flex items-center gap-1.5"><MapPin className="w-4 h-4" />{state.mysteryCountry.region}</p>
+                  <p className="text-sm text-white/40 uppercase tracking-widest font-semibold flex items-center gap-1.5"><MapPin className="w-4 h-4" />{state.mysteryCountry.region}</p>
                 </div>
 
-                <div className="bg-secondary/30 border border-border rounded-xl p-6 mb-8 text-center">
-                  <p className="text-muted-foreground leading-relaxed italic">"{state.mysteryCountry.knownFor}"</p>
+                <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-8 text-center">
+                  <p className="text-white/40 leading-relaxed italic">"{state.mysteryCountry.knownFor}"</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c)).map(cat => {
                     const stat = state.mysteryCountry!.stats[getCategoryKey(cat)];
                     return (
-                      <div key={cat} className="bg-secondary/20 border border-border/50 rounded-xl p-4">
+                      <div key={cat} className="bg-white/5 border border-white/10/50 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-2">
-                          <span className="text-muted-foreground">{CATEGORY_ICONS[cat]}</span>
-                          <span className="text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span>
+                          <span className="text-white/40">{CATEGORY_ICONS[cat]}</span>
+                          <span className="text-xs font-bold uppercase tracking-widest text-white/80">{cat}</span>
                         </div>
-                        <p className="text-sm text-foreground/70">{stat.description}</p>
-                        <div className="mt-2 text-primary font-mono font-bold">{getPtsDisplay(stat.score, cat)}</div>
+                        <p className="text-sm text-white/70">{stat.description}</p>
+                        <div className="mt-2 text-primary font-mono font-bold">{getPtsDisplay(stat.score ?? 0, cat)}</div>
                       </div>
                     );
                   })}

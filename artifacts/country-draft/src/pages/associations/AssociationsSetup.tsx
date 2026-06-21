@@ -68,14 +68,14 @@ export function AssociationsSetup() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
-      <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
+    <div className="flex flex-col h-screen bg-background text-white overflow-hidden font-sans">
+      <header className="h-14 md:h-16 shrink-0 border-b border-white/10/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <button onClick={() => setLocation("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:block">
+          <div className="px-2.5 py-1 rounded-md bg-white/10 text-xs font-semibold text-white/40 border border-white/10 hidden sm:block">
             Associations Mode
           </div>
         </div>
@@ -88,14 +88,14 @@ export function AssociationsSetup() {
           {/* Tasks Section */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold">1. Select Tasks</h2>
-            <div className="space-y-2 bg-card border border-border rounded-xl p-4">
+            <div className="space-y-2 bg-[#000000] border border-white/10 rounded-xl p-4">
               {TASK_TYPES.map(task => (
-                <label key={task.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary/50 cursor-pointer transition-colors">
+                <label key={task.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/10 cursor-pointer transition-colors">
                   <Checkbox 
                     checked={selectedTasks.includes(task.id)}
                     onCheckedChange={() => toggleTask(task.id)}
                   />
-                  <div className="p-1 rounded bg-secondary/80">
+                  <div className="p-1 rounded bg-white/10/80">
                     {task.icon}
                   </div>
                   <span className="text-sm font-medium">{task.label}</span>
@@ -111,7 +111,7 @@ export function AssociationsSetup() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold">2. Select Countries</h2>
-              <span className="text-sm text-muted-foreground">{selectedCountries.length} / {COUNTRIES.length} selected</span>
+              <span className="text-sm text-white/40">{selectedCountries.length} / {COUNTRIES.length} selected</span>
             </div>
             
             <div className="flex flex-col gap-3">
@@ -121,9 +121,9 @@ export function AssociationsSetup() {
                 const selectedCount = countries.filter(c => selectedCountries.includes(c.name)).length;
                 
                 return (
-                  <div key={region} className={`flex items-center border rounded-xl overflow-hidden transition-colors ${allSelected ? 'bg-primary/10 border-primary/30' : someSelected ? 'bg-primary/5 border-primary/20' : 'bg-card border-border'}`}>
+                  <div key={region} className={`flex items-center border rounded-xl overflow-hidden transition-colors ${allSelected ? 'bg-primary/10 border-primary/30' : someSelected ? 'bg-primary/5 border-primary/20' : 'bg-card border-white/10'}`}>
                     <button 
-                      className="flex-1 p-3 text-left flex items-center gap-3 hover:bg-secondary/50 transition-colors"
+                      className="flex-1 p-3 text-left flex items-center gap-3 hover:bg-white/10 transition-colors"
                       onClick={() => toggleRegion(region, countries)}
                     >
                       <Checkbox 
@@ -133,14 +133,14 @@ export function AssociationsSetup() {
                       />
                       <div className="flex flex-col">
                         <span className="text-sm font-bold leading-tight">{region}</span>
-                        <span className="text-xs text-muted-foreground">{selectedCount} / {countries.length}</span>
+                        <span className="text-xs text-white/40">{selectedCount} / {countries.length}</span>
                       </div>
                     </button>
                     
                     <Dialog>
                       <DialogTrigger asChild>
-                        <button className="px-4 py-3 hover:bg-secondary/30 transition-colors border-l border-border/50 h-full flex items-center justify-center group">
-                          <div className="w-8 h-8 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm border border-border">
+                        <button className="px-4 py-3 hover:bg-white/5 transition-colors border-l border-white/10/50 h-full flex items-center justify-center group">
+                          <div className="w-8 h-8 rounded-full bg-white/10 text-secondary-foreground flex items-center justify-center group-hover:scale-105 transition-transform shadow-sm border border-white/10">
                             <ChevronRight className="w-4 h-4" />
                           </div>
                         </button>
@@ -160,7 +160,7 @@ export function AssociationsSetup() {
                           </Button>
                           <div className="grid grid-cols-2 gap-2">
                             {countries.map(country => (
-                              <label key={country.name} className="flex items-center gap-2 cursor-pointer group p-2 rounded hover:bg-secondary/50 transition-colors border border-transparent hover:border-border">
+                              <label key={country.name} className="flex items-center gap-2 cursor-pointer group p-2 rounded hover:bg-white/10 transition-colors border border-transparent hover:border-border">
                                 <Checkbox 
                                   checked={selectedCountries.includes(country.name)}
                                   onCheckedChange={() => toggleCountry(country.name)}
@@ -185,9 +185,9 @@ export function AssociationsSetup() {
         </div>
 
         {/* Floating Action Bar */}
-        <div className="fixed bottom-0 left-0 right-0 p-6 bg-background/80 backdrop-blur-xl border-t border-border z-10">
+        <div className="fixed bottom-0 left-0 right-0 p-6 bg-black/80 backdrop-blur-xl border-t border-white/10 z-10">
           <div className="max-w-4xl mx-auto flex justify-between items-center">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-white/40">
               {selectedTasks.length} tasks • {selectedCountries.length} countries
             </div>
             <Button 

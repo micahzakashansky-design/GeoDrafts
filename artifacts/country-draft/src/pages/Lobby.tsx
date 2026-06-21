@@ -4,6 +4,7 @@ import { Users, Swords, PartyPopper, ChevronLeft } from "lucide-react";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
 import { listenToRoom, listenToPlayers, updateRoom, type Room, type RoomPlayer } from "../lib/firestore";
 import { Logo } from "../components/Logo";
+import { motion } from "framer-motion";
 
 export default function Lobby() {
   const [, navigate] = useLocation();
@@ -34,8 +35,14 @@ export default function Lobby() {
 
   if (!room || !firebaseUser) {
     return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center">
-        <div className="text-muted-foreground animate-pulse">Loading Lobby...</div>
+      <div className="min-h-screen bg-[#000000] flex flex-col items-center justify-center font-sans">
+        <motion.div 
+          animate={{ opacity: [0.3, 1, 0.3] }} 
+          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+          className="text-white/50 font-bold tracking-widest text-sm uppercase"
+        >
+          Loading Lobby...
+        </motion.div>
       </div>
     );
   }
@@ -61,59 +68,89 @@ export default function Lobby() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground overflow-hidden font-sans">
-      <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
-            <Logo className="w-5 h-5" />GeoDrafts
-          </button>
-          <div className="h-4 w-px bg-border hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5" /> Multiplayer Lobby
+    <div className="flex flex-col min-h-screen bg-[#000000] text-white overflow-hidden font-sans selection:bg-white/20">
+      <header className="h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 mix-blend-difference">
+        <div className="flex items-center gap-4">
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            onClick={() => navigate("/")} 
+            className="font-serif text-xl md:text-2xl font-black tracking-tighter flex items-center gap-3 hover:opacity-80 transition-opacity"
+          >
+            <Logo className="w-6 h-6 opacity-90" />GeoDrafts
+          </motion.button>
+          <div className="h-6 w-px bg-white/10 hidden md:block" />
+          <div className="px-3 py-1.5 rounded-full bg-white/5 text-xs font-bold text-white/50 border border-white/10 hidden sm:flex items-center gap-2">
+            <Users className="w-4 h-4" /> Multiplayer Lobby
           </div>
         </div>
       </header>
 
-      <main className="flex-1 p-8 md:p-12 relative flex flex-col md:flex-row justify-between gap-8">
+      <main className="flex-1 p-6 md:p-12 relative flex flex-col md:flex-row justify-between gap-12 max-w-7xl mx-auto w-full">
         {/* Left Side: Room Code & Players */}
         <div className="flex-1 max-w-2xl">
-          <div className="mb-8">
-            <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-2">Room Code</h2>
-            <div className="text-6xl font-black tracking-widest text-primary">{room.code}</div>
-          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-12"
+          >
+            <h2 className="text-sm font-black text-white/40 uppercase tracking-widest mb-3">Room Code</h2>
+            <div className="text-7xl md:text-8xl font-black tracking-tighter text-white leading-none">{room.code}</div>
+          </motion.div>
 
-          <div className="space-y-4">
-            <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Players ({players.length})</h3>
-            <div className="grid gap-3">
-              {players.map((p) => (
-                <div key={p.uid} className="flex items-center justify-between p-4 rounded-2xl bg-card border border-border shadow-sm">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="space-y-6"
+          >
+            <h3 className="text-sm font-black text-white/40 uppercase tracking-widest">Players ({players.length})</h3>
+            <div className="grid gap-3 p-1 bg-white/5 rounded-3xl border border-white/10">
+              {players.map((p, i) => (
+                <motion.div 
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: i * 0.05 }}
+                  key={p.uid} 
+                  className="flex items-center justify-between p-4 rounded-[1.25rem] bg-[#080808] border border-white/5"
+                >
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-bold text-xl">
+                    <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white font-black text-2xl">
                       {p.username[0].toUpperCase()}
                     </div>
-                    <span className="font-bold text-lg">{p.username}</span>
+                    <span className="font-bold text-xl tracking-tight">{p.username}</span>
                   </div>
                   {p.uid === room.hostId && (
-                    <span className="text-xs bg-yellow-400/20 text-yellow-400 px-3 py-1 rounded-full font-bold uppercase tracking-wider">Host</span>
+                    <span className="text-xs bg-yellow-500 text-black px-4 py-1.5 rounded-full font-black uppercase tracking-widest">Host</span>
                   )}
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Side: Settings (Bottom Right pinned on desktop) */}
-        <div className="md:w-[400px] shrink-0 flex flex-col justify-end ml-auto mt-auto">
-          <div className="space-y-6 bg-card/50 p-6 rounded-3xl border border-border/50 shadow-xl">
+        <motion.div 
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="md:w-[440px] shrink-0 flex flex-col justify-end mt-auto"
+        >
+          <div className="space-y-6 bg-[#080808] p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
+            {/* Ambient Glow */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+
             {/* Difficulty Radio (Pills) */}
-            <div className="flex bg-[#1E2330] rounded-xl p-1 shadow-inner border border-white/5">
+            <div className="flex bg-[#000000] rounded-2xl p-1.5 shadow-inner border border-white/5">
               <button
                 onClick={() => handleDifficultyChange("easy")}
                 disabled={!isHost}
-                className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${
+                className={`flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
                   room.difficulty === "easy"
-                    ? "bg-[#FBBF24] text-[#111827] shadow-sm"
-                    : "text-white/50 hover:text-white/80"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-white/40 hover:text-white/80"
                 } ${!isHost && "cursor-default opacity-80"}`}
               >
                 Classic
@@ -121,10 +158,10 @@ export default function Lobby() {
               <button
                 onClick={() => handleDifficultyChange("hard")}
                 disabled={!isHost}
-                className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${
+                className={`flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
                   room.difficulty === "hard"
-                    ? "bg-[#FBBF24] text-[#111827] shadow-sm"
-                    : "text-white/50 hover:text-white/80"
+                    ? "bg-white text-black shadow-sm"
+                    : "text-white/40 hover:text-white/80"
                 } ${!isHost && "cursor-default opacity-80"}`}
               >
                 Hard
@@ -133,69 +170,78 @@ export default function Lobby() {
 
             {/* Game Mode Radio */}
             <div className="space-y-3">
-              <button
+              <motion.button
+                whileHover={isHost ? { scale: 1.02 } : {}}
+                whileTap={isHost ? { scale: 0.98 } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 onClick={() => handleModeChange("sabotage")}
                 disabled={!isHost}
-                className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-colors text-left ${
+                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
                   room.mode === "sabotage"
-                    ? "border-[#FBBF24]/50 bg-[#FBBF24]/5"
-                    : "border-border/50 bg-secondary/20 hover:bg-secondary/40"
+                    ? "border-red-500/50 bg-red-500/10"
+                    : "border-white/10 bg-[#000000] hover:bg-white/5"
                 } ${!isHost && "cursor-default"}`}
               >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${room.mode === "sabotage" ? "bg-red-500/20 text-red-400" : "bg-red-500/10 text-red-400/70"}`}>
-                  <Swords className="w-6 h-6" />
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "bg-red-500/20 text-red-500" : "bg-white/10 text-white/50"}`}>
+                  <Swords className="w-7 h-7" />
                 </div>
                 <div>
-                  <div className={`font-bold text-lg ${room.mode === "sabotage" ? "text-white" : "text-white/80"}`}>Sabotage (2 Player)</div>
-                  <div className="text-sm text-muted-foreground">Pick for your opponent</div>
+                  <div className={`font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-white" : "text-white/80"}`}>Sabotage</div>
+                  <div className="text-sm font-medium text-white/40 mt-1">Pick for your opponent</div>
                 </div>
-                <div className={`ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center ${room.mode === "sabotage" ? "border-[#FBBF24]" : "border-muted-foreground/30"}`}>
+                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "border-red-500" : "border-white/20"}`}>
                   {room.mode === "sabotage" && (
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#FBBF24] shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+                    <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-red-500" />
                   )}
                 </div>
-              </button>
+              </motion.button>
 
-              <button
+              <motion.button
+                whileHover={isHost ? { scale: 1.02 } : {}}
+                whileTap={isHost ? { scale: 0.98 } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 onClick={() => handleModeChange("party")}
                 disabled={!isHost}
-                className={`w-full flex items-center gap-4 p-4 rounded-xl border transition-colors text-left ${
+                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
                   room.mode === "party"
-                    ? "border-[#FBBF24]/50 bg-[#FBBF24]/5"
-                    : "border-border/50 bg-secondary/20 hover:bg-secondary/40"
+                    ? "border-emerald-500/50 bg-emerald-500/10"
+                    : "border-white/10 bg-[#000000] hover:bg-white/5"
                 } ${!isHost && "cursor-default"}`}
               >
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${room.mode === "party" ? "bg-emerald-500/20 text-emerald-400" : "bg-emerald-500/10 text-emerald-400/70"}`}>
-                  <PartyPopper className="w-6 h-6" />
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "party" ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 text-white/50"}`}>
+                  <PartyPopper className="w-7 h-7" />
                 </div>
                 <div>
-                  <div className={`font-bold text-lg ${room.mode === "party" ? "text-white" : "text-white/80"}`}>Party (No Limit)</div>
-                  <div className="text-sm text-muted-foreground">Same countries for everyone</div>
+                  <div className={`font-black text-xl tracking-tight ${room.mode === "party" ? "text-white" : "text-white/80"}`}>Party</div>
+                  <div className="text-sm font-medium text-white/40 mt-1">Same countries for all</div>
                 </div>
-                <div className={`ml-auto w-5 h-5 rounded-full border-2 flex items-center justify-center ${room.mode === "party" ? "border-[#FBBF24]" : "border-muted-foreground/30"}`}>
+                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "party" ? "border-emerald-500" : "border-white/20"}`}>
                   {room.mode === "party" && (
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#FBBF24] shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+                    <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-emerald-500" />
                   )}
                 </div>
-              </button>
+              </motion.button>
             </div>
 
             {/* Play Button */}
             {isHost ? (
-              <button
+              <motion.button
+                whileHover={players.length >= 2 ? { scale: 1.02, backgroundColor: "#ffffff" } : {}}
+                whileTap={players.length >= 2 ? { scale: 0.98 } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 onClick={handlePlay}
                 disabled={players.length < 2}
-                className="w-full py-4 rounded-xl bg-[#FBBF24] text-[#111827] font-black text-xl hover:bg-[#FBBF24]/90 transition-all shadow-[0_0_20px_rgba(251,191,36,0.3)] disabled:opacity-50 disabled:shadow-none uppercase tracking-widest mt-4"
+                className="w-full py-5 rounded-2xl bg-white/90 text-black font-black text-xl transition-all shadow-[0_0_40px_rgba(255,255,255,0.1)] disabled:opacity-30 disabled:shadow-none uppercase tracking-widest mt-8"
               >
-                Play
-              </button>
+                Start Game
+              </motion.button>
             ) : (
-              <div className="w-full py-4 rounded-xl bg-secondary/50 text-muted-foreground font-bold text-center uppercase tracking-widest mt-4">
+              <div className="w-full py-5 rounded-2xl bg-white/5 text-white/40 font-black text-center uppercase tracking-widest mt-8">
                 Waiting for host...
               </div>
             )}
           </div>
-        </div>
+        </motion.div>
       </main>
     </div>
   );

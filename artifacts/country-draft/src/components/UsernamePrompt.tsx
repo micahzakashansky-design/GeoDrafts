@@ -55,16 +55,16 @@ export function UsernamePrompt({ user, onComplete }: Props) {
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 24 }}
-        className="bg-card border border-border rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden"
+        className="bg-[#000000] border border-white/10 rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden"
       >
-        <div className="px-5 py-4 border-b border-border flex items-center gap-2">
+        <div className="px-5 py-4 border-b border-white/10 flex items-center gap-2">
           <Globe className="w-5 h-5 text-primary" />
-          <span className="font-serif text-lg font-bold text-foreground">
+          <span className="font-serif text-lg font-bold text-white">
             Choose a username
           </span>
         </div>
         <div className="px-5 py-5 space-y-4">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-white/40">
             Welcome to GeoDrafts! Pick a name that will appear on the global
             leaderboard.
           </p>
@@ -80,9 +80,9 @@ export function UsernamePrompt({ user, onComplete }: Props) {
               placeholder="e.g. DraftMaster42"
               maxLength={30}
               autoFocus
-              className="w-full px-3 py-2.5 rounded-lg border border-border bg-secondary/40 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+              className="w-full px-3 py-2.5 rounded-lg border border-white/10 bg-white/5 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-white/40">
               Letters, numbers, underscores. 2–30 characters.
             </p>
           </div>
@@ -93,7 +93,7 @@ export function UsernamePrompt({ user, onComplete }: Props) {
             className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
               !saving && username.trim().length >= 2
                 ? "bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30"
-                : "bg-secondary text-muted-foreground border border-border cursor-not-allowed"
+                : "bg-white/10 text-white/40 border border-white/10 cursor-not-allowed"
             }`}
           >
             <Check className="w-4 h-4" />

@@ -96,16 +96,16 @@ export default function AssociationsGame() {
 
   if (isGameOver) {
     return (
-      <div className="min-h-screen bg-background text-foreground p-6 pt-12 md:p-12 flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-background text-white p-6 pt-12 md:p-12 flex flex-col items-center justify-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-card border border-border p-8 rounded-2xl text-center space-y-6"
+          className="max-w-md w-full bg-[#000000] border border-white/10 p-8 rounded-2xl text-center space-y-6"
         >
           <div className="text-6xl mb-4">🏆</div>
           <h1 className="text-3xl font-bold font-serif">Game Over!</h1>
-          <p className="text-muted-foreground text-lg">
-            You scored <span className="font-bold text-foreground">{score}</span> out of {questions.length}.
+          <p className="text-white/40 text-lg">
+            You scored <span className="font-bold text-white">{score}</span> out of {questions.length}.
           </p>
           <div className="pt-4 space-y-3">
             <Button className="w-full font-bold" size="lg" onClick={() => setLocation("/game/associations/setup")}>
@@ -123,22 +123,22 @@ export default function AssociationsGame() {
   const currentQuestion = questions[currentIndex];
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
+    <div className="min-h-screen bg-background text-white flex flex-col">
+      <header className="h-14 md:h-16 shrink-0 border-b border-white/10/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <button onClick={() => setLocation("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:flex items-center gap-1.5">
+          <div className="px-2.5 py-1 rounded-md bg-white/10 text-xs font-semibold text-white/40 border border-white/10 hidden sm:flex items-center gap-1.5">
             <Brain className="w-3.5 h-3.5" /> Associations
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="text-sm font-medium bg-secondary/50 px-3 py-1 rounded-full flex items-center gap-2 border border-border/50 shadow-sm">
-            <span className="text-muted-foreground font-bold">{currentIndex + 1} / {questions.length}</span>
+          <div className="text-sm font-medium bg-white/10 px-3 py-1 rounded-full flex items-center gap-2 border border-white/10/50 shadow-sm">
+            <span className="text-white/40 font-bold">{currentIndex + 1} / {questions.length}</span>
             <span className="w-1 h-1 rounded-full bg-border" />
-            <span className="font-bold text-foreground">Score: {score}</span>
+            <span className="font-bold text-white">Score: {score}</span>
           </div>
         </div>
       </header>
