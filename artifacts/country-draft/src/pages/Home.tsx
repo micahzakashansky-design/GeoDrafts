@@ -201,6 +201,30 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                           </div>
                         </div>
                       </div>
+                      
+                      <div className="pt-4 border-t border-border/50">
+                        <h4 className="font-bold text-foreground text-lg mb-3">Category Impact Multipliers</h4>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Some categories are more impactful to a nation's overall strength. These have higher maximum scores, indicated by stars next to the category name.
+                        </p>
+                        <div className="grid sm:grid-cols-3 gap-3">
+                          <div className="p-4 rounded-xl border border-yellow-500/20 bg-yellow-500/5 flex flex-col gap-1">
+                            <span className="text-yellow-500 tracking-widest text-lg font-black">★★★</span>
+                            <span className="font-bold text-foreground text-sm">High Impact</span>
+                            <span className="text-xs text-muted-foreground">Max 15 points</span>
+                          </div>
+                          <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 flex flex-col gap-1">
+                            <span className="text-blue-500 tracking-widest text-lg font-black">★★</span>
+                            <span className="font-bold text-foreground text-sm">Medium Impact</span>
+                            <span className="text-xs text-muted-foreground">Max 12 points</span>
+                          </div>
+                          <div className="p-4 rounded-xl border border-border/50 bg-foreground/5 flex flex-col gap-1">
+                            <span className="text-muted-foreground tracking-widest text-lg font-black">★</span>
+                            <span className="font-bold text-foreground text-sm">Standard</span>
+                            <span className="text-xs text-muted-foreground">Max 10 points</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   )}
 
