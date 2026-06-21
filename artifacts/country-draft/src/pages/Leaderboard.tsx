@@ -202,7 +202,7 @@ export default function Leaderboard() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col font-sans selection:bg-foreground/20">
-      <header className="h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 mix-blend-difference sticky top-0">
+      <header className="h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 bg-background/80 backdrop-blur-md border-b border-border/50 sticky top-0">
         <div className="flex items-center gap-4">
           <motion.button 
             whileHover={{ scale: 1.05 }}
