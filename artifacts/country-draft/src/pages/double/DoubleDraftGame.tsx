@@ -176,7 +176,7 @@ export default function DoubleDraftGame() {
           )}
         </div>
       </main>
-      {showSubmitDialog && <SubmitDialog score={finalScore} mode="double" roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />}
+      {showSubmitDialog && <SubmitDialog score={finalScore} mode={state.isHardMode ? "double_hard" : "double"} roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />}
     </div>
   );
 }

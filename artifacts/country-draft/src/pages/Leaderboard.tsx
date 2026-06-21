@@ -25,6 +25,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
   const isDaily = mode === "daily";
   const isHard = mode === "hard";
   const isDouble = mode === "double";
+  const isDoubleHard = mode === "double_hard";
   const isGuess = mode === "guess";
 
   const roster = isGlobal ? (entry as LeaderboardEntry).roster : (entry as PersonalLeaderboardEntry).roster;
@@ -59,15 +60,17 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
               isDaily
                 ? "bg-amber-400/10 text-amber-400 border border-amber-400/20"
                 : isHard
-                ? "bg-red-500/10 text-red-400 border border-red-500/20"
+                ? "bg-red-500/10 text-red-500 border border-red-500/20"
                 : isDouble
                 ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
+                : isDoubleHard
+                ? "bg-fuchsia-500/10 text-fuchsia-500 border border-fuchsia-500/20"
                 : isGuess
                 ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                 : "bg-foreground/10 text-muted-foreground/80 border border-border"
             }`}
           >
-            {isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isGuess ? "Guess" : "Normal"}
+            {isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isDoubleHard ? "Double (Hard)" : isGuess ? "Guess" : "Normal"}
           </span>
         )}
 
@@ -191,12 +194,12 @@ export default function Leaderboard() {
     }
   }, [modeFilter, scopeFilter, firebaseUser, cloudPersonalEntries]);
 
-  const modeTabs: { key: ParentMode; label: string; activeClass: string }[] = [
-    { key: "classic", label: "Classic Draft", activeClass: "bg-white text-black font-black" },
-    { key: "double",  label: "Double Draft", activeClass: "bg-purple-500 text-white font-black" },
-    { key: "guess",   label: "Guess Country", activeClass: "bg-emerald-500 text-white font-black" },
-    { key: "daily",   label: `Daily`,   activeClass: "bg-amber-400 text-black font-black" },
-  ];
+  const modeTabs = [
+    { key: "classic", label: "Classic Draft", activeClass: "bg-blue-500 text-white font-black" },
+    { key: "double", label: "Double Draft", activeClass: "bg-purple-500 text-white font-black" },
+    { key: "guess", label: "Guess", activeClass: "bg-emerald-500 text-white font-black" },
+    { key: "daily", label: "Daily", activeClass: "bg-amber-400 text-amber-950 font-black" },
+  ] as const;
 
   const entriesToDisplay = scopeFilter === "global" ? globalEntries : personalEntries;
 
