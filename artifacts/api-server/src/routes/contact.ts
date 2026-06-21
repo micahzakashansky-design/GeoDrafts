@@ -6,7 +6,7 @@ const router = Router();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "darabrawl1@gmail.com",
+    user: "micahzakashansky@gmail.com",
     pass: "iqrf urvu lyrz dnyz",
   },
 });
@@ -21,8 +21,8 @@ router.post("/contact", async (req: Request, res: Response) => {
 
   try {
     const mailOptions = {
-      from: "darabrawl1@gmail.com",
-      to: "micahzakashansky@gmail.com, darabrawl1@gmail.com",
+      from: "micahzakashansky@gmail.com",
+      to: "micahzakashansky@gmail.com",
       subject: `[GeoDrafts Suggestion] ${subject || "No Subject"}`,
       text: `From: ${email}\n\nMessage:\n${message}`,
     };
