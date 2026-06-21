@@ -1,6 +1,7 @@
+import { computeSizePopBonus } from "@/lib/achievements-logic";
 import React from "react";
 import { Category, Country, CATEGORIES, getCategoryKey } from "@/data/countries";
-import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, computeSizePopBonus, BONUS_CATEGORIES } from "./DailyUI";
+import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, BONUS_CATEGORIES } from "./DailyUI";
 import { Users, Plus } from "lucide-react";
 
 export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean ; categoryTimes?: Partial<Record<Category, number>>; }) {

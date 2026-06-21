@@ -9,6 +9,8 @@ import {
   Handshake, Umbrella, Info, Search, Lightbulb
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { RATINGS, ARCHETYPES, BONUS_PATHS, getAchievementIcon } from "@/lib/achievements";
+import { getRating, getCountryArchetype, getBonusPath, computeSizePopBonus } from "@/lib/achievements-logic";
 import {
   COUNTRIES, CATEGORIES, getCategoryKey,
   type Country, type Category,
@@ -251,103 +253,27 @@ export function getScoreLabel(score: number, maxScore: number = 15): { label: st
   if (score >= 5) return { label: "Weak", color: "text-orange-400" };
   return { label: "Critical", color: "text-red-400" };
 }
-export function getRating(total: number): { label: string; color: string; icon: React.ReactNode; desc: string } {
-  if (total >= 165) return { label: "Superpower", color: "text-yellow-400", icon: <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />, desc: "Unrivaled global influence and capabilities." };
-  if (total >= 140) return { label: "Major Power", color: "text-blue-400", icon: <Globe className="w-5 h-5 text-blue-400" />, desc: "Significant influence on the world stage." };
-  if (total >= 110) return { label: "Regional Power", color: "text-green-400", icon: <Shield className="w-5 h-5 text-green-400" />, desc: "Strong capabilities within its geographic sphere." };
-  if (total >= 80) return { label: "Developing Nation", color: "text-orange-400", icon: <TrendingUp className="w-5 h-5 text-orange-400" />, desc: "Growing capabilities and emerging potential." };
-  return { label: "Struggling State", color: "text-red-400", icon: <Building className="w-5 h-5 text-red-400" />, desc: "Facing significant challenges and limitations." };
-}
-function getRawPopulation(desc: string): number {
-  const match = desc.match(/^(?:Pre-war\s*)?([\d,.]+)\s*(million|billion|K|M|B)?/i);
-  if (!match) return 5000000;
-  let val = parseFloat(match[1].replace(/,/g, ''));
-  const unit = match[2] ? match[2].toLowerCase() : '';
-  if (unit === 'million' || unit === 'm') val *= 1000000;
-  if (unit === 'billion' || unit === 'b') val *= 1000000000;
-  if (unit === 'k') val *= 1000;
-  return val;
-}
-
-export function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
-  if (!roster.Size || !roster.Population) return 0;
-  
-  const pop = getRawPopulation(roster.Population.stats.population.description);
-  const size = roster.Size.area || 100000;
-  const rawDensity = pop / size;
-  const maxCap = size <= 2500 ? 20000 : 1500;
-
-  let techMult = 2.5;
-  if (rawDensity < 300) techMult = Math.max(1.0, 2.5 * (rawDensity / 300));
-  else if (rawDensity > maxCap) techMult = Math.max(1.0, 2.5 * (maxCap / rawDensity));
-
-  let agriMult = 2.5;
-  if (rawDensity > 100) agriMult = Math.max(1.0, 2.5 * (100 / rawDensity));
-
-  let extMult = 2.5;
-  if (rawDensity < 50) extMult = Math.max(1.0, 2.5 * (rawDensity / 50));
-  else if (rawDensity > 300) extMult = Math.max(1.0, 2.5 * (300 / rawDensity));
-
-  const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
-  const climateScore = roster.Climate?.stats.climate?.score || 0;
-  const techScore = roster.Technology?.stats.technology?.score || 0;
-  const agriBonus = (climateScore * 10 / 10) * agriMult;
-  const techBonus = (techScore * 10 / 12) * techMult;
-  const extBonus = (resourcesScore * 10 / 12) * extMult;
-
-  return Math.floor(Math.max(agriBonus, techBonus, extBonus));
-}
-
-export function getBonusPath(roster: Partial<Record<Category, Country>>): "agricultural" | "urban" | "extraction" | null {
-  if (!roster.Size || !roster.Population) return null;
-
-  const pop = getRawPopulation(roster.Population.stats.population.description);
-  const size = roster.Size.area || 100000;
-  const rawDensity = pop / size;
-  const maxCap = size <= 2500 ? 20000 : 1500;
-
-  let techMult = 2.5;
-  if (rawDensity < 300) techMult = Math.max(1.0, 2.5 * (rawDensity / 300));
-  else if (rawDensity > maxCap) techMult = Math.max(1.0, 2.5 * (maxCap / rawDensity));
-
-  let agriMult = 2.5;
-  if (rawDensity > 100) agriMult = Math.max(1.0, 2.5 * (100 / rawDensity));
-
-  let extMult = 2.5;
-  if (rawDensity < 50) extMult = Math.max(1.0, 2.5 * (rawDensity / 50));
-  else if (rawDensity > 300) extMult = Math.max(1.0, 2.5 * (300 / rawDensity));
-
-  const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
-  const climateScore = roster.Climate?.stats.climate?.score || 0;
-  const techScore = roster.Technology?.stats.technology?.score || 0;
-  const agriBonus = (climateScore * 10 / 10) * agriMult;
-  const techBonus = (techScore * 10 / 12) * techMult;
-  const extBonus = (resourcesScore * 10 / 12) * extMult;
-
-  const maxBonus = Math.max(agriBonus, techBonus, extBonus);
-  if (maxBonus === agriBonus) return "agricultural";
-  if (maxBonus === techBonus) return "urban";
-  return "extraction";
+export function getBonusPathData(roster: Partial<Record<Category, Country>>) {
+  const name = getBonusPath(roster);
+  if (!name) return null;
+  const data = BONUS_PATHS.find(b => b.name === name)!;
+  return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
 
 export type Archetype = { name: string; icon: React.ReactNode; desc: string };
 
-export function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archetype {
-  const m = roster.Military?.stats.military.score ?? 0;
-  const e = roster.Economy?.stats.economy.score ?? 0;
-  const t = roster.Technology?.stats.technology.score ?? 0;
-  const h = roster.Healthcare?.stats.healthcare.score ?? 0;
-  const ed = roster.Education?.stats.education.score ?? 0;
-  const g = roster.Government?.stats.government.score ?? 0;
-  if (m >= 8 && e >= 8 && t >= 8) return { name: "Military Superstate", icon: <Swords className="w-5 h-5 text-red-400" />, desc: "Unmatched hard power." };
-  if (e >= 8 && t >= 8 && ed >= 8) return { name: "Techno-Utopia", icon: <Laptop className="w-5 h-5 text-blue-400" />, desc: "A beacon of innovation." };
-  if (h >= 8 && ed >= 8 && g >= 8) return { name: "Nordic Model", icon: <Heart className="w-5 h-5 text-green-400" />, desc: "World-leading quality of life." };
-  if (roster.Size && roster.Population) {
-    const size = roster.Size.area || 100000; const pop = getRawPopulation(roster.Population.stats.population.description);
-    if (size <= 50000 && pop <= 15000000 && e >= 7) return { name: "Wealthy City-State", icon: <Building className="w-5 h-5 text-yellow-400" />, desc: "Small but mighty." };
-  }
-  return { name: "Balanced Republic", icon: <Globe className="w-5 h-5 text-primary" />, desc: "A well-rounded nation." };
+export function getRatingData(total: number) {
+  const name = getRating(total);
+  const data = RATINGS.find(r => r.name === name)!;
+  return { label: data.name, color: data.color, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
+
+export function getArchetypeData(roster: Partial<Record<Category, Country>>): Archetype {
+  const name = getCountryArchetype(roster);
+  const data = ARCHETYPES.find(a => a.name === name)!;
+  return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
+}
+
 
 // ─── UI Components ────────────────────────────────────────────────────────
 
@@ -522,7 +448,7 @@ import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { unlockAchievements } from "@/lib/firestore";
 
 export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players , categoryTimes}: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[];  categoryTimes?: Partial<Record<Category, number>>; }) {
-  const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bPath = getBonusPath(roster); const isGuest = room && gameMode === "sabotage" && players;
+  const rating = getRatingData(totalScore); const archetype = getArchetypeData(roster); const bPath = getBonusPathData(roster); const isGuest = room && gameMode === "sabotage" && players;
   const { firebaseUser } = useFirebaseAuth();
   
   const [isAtBottom, setIsAtBottom] = useState(false);
@@ -532,7 +458,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
   const achievementsRef = useRef<string[]>([]);
 
   useEffect(() => {
-    const bName = bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : bPath === "urban" ? "Tech Megacity" : null;
+    const bName = bPath?.name;
     const toUnlock = [rating.label, archetype.name];
     if (bName) toUnlock.push(bName);
     achievementsRef.current = toUnlock;
@@ -621,8 +547,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           </div>
           {bPath && (
             <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-              <div className="p-3 bg-muted rounded-xl shrink-0">{bPath === "agricultural" ? <Leaf className="w-5 h-5 text-yellow-500" /> : bPath === "extraction" ? <Mountain className="w-5 h-5 text-yellow-500" /> : <Building className="w-5 h-5 text-yellow-500" />}</div>
-              <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : "Tech Megacity"}</h3><p className="text-xs text-muted-foreground">{bPath === "agricultural" ? "Vast lands with sparse population." : bPath === "extraction" ? "Massive nation built for resource extraction." : "Dense population in a compact area."}</p></div>
+              <div className="p-3 bg-muted rounded-xl shrink-0 text-foreground">{bPath.icon}</div>
+              <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{bPath.name}</h3><p className="text-xs text-muted-foreground">{bPath.desc}</p></div>
             </div>
           )}
         </div>

@@ -1,3 +1,4 @@
+import { computeSizePopBonus } from "@/lib/achievements-logic";
 import React, { useState, useCallback, useRef, useMemo } from "react";
 import { useLocation } from "wouter";
 import {
@@ -5,7 +6,7 @@ import {
   type Country, type Category,
 } from "@/data/countries";
 import {
-  CountryCard, GameOver, SelectionPhase, GameState, computeSizePopBonus,
+  CountryCard, GameOver, SelectionPhase, GameState,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./DoubleUI";
 import { SidebarRoster } from "./SidebarRoster";
