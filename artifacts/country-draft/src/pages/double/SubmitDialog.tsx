@@ -10,7 +10,7 @@ export function SubmitDialog({ score, mode, roster, onClose, onSuccess }: { scor
   const [, navigate] = useLocation(); const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
   const [loading, setLoading] = useState(false); const [done, setDone] = useState(false); const [error, setError] = useState<string | null>(null);
   const [showEmail, setShowEmail] = useState(false); const [isSignUp, setIsSignUp] = useState(false); const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
-  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Hard" : mode === "double" ? "Double Draft" : mode === "guess" ? "Guess the Country" : "Easy"; const displayName = profile?.username ?? firebaseUser?.displayName ?? firebaseUser?.email ?? "Anonymous"; const isAuthenticated = !!firebaseUser && !!profile;
+  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Hard" : mode === "double" ? "Double Draft" : mode === "guess" ? "Guess the Country" : "Normal"; const displayName = profile?.username ?? firebaseUser?.displayName ?? firebaseUser?.email ?? "Anonymous"; const isAuthenticated = !!firebaseUser && !!profile;
   async function handleGoogleSignIn() { setError(null); try { await signInWithGoogle(); } catch { setError("Google sign-in failed. Please try again."); } }
   async function handleEmailAuth() {
     setError(null); if (!email.trim() || !password) { setError("Enter your email and password."); return; }

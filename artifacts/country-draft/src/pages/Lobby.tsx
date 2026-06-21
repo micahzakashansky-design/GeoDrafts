@@ -69,7 +69,7 @@ export default function Lobby() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-hidden font-sans selection:bg-foreground/20">
-      <header className="h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 mix-blend-difference">
+      <header className="h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 bg-background/80 backdrop-blur-md border-b border-border/50 sticky top-0">
         <div className="flex items-center gap-4">
           <motion.button 
             whileHover={{ scale: 1.05 }}
@@ -153,7 +153,7 @@ export default function Lobby() {
                     : "text-muted-foreground hover:text-foreground/80"
                 } ${!isHost && "cursor-default opacity-80"}`}
               >
-                Classic
+                Normal
               </button>
               <button
                 onClick={() => handleDifficultyChange("hard")}

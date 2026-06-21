@@ -67,7 +67,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
                 : "bg-foreground/10 text-muted-foreground/80 border border-border"
             }`}
           >
-            {isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isGuess ? "Guess" : "Easy"}
+            {isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isGuess ? "Guess" : "Normal"}
           </span>
         )}
 
