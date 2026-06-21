@@ -175,31 +175,31 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                               </tr>
                             </thead>
                             <tbody className="divide-y divide-border/50">
-                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                              <tr className="bg-foreground/[0.02]">
                                 <td className="px-4 py-3 font-bold text-emerald-400">World-Class</td>
                                 <td className="px-4 py-3 text-center font-mono">14-15</td>
                                 <td className="px-4 py-3 text-center font-mono">11-12</td>
                                 <td className="px-4 py-3 text-center font-mono">9-10</td>
                               </tr>
-                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                              <tr className="bg-foreground/[0.02]">
                                 <td className="px-4 py-3 font-bold text-green-400">Strong</td>
                                 <td className="px-4 py-3 text-center font-mono">12-13</td>
                                 <td className="px-4 py-3 text-center font-mono">9-10</td>
                                 <td className="px-4 py-3 text-center font-mono">7-8</td>
                               </tr>
-                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                              <tr className="bg-foreground/[0.02]">
                                 <td className="px-4 py-3 font-bold text-yellow-400">Moderate</td>
                                 <td className="px-4 py-3 text-center font-mono">8-11</td>
                                 <td className="px-4 py-3 text-center font-mono">6-8</td>
                                 <td className="px-4 py-3 text-center font-mono">5-6</td>
                               </tr>
-                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                              <tr className="bg-foreground/[0.02]">
                                 <td className="px-4 py-3 font-bold text-orange-400">Weak</td>
                                 <td className="px-4 py-3 text-center font-mono">4-7</td>
                                 <td className="px-4 py-3 text-center font-mono">4-5</td>
                                 <td className="px-4 py-3 text-center font-mono">3-4</td>
                               </tr>
-                              <tr className="bg-foreground/[0.02] hover:bg-foreground/[0.05] transition-colors">
+                              <tr className="bg-foreground/[0.02]">
                                 <td className="px-4 py-3 font-bold text-red-400">Critical</td>
                                 <td className="px-4 py-3 text-center font-mono">1-3</td>
                                 <td className="px-4 py-3 text-center font-mono">1-3</td>
@@ -247,8 +247,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
 
                       <div className="grid gap-3">
                         {NATION_RANKS.map((r) => (
-                          <div key={r.label} className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:border-foreground/20 hover:shadow-md">
-                            <div className="absolute inset-0 bg-gradient-to-r from-foreground/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                          <div key={r.label} className="relative flex items-center justify-between overflow-hidden rounded-2xl border border-border bg-card p-5">
                             <div className="relative z-10 flex items-center gap-3">
                               <div className={`p-2 rounded-lg bg-foreground/5 ${r.color}`}>
                                 {r.icon}
