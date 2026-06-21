@@ -65,24 +65,38 @@ export default function DoubleDraftGame() {
     if (!wildcardPhase || state.wildcardUsed) return;
     localSavedRef.current = false;
     setState(prev => {
-      const newRoster = { ...prev.roster };
-      delete newRoster[cat];
       const newPool = [...prev.pool];
       const c1 = newPool.pop();
       const c2 = newPool.pop();
       const options = c1 && c2 ? [c1, c2] : null;
       return { 
         ...prev, 
-        roster: newRoster, 
         selectionOptions: options, 
+        wildcardTargetCategory: cat,
         currentCountry: null, 
         pool: newPool, 
         wildcardUsed: true, 
-        gameOver: false 
+        // Keep gameOver as true since we're on the game over screen
+        gameOver: true 
       };
     });
     setWildcardPhase(false);
   }, [wildcardPhase, state.wildcardUsed]);
+
+  const onResolveWildcard = useCallback((country: Country) => {
+    setState(prev => {
+      if (!prev.wildcardTargetCategory) return prev;
+      const newRoster = { ...prev.roster };
+      newRoster[prev.wildcardTargetCategory] = country;
+      return {
+        ...prev,
+        roster: newRoster,
+        selectionOptions: null,
+        wildcardTargetCategory: null,
+      };
+    });
+    localSavedRef.current = false; // Trigger save of new final score
+  }, []);
 
   const assignCountry = useCallback((category: Category) => {
     if (state.roster[category]) return;
@@ -115,7 +129,7 @@ export default function DoubleDraftGame() {
       pool, currentCountry: null, selectionOptions: selection, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "double", isHardMode,
-      roomCode: null, poolSeed: 0
+      roomCode: null, poolSeed: 0, wildcardTargetCategory: null
     });
     localSavedRef.current = false;
   }, [state.isHardMode]);
@@ -145,7 +159,7 @@ export default function DoubleDraftGame() {
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} />
+            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} wildcardOptions={state.selectionOptions} wildcardTargetCategory={state.wildcardTargetCategory} onResolveWildcard={onResolveWildcard} />
           ) : state.selectionOptions ? (
              <SelectionPhase options={state.selectionOptions} onPick={onSelectionPick} isHardMode={state.isHardMode} mode="double" />
           ) : state.currentCountry ? (

@@ -396,10 +396,10 @@ export function ExpandableDescription({ description, isHovered = false }: { desc
   );
 }
 
-export function SelectionPhase({ options, onPick, isHardMode, mode }: { options: Country[]; onPick: (c: Country) => void; isHardMode: boolean; mode: string; }) {
+export function SelectionPhase({ options, onPick, isHardMode, mode, targetCategory }: { options: Country[]; onPick: (c: Country) => void; isHardMode: boolean; mode: string; targetCategory?: Category | null; }) {
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-start flex-1 overflow-y-auto w-full">
-      <div className="text-center"><h2 className="text-3xl font-sans font-bold mb-1 text-white">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-white/40 text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
+      <div className="text-center"><h2 className="text-3xl font-sans font-bold mb-1 text-white">{targetCategory ? "Wildcard Replacement" : mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-white/40 text-sm">{targetCategory ? `Choose a country to replace your ${targetCategory} slot.` : mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {options.map((country, idx) => (
           <motion.div 
@@ -413,6 +413,22 @@ export function SelectionPhase({ options, onPick, isHardMode, mode }: { options:
             <div className="p-5 space-y-4">
                <ExpandableDescription description={country.knownFor} />
                {!isHardMode && (() => {
+                 if (targetCategory) {
+                    const stat = country.stats[getCategoryKey(targetCategory)];
+                    if (!stat) return null;
+                    return (
+                      <div className="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-2">
+                        <div className="flex items-center gap-2 text-white/40">
+                          {CATEGORY_ICONS[targetCategory]}
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-white/80">{targetCategory}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="font-bold text-white text-sm">{extractBonusText(stat.description, targetCategory)}</div>
+                        </div>
+                        <p className="text-[10px] text-white/40/80 leading-relaxed italic line-clamp-3">"{stat.description}"</p>
+                      </div>
+                    );
+                 }
                  const threeStars = ["Military", "Economy", "Government"] as Category[];
                  const twoStars = ["International Relationships", "Technology", "Education", "Natural Resources", "Healthcare"] as Category[];
                  const oneStars = ["Location", "Size", "Population", "Culture", "Climate", "History", "Tourism"] as Category[];
@@ -520,9 +536,26 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
   );
 }
 
-export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players }: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[]; }) {
+export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players, wildcardOptions, wildcardTargetCategory, onResolveWildcard }: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[]; wildcardOptions?: Country[] | null; wildcardTargetCategory?: Category | null; onResolveWildcard?: (c: Country) => void; }) {
   const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bPath = getBonusPath(roster); const isGuest = room && gameMode === "sabotage" && players;
   const isMultiplayerGame = gameMode === "sabotage" || gameMode === "party";
+
+  if (wildcardOptions && wildcardTargetCategory && onResolveWildcard) {
+    return (
+      <div className="p-4 md:p-8 flex-1 overflow-y-auto w-full h-full" ref={rosterRef}>
+        <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 pb-20 h-full flex flex-col">
+          <SelectionPhase 
+            options={wildcardOptions} 
+            onPick={onResolveWildcard} 
+            isHardMode={isHardMode} 
+            mode="double" 
+            targetCategory={wildcardTargetCategory} 
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="p-4 md:p-8 flex-1 overflow-y-auto" ref={rosterRef}>
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 pb-20">
@@ -763,6 +796,7 @@ export type GameState = {
   isHardMode: boolean;
   roomCode: string | null;
   poolSeed: number;
+  wildcardTargetCategory?: Category | null;
 };
 
 export function seededRng(seed: number): () => number {
