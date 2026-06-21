@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
   Globe, ShieldAlert, ShieldPlus, Trophy, BookOpen, CalendarDays, X,
   Moon, Sun, Users, Swords, PartyPopper, ArrowLeftRight,
-  Search, Zap, Star, Calculator, ChevronRight, Settings, LogIn, User, Loader2, Brain
+  Search, Zap, Star, Calculator, ChevronRight, Settings, LogIn, User, Loader2, Brain, Medal, Target, Shield
 } from "lucide-react";
 import { useTheme } from "../lib/theme-context";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
@@ -20,27 +20,266 @@ import { AchievementsCard } from "../components/AchievementsCard";
 import { toast } from "sonner";
 
 const NATION_RANKS = [
-  { label: "Superpower", range: "165+", color: "text-yellow-400" },
-  { label: "Major Power", range: "140-164", color: "text-blue-400" },
-  { label: "Regional Power", range: "110-139", color: "text-green-400" },
-  { label: "Developing Nation", range: "80-109", color: "text-orange-400" },
-  { label: "Struggling State", range: "0-79", color: "text-red-400" },
+  { label: "Superpower", range: "140+", color: "text-purple-400", icon: <Trophy className="w-4 h-4" /> },
+  { label: "Regional Power", range: "110-139", color: "text-green-400", icon: <Shield className="w-4 h-4" /> },
+  { label: "Developing Nation", range: "80-109", color: "text-orange-400", icon: <Users className="w-4 h-4" /> },
+  { label: "Struggling State", range: "0-79", color: "text-red-400", icon: <Target className="w-4 h-4" /> },
 ];
 
+const TABS = [
+  { id: "basics", label: "How to Play", icon: <Zap className="w-4 h-4" /> },
+  { id: "scoring", label: "Point System", icon: <Calculator className="w-4 h-4" /> },
+  { id: "rankings", label: "Nation Rankings", icon: <Medal className="w-4 h-4" /> },
+  { id: "bonuses", label: "Synergies & Bonuses", icon: <Star className="w-4 h-4" /> },
+] as const;
+
 function GuidebookModal({ onClose }: { onClose: () => void }) {
-  const [activeTab, setActiveTab] = useState<"basics" | "scoring" | "bonus">("basics");
+  const [activeTab, setActiveTab] = useState<typeof TABS[number]["id"]>("basics");
+
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
-      <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }} className="bg-card border border-border w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-foreground/5"><div className="flex items-center gap-2"><BookOpen className="w-5 h-5 text-primary" /><h2 className="font-sans text-xl font-bold text-foreground">Game Guidebook</h2></div><button onClick={onClose} className="p-1 rounded-lg hover:bg-foreground/10 transition-colors text-foreground"><X className="w-5 h-5" /></button></div>
-        <div className="flex border-b border-border bg-card">{(["basics", "scoring", "bonus"] as const).map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`flex-1 py-3 text-sm font-semibold capitalize transition-all border-b-2 ${activeTab === tab ? "border-primary text-primary bg-primary/5" : "border-transparent text-muted-foreground hover:text-foreground"}`}>{tab}</button>))}</div>
-        <div className="p-6 overflow-y-auto flex-1">
-          {activeTab === "basics" && (<div className="space-y-4"><div className="space-y-2"><h3 className="text-lg font-semibold flex items-center gap-2 text-foreground"><Zap className="w-4 h-4 text-amber-400" />How to Play</h3><p className="text-sm text-muted-foreground leading-relaxed">You are presented with countries one-by-one from a randomized pool. For each country, you must assign it to one of 15 available category slots. Once a slot is filled, it cannot be changed.</p></div></div>)}
-          {activeTab === "scoring" && (<div className="space-y-4"><div className="space-y-2"><h3 className="text-lg font-semibold flex items-center gap-2 text-foreground"><Calculator className="w-4 h-4 text-emerald-400" />Point System</h3><p className="text-sm text-muted-foreground">Each category is scored from 1 to 10 based on real data.</p></div></div>)}
-          {activeTab === "bonus" && (<div><h3 className="text-sm font-semibold text-foreground mb-3">Nation Rankings</h3><div className="space-y-1.5">{NATION_RANKS.map((r) => (<div key={r.label} className="flex items-center justify-between rounded-lg bg-foreground/5 px-3 py-2"><span className={`text-sm font-semibold ${r.color}`}>{r.label}</span><span className="text-xs text-muted-foreground">{r.range}</span></div>))}</div></div>)}
-        </div>
+    <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        exit={{ opacity: 0 }} 
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-background/80 backdrop-blur-xl"
+      >
+        <motion.div 
+          initial={{ scale: 0.95, opacity: 0, y: 20 }} 
+          animate={{ scale: 1, opacity: 1, y: 0 }} 
+          exit={{ scale: 0.95, opacity: 0, y: 20 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="bg-card/90 backdrop-blur-3xl border border-border/50 w-full max-w-4xl rounded-[2rem] shadow-2xl overflow-hidden flex flex-col md:flex-row h-[85vh] md:h-[600px] relative"
+        >
+          {/* Header for mobile, hidden on md */}
+          <div className="md:hidden flex items-center justify-between p-4 border-b border-border/50 bg-muted/20">
+            <div className="flex items-center gap-2">
+              <div className="p-2 bg-primary/10 rounded-xl">
+                <BookOpen className="w-5 h-5 text-primary" />
+              </div>
+              <h2 className="font-sans text-xl font-bold text-foreground">Guidebook</h2>
+            </div>
+            <button onClick={onClose} className="p-2 rounded-full hover:bg-foreground/10 transition-colors text-foreground">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          {/* Sidebar */}
+          <div className="md:w-64 bg-muted/20 border-r border-border/50 p-4 flex flex-col gap-2 overflow-x-auto md:overflow-y-auto shrink-0">
+            <div className="hidden md:flex items-center gap-3 px-2 py-4 mb-2">
+              <div className="p-2 bg-primary/10 rounded-xl shadow-inner border border-primary/20">
+                <BookOpen className="w-5 h-5 text-primary" />
+              </div>
+              <h2 className="font-sans text-xl font-black text-foreground tracking-tight">Guidebook</h2>
+            </div>
+
+            <div className="flex md:flex-col gap-1 min-w-max md:min-w-0">
+              {TABS.map(tab => {
+                const isActive = activeTab === tab.id;
+                return (
+                  <button 
+                    key={tab.id} 
+                    onClick={() => setActiveTab(tab.id)} 
+                    className={`relative flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${isActive ? "text-primary" : "text-muted-foreground hover:text-foreground hover:bg-foreground/5"}`}
+                  >
+                    {isActive && (
+                      <motion.div 
+                        layoutId="activeTabBg" 
+                        className="absolute inset-0 bg-primary/10 border border-primary/20 rounded-xl" 
+                        transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      />
+                    )}
+                    <span className="relative z-10">{tab.icon}</span>
+                    <span className="relative z-10">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Content Area */}
+          <div className="flex-1 overflow-y-auto relative bg-card/50">
+            <button onClick={onClose} className="hidden md:flex absolute top-4 right-4 p-2 rounded-full hover:bg-muted transition-colors text-muted-foreground hover:text-foreground z-10 border border-transparent hover:border-border">
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="p-6 md:p-10 max-w-2xl mx-auto">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className="space-y-8 pb-12"
+                >
+                  {activeTab === "basics" && (
+                    <div className="space-y-6">
+                      <div>
+                        <h3 className="text-3xl font-black tracking-tight text-foreground mb-4">How to Play</h3>
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                          GeoDraft is a strategic geography game where you build a hypothetical nation by drafting real-world countries into specialized roles.
+                        </p>
+                      </div>
+
+                      <div className="grid gap-4">
+                        <div className="p-5 rounded-2xl border border-border bg-muted/10 space-y-2">
+                          <h4 className="font-bold text-foreground flex items-center gap-2">
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs">1</span>
+                            The Draft
+                          </h4>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            You are presented with countries one-by-one from a randomized global pool. For each country, you must analyze its real-world statistics (GDP, Military, Population, etc).
+                          </p>
+                        </div>
+                        <div className="p-5 rounded-2xl border border-border bg-muted/10 space-y-2">
+                          <h4 className="font-bold text-foreground flex items-center gap-2">
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs">2</span>
+                            Assign Roles
+                          </h4>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            Assign the drafted country to one of 15 available category slots. <strong className="text-foreground">Choose wisely: once a slot is filled, it cannot be changed for the rest of the game.</strong>
+                          </p>
+                        </div>
+                        <div className="p-5 rounded-2xl border border-border bg-muted/10 space-y-2">
+                          <h4 className="font-bold text-foreground flex items-center gap-2">
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs">3</span>
+                            Maximize Score
+                          </h4>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            Your goal is to build the ultimate nation by matching countries with their strongest real-world metrics. Drafting the USA for Military will yield a massive score, while drafting Vatican City for Population will earn you very little.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "scoring" && (
+                    <div className="space-y-6">
+                      <div>
+                        <h3 className="text-3xl font-black tracking-tight text-foreground mb-4">Point System</h3>
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                          Every category evaluates a different real-world metric. Scores are normalized on a scale from <strong className="text-foreground">1 to 10</strong>.
+                        </p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-foreground/5">
+                          <div className="w-16 text-center">
+                            <span className="text-xl font-black text-emerald-400">10</span>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-foreground text-sm">Exceptional</h4>
+                            <p className="text-xs text-muted-foreground">Top 5% globally in this category (e.g., China in Population)</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-foreground/5">
+                          <div className="w-16 text-center">
+                            <span className="text-xl font-black text-blue-400">7-9</span>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-foreground text-sm">Strong</h4>
+                            <p className="text-xs text-muted-foreground">Above average performer</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-foreground/5">
+                          <div className="w-16 text-center">
+                            <span className="text-xl font-black text-orange-400">4-6</span>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-foreground text-sm">Average</h4>
+                            <p className="text-xs text-muted-foreground">Middle of the pack globally</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-4 p-4 rounded-xl border border-border/50 bg-foreground/5">
+                          <div className="w-16 text-center">
+                            <span className="text-xl font-black text-red-400">1-3</span>
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-bold text-foreground text-sm">Weak</h4>
+                            <p className="text-xs text-muted-foreground">Bottom percentiles globally</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "rankings" && (
+                    <div className="space-y-6">
+                      <div>
+                        <h3 className="text-3xl font-black tracking-tight text-foreground mb-4">Nation Rankings</h3>
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                          Your final score determines your new nation's global status. Build a well-rounded roster to achieve Superpower status.
+                        </p>
+                      </div>
+
+                      <div className="grid gap-3">
+                        {NATION_RANKS.map((r) => (
+                          <div key={r.label} className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all hover:border-foreground/20 hover:shadow-md">
+                            <div className="absolute inset-0 bg-gradient-to-r from-foreground/5 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
+                            <div className="relative z-10 flex items-center gap-3">
+                              <div className={`p-2 rounded-lg bg-foreground/5 ${r.color}`}>
+                                {r.icon}
+                              </div>
+                              <span className={`text-base font-bold ${r.color}`}>{r.label}</span>
+                            </div>
+                            <span className="relative z-10 font-mono text-sm font-bold text-muted-foreground bg-muted px-3 py-1 rounded-full">{r.range} pts</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "bonuses" && (
+                    <div className="space-y-6">
+                      <div>
+                        <h3 className="text-3xl font-black tracking-tight text-foreground mb-4">Synergies & Bonuses</h3>
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                          Specialized nations can earn massive bonus points by focusing on specific geographic or economic themes.
+                        </p>
+                      </div>
+
+                      <div className="grid sm:grid-cols-2 gap-4">
+                        <div className="p-5 rounded-2xl border border-yellow-500/30 bg-yellow-500/5 space-y-3">
+                          <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+                            <Star className="w-5 h-5 text-yellow-500" />
+                          </div>
+                          <h4 className="font-bold text-foreground text-lg tracking-tight">Agricultural Giant</h4>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            Draft a nation with massive land area but sparse population. Maximizes food production capabilities.
+                          </p>
+                        </div>
+                        
+                        <div className="p-5 rounded-2xl border border-blue-500/30 bg-blue-500/5 space-y-3">
+                          <div className="w-10 h-10 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                            <Star className="w-5 h-5 text-blue-500" />
+                          </div>
+                          <h4 className="font-bold text-foreground text-lg tracking-tight">Tech Megacity</h4>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            Draft a highly dense population into a small geographical area. Maximizes urbanization and innovation output.
+                          </p>
+                        </div>
+                        
+                        <div className="p-5 rounded-2xl border border-emerald-500/30 bg-emerald-500/5 space-y-3 sm:col-span-2">
+                          <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center">
+                            <Star className="w-5 h-5 text-emerald-500" />
+                          </div>
+                          <h4 className="font-bold text-foreground text-lg tracking-tight">Resource Extraction Titan</h4>
+                          <p className="text-sm text-muted-foreground leading-relaxed">
+                            Combine massive size with moderate population to create an industrial powerhouse focused on raw materials.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          </div>
+        </motion.div>
       </motion.div>
-    </motion.div>
+    </AnimatePresence>
   );
 }
 
