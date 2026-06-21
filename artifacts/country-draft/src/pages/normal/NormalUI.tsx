@@ -528,14 +528,27 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
 
+  const isMounted = useRef(true);
+  const achievementsRef = useRef<string[]>([]);
+
   useEffect(() => {
-    if (firebaseUser && !isGuest) {
-      const bName = bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : bPath === "urban" ? "Tech Megacity" : null;
-      const toUnlock = [rating.label, archetype.name];
-      if (bName) toUnlock.push(bName);
-      unlockAchievements(firebaseUser.uid, toUnlock).catch(console.error);
-    }
-  }, [firebaseUser, isGuest, rating.label, archetype.name, bPath]);
+    const bName = bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : bPath === "urban" ? "Tech Megacity" : null;
+    const toUnlock = [rating.label, archetype.name];
+    if (bName) toUnlock.push(bName);
+    achievementsRef.current = toUnlock;
+  }, [rating.label, archetype.name, bPath]);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      setTimeout(() => {
+        if (!isMounted.current && firebaseUser && !isGuest && achievementsRef.current.length > 0) {
+          unlockAchievements(firebaseUser.uid, achievementsRef.current).catch(console.error);
+        }
+      }, 100);
+    };
+  }, [firebaseUser, isGuest]);
 
   useEffect(() => {
     const el = rosterRef?.current;

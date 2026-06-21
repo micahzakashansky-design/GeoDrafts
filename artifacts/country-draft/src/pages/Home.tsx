@@ -55,7 +55,7 @@ function DailyCard() {
   const alreadyCompleted = dailyResult?.completed === true || cloudCompleted;
   
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.1 }} className="w-full mb-2">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.1 }} className="w-full">
       <button 
         onClick={playDaily} 
         className={`w-full text-left rounded-3xl border p-6 relative overflow-hidden transition-all duration-300 group flex items-center justify-between shadow-sm hover:shadow-xl ${
@@ -166,6 +166,10 @@ export default function Home() {
   const [isJoining, setIsJoining] = useState(false);
   const [isHosting, setIsHosting] = useState(false);
 
+  useEffect(() => {
+    if (firebaseUser) refreshProfile();
+  }, [firebaseUser, refreshProfile]);
+
   async function handleHost() {
     if (!firebaseUser || !profile) return;
     setIsHosting(true);
@@ -254,7 +258,7 @@ export default function Home() {
             <DailyCard />
 
             {/* Gapless Bento Grid */}
-            <div className="border border-border rounded-[2rem] shadow-2xl overflow-hidden mt-2 bg-card text-card-foreground">
+            <div className="border border-border rounded-[2rem] shadow-2xl overflow-hidden mt-8 bg-card text-card-foreground">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
                 
                 {/* Row 1: Classic Mode & Double Draft */}
@@ -307,20 +311,20 @@ export default function Home() {
                 </div>
 
                 {/* Multiplayer Section - Full Width */}
-                <div className="col-span-1 md:col-span-2 bg-muted/30 border-t border-border p-8 md:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+                <div className="col-span-1 md:col-span-2 bg-muted/30 border-t border-border p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
                   <div className="absolute inset-0 bg-gradient-to-r from-foreground/5 to-blue-500/5 pointer-events-none" />
-                  <div className="relative z-10 flex items-center gap-6">
-                    <div className="w-16 h-16 rounded-2xl bg-foreground/10 flex items-center justify-center">
-                      <Users className="w-8 h-8 text-foreground" />
+                  <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-5 text-center md:text-left">
+                    <div className="w-12 h-12 rounded-xl bg-foreground/10 flex items-center justify-center shrink-0">
+                      <Users className="w-6 h-6 text-foreground" />
                     </div>
                     <div>
-                      <h3 className="font-sans text-3xl font-bold mb-2 text-card-foreground">Multiplayer Mode</h3>
-                      <p className="text-lg text-muted-foreground max-w-sm">Host a Party or Sabotage game with your friends in real-time.</p>
+                      <h3 className="font-sans text-2xl font-bold mb-2 text-card-foreground">Multiplayer Mode</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">Host a Party or Sabotage game with your friends in real-time.</p>
                     </div>
                   </div>
                   
-                  <div className="relative z-10 w-full md:w-auto flex flex-col sm:flex-row items-center gap-3">
-                    <button onClick={handleHost} disabled={isHosting} className="w-full sm:w-auto px-8 py-5 rounded-2xl bg-foreground text-background font-bold text-lg hover:scale-105 active:scale-95 transition-all shadow-lg disabled:opacity-50">
+                  <div className="relative z-10 w-full md:w-auto flex flex-col sm:flex-row items-center gap-2">
+                    <button onClick={handleHost} disabled={isHosting} className="w-full sm:w-auto px-6 py-4 rounded-xl bg-foreground text-background font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg disabled:opacity-50">
                       {isHosting ? "Hosting..." : "Host Game"}
                     </button>
                     <form onSubmit={handleJoin} className="w-full sm:w-auto relative flex items-center">
@@ -329,9 +333,9 @@ export default function Home() {
                         onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                         maxLength={6}
                         placeholder="CODE"
-                        className="w-full sm:w-40 bg-card text-foreground placeholder-muted-foreground border border-border rounded-2xl px-6 py-5 font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-ring uppercase text-center text-lg"
+                        className="w-full sm:w-32 bg-card text-foreground placeholder-muted-foreground border border-border rounded-xl px-4 py-4 font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-ring uppercase text-center text-sm"
                       />
-                      <button type="submit" disabled={isJoining || joinCode.length !== 6} className="absolute right-2 top-2 bottom-2 px-5 rounded-xl bg-foreground text-background font-bold hover:bg-foreground/90 active:scale-95 transition-all disabled:opacity-0 disabled:scale-90 duration-300">
+                      <button type="submit" disabled={isJoining || joinCode.length !== 6} className="absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-lg bg-foreground text-background font-bold hover:bg-foreground/90 active:scale-95 transition-all disabled:opacity-0 disabled:scale-90 duration-300 text-xs">
                         Join
                       </button>
                     </form>
@@ -347,7 +351,7 @@ export default function Home() {
         </div>
       )}
 
-      <footer className="mt-32 md:mt-48 py-8 text-center flex items-center justify-center gap-4">
+      <footer className="mt-8 md:mt-12 py-8 text-center flex items-center justify-center gap-4">
         <button onClick={() => setShowAboutModal(true)} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
           About
         </button>

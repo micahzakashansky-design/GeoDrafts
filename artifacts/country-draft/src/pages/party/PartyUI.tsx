@@ -506,14 +506,77 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
   const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bPath = getBonusPath(roster); const isGuest = room && gameMode === "sabotage" && players;
   const { firebaseUser } = useFirebaseAuth();
 
+  const isMounted = useRef(true);
+  const achievementsRef = useRef<string[]>([]);
+  
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+
   useEffect(() => {
-    if (firebaseUser && !isGuest) {
-      const bName = bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : bPath === "urban" ? "Tech Megacity" : null;
-      const toUnlock = [rating.label, archetype.name];
-      if (bName) toUnlock.push(bName);
-      unlockAchievements(firebaseUser.uid, toUnlock).catch(console.error);
-    }
-  }, [firebaseUser, isGuest, rating.label, archetype.name, bPath]);
+    const bName = bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : bPath === "urban" ? "Tech Megacity" : null;
+    const toUnlock = [rating.label, archetype.name];
+    if (bName) toUnlock.push(bName);
+    achievementsRef.current = toUnlock;
+  }, [rating.label, archetype.name, bPath]);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      setTimeout(() => {
+        if (!isMounted.current && firebaseUser && !isGuest && achievementsRef.current.length > 0) {
+          unlockAchievements(firebaseUser.uid, achievementsRef.current).catch(console.error);
+        }
+      }, 100);
+    };
+  }, [firebaseUser, isGuest]);
+
+  useEffect(() => {
+    const el = rosterRef?.current;
+    if (!el) return;
+
+    const handleScroll = () => {
+      if (el.scrollHeight - el.scrollTop - el.clientHeight < 300) {
+        setIsAtBottom(true);
+      } else {
+        setIsAtBottom(false);
+      }
+      if (el.scrollTop < 300) {
+        setIsAtTop(true);
+      } else {
+        setIsAtTop(false);
+      }
+    };
+    
+    handleScroll();
+    el.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    
+    return () => {
+      el.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [rosterRef]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "r" || e.key === "R") {
+        onReset();
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (rosterRef && 'current' in rosterRef && rosterRef.current) {
+          rosterRef.current.scrollTo({ top: rosterRef.current.scrollHeight, behavior: 'smooth' });
+        }
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (rosterRef && 'current' in rosterRef && rosterRef.current) {
+          rosterRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onReset, rosterRef]);
   const isMultiplayerGame = gameMode === "sabotage" || gameMode === "party";
   return (
     <div className="p-4 md:p-8 flex-1 overflow-y-auto" ref={rosterRef}>
@@ -732,11 +795,11 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           </div>
         </div>
         {!isDailyMode && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 md:pt-8 border-t border-border">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 md:pt-8 border-t border-border mb-12">
             <button onClick={onReset} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-base hover:opacity-90 transition-opacity shadow-lg">
-              <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again
+              <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again <span className="ml-1 text-xs opacity-60 bg-black/20 px-1.5 py-0.5 rounded font-mono">[R]</span>
             </button>
-            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-foreground/10 text-foreground font-bold text-sm md:text-base hover:bg-foreground/10/80 transition-colors border border-border shadow-sm">
+            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-foreground font-bold text-sm md:text-base hover:bg-muted/80 transition-colors border border-border shadow-sm">
               <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
             </button>
             {!leaderboardSubmitted && (
@@ -745,13 +808,37 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
               </button>
             )}
             {leaderboardSubmitted && (
-              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-foreground/10 text-muted-foreground border border-border font-bold text-sm md:text-base">
+              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground border border-border font-bold text-sm md:text-base">
                 <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
               </div>
             )}
           </div>
         )}
       </div>
+
+      <button
+        onClick={() => {
+          if (rosterRef && 'current' in rosterRef && rosterRef.current) {
+            rosterRef.current.scrollTo({ top: rosterRef.current.scrollHeight, behavior: 'smooth' });
+          }
+        }}
+        title="Scroll to bottom"
+        className={`fixed bottom-6 right-6 md:bottom-8 md:right-8 p-3 md:p-4 rounded-full bg-card text-foreground shadow-xl hover:scale-105 active:scale-95 transition-all z-50 flex items-center justify-center border border-border group duration-300 ${isAtBottom ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}`}
+      >
+        <ChevronDown className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-y-0.5 transition-transform" />
+      </button>
+
+      <button
+        onClick={() => {
+          if (rosterRef && 'current' in rosterRef && rosterRef.current) {
+            rosterRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+        title="Scroll to top"
+        className={`fixed top-20 right-6 md:top-24 md:right-8 p-3 md:p-4 rounded-full bg-card text-foreground shadow-xl hover:scale-105 active:scale-95 transition-all z-50 flex items-center justify-center border border-border group duration-300 ${isAtTop ? 'opacity-0 pointer-events-none -translate-y-4' : 'opacity-100 translate-y-0'}`}
+      >
+        <ChevronUp className="w-5 h-5 md:w-6 md:h-6 group-hover:-translate-y-0.5 transition-transform" />
+      </button>
     </div>
   );
 }
