@@ -26,8 +26,7 @@ export default function GuessGame() {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: mystery, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "guess", isHardMode,
-      roomCode: null, poolSeed: 0, hintsRevealed: 0
-    };
+      roomCode: null, poolSeed: 0, hintsRevealed: 0, categoryTimes: {}, currentTurnStartTime: Date.now() };
   });
 
   const localSavedRef = useRef(false);
@@ -73,8 +72,7 @@ export default function GuessGame() {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: mystery, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "guess", isHardMode,
-      roomCode: null, poolSeed: 0, hintsRevealed: 0
-    });
+      roomCode: null, poolSeed: 0, hintsRevealed: 0, categoryTimes: {}, currentTurnStartTime: Date.now() });
     localSavedRef.current = false;
   }, [state.isHardMode]);
 

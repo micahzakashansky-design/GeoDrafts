@@ -595,7 +595,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
   );
 }
 
-export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players }: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[]; }) {
+export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players , categoryTimes}: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[];  categoryTimes?: Partial<Record<Category, number>>; }) {
   const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bPath = getBonusPath(roster); const isGuest = room && gameMode === "sabotage" && players;
   const isMultiplayerGame = gameMode === "sabotage" || gameMode === "party";
   return (
@@ -607,6 +607,12 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
             <span className="text-white/40 font-medium tracking-wide">Final Score:</span>
             <div className="flex items-center gap-3">
               <span className="text-2xl md:text-3xl font-bold text-primary">{totalScore} <span className="text-sm text-primary/60">pts</span></span>
+    {categoryTimes && Object.keys(categoryTimes).length > 0 && (
+      <div className="flex items-center gap-1.5 text-xs md:text-sm text-white/40 mt-1">
+        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Total Draft Time: {(Object.values(categoryTimes).reduce((a, b) => a + b, 0) / 1000).toFixed(1)}s</span>
+      </div>
+    )}
               </div>
           </div>
           </div>
@@ -661,7 +667,13 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         const stat = splitAssigned.stats[ck];
                         return (
                           <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-white/10/50 bg-card">
-                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-white/40">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-white/80">{sCat}</span></div></div>
+                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-white/40">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-white/80">{sCat}</span>
+    {categoryTimes?.[sCat] !== undefined && (
+      <span className="ml-2 text-[8px] md:text-[9px] font-mono bg-black/40 px-1.5 py-0.5 rounded text-white/60">
+        {(categoryTimes[sCat] / 1000).toFixed(1)}s
+      </span>
+    )}
+    </div></div>
                             <div><div className="text-sm md:text-base font-bold text-white flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
                               <div className="flex flex-col items-start gap-1 mt-3">
@@ -844,6 +856,8 @@ export type GameState = {
   isHardMode: boolean;
   roomCode: string | null;
   poolSeed: number;
+  categoryTimes: Partial<Record<Category, number>>;
+  currentTurnStartTime: number;
 };
 
 export function seededRng(seed: number): () => number {

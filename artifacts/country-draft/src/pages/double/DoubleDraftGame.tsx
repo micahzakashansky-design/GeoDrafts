@@ -26,7 +26,7 @@ export default function DoubleDraftGame() {
       pool, currentCountry: null, selectionOptions: selection, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "double", isHardMode,
-      roomCode: null, poolSeed: 0
+      roomCode: null, poolSeed: 0, categoryTimes: {}, currentTurnStartTime: Date.now()
     };
   });
 
@@ -72,7 +72,7 @@ export default function DoubleDraftGame() {
       return { 
         ...prev, 
         selectionOptions: options, 
-        wildcardTargetCategory: cat,
+        wildcardTargetCategory: cat, currentTurnStartTime: Date.now(),
         currentCountry: null, 
         pool: newPool, 
         wildcardUsed: true, 
@@ -87,9 +87,13 @@ export default function DoubleDraftGame() {
     setState(prev => {
       if (!prev.wildcardTargetCategory) return prev;
       const newRoster = { ...prev.roster };
+      const timeTaken = Date.now() - (prev.currentTurnStartTime || Date.now());
+      const newCategoryTimes = { ...(prev.categoryTimes || {}), [prev.wildcardTargetCategory]: timeTaken };
       newRoster[prev.wildcardTargetCategory] = country;
       return {
         ...prev,
+        categoryTimes: newCategoryTimes,
+        currentTurnStartTime: Date.now(),
         roster: newRoster,
         selectionOptions: null,
         wildcardTargetCategory: null,
@@ -102,6 +106,8 @@ export default function DoubleDraftGame() {
     if (state.roster[category]) return;
     setState(prev => {
       if (!prev.currentCountry) return prev;
+      const timeTaken = Date.now() - (prev.currentTurnStartTime || Date.now());
+      const newCategoryTimes = { ...(prev.categoryTimes || {}), [category]: timeTaken };
       const newRoster = { ...prev.roster, [category]: prev.currentCountry };
       const isGameOver = CATEGORIES.every(c => newRoster[c]);
       const newPool = [...prev.pool];
@@ -115,6 +121,8 @@ export default function DoubleDraftGame() {
       return {
         ...prev, roster: newRoster, pool: newPool, currentCountry: null, selectionOptions: nextOptions,
         gameOver: isGameOver
+      ,
+        categoryTimes: newCategoryTimes, currentTurnStartTime: Date.now()
       };
     });
     setHoveredCategory(null);
@@ -129,8 +137,7 @@ export default function DoubleDraftGame() {
       pool, currentCountry: null, selectionOptions: selection, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "double", isHardMode,
-      roomCode: null, poolSeed: 0, wildcardTargetCategory: null
-    });
+      roomCode: null, poolSeed: 0, wildcardTargetCategory: null, categoryTimes: {}, currentTurnStartTime: Date.now() });
     localSavedRef.current = false;
   }, [state.isHardMode]);
 
@@ -152,14 +159,14 @@ export default function DoubleDraftGame() {
         {!state.gameOver && (
           <div className="hidden md:flex w-80 bg-[#080808] border-r border-white/10 flex-col overflow-y-auto">
              <div className="p-5 space-y-6">
-                <SidebarRoster roster={state.roster} isHardMode={state.isHardMode} />
+                <SidebarRoster roster={state.roster} categoryTimes={state.categoryTimes} isHardMode={state.isHardMode} />
              </div>
           </div>
         )}
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} wildcardOptions={state.selectionOptions} wildcardTargetCategory={state.wildcardTargetCategory} onResolveWildcard={onResolveWildcard} />
+            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} wildcardOptions={state.selectionOptions} wildcardTargetCategory={state.wildcardTargetCategory} onResolveWildcard={onResolveWildcard} />
           ) : state.selectionOptions ? (
              <SelectionPhase options={state.selectionOptions} onPick={onSelectionPick} isHardMode={state.isHardMode} mode="double" />
           ) : state.currentCountry ? (

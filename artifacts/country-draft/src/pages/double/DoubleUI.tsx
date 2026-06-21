@@ -536,7 +536,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
   );
 }
 
-export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players, wildcardOptions, wildcardTargetCategory, onResolveWildcard }: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[]; wildcardOptions?: Country[] | null; wildcardTargetCategory?: Category | null; onResolveWildcard?: (c: Country) => void; }) {
+export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players, wildcardOptions, wildcardTargetCategory, onResolveWildcard , categoryTimes}: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[]; wildcardOptions?: Country[] | null; wildcardTargetCategory?: Category | null; onResolveWildcard?: (c: Country) => void;  categoryTimes?: Partial<Record<Category, number>>; }) {
   const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bPath = getBonusPath(roster); const isGuest = room && gameMode === "sabotage" && players;
   const isMultiplayerGame = gameMode === "sabotage" || gameMode === "party";
 
@@ -619,7 +619,13 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         const stat = splitAssigned.stats[ck];
                         return (
                           <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-white/10/50 bg-card">
-                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-white/40">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-white/80">{sCat}</span></div></div>
+                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-white/40">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-white/80">{sCat}</span>
+    {categoryTimes?.[sCat] !== undefined && (
+      <span className="ml-2 text-[8px] md:text-[9px] font-mono bg-black/40 px-1.5 py-0.5 rounded text-white/60">
+        {(categoryTimes[sCat] / 1000).toFixed(1)}s
+      </span>
+    )}
+    </div></div>
                             <div><div className="text-sm md:text-base font-bold text-white flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
                               <div className="flex flex-col items-start gap-1 mt-3">
@@ -797,6 +803,8 @@ export type GameState = {
   roomCode: string | null;
   poolSeed: number;
   wildcardTargetCategory?: Category | null;
+  categoryTimes: Partial<Record<Category, number>>;
+  currentTurnStartTime: number;
 };
 
 export function seededRng(seed: number): () => number {

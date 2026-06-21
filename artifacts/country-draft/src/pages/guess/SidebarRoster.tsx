@@ -3,7 +3,7 @@ import { Category, Country, CATEGORIES, getCategoryKey } from "@/data/countries"
 import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, computeSizePopBonus, BONUS_CATEGORIES } from "./GuessUI";
 import { Users, Plus } from "lucide-react";
 
-export function SidebarRoster({ roster, isHardMode }: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean }) {
+export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean ; categoryTimes?: Partial<Record<Category, number>>; }) {
   const assignedCategories = CATEGORIES.filter((c: Category) => roster[c]);
   const hasSizeAndPop = roster["Size"] && roster["Population"];
 

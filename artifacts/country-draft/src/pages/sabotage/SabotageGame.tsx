@@ -36,7 +36,7 @@ export default function SabotageGame() {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "sabotage", isHardMode,
-      roomCode: roomCode, poolSeed: 0
+      roomCode: roomCode, poolSeed: 0, categoryTimes: {}, currentTurnStartTime: Date.now()
     };
   });
 
@@ -103,6 +103,8 @@ export default function SabotageGame() {
     if (state.roster[category] || !roomCode || !firebaseUser) return;
     setState(prev => {
       if (!prev.currentCountry) return prev;
+      const timeTaken = Date.now() - (prev.currentTurnStartTime || Date.now());
+      const newCategoryTimes = { ...(prev.categoryTimes || {}), [category]: timeTaken };
       const newRoster = { ...prev.roster, [category]: prev.currentCountry };
       const isGameOver = CATEGORIES.every(c => newRoster[c]);
       
@@ -126,6 +128,8 @@ export default function SabotageGame() {
       return {
         ...prev, roster: newRoster, currentCountry: null,
         gameOver: isGameOver
+      ,
+        categoryTimes: newCategoryTimes, currentTurnStartTime: Date.now()
       };
     });
     setHoveredCategory(null);
@@ -153,14 +157,14 @@ export default function SabotageGame() {
         {room && room.status === "playing" && !state.gameOver && (
           <div className="hidden md:flex w-80 bg-card/30 border-r border-white/10/50 flex-col overflow-y-auto">
              <div className="p-5 space-y-6">
-                <SidebarRoster roster={state.roster} isHardMode={state.isHardMode} />
+                <SidebarRoster roster={state.roster} categoryTimes={state.categoryTimes} isHardMode={state.isHardMode} />
              </div>
           </div>
         )}
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="sabotage" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
+            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="sabotage" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
           ) : room && room.status === "playing" && players.find(p => p.uid === firebaseUser?.uid)?.finishedRound && !players.every(p => p.finishedRound) ? (
              <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-6" /><h2 className="text-2xl font-sans font-bold mb-2">Waiting for others...</h2><p className="text-white/40">The next country will be revealed once everyone finishes this round.</p></div>
           ) : state.selectionOptions ? (

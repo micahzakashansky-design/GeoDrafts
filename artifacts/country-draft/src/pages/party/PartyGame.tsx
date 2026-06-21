@@ -36,7 +36,7 @@ export default function PartyGame() {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "party", isHardMode,
-      roomCode: roomCode, poolSeed: 0
+      roomCode: roomCode, poolSeed: 0, categoryTimes: {}, currentTurnStartTime: Date.now()
     };
   });
 
@@ -70,6 +70,8 @@ export default function PartyGame() {
     if (state.roster[category] || !roomCode || !firebaseUser) return;
     setState(prev => {
       if (!prev.currentCountry) return prev;
+      const timeTaken = Date.now() - (prev.currentTurnStartTime || Date.now());
+      const newCategoryTimes = { ...(prev.categoryTimes || {}), [category]: timeTaken };
       const newRoster = { ...prev.roster, [category]: prev.currentCountry };
       const isGameOver = CATEGORIES.every(c => newRoster[c]);
       
@@ -98,6 +100,8 @@ export default function PartyGame() {
       return {
         ...prev, roster: newRoster, currentCountry: nextCountry, pool,
         gameOver: isGameOver
+      ,
+        categoryTimes: newCategoryTimes, currentTurnStartTime: Date.now()
       };
     });
     setHoveredCategory(null);
@@ -125,14 +129,14 @@ export default function PartyGame() {
         {room && room.status === "playing" && !state.gameOver && (
           <div className="hidden md:flex w-80 bg-card/30 border-r border-white/10/50 flex-col overflow-y-auto">
              <div className="p-5 space-y-6">
-                <SidebarRoster roster={state.roster} isHardMode={state.isHardMode} />
+                <SidebarRoster roster={state.roster} categoryTimes={state.categoryTimes} isHardMode={state.isHardMode} />
              </div>
           </div>
         )}
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="party" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
+            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="party" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (
