@@ -111,81 +111,32 @@ export function SettingsModal({ onClose }: Props) {
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2">
               Theme
             </label>
-            <div className="flex flex-col gap-3">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                onClick={() => setTheme("system")}
-                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
-                  theme === "system"
-                    ? "border-primary/50 bg-primary/10"
-                    : "bg-card border-border hover:bg-muted/50"
-                }`}
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${theme === "system" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
-                  <Laptop className="w-7 h-7" />
-                </div>
-                <div>
-                  <div className={`font-black text-xl tracking-tight ${theme === "system" ? "text-foreground" : "text-foreground/80"}`}>System</div>
-                  <div className="text-sm font-medium text-muted-foreground mt-1">Follow system setting</div>
-                </div>
-                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${theme === "system" ? "border-primary" : "border-border"}`}>
-                  {theme === "system" && (
-                    <motion.div layoutId="theme-dot" className="w-3 h-3 rounded-full bg-primary" />
-                  )}
-                </div>
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                onClick={() => setTheme("light")}
-                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
-                  theme === "light"
-                    ? "border-primary/50 bg-primary/10"
-                    : "bg-card border-border hover:bg-muted/50"
-                }`}
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${theme === "light" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
-                  <Sun className="w-7 h-7" />
-                </div>
-                <div>
-                  <div className={`font-black text-xl tracking-tight ${theme === "light" ? "text-foreground" : "text-foreground/80"}`}>Light</div>
-                  <div className="text-sm font-medium text-muted-foreground mt-1">Always light mode</div>
-                </div>
-                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${theme === "light" ? "border-primary" : "border-border"}`}>
-                  {theme === "light" && (
-                    <motion.div layoutId="theme-dot" className="w-3 h-3 rounded-full bg-primary" />
-                  )}
-                </div>
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                onClick={() => setTheme("dark")}
-                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
-                  theme === "dark"
-                    ? "border-primary/50 bg-primary/10"
-                    : "bg-card border-border hover:bg-muted/50"
-                }`}
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${theme === "dark" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
-                  <Moon className="w-7 h-7" />
-                </div>
-                <div>
-                  <div className={`font-black text-xl tracking-tight ${theme === "dark" ? "text-foreground" : "text-foreground/80"}`}>Dark</div>
-                  <div className="text-sm font-medium text-muted-foreground mt-1">Always dark mode</div>
-                </div>
-                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${theme === "dark" ? "border-primary" : "border-border"}`}>
-                  {theme === "dark" && (
-                    <motion.div layoutId="theme-dot" className="w-3 h-3 rounded-full bg-primary" />
-                  )}
-                </div>
-              </motion.button>
+            <div className="flex gap-2 flex-wrap">
+              {([
+                { key: "system", label: "System", icon: Laptop, activeClass: "bg-primary text-primary-foreground font-black" },
+                { key: "light", label: "Light", icon: Sun, activeClass: "bg-amber-400 text-black font-black" },
+                { key: "dark", label: "Dark", icon: Moon, activeClass: "bg-indigo-600 text-white font-black" }
+              ] as const).map((tab) => {
+                const TabIcon = tab.icon;
+                const isActive = theme === tab.key;
+                return (
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                    key={tab.key}
+                    onClick={() => setTheme(tab.key)}
+                    className={`px-5 py-2.5 rounded-full text-sm uppercase tracking-widest transition-colors border flex items-center gap-2 ${
+                      isActive
+                        ? tab.activeClass + " border-transparent"
+                        : "text-muted-foreground font-bold border-border hover:text-foreground hover:bg-muted/50 bg-card"
+                    }`}
+                  >
+                    <TabIcon className="w-4 h-4 shrink-0" />
+                    {tab.label}
+                  </motion.button>
+                );
+              })}
             </div>
           </div>
 
