@@ -4,7 +4,7 @@ import { useLocation, Link } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Globe, ShieldAlert, ShieldPlus, Trophy, BookOpen, CalendarDays, X,
-  Moon, Sun, Users, Swords, PartyPopper, ArrowLeftRight,
+  Moon, Sun, Users, Swords, PartyPopper, ArrowLeftRight, Gamepad2,
   Search, Zap, Star, Calculator, ChevronRight, Settings, LogIn, User, Loader2, Brain, Medal, Target, Shield
 } from "lucide-react";
 import { useTheme } from "../lib/theme-context";
@@ -28,6 +28,7 @@ const NATION_RANKS = [
 
 const TABS = [
   { id: "basics", label: "How to Play", icon: <Zap className="w-4 h-4" /> },
+  { id: "modes", label: "Game Modes", icon: <Gamepad2 className="w-4 h-4" /> },
   { id: "scoring", label: "Point System", icon: <Calculator className="w-4 h-4" /> },
   { id: "rankings", label: "Nation Rankings", icon: <Medal className="w-4 h-4" /> },
   { id: "bonuses", label: "Synergies & Bonuses", icon: <Star className="w-4 h-4" /> },
@@ -299,6 +300,44 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                           <p className="text-sm text-muted-foreground leading-relaxed">
                             Combine massive size with moderate population to create an industrial powerhouse focused on raw materials.
                           </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeTab === "modes" && (
+                    <div className="space-y-6">
+                      <div>
+                        <h3 className="text-3xl font-black tracking-tight text-foreground mb-4">Game Modes</h3>
+                        <p className="text-lg text-muted-foreground leading-relaxed">
+                          Play GeoDraft your way. Test your knowledge across multiple unique and challenging game modes.
+                        </p>
+                      </div>
+
+                      <div className="grid sm:grid-cols-2 gap-3">
+                        <div className="p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5">
+                          <h4 className="font-bold text-emerald-400 mb-1 flex items-center gap-2"><ShieldPlus className="w-4 h-4"/>Classic</h4>
+                          <p className="text-sm text-muted-foreground">Draft one country per turn from 3 options. Build the most balanced nation possible.</p>
+                        </div>
+                        <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5">
+                          <h4 className="font-bold text-blue-400 mb-1 flex items-center gap-2"><Globe className="w-4 h-4"/>Double Draft</h4>
+                          <p className="text-sm text-muted-foreground">Draft two countries at a time from a grid of 6. Synergies become crucial.</p>
+                        </div>
+                        <div className="p-4 rounded-xl border border-pink-500/20 bg-pink-500/5">
+                          <h4 className="font-bold text-pink-400 mb-1 flex items-center gap-2"><PartyPopper className="w-4 h-4"/>Party</h4>
+                          <p className="text-sm text-muted-foreground">Draft countries based on specific required categories. Fast, chaotic, and fun!</p>
+                        </div>
+                        <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5">
+                          <h4 className="font-bold text-amber-400 mb-1 flex items-center gap-2"><Search className="w-4 h-4"/>Guess</h4>
+                          <p className="text-sm text-muted-foreground">Test your knowledge! Guess the real-world country based purely on its stats.</p>
+                        </div>
+                        <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
+                          <h4 className="font-bold text-red-400 mb-1 flex items-center gap-2"><Swords className="w-4 h-4"/>Sabotage</h4>
+                          <p className="text-sm text-muted-foreground">Draft for your opponent. Give them the absolute worst stats possible.</p>
+                        </div>
+                        <div className="p-4 rounded-xl border border-indigo-500/20 bg-indigo-500/5">
+                          <h4 className="font-bold text-indigo-400 mb-1 flex items-center gap-2"><CalendarDays className="w-4 h-4"/>Daily Challenge</h4>
+                          <p className="text-sm text-muted-foreground">A unique global seed every day. Compete globally with the exact same country pool.</p>
                         </div>
                       </div>
                     </div>
