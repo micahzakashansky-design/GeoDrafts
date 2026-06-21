@@ -303,7 +303,7 @@ export default function Leaderboard() {
                     onClick={() => setDifficulty("normal")}
                     className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${
                       difficulty === "normal" 
-                        ? (parentMode === "classic" ? "bg-white text-black" : "bg-purple-500 text-white") 
+                        ? "bg-green-500 text-white" 
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
