@@ -342,14 +342,26 @@ export function SelectionPhase({ options, onPick, isHardMode, mode, targetCatego
                  if (targetCategory) {
                     const stat = country.stats[getCategoryKey(targetCategory)];
                     if (!stat) return null;
+                    const isBonus = BONUS_CATEGORIES.includes(targetCategory);
+                    const isSizeOrPop = targetCategory === "Size" || targetCategory === "Population";
+                    const maxScore = CATEGORY_MAX_SCORES[targetCategory] ?? 10;
+                    const scoreLabel = getScoreLabel(stat.score ?? 0, maxScore);
                     return (
-                      <div className="p-4 rounded-xl bg-muted border border-border flex flex-col gap-2">
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                          {CATEGORY_ICONS[targetCategory]}
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/80">{targetCategory}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <div className="font-bold text-foreground text-sm">{extractBonusText(stat.description, targetCategory)}</div>
+                      <div className="p-4 rounded-xl bg-muted border border-border flex flex-col gap-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            {CATEGORY_ICONS[targetCategory]}
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-foreground/80">{targetCategory}</span>
+                          </div>
+                          {!isBonus && !isSizeOrPop ? (
+                            <div className="flex items-center gap-1.5">
+                              <span className={`text-2xl font-black ${scoreLabel.color.split(' ')[0]}`}>{stat.score ?? 0}</span>
+                              <span className="text-muted-foreground text-xs font-bold">/ {maxScore}</span>
+                              <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${scoreLabel.color} bg-background`}>{scoreLabel.label}</span>
+                            </div>
+                          ) : (
+                            <div className="text-sm font-bold text-foreground">{extractBonusText(stat.description, targetCategory)}</div>
+                          )}
                         </div>
                         <p className="text-[10px] text-muted-foreground/80 leading-relaxed italic line-clamp-3">"{stat.description}"</p>
                       </div>
