@@ -35,11 +35,11 @@ export default function Lobby() {
 
   if (!room || !firebaseUser) {
     return (
-      <div className="min-h-screen bg-[#000000] flex flex-col items-center justify-center font-sans">
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center font-sans">
         <motion.div 
           animate={{ opacity: [0.3, 1, 0.3] }} 
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          className="text-white/50 font-bold tracking-widest text-sm uppercase"
+          className="text-muted-foreground font-bold tracking-widest text-sm uppercase"
         >
           Loading Lobby...
         </motion.div>
@@ -68,7 +68,7 @@ export default function Lobby() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#000000] text-white overflow-hidden font-sans selection:bg-white/20">
+    <div className="flex flex-col min-h-screen bg-background text-foreground overflow-hidden font-sans selection:bg-foreground/20">
       <header className="h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 mix-blend-difference">
         <div className="flex items-center gap-4">
           <motion.button 
@@ -80,7 +80,7 @@ export default function Lobby() {
           >
             <Logo className="w-6 h-6 opacity-90" />GeoDrafts
           </motion.button>
-          <div className="h-6 w-px bg-white/10 hidden md:block" />
+          <div className="h-6 w-px bg-foreground/10 hidden md:block" />
           <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
             <Users className="w-3.5 h-3.5" /> Multiplayer Lobby
           </div>
@@ -96,8 +96,8 @@ export default function Lobby() {
             transition={{ duration: 0.5 }}
             className="mb-12"
           >
-            <h2 className="text-sm font-black text-white/40 uppercase tracking-widest mb-3">Room Code</h2>
-            <div className="text-7xl md:text-8xl font-black tracking-tighter text-white leading-none">{room.code}</div>
+            <h2 className="text-sm font-black text-muted-foreground uppercase tracking-widest mb-3">Room Code</h2>
+            <div className="text-7xl md:text-8xl font-black tracking-tighter text-foreground leading-none">{room.code}</div>
           </motion.div>
 
           <motion.div 
@@ -106,18 +106,18 @@ export default function Lobby() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="space-y-6"
           >
-            <h3 className="text-sm font-black text-white/40 uppercase tracking-widest">Players ({players.length})</h3>
-            <div className="grid gap-3 p-1 bg-white/5 rounded-3xl border border-white/10">
+            <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest">Players ({players.length})</h3>
+            <div className="grid gap-3 p-1 bg-foreground/5 rounded-3xl border border-border">
               {players.map((p, i) => (
                 <motion.div 
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: i * 0.05 }}
                   key={p.uid} 
-                  className="flex items-center justify-between p-4 rounded-[1.25rem] bg-[#080808] border border-white/5"
+                  className="flex items-center justify-between p-4 rounded-[1.25rem] bg-card border border-border/50"
                 >
                   <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center text-white font-black text-2xl">
+                    <div className="w-14 h-14 rounded-2xl bg-foreground/10 flex items-center justify-center text-foreground font-black text-2xl">
                       {p.username[0].toUpperCase()}
                     </div>
                     <span className="font-bold text-xl tracking-tight">{p.username}</span>
@@ -138,19 +138,19 @@ export default function Lobby() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="md:w-[440px] shrink-0 flex flex-col justify-end mt-auto"
         >
-          <div className="space-y-6 bg-[#080808] p-8 rounded-[2rem] border border-white/10 shadow-2xl relative overflow-hidden">
+          <div className="space-y-6 bg-card p-8 rounded-[2rem] border border-border shadow-2xl relative overflow-hidden">
             {/* Ambient Glow */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-foreground/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
             {/* Difficulty Radio (Pills) */}
-            <div className="flex bg-[#000000] rounded-2xl p-1.5 shadow-inner border border-white/5">
+            <div className="flex bg-background rounded-2xl p-1.5 shadow-inner border border-border/50">
               <button
                 onClick={() => handleDifficultyChange("easy")}
                 disabled={!isHost}
                 className={`flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
                   room.difficulty === "easy"
                     ? "bg-white text-black shadow-sm"
-                    : "text-white/40 hover:text-white/80"
+                    : "text-muted-foreground hover:text-foreground/80"
                 } ${!isHost && "cursor-default opacity-80"}`}
               >
                 Classic
@@ -161,7 +161,7 @@ export default function Lobby() {
                 className={`flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
                   room.difficulty === "hard"
                     ? "bg-white text-black shadow-sm"
-                    : "text-white/40 hover:text-white/80"
+                    : "text-muted-foreground hover:text-foreground/80"
                 } ${!isHost && "cursor-default opacity-80"}`}
               >
                 Hard
@@ -179,17 +179,17 @@ export default function Lobby() {
                 className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
                   room.mode === "sabotage"
                     ? "border-red-500/50 bg-red-500/10"
-                    : "border-white/10 bg-[#000000] hover:bg-white/5"
+                    : "border-border bg-background hover:bg-foreground/5"
                 } ${!isHost && "cursor-default"}`}
               >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "bg-red-500/20 text-red-500" : "bg-white/10 text-white/50"}`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "bg-red-500/20 text-red-500" : "bg-foreground/10 text-muted-foreground"}`}>
                   <Swords className="w-7 h-7" />
                 </div>
                 <div>
-                  <div className={`font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-white" : "text-white/80"}`}>Sabotage</div>
-                  <div className="text-sm font-medium text-white/40 mt-1">Pick for your opponent</div>
+                  <div className={`font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-foreground" : "text-foreground/80"}`}>Sabotage</div>
+                  <div className="text-sm font-medium text-muted-foreground mt-1">Pick for your opponent</div>
                 </div>
-                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "border-red-500" : "border-white/20"}`}>
+                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "border-red-500" : "border-border"}`}>
                   {room.mode === "sabotage" && (
                     <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-red-500" />
                   )}
@@ -205,17 +205,17 @@ export default function Lobby() {
                 className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
                   room.mode === "party"
                     ? "border-emerald-500/50 bg-emerald-500/10"
-                    : "border-white/10 bg-[#000000] hover:bg-white/5"
+                    : "border-border bg-background hover:bg-foreground/5"
                 } ${!isHost && "cursor-default"}`}
               >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "party" ? "bg-emerald-500/20 text-emerald-500" : "bg-white/10 text-white/50"}`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "party" ? "bg-emerald-500/20 text-emerald-500" : "bg-foreground/10 text-muted-foreground"}`}>
                   <PartyPopper className="w-7 h-7" />
                 </div>
                 <div>
-                  <div className={`font-black text-xl tracking-tight ${room.mode === "party" ? "text-white" : "text-white/80"}`}>Party</div>
-                  <div className="text-sm font-medium text-white/40 mt-1">Same countries for all</div>
+                  <div className={`font-black text-xl tracking-tight ${room.mode === "party" ? "text-foreground" : "text-foreground/80"}`}>Party</div>
+                  <div className="text-sm font-medium text-muted-foreground mt-1">Same countries for all</div>
                 </div>
-                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "party" ? "border-emerald-500" : "border-white/20"}`}>
+                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "party" ? "border-emerald-500" : "border-border"}`}>
                   {room.mode === "party" && (
                     <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-emerald-500" />
                   )}
@@ -236,7 +236,7 @@ export default function Lobby() {
                 Start Game
               </motion.button>
             ) : (
-              <div className="w-full py-5 rounded-2xl bg-white/5 text-white/40 font-black text-center uppercase tracking-widest mt-8">
+              <div className="w-full py-5 rounded-2xl bg-foreground/5 text-muted-foreground font-black text-center uppercase tracking-widest mt-8">
                 Waiting for host...
               </div>
             )}

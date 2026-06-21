@@ -16,6 +16,7 @@ import { AuthModal } from "../components/AuthModal";
 import { ContactModal } from "../components/ContactModal";
 import { AboutModal } from "../components/AboutModal";
 import { Logo } from "../components/Logo";
+import { AchievementsCard } from "../components/AchievementsCard";
 import { toast } from "sonner";
 
 const NATION_RANKS = [
@@ -54,7 +55,7 @@ function DailyCard() {
   const alreadyCompleted = dailyResult?.completed === true || cloudCompleted;
   
   return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.1 }} className="w-full mb-8">
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 400, damping: 30, delay: 0.1 }} className="w-full mb-2">
       <button 
         onClick={playDaily} 
         className={`w-full text-left rounded-3xl border p-6 relative overflow-hidden transition-all duration-300 group flex items-center justify-between shadow-sm hover:shadow-xl ${
@@ -236,7 +237,7 @@ export default function Home() {
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="flex flex-col w-full">
             
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row items-center justify-between mb-16 gap-8 text-center md:text-left">
+            <div className="flex flex-col md:flex-row items-center justify-between mb-8 gap-8 text-center md:text-left">
               <div className="flex items-center gap-6">
                 <img src="/logo.svg" alt="GeoDrafts Logo" className="w-20 h-20 rounded-full object-cover" />
                 <div>
@@ -253,7 +254,7 @@ export default function Home() {
             <DailyCard />
 
             {/* Gapless Bento Grid */}
-            <div className="border border-border rounded-[2rem] shadow-2xl overflow-hidden mt-8 bg-card text-card-foreground">
+            <div className="border border-border rounded-[2rem] shadow-2xl overflow-hidden mt-2 bg-card text-card-foreground">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
                 
                 {/* Row 1: Classic Mode & Double Draft */}
@@ -340,11 +341,13 @@ export default function Home() {
               </div>
             </div>
 
+            <AchievementsCard profile={profile} />
+
           </motion.div>
         </div>
       )}
 
-      <footer className="py-8 text-center flex items-center justify-center gap-4">
+      <footer className="mt-32 md:mt-48 py-8 text-center flex items-center justify-center gap-4">
         <button onClick={() => setShowAboutModal(true)} className="text-sm text-muted-foreground hover:text-foreground transition-colors font-semibold">
           About
         </button>

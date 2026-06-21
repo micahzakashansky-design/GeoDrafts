@@ -536,9 +536,22 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
   );
 }
 
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
+import { unlockAchievements } from "@/lib/firestore";
+
 export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players, wildcardOptions, wildcardTargetCategory, onResolveWildcard , categoryTimes}: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[]; wildcardOptions?: Country[] | null; wildcardTargetCategory?: Category | null; onResolveWildcard?: (c: Country) => void;  categoryTimes?: Partial<Record<Category, number>>; }) {
   const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bPath = getBonusPath(roster); const isGuest = room && gameMode === "sabotage" && players;
   const isMultiplayerGame = gameMode === "sabotage" || gameMode === "party";
+  const { firebaseUser } = useFirebaseAuth();
+
+  useEffect(() => {
+    if (firebaseUser && !isGuest) {
+      const bName = bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : bPath === "urban" ? "Tech Megacity" : null;
+      const toUnlock = [rating.label, archetype.name];
+      if (bName) toUnlock.push(bName);
+      unlockAchievements(firebaseUser.uid, toUnlock).catch(console.error);
+    }
+  }, [firebaseUser, isGuest, rating.label, archetype.name, bPath]);
 
   if (wildcardOptions && wildcardTargetCategory && onResolveWildcard) {
     return (
@@ -767,11 +780,11 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           </div>
         </div>
         {!isDailyMode && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 md:pt-8 border-t border-white/10">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 md:pt-8 border-t border-border">
             <button onClick={onReset} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-base hover:opacity-90 transition-opacity shadow-lg">
               <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again
             </button>
-            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-white/10 text-white font-bold text-sm md:text-base hover:bg-white/10/80 transition-colors border border-white/10 shadow-sm">
+            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-foreground font-bold text-sm md:text-base hover:bg-muted/80 transition-colors border border-border shadow-sm">
               <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
             </button>
             {!leaderboardSubmitted && (
@@ -780,7 +793,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
               </button>
             )}
             {leaderboardSubmitted && (
-              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-white/10 text-white/40 border border-white/10 font-bold text-sm md:text-base">
+              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground border border-border font-bold text-sm md:text-base">
                 <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
               </div>
             )}

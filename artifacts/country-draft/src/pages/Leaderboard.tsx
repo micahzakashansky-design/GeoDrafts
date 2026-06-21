@@ -13,7 +13,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
   const [expanded, setExpanded] = useState(false);
   const medal = rank === 1 ? <Medal className="w-6 h-6 text-yellow-400" /> : rank === 2 ? <Medal className="w-6 h-6 text-slate-300" /> : rank === 3 ? <Medal className="w-6 h-6 text-amber-600" /> : null;
   const rankColor =
-    rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-white/40";
+    rank === 1 ? "text-yellow-400" : rank === 2 ? "text-slate-300" : rank === 3 ? "text-amber-600" : "text-muted-foreground";
 
   const isGlobal = "username" in entry;
   
@@ -35,10 +35,10 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl border border-white/5 bg-[#080808] overflow-hidden transition-colors relative"
+      className="rounded-2xl border border-border/50 bg-card overflow-hidden transition-colors relative"
     >
       <button
-        className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-white/5 transition-colors"
+        className="w-full flex items-center gap-4 px-5 py-4 text-left hover:bg-foreground/5 transition-colors"
         onClick={() => setExpanded(!expanded)}
       >
         <span className={`text-base font-black w-8 text-center shrink-0 flex justify-center ${rankColor}`}>
@@ -46,12 +46,12 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
         </span>
         
         {isGlobal ? (
-          <span className="font-bold text-white text-lg tracking-tight flex-1">{(entry as LeaderboardEntry).username}</span>
+          <span className="font-bold text-foreground text-lg tracking-tight flex-1">{(entry as LeaderboardEntry).username}</span>
         ) : (
-          <span className="font-bold text-white text-lg tracking-tight flex-1">You</span>
+          <span className="font-bold text-foreground text-lg tracking-tight flex-1">You</span>
         )}
 
-        <span className="text-white font-black text-lg tracking-tight">{entry.score} pts</span>
+        <span className="text-foreground font-black text-lg tracking-tight">{entry.score} pts</span>
         
         {isGlobal && (
           <span
@@ -64,18 +64,18 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
                 ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
                 : isGuess
                 ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                : "bg-white/10 text-white/70 border border-white/20"
+                : "bg-foreground/10 text-muted-foreground/80 border border-border"
             }`}
           >
             {isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isGuess ? "Guess" : "Easy"}
           </span>
         )}
 
-        <span className="text-sm font-medium text-white/40 mr-2 hidden sm:block">{date}</span>
+        <span className="text-sm font-medium text-muted-foreground mr-2 hidden sm:block">{date}</span>
         
         {((roster && Object.keys(roster).length > 0) || (guesses && guesses.length > 0)) && (
           <ChevronDown
-            className={`w-4 h-4 text-white/40 transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`}
+            className={`w-4 h-4 text-muted-foreground transition-transform shrink-0 ${expanded ? "rotate-180" : ""}`}
           />
         )}
       </button>
@@ -88,22 +88,22 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
             transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="overflow-hidden"
           >
-            <div className="px-5 pb-5 pt-2 border-t border-white/5 bg-[#000000]/50">
+            <div className="px-5 pb-5 pt-2 border-t border-border/50 bg-background/50">
                {roster && Object.keys(roster).length > 0 ? (
                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                    {Object.entries(roster).map(([cat, name]) => (
                      <div key={cat} className="flex flex-col gap-0.5">
-                       <span className="text-[10px] font-black uppercase tracking-widest text-white/30 truncate">{cat}</span>
-                       <span className="text-white font-bold text-sm truncate">{name}</span>
+                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground truncate">{cat}</span>
+                       <span className="text-foreground font-bold text-sm truncate">{name}</span>
                      </div>
                    ))}
                  </div>
                ) : guesses ? (
                  <div className="text-sm">
-                   <div className="mb-3 text-white/50 text-xs font-black tracking-widest uppercase">Mystery Country: <span className="font-bold text-white capitalize tracking-normal">{mysteryCountry}</span></div>
+                   <div className="mb-3 text-muted-foreground text-xs font-black tracking-widest uppercase">Mystery Country: <span className="font-bold text-foreground capitalize tracking-normal">{mysteryCountry}</span></div>
                    <div className="flex gap-2 flex-wrap">
                      {guesses.map((g, i) => (
-                       <span key={i} className="px-3 py-1.5 bg-white/5 rounded-lg text-xs font-bold border border-white/10 text-white/80">
+                       <span key={i} className="px-3 py-1.5 bg-foreground/5 rounded-lg text-xs font-bold border border-border text-foreground/80">
                          {i + 1}. {g}
                        </span>
                      ))}
@@ -118,7 +118,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
       {(isPersonal || isOwner) && onDelete && (
         <button 
           onClick={(e) => { e.stopPropagation(); onDelete(); }}
-          className="absolute right-4 top-4 p-2 text-white/30 hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors bg-[#080808]/80 backdrop-blur-sm z-10"
+          className="absolute right-4 top-4 p-2 text-muted-foreground hover:text-red-500 hover:bg-red-500/10 rounded-full transition-colors bg-card/80 backdrop-blur-sm z-10"
           title="Delete record"
         >
           <Trash2 className="w-4 h-4" />
@@ -201,7 +201,7 @@ export default function Leaderboard() {
   const entriesToDisplay = scopeFilter === "global" ? globalEntries : personalEntries;
 
   return (
-    <div className="min-h-screen bg-[#000000] flex flex-col font-sans selection:bg-white/20">
+    <div className="min-h-screen bg-background flex flex-col font-sans selection:bg-foreground/20">
       <header className="h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 mix-blend-difference sticky top-0">
         <div className="flex items-center gap-4">
           <motion.button 
@@ -209,11 +209,11 @@ export default function Leaderboard() {
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 30 }}
             onClick={() => navigate("/")} 
-            className="font-sans text-xl md:text-2xl font-black tracking-tighter flex items-center gap-3 hover:opacity-80 transition-opacity text-white"
+            className="font-sans text-xl md:text-2xl font-black tracking-tighter flex items-center gap-3 hover:opacity-80 transition-opacity text-foreground"
           >
             <Logo className="w-6 h-6 opacity-90" />GeoDrafts
           </motion.button>
-          <div className="h-6 w-px bg-white/10 hidden md:block" />
+          <div className="h-6 w-px bg-foreground/10 hidden md:block" />
           <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:block tracking-widest uppercase">
             Leaderboards
           </div>
@@ -223,11 +223,11 @@ export default function Leaderboard() {
       <div className="flex-1 max-w-3xl mx-auto w-full px-6 py-12">
         
         {/* Scope Toggle: Global vs Personal */}
-        <div className="flex bg-[#080808] p-1.5 rounded-2xl mb-12 border border-white/5">
+        <div className="flex bg-card p-1.5 rounded-2xl mb-12 border border-border/50">
           <button
             onClick={() => setScopeFilter("global")}
             className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
-              scopeFilter === "global" ? "bg-white shadow-sm text-black" : "text-white/40 hover:text-white/80"
+              scopeFilter === "global" ? "bg-white shadow-sm text-black" : "text-muted-foreground hover:text-foreground/80"
             }`}
           >
             <Globe className="w-4 h-4" /> Global
@@ -235,7 +235,7 @@ export default function Leaderboard() {
           <button
             onClick={() => setScopeFilter("personal")}
             className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
-              scopeFilter === "personal" ? "bg-white shadow-sm text-black" : "text-white/40 hover:text-white/80"
+              scopeFilter === "personal" ? "bg-white shadow-sm text-black" : "text-muted-foreground hover:text-foreground/80"
             }`}
           >
             <User className="w-4 h-4" /> Personal
@@ -247,8 +247,8 @@ export default function Leaderboard() {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center gap-4 mb-10"
         >
-          <Trophy className={`w-10 h-10 ${scopeFilter === "global" ? "text-yellow-400" : "text-white/80"}`} />
-          <h1 className="font-sans text-5xl md:text-6xl font-black text-white tracking-tighter leading-none">
+          <Trophy className={`w-10 h-10 ${scopeFilter === "global" ? "text-yellow-400" : "text-foreground/80"}`} />
+          <h1 className="font-sans text-5xl md:text-6xl font-black text-foreground tracking-tighter leading-none">
              {scopeFilter === "global" ? "Global Rankings" : "Personal Records"}
           </h1>
         </motion.div>
@@ -282,7 +282,7 @@ export default function Leaderboard() {
                 className={`px-5 py-2.5 rounded-full text-sm uppercase tracking-widest transition-colors border ${
                   parentMode === tab.key
                     ? tab.activeClass + " border-transparent"
-                    : "text-white/40 font-bold border-white/10 hover:text-white hover:bg-white/5 bg-[#080808]"
+                    : "text-muted-foreground font-bold border-border hover:text-foreground hover:bg-foreground/5 bg-card"
                 }`}
               >
                 {tab.label}
@@ -298,13 +298,13 @@ export default function Leaderboard() {
                 exit={{ opacity: 0, height: 0, y: -10 }}
                 className="flex gap-2"
               >
-                <div className="flex bg-[#080808] p-1.5 rounded-full border border-white/10">
+                <div className="flex bg-card p-1.5 rounded-full border border-border">
                   <button
                     onClick={() => setDifficulty("normal")}
                     className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${
                       difficulty === "normal" 
                         ? (parentMode === "classic" ? "bg-white text-black" : "bg-purple-500 text-white") 
-                        : "text-white/40 hover:text-white"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     Normal
@@ -314,7 +314,7 @@ export default function Leaderboard() {
                     className={`px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${
                       difficulty === "hard" 
                         ? "bg-red-500 text-white" 
-                        : "text-white/40 hover:text-white"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     Hard Mode
@@ -330,7 +330,7 @@ export default function Leaderboard() {
             <motion.div 
               animate={{ opacity: [0.3, 1, 0.3] }} 
               transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="text-white/40 font-black tracking-widest text-sm uppercase"
+              className="text-muted-foreground font-black tracking-widest text-sm uppercase"
             >
               Loading scores...
             </motion.div>
@@ -338,14 +338,14 @@ export default function Leaderboard() {
         ) : globalError && scopeFilter === "global" ? (
           <div className="text-center py-32">
             <div className="text-red-500 font-bold mb-4">{globalError instanceof Error ? globalError.message : "Failed to load global leaderboard."}</div>
-            <button onClick={() => window.location.reload()} className="text-sm text-white/50 font-bold uppercase tracking-widest hover:text-white transition-colors">
+            <button onClick={() => window.location.reload()} className="text-sm text-muted-foreground font-bold uppercase tracking-widest hover:text-foreground transition-colors">
               Try again
             </button>
           </div>
         ) : entriesToDisplay.length === 0 ? (
           <div className="text-center py-32">
-            {scopeFilter === "global" ? <Globe className="w-16 h-16 mx-auto mb-6 opacity-10 text-white" /> : <User className="w-16 h-16 mx-auto mb-6 opacity-10 text-white" />}
-            <p className="text-white/40 font-bold text-lg tracking-tight">
+            {scopeFilter === "global" ? <Globe className="w-16 h-16 mx-auto mb-6 opacity-10 text-foreground" /> : <User className="w-16 h-16 mx-auto mb-6 opacity-10 text-foreground" />}
+            <p className="text-muted-foreground font-bold text-lg tracking-tight">
               {modeFilter === "daily"
                 ? `No daily scores yet. Be the first today!`
                 : `No scores yet. Play a game to record a score!`}

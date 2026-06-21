@@ -100,7 +100,7 @@ export default function AssociationsGame() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="max-w-md w-full bg-[#000000] border border-white/10 p-8 rounded-2xl text-center space-y-6"
+          className="max-w-md w-full bg-background border border-border p-8 rounded-2xl text-center space-y-6"
         >
           <div className="text-6xl mb-4">🏆</div>
           <h1 className="text-3xl font-bold font-sans">Game Over!</h1>

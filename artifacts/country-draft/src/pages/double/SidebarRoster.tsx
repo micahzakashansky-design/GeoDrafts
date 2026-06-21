@@ -9,17 +9,17 @@ export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: P
 
   return (
     <div className="flex flex-col h-full min-h-[400px]">
-      <div className="border-b border-white/10/50 pb-2 mb-3 px-1 shrink-0">
-        <h3 className="text-[10px] font-bold text-white/40 uppercase tracking-wider">Your Nation's Roster</h3>
+      <div className="border-b border-border pb-2 mb-3 px-1 shrink-0">
+        <h3 className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Your Nation's Roster</h3>
       </div>
       <div className="space-y-1.5 flex-1 overflow-y-auto">
         {Object.keys(roster).length === 0 ? (
           <div className="flex flex-col items-center justify-center text-center h-full pb-12 mt-12">
-            <div className="w-12 h-12 rounded-full bg-slate-800/50 flex items-center justify-center mb-4">
-              <Plus className="w-5 h-5 text-white/40" />
+            <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
+              <Plus className="w-5 h-5 text-muted-foreground" />
             </div>
-            <p className="text-sm font-semibold text-white/90 mb-1">Your roster is empty</p>
-            <p className="text-xs text-white/40">Pick a category to build up your<br/>nation!</p>
+            <p className="text-sm font-semibold text-foreground mb-1">Your roster is empty</p>
+            <p className="text-xs text-muted-foreground">Pick a category to build up your<br/>nation!</p>
           </div>
         ) : (
           assignedCategories.map((category: Category) => {
@@ -35,17 +35,17 @@ export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: P
             const score = !isBonus ? (assigned.stats[catKey].score ?? 0) : null;
 
             return (
-              <div key={category} className="w-full rounded-lg border border-white/10/25 bg-muted/10 opacity-80 text-left transition-all">
+              <div key={category} className="w-full rounded-lg border border-border bg-card shadow-sm text-left transition-all">
                 <div className="px-3 py-2 flex items-center justify-between">
                   <div className="flex items-center gap-2 overflow-hidden">
-                    <span className="text-white/40 shrink-0">{CATEGORY_ICONS[category]}</span>
+                    <span className="text-muted-foreground shrink-0">{CATEGORY_ICONS[category]}</span>
                     <div className="truncate">
-                      <div className="text-[10px] font-bold uppercase tracking-tight text-white/40 truncate">{category}</div>
-                      <div className="text-xs font-semibold text-white/80 truncate">{assigned.flag} {assigned.name}</div>
+                      <div className="text-[10px] font-bold uppercase tracking-tight text-muted-foreground truncate">{category}</div>
+                      <div className="text-xs font-semibold text-foreground truncate">{assigned.flag} {assigned.name}</div>
                     </div>
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
-                    <span className="text-[9px] text-yellow-400/40">{stars}</span>
+                    <span className="text-[9px] text-yellow-500/80">{stars}</span>
                     {!isBonus && score !== null && !isHardMode && (
                       <span className="text-[10px] font-bold text-primary">{getPtsDisplay(score, category)}</span>
                     )}
@@ -63,10 +63,10 @@ export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: P
                 <span className="text-yellow-500 shrink-0"><Users className="w-4 h-4" /></span>
                 <div className="truncate">
                   <div className="text-[10px] font-bold uppercase tracking-tight text-yellow-500/80 truncate">Population Structure</div>
-                  <div className="text-xs font-semibold text-white/80 truncate mt-0.5">
+                  <div className="text-xs font-semibold text-foreground truncate mt-0.5">
                     {roster["Size"]?.flag} {roster["Size"]?.name}
                   </div>
-                  <div className="text-xs font-semibold text-white/80 truncate mt-0.5">
+                  <div className="text-xs font-semibold text-foreground truncate mt-0.5">
                     {roster["Population"]?.flag} {roster["Population"]?.name}
                   </div>
                 </div>

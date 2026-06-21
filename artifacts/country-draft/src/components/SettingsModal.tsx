@@ -111,7 +111,7 @@ export function SettingsModal({ onClose }: Props) {
             <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2">
               Theme
             </label>
-            <div className="flex gap-2 flex-wrap">
+            <div className="grid grid-cols-3 gap-2">
               {([
                 { key: "system", label: "System", icon: Laptop, activeClass: "bg-primary text-primary-foreground font-black" },
                 { key: "light", label: "Light", icon: Sun, activeClass: "bg-amber-400 text-black font-black" },
@@ -126,7 +126,7 @@ export function SettingsModal({ onClose }: Props) {
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                     key={tab.key}
                     onClick={() => setTheme(tab.key)}
-                    className={`px-5 py-2.5 rounded-full text-sm uppercase tracking-widest transition-colors border flex items-center gap-2 ${
+                    className={`px-2 py-2.5 rounded-2xl text-[10px] md:text-xs uppercase tracking-widest transition-colors border flex flex-col items-center justify-center gap-1.5 ${
                       isActive
                         ? tab.activeClass + " border-transparent"
                         : "text-muted-foreground font-bold border-border hover:text-foreground hover:bg-muted/50 bg-card"

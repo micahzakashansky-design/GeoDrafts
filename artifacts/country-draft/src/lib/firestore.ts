@@ -1,7 +1,7 @@
 import { where,
   collection, doc, getDoc, setDoc, addDoc, updateDoc,
   query, orderBy, limit, getDocs, serverTimestamp,
-  onSnapshot, type Timestamp, deleteDoc,
+  onSnapshot, type Timestamp, deleteDoc, arrayUnion
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -11,6 +11,7 @@ export type UserProfile = {
   createdAt: Timestamp | null;
   bestScore: number;
   totalGames: number;
+  unlockedAchievements?: string[];
 };
 
 export type LeaderboardEntry = {
@@ -58,6 +59,14 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
 
 export async function updateUsername(uid: string, username: string): Promise<void> {
   await updateDoc(doc(firestore, "users", uid), { username });
+}
+
+export async function unlockAchievements(uid: string, achievements: string[]): Promise<void> {
+  const validAchievements = achievements.filter(Boolean);
+  if (validAchievements.length === 0) return;
+  await updateDoc(doc(firestore, "users", uid), {
+    unlockedAchievements: arrayUnion(...validAchievements)
+  });
 }
 
 export async function checkUsernameExists(username: string): Promise<boolean> {

@@ -351,46 +351,38 @@ export function getCountryArchetype(roster: Partial<Record<Category, Country>>):
 
 // ─── UI Components ────────────────────────────────────────────────────────
 
-export function ExpandableDescription({ description, isHovered = false }: { description: string, isHovered?: boolean }) {
-  const [expanded, setExpanded] = useState(false);
+export function ExpandableDescription({ description, expanded, setExpanded, isHovered = false }: { description: string, expanded: boolean, setExpanded: (val: boolean) => void, isHovered?: boolean }) {
   const [isOverflowing, setIsOverflowing] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
+  
   useEffect(() => {
-    if (textRef.current) {
+    if (textRef.current && !expanded) {
       setIsOverflowing(textRef.current.scrollHeight > textRef.current.clientHeight);
     }
-  }, [description]);
+  }, [description, expanded]);
   
   return (
     <div className="relative">
-      <p ref={textRef} className={`text-[11px] md:text-xs text-muted-foreground leading-relaxed italic line-clamp-2 ${expanded ? "opacity-0 pointer-events-none" : ""}`}>
-        {description}
+      <p ref={textRef} className={`text-[11px] md:text-xs leading-relaxed italic transition-colors ${expanded ? "text-foreground" : "text-muted-foreground line-clamp-2"}`}>
+        "{description}"
       </p>
       
       {!expanded && isOverflowing && (
         <button 
           onClick={(e) => { e.stopPropagation(); setExpanded(true); }}
-          className="text-[10px] uppercase font-bold text-yellow-500 hover:text-yellow-400 mt-2 flex items-center gap-1 group w-max transition-colors"
+          className={`text-[10px] uppercase font-bold mt-2 flex items-center gap-1 group w-max transition-colors ${isHovered ? "text-primary hover:text-primary/80" : "text-yellow-500 hover:text-yellow-400"}`}
         >
-          Show More <ChevronDown className="w-3 h-3 group-hover:translate-y-0.5 transition-transform" />
+          Read More <ChevronDown className="w-3 h-3 group-hover:translate-y-0.5 transition-transform" />
         </button>
       )}
 
       {expanded && (
-        <div className={`absolute top-[-8px] left-[calc(-1rem-1px)] right-[calc(-1rem-1px)] md:left-[calc(-1.25rem-1px)] md:right-[calc(-1.25rem-1px)] bg-card border-x border-b rounded-b-2xl px-4 md:px-5 pt-[8px] pb-4 md:pb-5 z-50 shadow-2xl ${isHovered ? "border-primary" : "border-border/50"}`}>
-          {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-b-2xl pointer-events-none" />}
-          <div className="relative z-10">
-            <p className="text-[11px] md:text-xs text-foreground leading-relaxed italic">
-            {description}
-          </p>
-          <button 
-            onClick={(e) => { e.stopPropagation(); setExpanded(false); }}
-            className="text-[10px] uppercase font-bold text-yellow-500 hover:text-yellow-400 mt-3 flex items-center gap-1 group w-max transition-colors"
-          >
-            Show Less <ChevronUp className="w-3 h-3 group-hover:-translate-y-0.5 transition-transform" />
-            </button>
-          </div>
-        </div>
+        <button 
+          onClick={(e) => { e.stopPropagation(); setExpanded(false); }}
+          className={`text-[10px] uppercase font-bold mt-3 flex items-center gap-1 group w-max transition-colors ${isHovered ? "text-primary hover:text-primary/80" : "text-yellow-500 hover:text-yellow-400"}`}
+        >
+          Show Less <ChevronUp className="w-3 h-3 group-hover:-translate-y-0.5 transition-transform" />
+        </button>
       )}
     </div>
   );
@@ -399,13 +391,13 @@ export function ExpandableDescription({ description, isHovered = false }: { desc
 export function SelectionPhase({ options, onPick, isHardMode, mode }: { options: Country[]; onPick: (c: Country) => void; isHardMode: boolean; mode: string; }) {
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1">
-      <div className="text-center"><h2 className="text-3xl font-sans font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-white/40 text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
+      <div className="text-center"><h2 className="text-3xl font-sans font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-muted-foreground text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {options.map((country, idx) => (
           <motion.button key={country.name + idx} whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }} onClick={() => onPick(country)} className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl text-left group">
-            <div className="p-8 border-b border-white/10 bg-white/5 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-sans font-bold text-white">{country.name}</h3><p className="text-xs text-white/40 uppercase tracking-widest mt-1">{country.region}</p></div>
-            <div className="p-5 space-y-4"><p className="text-sm text-white/70 leading-relaxed italic line-clamp-2">"{country.knownFor}"</p>
-               {!isHardMode && (<div className="grid grid-cols-3 gap-2">{["Military", "Economy", "Government"].map(cat => { const score = country.stats[getCategoryKey(cat as Category)].score; return (<div key={cat} className="text-center p-2 rounded-lg bg-white/5 border border-white/10/40"><div className="text-[9px] uppercase font-bold text-white/40">{cat}</div><div className="text-sm font-bold text-primary">{score}/10</div></div>) })}</div>)}
+            <div className="p-8 border-b border-border bg-foreground/5 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-sans font-bold text-foreground">{country.name}</h3><p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{country.region}</p></div>
+            <div className="p-5 space-y-4"><p className="text-sm text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{country.knownFor}"</p>
+               {!isHardMode && (<div className="grid grid-cols-3 gap-2">{["Military", "Economy", "Government"].map(cat => { const score = country.stats[getCategoryKey(cat as Category)].score; return (<div key={cat} className="text-center p-2 rounded-lg bg-foreground/5 border border-border/40"><div className="text-[9px] uppercase font-bold text-muted-foreground">{cat}</div><div className="text-sm font-bold text-primary">{score}/10</div></div>) })}</div>)}
                <div className="w-full py-2.5 rounded-xl bg-primary/10 text-primary text-center font-bold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-primary/20">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div>
             </div>
           </motion.button>
@@ -421,21 +413,22 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
   const stats = mysteryCountry.stats; const categories = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full">
-      <div className="text-center"><h2 className="text-4xl font-sans font-bold mb-2">Guess the Country</h2><p className="text-white/40 text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
+      <div className="text-center"><h2 className="text-4xl font-sans font-bold mb-2">Guess the Country</h2><p className="text-muted-foreground text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p></div>
       <div className="w-full max-w-md relative mt-4 mb-6">
-        <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-white/40 group-focus-within:text-primary transition-colors" /></div>
-          <input type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-white/10 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
+        <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" /></div>
+          <input type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-foreground/10 border border-border rounded-2xl pl-12 pr-4 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
           {showSuggestions && suggestions.length > 0 && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-full left-0 w-full mb-3 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-50">{suggestions.map(s => (<button key={s.name} onClick={() => { onGuess(s.name); setInput(""); setShowSuggestions(false); }} className="w-full px-5 py-4 text-left hover:bg-muted transition-colors border-b border-border last:border-0 flex items-center justify-between group"><div className="flex items-center gap-4"><span className="text-2xl">{s.flag}</span><span className="font-bold text-foreground">{s.name}</span></div><ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" /></button>))}</motion.div>)}
         </div>
-        {guesses.length > 0 && (<div className="mt-8 space-y-3"><div className="flex items-center justify-center gap-2 text-xs font-bold text-white/40 uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div><div className="flex flex-wrap gap-2 justify-center">{guesses.map((g, i) => (<motion.div key={i} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold shadow-sm">{g}</motion.div>))}</div></div>)}
+        {guesses.length > 0 && (<div className="mt-8 space-y-3"><div className="flex items-center justify-center gap-2 text-xs font-bold text-muted-foreground uppercase tracking-widest"><RotateCcw className="w-3 h-3" />Attempt History ({guesses.length})</div><div className="flex flex-wrap gap-2 justify-center">{guesses.map((g, i) => (<motion.div key={i} initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-bold shadow-sm">{g}</motion.div>))}</div></div>)}
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">{categories.map(cat => { const key = getCategoryKey(cat); const score = stats[key].score; return (<div key={cat} className="p-4 rounded-xl border border-white/10 bg-card/40 flex flex-col items-center text-center shadow-sm"><div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div><div className="text-[10px] uppercase font-bold text-white/40 tracking-wider mb-1">{cat}</div><div className="text-3xl font-bold text-white tracking-tighter">{score}</div></div>); })}</div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 w-full">{categories.map(cat => { const key = getCategoryKey(cat); const score = stats[key].score; return (<div key={cat} className="p-4 rounded-xl border border-border bg-card/40 flex flex-col items-center text-center shadow-sm"><div className="text-primary/70 mb-1.5">{CATEGORY_ICONS[cat]}</div><div className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">{cat}</div><div className="text-3xl font-bold text-foreground tracking-tighter">{score}</div></div>); })}</div>
     </div>
   );
 }
 
 export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMode, roster, onAssign, onHover }: { country: Country; hoveredCategory: Category | null; poolRemaining: number; isHardMode: boolean; roster: Partial<Record<Category, Country>>; onAssign: (cat: Category) => void; onHover: (cat: Category | null) => void; }) {
   const isComplete = CATEGORIES.every(c => roster[c]);
+  const [expandedCat, setExpandedCat] = useState<Category | null>(null);
   if (isComplete) return null;
   return (
     <div className="flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8">
@@ -457,38 +450,64 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
           {CATEGORIES.filter(cat => !roster[cat]).map((cat) => {
             const stat = country.stats[getCategoryKey(cat)];
             const isHovered = hoveredCategory === cat;
+            const isExpanded = expandedCat === cat;
             const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
             const scoreLabel = getScoreLabel(stat.score ?? 0, maxScore);
             
-            return (
-              <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border hover:bg-muted cursor-pointer shadow-sm"}`}>
-                {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-xl" />}
+            const cardContent = (expanded: boolean, hideInteractive: boolean) => (
+              <div className="relative z-10 flex flex-col h-full">
+                <div className={`flex items-center justify-between ${!isHardMode ? "mb-4" : "mb-2"}`}>
+                  <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-start justify-between gap-2">
+                    <div className="flex items-start gap-2">
+                      <div className="shrink-0 mt-0.5">{CATEGORY_ICONS[cat]}</div>
+                      <span className="leading-tight">{cat}</span>
+                    </div>
+                    {!isHardMode && <span className="text-yellow-500/80 shrink-0 mt-0.5">{getCategoryStars(cat)}</span>}
+                  </div>
+                </div>
                 
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className={`flex items-center justify-between ${!isHardMode ? "mb-4" : "mb-2"}`}>
-                    <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex items-start justify-between gap-2">
-                      <div className="flex items-start gap-2">
-                        <div className="shrink-0 mt-0.5">{CATEGORY_ICONS[cat]}</div>
-                        <span className="leading-tight">{cat}</span>
-                      </div>
-                      {!isHardMode && <span className="text-yellow-500/80 shrink-0 mt-0.5">{getCategoryStars(cat)}</span>}
+                {!isHardMode && (
+                  <div className="flex items-center justify-between mb-1">
+                    <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
+                    <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>
+                      {BONUS_CATEGORIES.includes(cat) 
+                        ? extractBonusText(stat.description, cat) 
+                        : getPtsDisplay(stat.score ?? 0, cat)}
                     </div>
                   </div>
-                  
-                  {!isHardMode && (
-                    <div className="flex items-center justify-between mb-1">
-                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
-                      <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>
-                        {BONUS_CATEGORIES.includes(cat) 
-                          ? extractBonusText(stat.description, cat) 
-                          : getPtsDisplay(stat.score ?? 0, cat)}
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className={!isHardMode ? "mt-1" : "mt-1"}>
-                    <ExpandableDescription description={stat.description} isHovered={isHovered} />
-                  </div>
+                )}
+                
+                <div className="mt-1">
+                  <ExpandableDescription 
+                    description={stat.description} 
+                    isHovered={isHovered} 
+                    expanded={expanded}
+                    setExpanded={hideInteractive ? () => {} : (val) => setExpandedCat(val ? cat : null)}
+                  />
+                </div>
+              </div>
+            );
+            
+            return (
+              <div key={cat} className="relative w-full">
+                {/* Invisible spacer to maintain the grid cell height based on unexpanded content */}
+                <div className="p-5 rounded-xl border border-transparent flex flex-col opacity-0 pointer-events-none">
+                  {cardContent(false, true)}
+                </div>
+                
+                {/* Actual interactive card overlay */}
+                <div 
+                  onMouseEnter={() => onHover(cat)} 
+                  onMouseLeave={() => onHover(null)} 
+                  onClick={() => onAssign(cat)} 
+                  className={`p-5 rounded-xl border flex flex-col transition-all cursor-pointer ${
+                    isExpanded 
+                      ? "absolute inset-x-0 top-0 z-50 h-max bg-card shadow-2xl border-primary" 
+                      : "absolute inset-0 z-10 bg-card shadow-sm border-border hover:bg-muted"
+                  } ${isHovered && !isExpanded ? "bg-primary/5 border-primary shadow-md scale-[1.02] z-40" : ""}`}
+                >
+                  {isHovered && !isExpanded && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-xl pointer-events-none" />}
+                  {cardContent(isExpanded, false)}
                 </div>
               </div>
             );
@@ -499,11 +518,24 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
   );
 }
 
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
+import { unlockAchievements } from "@/lib/firestore";
+
 export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players , categoryTimes}: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[];  categoryTimes?: Partial<Record<Category, number>>; }) {
   const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bPath = getBonusPath(roster); const isGuest = room && gameMode === "sabotage" && players;
+  const { firebaseUser } = useFirebaseAuth();
   
   const [isAtBottom, setIsAtBottom] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+    if (firebaseUser && !isGuest) {
+      const bName = bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : bPath === "urban" ? "Tech Megacity" : null;
+      const toUnlock = [rating.label, archetype.name];
+      if (bName) toUnlock.push(bName);
+      unlockAchievements(firebaseUser.uid, toUnlock).catch(console.error);
+    }
+  }, [firebaseUser, isGuest, rating.label, archetype.name, bPath]);
 
   useEffect(() => {
     const el = rosterRef?.current;
@@ -557,9 +589,9 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
     <div className="p-4 md:p-8 flex-1 overflow-y-auto" ref={rosterRef}>
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 pb-20">
         <div className="text-center space-y-3 md:space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-700">
-          <h2 className="text-3xl md:text-5xl font-sans font-bold text-white">Draft Complete</h2>
+          <h2 className="text-3xl md:text-5xl font-sans font-bold text-foreground">Draft Complete</h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm md:text-base">
-            <span className="text-white/40 font-medium tracking-wide">Final Score:</span>
+            <span className="text-muted-foreground font-medium tracking-wide">Final Score:</span>
             <div className="flex items-center gap-3">
               <span className="text-5xl md:text-6xl font-black text-primary">{totalScore} <span className="text-2xl md:text-3xl text-primary/60 font-bold">pts</span></span>
               </div>
@@ -567,17 +599,17 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           </div>
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${bPath ? "lg:grid-cols-3" : ""} gap-4 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200`}>
           <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-            <div className="p-3 bg-white/5 rounded-xl shrink-0">{archetype.icon}</div>
-            <div><h3 className="font-bold text-white text-sm md:text-base mb-1">{archetype.name}</h3><p className="text-xs text-white/40">{archetype.desc}</p></div>
+            <div className="p-3 bg-muted rounded-xl shrink-0 text-foreground">{archetype.icon}</div>
+            <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{archetype.name}</h3><p className="text-xs text-muted-foreground">{archetype.desc}</p></div>
           </div>
           <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-            <div className="p-3 bg-white/5 rounded-xl shrink-0">{rating.icon}</div>
-            <div><h3 className="font-bold text-white text-sm md:text-base mb-1">{rating.label}</h3><p className="text-xs text-white/40">{rating.desc}</p></div>
+            <div className="p-3 bg-muted rounded-xl shrink-0 text-foreground">{rating.icon}</div>
+            <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{rating.label}</h3><p className="text-xs text-muted-foreground">{rating.desc}</p></div>
           </div>
           {bPath && (
             <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-              <div className="p-3 bg-white/5 rounded-xl shrink-0">{bPath === "agricultural" ? <Leaf className="w-5 h-5 text-yellow-400" /> : bPath === "extraction" ? <Mountain className="w-5 h-5 text-yellow-400" /> : <Building className="w-5 h-5 text-yellow-400" />}</div>
-              <div><h3 className="font-bold text-white text-sm md:text-base mb-1">{bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : "Tech Megacity"}</h3><p className="text-xs text-white/40">{bPath === "agricultural" ? "Vast lands with sparse population." : bPath === "extraction" ? "Massive nation built for resource extraction." : "Dense population in a compact area."}</p></div>
+              <div className="p-3 bg-muted rounded-xl shrink-0">{bPath === "agricultural" ? <Leaf className="w-5 h-5 text-yellow-500" /> : bPath === "extraction" ? <Mountain className="w-5 h-5 text-yellow-500" /> : <Building className="w-5 h-5 text-yellow-500" />}</div>
+              <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{bPath === "agricultural" ? "Agricultural society" : bPath === "extraction" ? "Resource Extraction" : "Tech Megacity"}</h3><p className="text-xs text-muted-foreground">{bPath === "agricultural" ? "Vast lands with sparse population." : bPath === "extraction" ? "Massive nation built for resource extraction." : "Dense population in a compact area."}</p></div>
             </div>
           )}
         </div>
@@ -602,7 +634,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           </div>
         )}
         <div className="space-y-4">
-          <h3 className="text-lg md:text-xl font-sans font-bold text-white px-2 flex items-center justify-between">
+          <h3 className="text-lg md:text-xl font-sans font-bold text-foreground px-2 flex items-center justify-between">
             <span>Your Nation's Roster</span>
             {!wildcardUsed && !wildcardPhase && (
               <button onClick={onWildcard} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 font-semibold hover:bg-blue-500/20 transition-colors border border-blue-500/30">
@@ -610,7 +642,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
               </button>
             )}
             {wildcardPhase && (
-              <button onClick={() => setWildcardPhase(false)} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 text-white/40 font-semibold hover:text-white transition-colors">
+              <button onClick={() => setWildcardPhase(false)} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-foreground/10 text-muted-foreground font-semibold hover:text-foreground transition-colors">
                 Cancel
               </button>
             )}
@@ -635,24 +667,24 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         const ck = getCategoryKey(sCat);
                         const stat = splitAssigned.stats[ck];
                         return (
-                          <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-white/10/50 bg-card">
-                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-white/40">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-white/80">{sCat}</span>
+                          <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card">
+                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-muted-foreground">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-foreground/80">{sCat}</span>
     {categoryTimes?.[sCat] !== undefined && (
-      <span className="ml-2 text-[8px] md:text-[9px] font-mono bg-black/40 px-1.5 py-0.5 rounded text-white/60">
+      <span className="ml-2 text-[8px] md:text-[9px] font-mono bg-foreground/10 px-1.5 py-0.5 rounded text-muted-foreground/80">
         {(categoryTimes[sCat] / 1000).toFixed(1)}s
       </span>
     )}
     </div></div>
-                            <div><div className="text-sm md:text-base font-bold text-white flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
+                            <div><div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
                               <div className="flex flex-col items-start gap-1 mt-3">
                                 <div className="flex items-center gap-2 flex-wrap">
-                                  <div className="font-bold text-white text-xs">{extractBonusText(stat.description, sCat)}</div>
-                                  <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-white bg-white/10">Bonus</div>
+                                  <div className="font-bold text-foreground text-xs">{extractBonusText(stat.description, sCat)}</div>
+                                  <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-foreground/10">Bonus</div>
                                 </div>
                               </div>
                             )}
-                            <p className="text-[9px] text-white/40/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
+                            <p className="text-[9px] text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
                           </div>
                         );
                       })}
@@ -674,7 +706,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                             </span>
                           )}
                         </div>
-                        <div className="font-bold text-white text-base md:text-lg">
+                        <div className="font-bold text-foreground text-base md:text-lg">
                            {!isHardMode && (
                              <><span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{bonus}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span></>
                            )}
