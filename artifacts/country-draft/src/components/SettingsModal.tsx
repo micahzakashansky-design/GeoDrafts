@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, User, LogOut, Check, Loader2, Moon, Sun, Settings } from "lucide-react";
+import { X, User, LogOut, Check, Loader2, Moon, Sun, Settings, Laptop } from "lucide-react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { updateUsername, checkUsernameExists } from "@/lib/firestore";
 import { useToast } from "@/hooks/use-toast";
@@ -16,7 +16,7 @@ export function SettingsModal({ onClose }: Props) {
   const [newUsername, setNewUsername] = useState(profile?.username || "");
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { isLight, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
 
   async function handleUpdateUsername() {
     if (!firebaseUser || !newUsername.trim()) return;
@@ -108,13 +108,85 @@ export function SettingsModal({ onClose }: Props) {
 
         <div className="p-5 space-y-5">
           <div className="space-y-3">
-            <button
-              onClick={toggleTheme}
-              className="w-full flex items-center justify-center gap-2 p-3 rounded-xl bg-muted/50 border border-border hover:bg-muted transition-colors font-bold text-sm text-foreground"
-            >
-              {isLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-              {isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
-            </button>
+            <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider block mb-2">
+              Theme
+            </label>
+            <div className="flex flex-col gap-3">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                onClick={() => setTheme("system")}
+                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
+                  theme === "system"
+                    ? "border-primary/50 bg-primary/10"
+                    : "bg-card border-border hover:bg-muted/50"
+                }`}
+              >
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${theme === "system" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
+                  <Laptop className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className={`font-black text-xl tracking-tight ${theme === "system" ? "text-foreground" : "text-foreground/80"}`}>System</div>
+                  <div className="text-sm font-medium text-muted-foreground mt-1">Follow system setting</div>
+                </div>
+                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${theme === "system" ? "border-primary" : "border-border"}`}>
+                  {theme === "system" && (
+                    <motion.div layoutId="theme-dot" className="w-3 h-3 rounded-full bg-primary" />
+                  )}
+                </div>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                onClick={() => setTheme("light")}
+                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
+                  theme === "light"
+                    ? "border-primary/50 bg-primary/10"
+                    : "bg-card border-border hover:bg-muted/50"
+                }`}
+              >
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${theme === "light" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
+                  <Sun className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className={`font-black text-xl tracking-tight ${theme === "light" ? "text-foreground" : "text-foreground/80"}`}>Light</div>
+                  <div className="text-sm font-medium text-muted-foreground mt-1">Always light mode</div>
+                </div>
+                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${theme === "light" ? "border-primary" : "border-border"}`}>
+                  {theme === "light" && (
+                    <motion.div layoutId="theme-dot" className="w-3 h-3 rounded-full bg-primary" />
+                  )}
+                </div>
+              </motion.button>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                onClick={() => setTheme("dark")}
+                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
+                  theme === "dark"
+                    ? "border-primary/50 bg-primary/10"
+                    : "bg-card border-border hover:bg-muted/50"
+                }`}
+              >
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${theme === "dark" ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"}`}>
+                  <Moon className="w-7 h-7" />
+                </div>
+                <div>
+                  <div className={`font-black text-xl tracking-tight ${theme === "dark" ? "text-foreground" : "text-foreground/80"}`}>Dark</div>
+                  <div className="text-sm font-medium text-muted-foreground mt-1">Always dark mode</div>
+                </div>
+                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${theme === "dark" ? "border-primary" : "border-border"}`}>
+                  {theme === "dark" && (
+                    <motion.div layoutId="theme-dot" className="w-3 h-3 rounded-full bg-primary" />
+                  )}
+                </div>
+              </motion.button>
+            </div>
           </div>
 
           {firebaseUser && (
