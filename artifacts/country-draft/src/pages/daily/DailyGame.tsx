@@ -108,9 +108,19 @@ export default function DailyGame() {
   }, [wildcardPhase, state.wildcardUsed]);
 
   const doReset = useCallback(() => {
-     localSavedRef.current = false;
-     navigate("/");
-  }, [navigate]);
+    localSavedRef.current = false;
+    const dailyDate = new Date().toISOString().slice(0, 10);
+    const poolSeed = dateStrToSeed(dailyDate);
+    const pool = seededShuffle([...COUNTRIES], poolSeed);
+    const currentCountry = pool.pop() || null;
+    setState({
+      pool, currentCountry, selectionOptions: null, mysteryCountry: null, guesses: [],
+      roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: true,
+      dailyDate, leaderboardSubmitted: false, mode: "normal", isHardMode: false,
+      roomCode: null, poolSeed, categoryTimes: {}, currentTurnStartTime: Date.now()
+    });
+    setWildcardPhase(false);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">

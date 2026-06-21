@@ -100,9 +100,18 @@ export default function NormalGame() {
   }, [wildcardPhase, state.wildcardUsed]);
 
   const doReset = useCallback(() => {
-     localSavedRef.current = false;
-     navigate("/");
-  }, [navigate]);
+    localSavedRef.current = false;
+    const isHardMode = state.isHardMode;
+    let pool = shuffleArray([...COUNTRIES]);
+    const currentCountry = pool.pop() || null;
+    setState({
+      pool, currentCountry, selectionOptions: null, mysteryCountry: null, guesses: [],
+      roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
+      dailyDate: "", leaderboardSubmitted: false, mode: "normal", isHardMode,
+      roomCode: null, poolSeed: 0, categoryTimes: {}, currentTurnStartTime: Date.now()
+    });
+    setWildcardPhase(false);
+  }, [state.isHardMode]);
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground selection:bg-primary/20 overflow-hidden font-sans">
