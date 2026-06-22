@@ -7,6 +7,8 @@ import { ChevronLeft, Brain } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { motion } from "framer-motion";
 import { SettingsButton } from "@/components/SettingsButton";
+import { isDevModeActive } from "@/lib/dev-logic";
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
 export type TaskType = 
   | "identify_from_flag" 
@@ -38,6 +40,8 @@ export default function AssociationsGame() {
   const [score, setScore] = useState(0);
   const [isGameOver, setIsGameOver] = useState(false);
   const [validIsos, setValidIsos] = useState<string[]>([]);
+  const { profile } = useFirebaseAuth();
+  const [showDevAnswer, setShowDevAnswer] = useState(false);
 
   useEffect(() => {
     try {
@@ -123,6 +127,13 @@ export default function AssociationsGame() {
 
   const currentQuestion = questions[currentIndex];
 
+  const handleDoubleClick = () => {
+    if (isDevModeActive(profile?.username)) {
+      setShowDevAnswer(true);
+      setTimeout(() => setShowDevAnswer(false), 2000);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <header className="h-20 shrink-0 border-b border-border bg-card/50 backdrop-blur-md px-6 md:px-8 flex items-center justify-between z-20">
@@ -147,7 +158,12 @@ export default function AssociationsGame() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col relative overflow-y-auto overflow-x-hidden">
+      <main className="flex-1 flex flex-col relative overflow-y-auto overflow-x-hidden" onDoubleClick={handleDoubleClick}>
+        {showDevAnswer && currentQuestion && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/90 text-white px-8 py-4 rounded-xl z-50 text-4xl font-bold tracking-widest pointer-events-none">
+            {currentQuestion.country.name}
+          </div>
+        )}
         {isGameOver ? (
           <div className="flex-1 overflow-y-auto p-6 md:p-12 pb-32 flex flex-col items-center justify-center w-full">
           <motion.div 

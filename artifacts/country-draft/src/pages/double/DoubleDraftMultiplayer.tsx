@@ -16,6 +16,7 @@ import { SidebarRoster } from "./SidebarRoster";
 import { Home, Globe as GlobeIcon, Users } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SettingsButton } from "@/components/SettingsButton";
+import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
 
 export default function DoubleDraftMultiplayer() {
   const [, navigate] = useLocation();
@@ -51,11 +52,25 @@ export default function DoubleDraftMultiplayer() {
   useEffect(() => {
     if (room && room.poolSeed && room.status === "playing" && state.pool.length === COUNTRIES.length && !state.gameOver && !state.selectionOptions && !state.currentCountry) {
        const seededPool = seededShuffle([...COUNTRIES], room.poolSeed);
-       const c1 = seededPool.pop(); const c2 = seededPool.pop();
+       let c1, c2;
+       
+       if (isDevModeActive(firebaseUser?.displayName || firebaseUser?.uid)) {
+           // Since we don't have profile handy here easily, use firebaseUser. But wait, in the multiplayer component, 
+           // let's just see if we can get the profile or use a simpler check:
+           // Actually `isDevModeActive` uses `profile?.username`. Since we might not have `profile` here,
+           // we can just pass the string we have or fetch it from `players`.
+           // Let's find currentPlayer.
+           const currentPlayer = players.find(p => p.uid === firebaseUser?.uid);
+           c1 = isDevModeActive(currentPlayer?.username) ? drawDevCountry(seededPool, {}) : seededPool.pop();
+           c2 = isDevModeActive(currentPlayer?.username) ? drawDevCountry(seededPool, {}) : seededPool.pop();
+       } else {
+           c1 = seededPool.pop(); c2 = seededPool.pop();
+       }
+       
        const selection = (c1 && c2) ? [c1, c2] : null;
        setState(prev => ({ ...prev, poolSeed: room.poolSeed!, pool: seededPool, selectionOptions: selection }));
     }
-  }, [room, state.pool.length, state.gameOver, state.selectionOptions, state.currentCountry]);
+  }, [room, state.pool.length, state.gameOver, state.selectionOptions, state.currentCountry, players, firebaseUser]);
 
   const totalScore = useMemo(() => {
     return CATEGORIES.reduce((sum, cat) => {
@@ -95,7 +110,14 @@ export default function DoubleDraftMultiplayer() {
       const newPool = [...prev.pool];
       let nextOptions = null;
       if (!isGameOver) {
-        const c1 = newPool.pop(); const c2 = newPool.pop();
+        let c1, c2;
+        const currentPlayer = players.find(p => p.uid === firebaseUser?.uid);
+        if (isDevModeActive(currentPlayer?.username)) {
+          c1 = drawDevCountry(newPool, newRoster);
+          c2 = drawDevCountry(newPool, newRoster);
+        } else {
+          c1 = newPool.pop(); c2 = newPool.pop();
+        }
         if (c1 && c2) nextOptions = [c1, c2];
       }
 

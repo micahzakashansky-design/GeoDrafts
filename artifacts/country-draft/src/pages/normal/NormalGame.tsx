@@ -15,15 +15,20 @@ import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 import { SettingsButton } from "@/components/SettingsButton";
+import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
 export default function NormalGame() {
   const [, navigate] = useLocation();
+  const { profile } = useFirebaseAuth();
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
     
     let pool = shuffleArray([...COUNTRIES]);
     
+    // We can't access profile easily in useState initializer without it being a dependency,
+    // but on initial load, roster is empty, so pool.pop() is fine even in dev mode.
     const currentCountry = pool.pop() || null;
 
     
@@ -74,7 +79,15 @@ export default function NormalGame() {
       const newRoster = { ...prev.roster, [category]: prev.currentCountry };
       const isGameOver = CATEGORIES.every(c => newRoster[c]);
       const newPool = [...prev.pool];
-      const nextCountry = isGameOver ? null : newPool.pop() || null;
+      
+      let nextCountry = null;
+      if (!isGameOver) {
+        if (isDevModeActive(profile?.username)) {
+          nextCountry = drawDevCountry(newPool, newRoster);
+        } else {
+          nextCountry = newPool.pop() || null;
+        }
+      }
 
       return {
         ...prev, roster: newRoster, pool: newPool, currentCountry: nextCountry,
@@ -88,7 +101,18 @@ export default function NormalGame() {
     if (!wildcardPhase || state.wildcardUsed) return;
     setState(prev => {
       const newPool = [...prev.pool];
-      const newCountry = newPool.pop();
+      
+      let newCountry = null;
+      if (isDevModeActive(profile?.username)) {
+        // Technically for wildcard we are replacing one category.
+        // We can just pretend we don't have that category.
+        const tempRoster = { ...prev.roster };
+        delete tempRoster[categoryToReplace];
+        newCountry = drawDevCountry(newPool, tempRoster);
+      } else {
+        newCountry = newPool.pop() || null;
+      }
+      
       if (!newCountry) return prev;
       return {
         ...prev,
@@ -150,7 +174,9 @@ export default function NormalGame() {
           )}
         </div>
       </main>
-      {showSubmitDialog && <SubmitDialog score={finalScore} mode={state.isHardMode ? "hard" : "normal"} roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />}
+      {showSubmitDialog && !isDevModeActive(profile?.username) && (
+        <SubmitDialog score={finalScore} mode={state.isHardMode ? "hard" : "normal"} roster={state.roster} guesses={[]} mysteryCountry={undefined} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />
+      )}
     </div>
   );
 }

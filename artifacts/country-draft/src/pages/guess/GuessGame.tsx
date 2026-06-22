@@ -14,10 +14,14 @@ import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore } from "@/lib/local-leaderboard";
 import { SettingsButton } from "@/components/SettingsButton";
+import { isDevModeActive } from "@/lib/dev-logic";
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
 export default function GuessGame() {
   const [, navigate] = useLocation();
   const [statsModalCountry, setStatsModalCountry] = useState<Country | null>(null);
+  const { profile } = useFirebaseAuth();
+  const [showDevAnswer, setShowDevAnswer] = useState(false);
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
@@ -77,6 +81,13 @@ export default function GuessGame() {
     localSavedRef.current = false;
   }, [state.isHardMode]);
 
+  const handleDoubleClick = useCallback(() => {
+    if (isDevModeActive(profile?.username)) {
+      setShowDevAnswer(true);
+      setTimeout(() => setShowDevAnswer(false), 2000);
+    }
+  }, [profile?.username]);
+
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
       <header className="h-20 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-6 md:px-8 flex items-center justify-between z-20">
@@ -94,7 +105,12 @@ export default function GuessGame() {
         </div>
       </header>
 
-      <main className="flex-1 flex overflow-hidden relative">
+      <main className="flex-1 flex overflow-hidden relative" onDoubleClick={handleDoubleClick}>
+        {showDevAnswer && state.mysteryCountry && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/90 text-white px-8 py-4 rounded-xl z-50 text-4xl font-bold tracking-widest pointer-events-none">
+            {state.mysteryCountry.name}
+          </div>
+        )}
         <div className="flex-1 flex flex-col overflow-y-auto relative p-6">
           {state.gameOver ? (
             <div className="flex flex-col items-center justify-center flex-1 max-w-2xl mx-auto w-full text-center">
@@ -254,7 +270,7 @@ export default function GuessGame() {
         )}
       </AnimatePresence>
 
-      {state.leaderboardSubmitted === 'pending' as any && (
+      {state.leaderboardSubmitted === 'pending' as any && !isDevModeActive(profile?.username) && (
         <SubmitDialog score={guessScore} mode="guess" roster={{}} guesses={state.guesses} mysteryCountry={state.mysteryCountry?.name} onClose={() => setState(prev => ({ ...prev, leaderboardSubmitted: false }))} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />
       )}
     </div>

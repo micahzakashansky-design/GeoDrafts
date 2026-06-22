@@ -15,6 +15,7 @@ import { Home, Globe as GlobeIcon, Users, PartyPopper, ShieldAlert, ShieldPlus }
 import { Logo } from "../../components/Logo";
 import { SidebarRoster } from "./SidebarRoster";
 import { SettingsButton } from "@/components/SettingsButton";
+import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
 
 export default function PartyGame() {
   const [, navigate] = useLocation();
@@ -49,7 +50,16 @@ export default function PartyGame() {
   useEffect(() => {
     if (room && room.poolSeed && room.status === "playing" && state.pool.length === COUNTRIES.length && !state.gameOver) {
        const seededPool = seededShuffle([...COUNTRIES], room.poolSeed);
-       setState(prev => ({ ...prev, poolSeed: room.poolSeed!, pool: seededPool, currentCountry: seededPool.pop() || null }));
+       
+       let firstCountry = null;
+       const currentPlayer = players.find(p => p.uid === firebaseUser?.uid);
+       if (isDevModeActive(currentPlayer?.username)) {
+           firstCountry = drawDevCountry(seededPool, {});
+       } else {
+           firstCountry = seededPool.pop() || null;
+       }
+
+       setState(prev => ({ ...prev, poolSeed: room.poolSeed!, pool: seededPool, currentCountry: firstCountry }));
     }
   }, [room, state.pool.length, state.gameOver]);
 
@@ -78,7 +88,15 @@ export default function PartyGame() {
       const isGameOver = CATEGORIES.every(c => newRoster[c]);
       
       const pool = [...prev.pool];
-      const nextCountry = isGameOver ? null : (pool.pop() || null);
+      let nextCountry = null;
+      if (!isGameOver) {
+        const currentPlayer = players.find(p => p.uid === firebaseUser?.uid);
+        if (isDevModeActive(currentPlayer?.username)) {
+          nextCountry = drawDevCountry(pool, newRoster);
+        } else {
+          nextCountry = pool.pop() || null;
+        }
+      }
 
       if (isGameOver) {
         // Calculate score right away

@@ -15,9 +15,12 @@ import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 import { SettingsButton } from "@/components/SettingsButton";
+import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
 export default function DoubleDraftGame() {
   const [, navigate] = useLocation();
+  const { profile } = useFirebaseAuth();
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
@@ -68,8 +71,18 @@ export default function DoubleDraftGame() {
     localSavedRef.current = false;
     setState(prev => {
       const newPool = [...prev.pool];
-      const c1 = newPool.pop();
-      const c2 = newPool.pop();
+      let c1, c2;
+      
+      if (isDevModeActive(profile?.username)) {
+        const tempRoster = { ...prev.roster };
+        delete tempRoster[cat];
+        c1 = drawDevCountry(newPool, tempRoster);
+        c2 = drawDevCountry(newPool, tempRoster);
+      } else {
+        c1 = newPool.pop();
+        c2 = newPool.pop();
+      }
+
       const options = c1 && c2 ? [c1, c2] : null;
       return { 
         ...prev, 
@@ -113,7 +126,14 @@ export default function DoubleDraftGame() {
 
       let nextOptions = null;
       if (!isGameOver) {
-        const c1 = newPool.pop(); const c2 = newPool.pop();
+        let c1, c2;
+        if (isDevModeActive(profile?.username)) {
+          c1 = drawDevCountry(newPool, newRoster);
+          c2 = drawDevCountry(newPool, newRoster);
+        } else {
+          c1 = newPool.pop();
+          c2 = newPool.pop();
+        }
         if (c1 && c2) nextOptions = [c1, c2];
       }
 
@@ -178,7 +198,8 @@ export default function DoubleDraftGame() {
           )}
         </div>
       </main>
-      {showSubmitDialog && <SubmitDialog score={finalScore} mode={state.isHardMode ? "double_hard" : "double"} roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />}
+
+      {showSubmitDialog && !isDevModeActive(profile?.username) && <SubmitDialog score={finalScore} mode={state.isHardMode ? "double_hard" : "double"} roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />}
     </div>
   );
 }

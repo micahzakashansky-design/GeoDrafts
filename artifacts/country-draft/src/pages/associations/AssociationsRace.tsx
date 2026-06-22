@@ -10,6 +10,7 @@ import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { listenToRoom, listenToPlayers, updateRoom, updatePlayer, type Room, type RoomPlayer } from "@/lib/firestore";
 import type { TaskType, Question } from "./AssociationsGame";
 import { SettingsButton } from "@/components/SettingsButton";
+import { isDevModeActive } from "@/lib/dev-logic";
 
 // Simple seeded PRNG
 function mulberry32(a: number) {
@@ -41,6 +42,7 @@ export default function AssociationsRace() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [showDevAnswer, setShowDevAnswer] = useState(false);
 
   // Re-sync and build questions when room starts
   useEffect(() => {
@@ -202,6 +204,15 @@ export default function AssociationsRace() {
 
   if (!currentQuestion) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
 
+  const handleDoubleClick = () => {
+    if (isDevModeActive(firebaseUser?.displayName || firebaseUser?.uid)) {
+      // Wait, firebase profile doesn't map username to displayName in this app? 
+      // In associations race it gets it from currentPlayer.
+      setShowDevAnswer(true);
+      setTimeout(() => setShowDevAnswer(false), 2000);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <header className="p-4 border-b border-border flex items-center justify-between bg-card z-10 relative">
@@ -223,7 +234,17 @@ export default function AssociationsRace() {
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col relative overflow-hidden">
+      <main className="flex-1 flex flex-col relative overflow-hidden" onDoubleClick={() => {
+        if (currentPlayer && isDevModeActive(currentPlayer.username)) {
+          setShowDevAnswer(true);
+          setTimeout(() => setShowDevAnswer(false), 2000);
+        }
+      }}>
+        {showDevAnswer && currentQuestion && (
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-black/90 text-white px-8 py-4 rounded-xl z-50 text-4xl font-bold tracking-widest pointer-events-none">
+            {currentQuestion.country.name}
+          </div>
+        )}
         <AssociationsUI 
           question={currentQuestion}
           onCorrect={handleCorrect}

@@ -5,6 +5,8 @@ import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { updateUsername, checkUsernameExists } from "@/lib/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/lib/theme-context";
+import { Switch } from "@/components/ui/switch";
+import { Bug } from "lucide-react";
 
 interface Props {
   onClose: () => void;
@@ -17,6 +19,13 @@ export function SettingsModal({ onClose }: Props) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { theme, setTheme } = useTheme();
+  
+  const [devModeEnabled, setDevModeEnabled] = useState(() => localStorage.getItem("geoDraftsDevMode") === "true");
+
+  function toggleDevMode(checked: boolean) {
+    setDevModeEnabled(checked);
+    localStorage.setItem("geoDraftsDevMode", String(checked));
+  }
 
   async function handleUpdateUsername() {
     if (!firebaseUser || !newUsername.trim()) return;
@@ -167,6 +176,21 @@ export function SettingsModal({ onClose }: Props) {
                   This name will be visible to other players on the leaderboard.
                 </p>
               </div>
+
+              {profile?.username === "DevTest" && (
+                <div className="pt-5 border-t border-border flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Bug className="w-4 h-4 text-primary" />
+                    <label className="text-sm font-semibold text-card-foreground">
+                      Developer Mode
+                    </label>
+                  </div>
+                  <Switch 
+                    checked={devModeEnabled} 
+                    onCheckedChange={toggleDevMode} 
+                  />
+                </div>
+              )}
 
               <div className="pt-5 border-t border-border">
                 <button

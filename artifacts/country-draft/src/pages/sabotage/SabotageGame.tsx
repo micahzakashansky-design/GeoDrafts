@@ -14,6 +14,7 @@ import { Home, Globe as GlobeIcon, Users, UserX, Skull, Bomb, Target, ShieldAler
 import { Logo } from "../../components/Logo";
 import { SidebarRoster } from "./SidebarRoster";
 import { SettingsButton } from "@/components/SettingsButton";
+import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
 
 export default function SabotageGame() {
   const [, navigate] = useLocation();
@@ -65,7 +66,16 @@ export default function SabotageGame() {
        // We need to pick a sabotage choice for the opponent
        // In a real implementation we'd use the seeded pool, but for now just pick 2
        const pool = [...state.pool];
-       const c1 = pool.pop(); const c2 = pool.pop();
+       let c1, c2;
+       
+       if (isDevModeActive(me.username)) {
+           // Provide max stat options for dev mode
+           c1 = drawDevCountry(pool, {});
+           c2 = drawDevCountry(pool, {});
+       } else {
+           c1 = pool.pop(); c2 = pool.pop();
+       }
+       
        if (c1 && c2) {
            setState(prev => ({ ...prev, pool, selectionOptions: [c1, c2] }));
        }
