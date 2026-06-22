@@ -8,6 +8,7 @@ import { AuthProvider } from "@/lib/use-firebase-auth";
 import NotFound from "@/pages/not-found";
 import NormalGame from "@/pages/normal/NormalGame";
 import DoubleDraftGame from "@/pages/double/DoubleDraftGame";
+import DoubleDraftMultiplayer from "@/pages/double/DoubleDraftMultiplayer";
 import GuessGame from "@/pages/guess/GuessGame";
 import DailyGame from "@/pages/daily/DailyGame";
 import PartyGame from "@/pages/party/PartyGame";
@@ -17,6 +18,7 @@ import Leaderboard from "@/pages/Leaderboard";
 import About from "@/pages/About";
 import { AssociationsSetup } from "@/pages/associations/AssociationsSetup";
 import AssociationsGame from "@/pages/associations/AssociationsGame";
+import AssociationsRace from "@/pages/associations/AssociationsRace";
 
 const queryClient = new QueryClient();
 
@@ -29,9 +31,11 @@ function Router() {
       <Route path="/game/guess" component={GuessGame} />
       <Route path="/game/daily" component={DailyGame} />
       <Route path="/game/party" component={PartyGame} />
+      <Route path="/game/double_draft" component={DoubleDraftMultiplayer} />
       <Route path="/game/sabotage" component={SabotageGame} />
       <Route path="/game/associations/setup" component={AssociationsSetup} />
       <Route path="/game/associations" component={AssociationsGame} />
+      <Route path="/game/associations_race" component={AssociationsRace} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/about" component={About} />
       <Route component={NotFound} />

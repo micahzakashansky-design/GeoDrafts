@@ -25,7 +25,7 @@ export type LeaderboardEntry = {
 };
 
 export type RoomStatus = "waiting" | "playing" | "finished";
-export type RoomMode = "sabotage" | "party";
+export type RoomMode = "sabotage" | "party" | "associations_race" | "double_draft";
 
 export type Room = {
   code: string;
@@ -36,6 +36,7 @@ export type Room = {
   currentRound: number;
   poolSeed: number;
   createdAt: Timestamp | null;
+  associationsSettings?: any;
 };
 
 export type RoomPlayer = {
@@ -46,6 +47,7 @@ export type RoomPlayer = {
   finishedRound: boolean;
   sabotageChoice: string | null;
   sabotageOptions: string[] | null;
+  completionTime?: number;
 };
 
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
@@ -185,7 +187,8 @@ export async function createRoom(
   hostUid: string,
   hostUsername: string,
   mode: RoomMode,
-  difficulty: "easy" | "hard"
+  difficulty: "easy" | "hard",
+  associationsSettings?: any
 ): Promise<string> {
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
   const room: Room = {
@@ -197,6 +200,7 @@ export async function createRoom(
     currentRound: 0,
     poolSeed: Math.floor(Math.random() * 1000000),
     createdAt: null,
+    associationsSettings: associationsSettings || null,
   };
 
   const roomRef = doc(firestore, "rooms", code);
@@ -211,6 +215,7 @@ export async function createRoom(
     finishedRound: false,
     sabotageChoice: null,
     sabotageOptions: null,
+    completionTime: undefined,
   };
   await setDoc(playerRef, player);
 
@@ -237,6 +242,7 @@ export async function joinRoom(code: string, uid: string, username: string): Pro
     finishedRound: false,
     sabotageChoice: null,
     sabotageOptions: null,
+    completionTime: undefined,
   };
   await setDoc(playerRef, player);
   return room;
