@@ -66,7 +66,10 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
 }
 
 export async function updateUsername(uid: string, username: string): Promise<void> {
-  await updateDoc(doc(firestore, "users", uid), { username });
+  await updateDoc(doc(firestore, "users", uid), { 
+    username,
+    usernameLower: username.toLowerCase()
+  });
 }
 
 export async function unlockAchievements(uid: string, achievements: string[]): Promise<void> {
@@ -78,20 +81,29 @@ export async function unlockAchievements(uid: string, achievements: string[]): P
 }
 
 export async function checkUsernameExists(username: string): Promise<boolean> {
-  const q = query(collection(firestore, "users"), where("username", "==", username), limit(1));
-  const snap = await getDocs(q);
-  return !snap.empty;
+  const usernameLower = username.toLowerCase();
+  
+  // Check against the lowercase field
+  const qLower = query(collection(firestore, "users"), where("usernameLower", "==", usernameLower), limit(1));
+  const snapLower = await getDocs(qLower);
+  if (!snapLower.empty) return true;
+
+  // Fallback for older profiles that might not have usernameLower
+  const qExact = query(collection(firestore, "users"), where("username", "==", username), limit(1));
+  const snapExact = await getDocs(qExact);
+  return !snapExact.empty;
 }
 
 export async function createUserProfile(uid: string, username: string): Promise<UserProfile> {
   const profile = {
     username,
+    usernameLower: username.toLowerCase(),
     createdAt: serverTimestamp(),
     bestScore: 0,
     totalGames: 0,
   };
   await setDoc(doc(firestore, "users", uid), profile);
-  return { uid, ...profile, createdAt: null };
+  return { uid, ...profile, createdAt: null } as any;
 }
 
 
