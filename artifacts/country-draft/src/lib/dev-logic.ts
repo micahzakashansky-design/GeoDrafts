@@ -11,6 +11,11 @@ export const DEV_CATEGORY_MAX_SCORES: Record<Category, number> = {
   Healthcare: 10,
   Culture: 10,
   Climate: 10,
+  History: 10,
+  Tourism: 10,
+  Location: 10,
+  Size: 10,
+  Population: 10,
 };
 
 export function isDevModeActive(username: string | undefined | null): boolean {

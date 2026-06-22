@@ -175,7 +175,7 @@ export default function NormalGame() {
         </div>
       </main>
       {showSubmitDialog && !isDevModeActive(profile?.username) && (
-        <SubmitDialog score={finalScore} mode={state.isHardMode ? "hard" : "normal"} roster={state.roster} guesses={[]} mysteryCountry={undefined} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />
+        <SubmitDialog score={finalScore} mode={state.isHardMode ? "hard" : "normal"} roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />
       )}
     </div>
   );

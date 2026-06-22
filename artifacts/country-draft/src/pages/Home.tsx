@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
-import { Globe, Trophy, Play, Users, MapPin, Zap, Crown, User, Brain, HelpCircle, CheckCircle2, ChevronRight, BookOpen, ShieldAlert, ShieldPlus, CalendarDays, X, Moon, Sun, Swords, PartyPopper, ArrowLeftRight, Gamepad2, Search, Star, Calculator, Settings, LogIn, Loader2, Shield, Target } from "lucide-react";
+import { Globe, Trophy, Play, Users, MapPin, Zap, Crown, User, Brain, HelpCircle, CheckCircle2, ChevronRight, BookOpen, ShieldAlert, ShieldPlus, CalendarDays, X, Moon, Sun, Swords, PartyPopper, ArrowLeftRight, Gamepad2, Search, Star, Calculator, Settings, LogIn, Loader2, Shield, Target, Medal } from "lucide-react";
 import { useTheme } from "../lib/theme-context";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
 import { checkDailySubmitted, getDailyState, createRoom, joinRoom, getTopScores } from "../lib/firestore";

@@ -248,6 +248,7 @@ export default function AssociationsRace() {
         <AssociationsUI 
           question={currentQuestion}
           onCorrect={handleCorrect}
+          onWrong={() => {}}
           onSkip={handleSkip}
           validIsos={validIsos}
           key={currentIndex} 

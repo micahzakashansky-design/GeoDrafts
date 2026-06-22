@@ -40,7 +40,7 @@ export default function DoubleDraftMultiplayer() {
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
       dailyDate: "", leaderboardSubmitted: false, mode: "double", isHardMode,
-      roomCode: roomCode, poolSeed: 0
+      roomCode: roomCode, poolSeed: 0, categoryTimes: {}, currentTurnStartTime: Date.now()
     };
   });
 
@@ -76,7 +76,7 @@ export default function DoubleDraftMultiplayer() {
     return CATEGORIES.reduce((sum, cat) => {
       const country = state.roster[cat]; if (!country) return sum;
       if (BONUS_CATEGORIES.includes(cat)) return sum;
-      const key = getCategoryKey(cat); const score = country.stats[key].score;
+      const key = getCategoryKey(cat); const score = country.stats[key]?.score || 0;
       return sum + score;
     }, 0);
   }, [state.roster]);
@@ -126,7 +126,7 @@ export default function DoubleDraftMultiplayer() {
         const baseScore = CATEGORIES.reduce((sum, cat) => {
           const country = newRoster[cat]; if (!country) return sum;
           if (BONUS_CATEGORIES.includes(cat)) return sum;
-          const key = getCategoryKey(cat); return sum + country.stats[key].score;
+          const key = getCategoryKey(cat); return sum + (country.stats[key]?.score || 0);
         }, 0);
         const bonusScore = computeSizePopBonus(newRoster);
         const finalScore = baseScore + bonusScore;
