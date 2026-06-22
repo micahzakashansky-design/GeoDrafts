@@ -1,22 +1,24 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { RATINGS, ARCHETYPES, BONUS_PATHS } from "@/lib/achievements";
+import { RATINGS, ARCHETYPES, BONUS_PATHS, ACCOUNT_STATS } from "@/lib/achievements";
 import { AchievementsModal } from "./AchievementsModal";
 import { UserProfile } from "@/lib/firestore";
-import { Award, Star, BookOpen, Crown } from "lucide-react";
+import { Award, Star, BookOpen, Crown, Trophy } from "lucide-react";
 
 export function AchievementsCard({ profile }: { profile: UserProfile | null }) {
-  const [modalType, setModalType] = useState<"ratings" | "archetypes" | "bonusPaths" | null>(null);
+  const [modalType, setModalType] = useState<"ratings" | "archetypes" | "bonusPaths" | "accountStats" | null>(null);
 
   const unlocked = profile?.unlockedAchievements || [];
 
   const ratingsUnlocked = RATINGS.filter(r => unlocked.includes(r.name)).length;
   const archetypesUnlocked = ARCHETYPES.filter(a => unlocked.includes(a.name)).length;
   const bonusUnlocked = BONUS_PATHS.filter(b => unlocked.includes(b.name)).length;
+  const accountStatsUnlocked = ACCOUNT_STATS.filter(s => unlocked.includes(s.name)).length;
 
   const totalRatings = RATINGS.length;
   const totalArchetypes = ARCHETYPES.length;
   const totalBonus = BONUS_PATHS.length;
+  const totalAccountStats = ACCOUNT_STATS.length;
 
   const getRingStyle = (unlocked: number, total: number, colorClass: string) => {
     const percentage = (unlocked / total) * 100;
@@ -35,7 +37,15 @@ export function AchievementsCard({ profile }: { profile: UserProfile | null }) {
           <h2 className="text-2xl font-black tracking-tight text-card-foreground">Your Achievements</h2>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <RingItem 
+            title="Account Stats" 
+            icon={<Trophy className="w-4 h-4 text-purple-500" />}
+            unlocked={accountStatsUnlocked} 
+            total={totalAccountStats} 
+            colorClass="text-purple-500"
+            onClick={() => setModalType("accountStats")}
+          />
           <RingItem 
             title="Nation Ratings" 
             icon={<Star className="w-4 h-4 text-yellow-500" />}
@@ -82,6 +92,13 @@ export function AchievementsCard({ profile }: { profile: UserProfile | null }) {
         onClose={() => setModalType(null)}
         title="Bonus Paths"
         achievements={BONUS_PATHS}
+        unlockedNames={unlocked}
+      />
+      <AchievementsModal
+        isOpen={modalType === "accountStats"}
+        onClose={() => setModalType(null)}
+        title="Account Stats"
+        achievements={ACCOUNT_STATS}
         unlockedNames={unlocked}
       />
     </>

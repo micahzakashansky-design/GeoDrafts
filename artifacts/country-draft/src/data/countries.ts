@@ -8211,6 +8211,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Fiji",
     isoNumeric: "242",
+    coordinates: [178.57, -17.32],
     aliases: [],
     capitalAliases: [],
     flag: "🇫🇯",
@@ -8243,6 +8244,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Western Sahara",
     isoNumeric: "732",
+    coordinates: [-12.19, 24.28],
     aliases: [],
     capitalAliases: [],
     flag: "🇪🇭",
@@ -8275,6 +8277,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Papua New Guinea",
     isoNumeric: "598",
+    coordinates: [145.31, -6.46],
     aliases: [],
     capitalAliases: [],
     flag: "🇵🇬",
@@ -8307,6 +8310,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "DR Congo",
     isoNumeric: "180",
+    coordinates: [23.58, -2.84],
     aliases: [],
     capitalAliases: [],
     flag: "🇨🇩",
@@ -8339,6 +8343,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Somalia",
     isoNumeric: "706",
+    coordinates: [45.7, 4.74],
     aliases: [],
     capitalAliases: [],
     flag: "🇸🇴",
@@ -8371,6 +8376,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Sudan",
     isoNumeric: "729",
+    coordinates: [29.83, 15.97],
     aliases: [],
     capitalAliases: [],
     flag: "🇸🇩",
@@ -8403,6 +8409,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Chad",
     isoNumeric: "148",
+    coordinates: [18.57, 15.28],
     aliases: [],
     capitalAliases: [],
     flag: "🇹🇩",
@@ -8435,6 +8442,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Haiti",
     isoNumeric: "332",
+    coordinates: [-72.66, 18.9],
     aliases: [],
     capitalAliases: [],
     flag: "🇭🇹",
@@ -8467,6 +8475,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Bahamas",
     isoNumeric: "044",
+    coordinates: [-77.93, 25.51],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇸",
@@ -8499,6 +8508,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Falkland Islands",
     isoNumeric: "238",
+    coordinates: [-59.42, -51.72],
     aliases: [],
     capitalAliases: [],
     flag: "🇫🇰",
@@ -8531,6 +8541,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Greenland",
     isoNumeric: "304",
+    coordinates: [-41.96, 73.15],
     aliases: [],
     capitalAliases: [],
     flag: "🇬🇱",
@@ -8563,6 +8574,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Timor-Leste",
     isoNumeric: "626",
+    coordinates: [125.97, -8.77],
     aliases: [],
     capitalAliases: [],
     flag: "🇹🇱",
@@ -8595,6 +8607,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Lesotho",
     isoNumeric: "426",
+    coordinates: [28.17, -29.62],
     aliases: [],
     capitalAliases: [],
     flag: "🇱🇸",
@@ -8627,6 +8640,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Nicaragua",
     isoNumeric: "558",
+    coordinates: [-85.02, 12.85],
     aliases: [],
     capitalAliases: [],
     flag: "🇳🇮",
@@ -8659,6 +8673,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Belize",
     isoNumeric: "084",
+    coordinates: [-88.7, 17.19],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇿",
@@ -8691,6 +8706,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Venezuela",
     isoNumeric: "862",
+    coordinates: [-66.15, 7.16],
     aliases: [],
     capitalAliases: [],
     flag: "🇻🇪",
@@ -8723,6 +8739,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Guyana",
     isoNumeric: "328",
+    coordinates: [-58.97, 4.79],
     aliases: [],
     capitalAliases: [],
     flag: "🇬🇾",
@@ -8755,6 +8772,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Suriname",
     isoNumeric: "740",
+    coordinates: [-55.91, 4.12],
     aliases: [],
     capitalAliases: [],
     flag: "🇸🇷",
@@ -8787,6 +8805,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Puerto Rico",
     isoNumeric: "630",
+    coordinates: [-66.48, 18.24],
     aliases: [],
     capitalAliases: [],
     flag: "🇵🇷",
@@ -8819,6 +8838,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Zimbabwe",
     isoNumeric: "716",
+    coordinates: [29.79, -18.9],
     aliases: [],
     capitalAliases: [],
     flag: "🇿🇼",
@@ -8851,6 +8871,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Botswana",
     isoNumeric: "072",
+    coordinates: [23.78, -22.08],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇼",
@@ -8883,6 +8904,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Namibia",
     isoNumeric: "516",
+    coordinates: [17.14, -22.04],
     aliases: [],
     capitalAliases: [],
     flag: "🇳🇦",
@@ -8915,6 +8937,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Mali",
     isoNumeric: "466",
+    coordinates: [-3.59, 17.24],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇱",
@@ -8947,6 +8970,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Mauritania",
     isoNumeric: "478",
+    coordinates: [-10.35, 20.18],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇷",
@@ -8979,6 +9003,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Benin",
     isoNumeric: "204",
+    coordinates: [2.34, 9.64],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇯",
@@ -9011,6 +9036,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Niger",
     isoNumeric: "562",
+    coordinates: [9.27, 17.34],
     aliases: [],
     capitalAliases: [],
     flag: "🇳🇪",
@@ -9043,6 +9069,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Cameroon",
     isoNumeric: "120",
+    coordinates: [12.61, 5.65],
     aliases: [],
     capitalAliases: [],
     flag: "🇨🇲",
@@ -9075,6 +9102,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Togo",
     isoNumeric: "768",
+    coordinates: [1, 8.43],
     aliases: [],
     capitalAliases: [],
     flag: "🇹🇬",
@@ -9107,6 +9135,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Guinea",
     isoNumeric: "324",
+    coordinates: [-11.06, 10.45],
     aliases: [],
     capitalAliases: [],
     flag: "🇬🇳",
@@ -9139,6 +9168,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Guinea-Bissau",
     isoNumeric: "624",
+    coordinates: [-15.11, 12.02],
     aliases: [],
     capitalAliases: [],
     flag: "🇬🇼",
@@ -9171,6 +9201,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Liberia",
     isoNumeric: "430",
+    coordinates: [-9.41, 6.43],
     aliases: [],
     capitalAliases: [],
     flag: "🇱🇷",
@@ -9203,6 +9234,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Sierra Leone",
     isoNumeric: "694",
+    coordinates: [-11.8, 8.53],
     aliases: [],
     capitalAliases: [],
     flag: "🇸🇱",
@@ -9235,6 +9267,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Burkina Faso",
     isoNumeric: "854",
+    coordinates: [-1.78, 12.31],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇫",
@@ -9267,6 +9300,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Central African Republic",
     isoNumeric: "140",
+    coordinates: [20.37, 6.55],
     aliases: [],
     capitalAliases: [],
     flag: "🇨🇫",
@@ -9299,6 +9333,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Congo",
     isoNumeric: "178",
+    coordinates: [15.14, -0.84],
     aliases: [],
     capitalAliases: [],
     flag: "🇨🇬",
@@ -9331,6 +9366,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Gabon",
     isoNumeric: "266",
+    coordinates: [11.69, -0.65],
     aliases: [],
     capitalAliases: [],
     flag: "🇬🇦",
@@ -9363,6 +9399,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Equatorial Guinea",
     isoNumeric: "226",
+    coordinates: [10.37, 1.65],
     aliases: [],
     capitalAliases: [],
     flag: "🇬🇶",
@@ -9395,6 +9432,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Zambia",
     isoNumeric: "894",
+    coordinates: [27.76, -13.39],
     aliases: [],
     capitalAliases: [],
     flag: "🇿🇲",
@@ -9427,6 +9465,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Malawi",
     isoNumeric: "454",
+    coordinates: [34.19, -13.16],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇼",
@@ -9459,6 +9498,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Mozambique",
     isoNumeric: "508",
+    coordinates: [35.54, -17.15],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇿",
@@ -9491,6 +9531,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Eswatini",
     isoNumeric: "748",
+    coordinates: [31.4, -26.49],
     aliases: [],
     capitalAliases: [],
     flag: "🇸🇿",
@@ -9523,6 +9564,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Angola",
     isoNumeric: "024",
+    coordinates: [17.47, -12.23],
     aliases: [],
     capitalAliases: [],
     flag: "🇦🇴",
@@ -9555,6 +9597,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Burundi",
     isoNumeric: "108",
+    coordinates: [29.91, -3.38],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇮",
@@ -9587,6 +9630,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Madagascar",
     isoNumeric: "450",
+    coordinates: [46.73, -19.3],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇬",
@@ -9619,6 +9663,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Palestine",
     isoNumeric: "275",
+    coordinates: [35.27, 31.94],
     aliases: [],
     capitalAliases: [],
     flag: "🇵🇸",
@@ -9651,6 +9696,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Gambia",
     isoNumeric: "270",
+    coordinates: [-15.43, 13.48],
     aliases: [],
     capitalAliases: [],
     flag: "🇬🇲",
@@ -9683,6 +9729,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Iraq",
     isoNumeric: "368",
+    coordinates: [43.79, 33.01],
     aliases: [],
     capitalAliases: [],
     flag: "🇮🇶",
@@ -9715,6 +9762,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Vanuatu",
     isoNumeric: "548",
+    coordinates: [167.07, -15.54],
     aliases: [],
     capitalAliases: [],
     flag: "🇻🇺",
@@ -9747,6 +9795,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Cambodia",
     isoNumeric: "116",
+    coordinates: [104.87, 12.68],
     aliases: [],
     capitalAliases: [],
     flag: "🇰🇭",
@@ -9779,6 +9828,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Laos",
     isoNumeric: "418",
+    coordinates: [103.79, 18.43],
     aliases: [],
     capitalAliases: [],
     flag: "🇱🇦",
@@ -9811,6 +9861,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Myanmar",
     isoNumeric: "104",
+    coordinates: [96.51, 20.94],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇲",
@@ -9843,6 +9894,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "North Korea",
     isoNumeric: "408",
+    coordinates: [127.13, 40.13],
     aliases: [],
     capitalAliases: [],
     flag: "🇰🇵",
@@ -9875,6 +9927,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Mongolia",
     isoNumeric: "496",
+    coordinates: [103.02, 46.95],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇳",
@@ -9907,6 +9960,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Bhutan",
     isoNumeric: "064",
+    coordinates: [90.47, 27.43],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇹",
@@ -9939,6 +9993,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Nepal",
     isoNumeric: "524",
+    coordinates: [84.04, 28.25],
     aliases: [],
     capitalAliases: [],
     flag: "🇳🇵",
@@ -9971,6 +10026,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Afghanistan",
     isoNumeric: "004",
+    coordinates: [66, 33.84],
     aliases: [],
     capitalAliases: [],
     flag: "🇦🇫",
@@ -10003,6 +10059,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Tajikistan",
     isoNumeric: "762",
+    coordinates: [71.05, 38.59],
     aliases: [],
     capitalAliases: [],
     flag: "🇹🇯",
@@ -10035,6 +10092,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Kyrgyzstan",
     isoNumeric: "417",
+    coordinates: [74.59, 41.52],
     aliases: [],
     capitalAliases: [],
     flag: "🇰🇬",
@@ -10067,6 +10125,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Turkmenistan",
     isoNumeric: "795",
+    coordinates: [59.35, 39.1],
     aliases: [],
     capitalAliases: [],
     flag: "🇹🇲",
@@ -10099,6 +10158,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Syria",
     isoNumeric: "760",
+    coordinates: [38.52, 35.01],
     aliases: [],
     capitalAliases: [],
     flag: "🇸🇾",
@@ -10131,6 +10191,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Moldova",
     isoNumeric: "498",
+    coordinates: [28.42, 47.2],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇩",
@@ -10163,6 +10224,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Albania",
     isoNumeric: "008",
+    coordinates: [20.03, 41.13],
     aliases: [],
     capitalAliases: [],
     flag: "🇦🇱",
@@ -10195,6 +10257,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Luxembourg",
     isoNumeric: "442",
+    coordinates: [5.97, 49.76],
     aliases: [],
     capitalAliases: [],
     flag: "🇱🇺",
@@ -10227,6 +10290,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "New Caledonia",
     isoNumeric: "540",
+    coordinates: [165.53, -21.26],
     aliases: [],
     capitalAliases: [],
     flag: "🇳🇨",
@@ -10259,6 +10323,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Solomon Islands",
     isoNumeric: "090",
+    coordinates: [159.96, -8.85],
     aliases: [],
     capitalAliases: [],
     flag: "🇸🇧",
@@ -10291,6 +10356,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Brunei",
     isoNumeric: "096",
+    coordinates: [114.92, 4.69],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇳",
@@ -10323,6 +10389,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Eritrea",
     isoNumeric: "232",
+    coordinates: [38.69, 15.43],
     aliases: [],
     capitalAliases: [],
     flag: "🇪🇷",
@@ -10355,6 +10422,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Yemen",
     isoNumeric: "887",
+    coordinates: [47.52, 15.92],
     aliases: [],
     capitalAliases: [],
     flag: "🇾🇪",
@@ -10419,6 +10487,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Libya",
     isoNumeric: "434",
+    coordinates: [18.03, 26.99],
     aliases: [],
     capitalAliases: [],
     flag: "🇱🇾",
@@ -10451,6 +10520,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Ethiopia",
     isoNumeric: "231",
+    coordinates: [39.56, 8.65],
     aliases: [],
     capitalAliases: [],
     flag: "🇪🇹",
@@ -10483,6 +10553,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Djibouti",
     isoNumeric: "262",
+    coordinates: [42.5, 11.77],
     aliases: [],
     capitalAliases: [],
     flag: "🇩🇯",
@@ -10547,6 +10618,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Bosnia and Herzegovina",
     isoNumeric: "070",
+    coordinates: [17.82, 44.18],
     aliases: [],
     capitalAliases: [],
     flag: "🇧🇦",
@@ -10579,6 +10651,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "North Macedonia",
     isoNumeric: "807",
+    coordinates: [21.7, 41.61],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇰",
@@ -10611,6 +10684,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Montenegro",
     isoNumeric: "499",
+    coordinates: [19.29, 42.79],
     aliases: [],
     capitalAliases: [],
     flag: "🇲🇪",
@@ -10675,6 +10749,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "Trinidad and Tobago",
     isoNumeric: "780",
+    coordinates: [-61.33, 10.43],
     aliases: [],
     capitalAliases: [],
     flag: "🇹🇹",
@@ -10707,6 +10782,7 @@ export const ALL_COUNTRIES: Country[] = [
   {
     name: "South Sudan",
     isoNumeric: "728",
+    coordinates: [30.2, 7.29],
     aliases: [],
     capitalAliases: [],
     flag: "🇸🇸",

@@ -17,27 +17,76 @@ export function computeSizePopBonus(roster: Partial<Record<Category, Country>>):
   const pop = getRawPopulation(roster.Population.stats.population.description);
   const size = roster.Size.area || 100000;
   const rawDensity = pop / size;
-  const maxCap = size <= 2500 ? 20000 : 1500;
 
-  let techMult = 2.5;
-  if (rawDensity < 300) techMult = Math.max(1.0, 2.5 * (rawDensity / 300));
-  else if (rawDensity > maxCap) techMult = Math.max(1.0, 2.5 * (maxCap / rawDensity));
+  const sCountryPop = getRawPopulation(roster.Size.stats.population.description);
+  const s = sCountryPop / size;
+  
+  const pCountryArea = roster.Population.area || 100000;
+  const p = pop / pCountryArea;
 
-  let agriMult = 2.5;
-  if (rawDensity > 100) agriMult = Math.max(1.0, 2.5 * (100 / rawDensity));
+  const getScore = (cat: Category) => {
+    let statKey = cat.toLowerCase();
+    if (cat === "Natural Resources") statKey = "naturalResources";
+    if (cat === "International Relationships") statKey = "internationalRelationships";
+    
+    // @ts-ignore
+    const rawScore = roster[cat]?.stats[statKey]?.score || 5;
+    
+    // Climate, Location, and Tourism are already out of 10, so we don't scale them
+    if (cat === "Climate" || cat === "Location" || cat === "Tourism") {
+      return rawScore;
+    }
+    
+    // Everything else (out of 12) gets scaled down to 10
+    return rawScore * 10 / 12;
+  };
 
-  let extMult = 2.5;
-  if (rawDensity < 50) extMult = Math.max(1.0, 2.5 * (rawDensity / 50));
-  else if (rawDensity > 300) extMult = Math.max(1.0, 2.5 * (300 / rawDensity));
+  const techScore = getScore("Technology");
+  const climateScore = getScore("Climate");
+  const locationScore = getScore("Location");
+  const intlScore = getScore("International Relationships");
+  const eduScore = getScore("Education");
+  const healthScore = getScore("Healthcare");
+  const tourismScore = getScore("Tourism");
 
-  const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
-  const climateScore = roster.Climate?.stats.climate?.score || 0;
-  const techScore = roster.Technology?.stats.technology?.score || 0;
-  const agriBonus = (climateScore * 10 / 10) * agriMult;
-  const techBonus = (techScore * 10 / 12) * techMult;
-  const extBonus = (resourcesScore * 10 / 12) * extMult;
-
-  return Math.floor(Math.max(agriBonus, techBonus, extBonus));
+  if (rawDensity < 100) {
+    // Agriculture
+    const target = 40;
+    
+    let effectiveDensity = rawDensity;
+    if (Math.abs(rawDensity - target) <= 30) {
+      effectiveDensity = target;
+    } else if (rawDensity > target) {
+      effectiveDensity = rawDensity - 30;
+    } else {
+      effectiveDensity = rawDensity + 30;
+    }
+    
+    const synergy = Math.max(1.0, 2.5 - Math.abs(Math.log10(effectiveDensity / target)));
+    const avg = (climateScore + locationScore) / 2;
+    return Math.floor(avg * synergy);
+  } else if (rawDensity <= 1000) {
+    // Generalist
+    const diff = Math.max(0.0001, Math.abs(s - p));
+    const synergy = Math.min(2.5, 1 + (1 / diff));
+    const avg = (intlScore + eduScore + healthScore + climateScore + tourismScore) / 5;
+    return Math.floor(avg * synergy);
+  } else {
+    // Technology
+    const target = size < 36193 ? 20000 : 10000;
+    
+    let effectiveDensity = rawDensity;
+    if (Math.abs(rawDensity - target) <= 30) {
+      effectiveDensity = target;
+    } else if (rawDensity > target) {
+      effectiveDensity = rawDensity - 30;
+    } else {
+      effectiveDensity = rawDensity + 30;
+    }
+    
+    const synergy = Math.max(1.0, 2.5 - Math.abs(Math.log10(effectiveDensity / target)));
+    return Math.floor(techScore * synergy);
+  }
 }
 
 export function getBonusPath(roster: Partial<Record<Category, Country>>): string | null {
@@ -46,7 +95,6 @@ export function getBonusPath(roster: Partial<Record<Category, Country>>): string
   const pop = getRawPopulation(roster.Population.stats.population.description);
   const size = roster.Size.area || 100000;
   const rawDensity = pop / size;
-  const maxCap = size <= 2500 ? 20000 : 1500;
   
   const techScore = roster.Technology?.stats.technology?.score || 0;
   const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
@@ -55,7 +103,7 @@ export function getBonusPath(roster: Partial<Record<Category, Country>>): string
   const econScore = roster.Economy?.stats.economy?.score || 0;
   const eduScore = roster.Education?.stats.education?.score || 0;
 
-  // New bonus paths conditions
+  // New bonus paths conditions (overrides)
   if (rawDensity > 1000 && geoScore >= 8) return "Trade Hub";
   if (size > 2000000 && rawDensity < 5) return "Nomadic Steppe";
   if (eduScore >= 8 && techScore >= 8 && resourcesScore <= 3) return "Service Economy";
@@ -67,26 +115,10 @@ export function getBonusPath(roster: Partial<Record<Category, Country>>): string
   if (climateScore <= 4 && geoScore >= 8 && rawDensity < 20) return "Frozen Fortress";
   if (size > 1500000 && climateScore >= 7 && pop > 80000000) return "Agrarian Giant";
 
-  // Existing bonus paths
-  let techMult = 2.5;
-  if (rawDensity < 300) techMult = Math.max(1.0, 2.5 * (rawDensity / 300));
-  else if (rawDensity > maxCap) techMult = Math.max(1.0, 2.5 * (maxCap / rawDensity));
-
-  let agriMult = 2.5;
-  if (rawDensity > 100) agriMult = Math.max(1.0, 2.5 * (100 / rawDensity));
-
-  let extMult = 2.5;
-  if (rawDensity < 50) extMult = Math.max(1.0, 2.5 * (rawDensity / 50));
-  else if (rawDensity > 300) extMult = Math.max(1.0, 2.5 * (300 / rawDensity));
-
-  const agriBonus = (climateScore * 10 / 10) * agriMult;
-  const techBonus = (techScore * 10 / 12) * techMult;
-  const extBonus = (resourcesScore * 10 / 12) * extMult;
-
-  const maxBonus = Math.max(agriBonus, techBonus, extBonus);
-  if (maxBonus === agriBonus) return "Agricultural society";
-  if (maxBonus === techBonus) return "Tech Megacity";
-  return "Resource Extraction";
+  // Density Synergy Archetypes
+  if (rawDensity < 100) return "Agricultural society";
+  if (rawDensity <= 1000) return "Generalist";
+  return "Tech Megacity";
 }
 
 export function getCountryArchetype(roster: Partial<Record<Category, Country>>): string {

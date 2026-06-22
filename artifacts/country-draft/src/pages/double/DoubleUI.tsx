@@ -475,7 +475,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
 }
 
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
-import { unlockAchievements } from "@/lib/firestore";
+import { unlockAchievements, processGameEndStats } from "@/lib/firestore";
 
 export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players, wildcardOptions, wildcardTargetCategory, onResolveWildcard , categoryTimes}: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[]; wildcardOptions?: Country[] | null; wildcardTargetCategory?: Category | null; onResolveWildcard?: (c: Country) => void;  categoryTimes?: Partial<Record<Category, number>>; }) {
   const rating = getRatingData(totalScore); const archetype = getArchetypeData(roster); const bPath = getBonusPathData(roster); const isGuest = room && gameMode === "sabotage" && players;

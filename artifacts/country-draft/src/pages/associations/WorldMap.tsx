@@ -50,7 +50,6 @@ export function WorldMap({
           zoom={zoomToCountry ? 4 : 1} 
           center={zoomToCountry?.coordinates || [0, 0]}
           maxZoom={8}
-          translateExtent={[[0, 0], [800, 400]]}
         >
           <Geographies geography={geoUrl}>
             {({ geographies }) =>

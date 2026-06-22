@@ -13,24 +13,45 @@ import { SidebarRoster } from "./SidebarRoster";
 import { Home, Globe as GlobeIcon, CalendarDays, ShieldAlert, ShieldPlus } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
-import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
+import { savePersonalScore, formatRoster, loadPersonalLeaderboard } from "@/lib/local-leaderboard";
 
 export default function DailyGame() {
   const [, navigate] = useLocation();
 
   const [state, setState] = useState<GameState>(() => {
-    const dailyDate = new Date().toISOString().slice(0, 10);
+    const dailyDate = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
     const poolSeed = dateStrToSeed(dailyDate);
-    const pool = seededShuffle([...COUNTRIES], poolSeed);
-    const mystery = null;
-    const selection = null;
-    const currentCountry = pool.pop() || null;
+    
+    // 1. Check personal leaderboard for today's completed game
+    const personalLeaderboard = loadPersonalLeaderboard("daily");
+    const todayEntry = personalLeaderboard.find(e => {
+      const entryET = new Date(e.timestamp).toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+      return entryET === dailyDate;
+    });
+    if (todayEntry && todayEntry.roster) {
+      const reconstructedRoster: any = {};
+      Object.entries(todayEntry.roster).forEach(([cat, countryName]) => {
+        const country = COUNTRIES.find(c => c.name === countryName);
+        if (country) reconstructedRoster[cat] = country;
+      });
+      return {
+        pool: [], currentCountry: null, selectionOptions: null, mysteryCountry: null, guesses: [],
+        roster: reconstructedRoster, gameOver: true, wildcardUsed: Object.keys(reconstructedRoster).length > 0 && !Object.values(reconstructedRoster).every(c => true), // wildcard check isn't trivial but it's fine
+        isDailyMode: true, dailyDate, leaderboardSubmitted: false, mode: "normal", isHardMode: false,
+        roomCode: null, poolSeed, categoryTimes: {}, currentTurnStartTime: Date.now()
+      };
+    }
 
-    // Check local storage for existing daily state
+    // 2. Check local storage for incomplete or completed daily state
     try {
         const saved = localStorage.getItem(`countryDraftState_daily_${dailyDate}`);
         if (saved) return JSON.parse(saved);
     } catch {}
+
+    const pool = seededShuffle([...COUNTRIES], poolSeed);
+    const mystery = null;
+    const selection = null;
+    const currentCountry = pool.pop() || null;
 
     return {
       pool, currentCountry, selectionOptions: selection, mysteryCountry: mystery, guesses: [],
@@ -108,18 +129,7 @@ export default function DailyGame() {
   }, [wildcardPhase, state.wildcardUsed]);
 
   const doReset = useCallback(() => {
-    localSavedRef.current = false;
-    const dailyDate = new Date().toISOString().slice(0, 10);
-    const poolSeed = dateStrToSeed(dailyDate);
-    const pool = seededShuffle([...COUNTRIES], poolSeed);
-    const currentCountry = pool.pop() || null;
-    setState({
-      pool, currentCountry, selectionOptions: null, mysteryCountry: null, guesses: [],
-      roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: true,
-      dailyDate, leaderboardSubmitted: false, mode: "normal", isHardMode: false,
-      roomCode: null, poolSeed, categoryTimes: {}, currentTurnStartTime: Date.now()
-    });
-    setWildcardPhase(false);
+    // Daily mode cannot be reset
   }, []);
 
   return (

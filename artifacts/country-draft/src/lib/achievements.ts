@@ -1,8 +1,28 @@
 import React from "react";
 import { 
   Globe, Heart, Laptop, Shield, Swords, TrendingUp, Building, Star, Leaf, Mountain,
-  Crown, Sun, Zap, Anchor, Briefcase, Stethoscope, BookOpen, Skull, Plane, Scale
+  Crown, Sun, Zap, Anchor, Briefcase, Stethoscope, BookOpen, Skull, Plane, Scale, Calendar, Trophy, FastForward, CheckCircle2
 } from "lucide-react";
+
+
+export const ACCOUNT_STATS = [
+  { id: "Draft Master", name: "Draft Master", color: "text-purple-400", desc: "Complete 100 games." },
+  { id: "Veteran Drafter", name: "Veteran Drafter", color: "text-purple-500", desc: "Complete 500 games." },
+  { id: "Addict", name: "Addict", color: "text-purple-600", desc: "Complete 1000 games." },
+  { id: "Superpower", name: "Superpower", color: "text-yellow-500", desc: "Score 165+ in Normal mode." },
+  { id: "God Tier", name: "God Tier", color: "text-yellow-400", desc: "Score 175+ in Normal mode." },
+  { id: "Double Threat", name: "Double Threat", color: "text-rose-500", desc: "Score 165+ in Double Draft." },
+  { id: "Geography Genius", name: "Geography Genius", color: "text-blue-400", desc: "Guess country on first try 10 times." },
+  { id: "Flawless Guesser", name: "Flawless Guesser", color: "text-blue-500", desc: "Guess country on first try 50 times." },
+  { id: "Speed Demon", name: "Speed Demon", color: "text-red-400", desc: "Complete a draft in under 2 minutes." },
+  { id: "Quick Thinker", name: "Quick Thinker", color: "text-red-500", desc: "Complete 10 drafts in under 2 minutes." },
+  { id: "Lightning Fast", name: "Lightning Fast", color: "text-red-600", desc: "Complete a draft in under 1 minute." },
+  { id: "World Traveler", name: "World Traveler", color: "text-emerald-400", desc: "Use 50+ different countries across games." },
+  { id: "Globetrotter", name: "Globetrotter", color: "text-emerald-500", desc: "Use 100+ different countries across games." },
+  { id: "Mr. Worldwide", name: "Mr. Worldwide", color: "text-emerald-600", desc: "Use 150+ different countries across games." },
+  { id: "Daily Streak", name: "Daily Streak", color: "text-orange-400", desc: "Complete 7 daily challenges in a row." },
+  { id: "Dedicated Player", name: "Dedicated Player", color: "text-orange-500", desc: "Complete 30 daily challenges in a row." }
+];
 
 export const RATINGS = [
   { id: "Global Hegemon", name: "Global Hegemon", color: "text-yellow-300", desc: "Absolute unipolar dominance." },
@@ -52,12 +72,31 @@ export const BONUS_PATHS = [
   { id: "Frozen Fortress", name: "Frozen Fortress", color: "text-cyan-200", desc: "Protected by ice and isolation." },
   { id: "Agrarian Giant", name: "Agrarian Giant", color: "text-lime-500", desc: "Feeding the world from vast plains." },
   { id: "Agricultural society", name: "Agricultural society", color: "text-yellow-500", desc: "Vast lands with sparse population." },
+  { id: "Generalist", name: "Generalist", color: "text-yellow-500", desc: "A perfectly balanced population distribution." },
   { id: "Resource Extraction", name: "Resource Extraction", color: "text-yellow-500", desc: "Massive nation built for resource extraction." },
   { id: "Tech Megacity", name: "Tech Megacity", color: "text-yellow-500", desc: "Dense population in a compact area." }
 ];
 
 export function getAchievementIcon(name: string, className: string = "w-5 h-5") {
   switch (name) {
+    
+    // Account Stats
+    case "Draft Master": return React.createElement(Trophy, { className: `${className} text-purple-400` });
+    case "Veteran Drafter": return React.createElement(Trophy, { className: `${className} text-purple-500` });
+    case "Addict": return React.createElement(Trophy, { className: `${className} text-purple-600` });
+    case "God Tier": return React.createElement(Crown, { className: `${className} text-yellow-400` });
+    case "Double Threat": return React.createElement(Swords, { className: `${className} text-rose-500` });
+    case "Geography Genius": return React.createElement(CheckCircle2, { className: `${className} text-blue-400` });
+    case "Flawless Guesser": return React.createElement(CheckCircle2, { className: `${className} text-blue-500` });
+    case "Speed Demon": return React.createElement(FastForward, { className: `${className} text-red-400` });
+    case "Quick Thinker": return React.createElement(Zap, { className: `${className} text-red-500` });
+    case "Lightning Fast": return React.createElement(Zap, { className: `${className} text-red-600` });
+    case "World Traveler": return React.createElement(Globe, { className: `${className} text-emerald-400` });
+    case "Globetrotter": return React.createElement(Globe, { className: `${className} text-emerald-500` });
+    case "Mr. Worldwide": return React.createElement(Globe, { className: `${className} text-emerald-600` });
+    case "Daily Streak": return React.createElement(Calendar, { className: `${className} text-orange-400` });
+    case "Dedicated Player": return React.createElement(Calendar, { className: `${className} text-orange-500` });
+
     // Ratings
     case "Global Hegemon": return React.createElement(Crown, { className: `${className} text-yellow-300` });
     case "Hyperpower": return React.createElement(Star, { className: `${className} text-yellow-400 fill-yellow-400` });
@@ -104,6 +143,7 @@ export function getAchievementIcon(name: string, className: string = "w-5 h-5") 
     case "Frozen Fortress": return React.createElement(Shield, { className: `${className} text-cyan-200` });
     case "Agrarian Giant": return React.createElement(Leaf, { className: `${className} text-lime-500` });
     case "Agricultural society": return React.createElement(Leaf, { className: `${className} text-yellow-500` });
+    case "Generalist": return React.createElement(Scale, { className: `${className} text-yellow-500` });
     case "Resource Extraction": return React.createElement(Mountain, { className: `${className} text-yellow-500` });
     case "Tech Megacity": return React.createElement(Laptop, { className: `${className} text-yellow-500` });
     

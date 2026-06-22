@@ -3,20 +3,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLocation } from "wouter";
 import {
   COUNTRIES, CATEGORIES, getCategoryKey, shuffleArray,
-  type Country, type Category,
+  type Country, type Category, extractBonusText,
 } from "@/data/countries";
 import {
   GuessPhase, GameState,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./GuessUI";
-import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown, ChevronRight, X, MapPin, Trophy, ShieldAlert, ShieldPlus } from "lucide-react";
+import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown, ChevronRight, X, MapPin, Trophy, ShieldAlert, ShieldPlus, ArrowDown } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore } from "@/lib/local-leaderboard";
 
 export default function GuessGame() {
   const [, navigate] = useLocation();
-  const [showStatsModal, setShowStatsModal] = useState(false);
+  const [statsModalCountry, setStatsModalCountry] = useState<Country | null>(null);
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
@@ -67,7 +67,7 @@ export default function GuessGame() {
     const isHardMode = state.isHardMode;
     let pool = shuffleArray([...COUNTRIES]);
     const mystery = pool.pop() || null;
-    setShowStatsModal(false);
+    setStatsModalCountry(null);
     setState({
       pool, currentCountry: null, selectionOptions: null, mysteryCountry: mystery, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
@@ -111,15 +111,18 @@ export default function GuessGame() {
                  {isWin && (
                     <div className="flex flex-col items-center justify-center my-4 p-4 rounded-xl bg-primary/10 border border-primary/20 w-fit mx-auto">
                       <span className="text-4xl md:text-6xl font-black text-primary">{Math.max(0, guessScore)} <span className="text-xl md:text-2xl text-primary/60 font-bold">pts</span></span>
-                      <div className="text-sm font-bold text-muted-foreground mb-4">Hints used: {state.hintsRevealed || 0}/4</div>
-                      <div className="text-sm text-muted-foreground">({state.guesses.length} guesses)</div>
+                      {(state.hintsRevealed || 0) > 0 && (
+                        <div className="text-sm font-bold text-muted-foreground mt-2 text-center">
+                          ({state.guesses.length} {state.guesses.length === 1 ? "guess" : "guesses"} + {state.hintsRevealed} {state.hintsRevealed === 1 ? "hint" : "hints"})
+                        </div>
+                      )}
                     </div>
                  )}
                </div>
 
                <div className="w-full max-w-md mx-auto mt-2 flex flex-col items-center">
                   <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-6">Your Guess Path:</h3>
-                  <div className="relative border-l-2 border-border/50 ml-4 md:ml-8 pl-8 md:pl-12 space-y-8">
+                  <div className="flex flex-col items-center space-y-3 w-full">
                      {state.guesses.map((g, idx) => {
                         const isLast = idx === state.guesses.length - 1;
                         const isCorrect = g.toLowerCase() === state.mysteryCountry?.name.toLowerCase();
@@ -131,26 +134,30 @@ export default function GuessGame() {
                                 className={`
                                   flex items-center justify-center text-center font-bold border shadow-sm relative group
                                   ${isLast && isCorrect 
-                                    ? "px-6 py-4 rounded-2xl bg-card border-2 border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)]" 
+                                    ? "min-w-[16rem] px-6 py-4 rounded-2xl bg-card border-2 border-green-500/50 shadow-[0_0_15px_rgba(34,197,94,0.2)]" 
                                     : "px-6 py-3 rounded-xl bg-muted border-border text-muted-foreground w-3/4"}
                                 `}
                               >
                                 <span className={isLast && isCorrect ? "text-foreground" : ""}>{g}</span>
-                                {isLast && isCorrect && (
-                                   <button 
-                                     onClick={() => setShowStatsModal(true)} 
-                                     className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 bg-green-500/10 hover:bg-green-500/30 rounded-full transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100"
-                                     title="View Country Stats"
-                                   >
-                                      <ChevronRight className="w-6 h-6 text-green-500" />
-                                   </button>
-                                )}
+                                {(() => {
+                                   const guessCountry = COUNTRIES.find(c => c.name.toLowerCase() === g.toLowerCase());
+                                   if (!guessCountry) return null;
+                                   const isWinBtn = isLast && isCorrect;
+                                   return (
+                                     <button 
+                                       onClick={() => setStatsModalCountry(guessCountry)} 
+                                       className={`absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 rounded-full transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus:opacity-100 ${isWinBtn ? 'bg-green-500/10 hover:bg-green-500/30' : 'bg-foreground/5 hover:bg-foreground/10'}`}
+                                       title="View Country Stats"
+                                     >
+                                        <ChevronRight className={`w-6 h-6 ${isWinBtn ? 'text-green-500' : 'text-muted-foreground'}`} />
+                                     </button>
+                                   );
+                                })()}
                               </motion.div>
                               
-                              {(state.hintsRevealed || 0) > 0 && isLast && (
-                                <div className="flex flex-col items-center gap-1 opacity-50">
-                                  <ChevronDown className="w-4 h-4 text-muted-foreground" />
-                                  <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">{state.hintsRevealed || 0} hints revealed</span>
+                              {!isLast && (
+                                <div className="text-muted-foreground opacity-30">
+                                  <ArrowDown className="w-5 h-5" />
                                 </div>
                               )}
                            </React.Fragment>
@@ -185,7 +192,7 @@ export default function GuessGame() {
       </main>
 
       <AnimatePresence>
-        {showStatsModal && state.mysteryCountry && (
+        {statsModalCountry && (
           <motion.div 
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm"
@@ -197,7 +204,7 @@ export default function GuessGame() {
               className="bg-card border border-border rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto relative"
             >
               <button 
-                onClick={() => setShowStatsModal(false)}
+                onClick={() => setStatsModalCountry(null)}
                 className="absolute top-4 right-4 p-2 rounded-full hover:bg-muted transition-colors"
               >
                 <X className="w-6 h-6 text-muted-foreground" />
@@ -205,28 +212,34 @@ export default function GuessGame() {
               
               <div className="p-8">
                 <div className="flex flex-col items-center text-center mb-8">
-                  <div className="text-8xl mb-4 drop-shadow-lg">{state.mysteryCountry.flag}</div>
+                  <div className="text-8xl mb-4 drop-shadow-lg">{statsModalCountry.flag}</div>
                   <div className="space-y-1">
-                    <h3 className="text-3xl font-sans font-bold text-foreground">{state.mysteryCountry.name}</h3>
-                    <p className="text-sm text-muted-foreground uppercase tracking-widest font-semibold flex items-center gap-1.5"><MapPin className="w-4 h-4" />{state.mysteryCountry.region}</p>
+                    <h3 className="text-3xl font-sans font-bold text-foreground">{statsModalCountry.name}</h3>
+                    <p className="text-sm text-muted-foreground uppercase tracking-widest font-semibold flex items-center gap-1.5"><MapPin className="w-4 h-4" />{statsModalCountry.region}</p>
                   </div>
                 </div>
 
                 <div className="mt-6 mb-8 px-5 py-4 bg-muted/50 rounded-2xl border border-border">
-                  <p className="text-muted-foreground leading-relaxed italic">"{state.mysteryCountry.knownFor}"</p>
+                  <p className="text-muted-foreground leading-relaxed italic">"{statsModalCountry.knownFor}"</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c)).map(cat => {
-                    const stat = state.mysteryCountry!.stats[getCategoryKey(cat)];
+                  {CATEGORIES.map(cat => {
+                    const stat = statsModalCountry!.stats[getCategoryKey(cat)];
+                    if (!stat) return null;
+                    const isBonus = cat === "Size" || cat === "Population";
                     return (
-                      <div key={cat} className="bg-muted/30 border border-border rounded-xl p-4">
+                      <div key={cat} className="bg-muted/30 border border-border rounded-xl p-4 flex flex-col">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="text-muted-foreground">{CATEGORY_ICONS[cat]}</span>
                           <span className="text-xs font-bold uppercase tracking-widest text-foreground/80">{cat}</span>
                         </div>
-                        <p className="text-sm text-muted-foreground">{stat.description}</p>
-                        <div className="mt-2 text-primary font-mono font-bold">{getPtsDisplay(stat.score ?? 0, cat)}</div>
+                        <p className="text-sm text-muted-foreground flex-1">{stat.description}</p>
+                        {stat.score !== undefined ? (
+                          <div className="mt-2 text-primary font-mono font-bold">{getPtsDisplay(stat.score, cat)}</div>
+                        ) : isBonus ? (
+                          <div className="mt-2 text-primary font-mono font-bold">{extractBonusText(stat.description, cat)}</div>
+                        ) : null}
                       </div>
                     );
                   })}
