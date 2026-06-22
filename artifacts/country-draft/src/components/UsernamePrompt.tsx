@@ -55,11 +55,11 @@ export function UsernamePrompt({ user, onComplete }: Props) {
         initial={{ scale: 0.9, y: 20 }}
         animate={{ scale: 1, y: 0 }}
         transition={{ type: "spring", stiffness: 300, damping: 24 }}
-        className="bg-card border border-border rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden"
+        className="bg-background border border-border rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden"
       >
         <div className="px-5 py-4 border-b border-border flex items-center gap-2">
           <Globe className="w-5 h-5 text-primary" />
-          <span className="font-serif text-lg font-bold text-foreground">
+          <span className="font-sans text-lg font-bold text-foreground">
             Choose a username
           </span>
         </div>
@@ -80,7 +80,7 @@ export function UsernamePrompt({ user, onComplete }: Props) {
               placeholder="e.g. DraftMaster42"
               maxLength={30}
               autoFocus
-              className="w-full px-3 py-2.5 rounded-lg border border-border bg-secondary/40 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+              className="w-full px-3 py-2.5 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
             />
             <p className="text-xs text-muted-foreground">
               Letters, numbers, underscores. 2–30 characters.
@@ -93,7 +93,7 @@ export function UsernamePrompt({ user, onComplete }: Props) {
             className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-semibold text-sm transition-colors ${
               !saving && username.trim().length >= 2
                 ? "bg-primary/20 text-primary border border-primary/40 hover:bg-primary/30"
-                : "bg-secondary text-muted-foreground border border-border cursor-not-allowed"
+                : "bg-foreground/10 text-muted-foreground border border-border cursor-not-allowed"
             }`}
           >
             <Check className="w-4 h-4" />

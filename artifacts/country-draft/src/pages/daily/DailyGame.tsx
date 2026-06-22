@@ -1,3 +1,4 @@
+import { computeSizePopBonus } from "@/lib/achievements-logic";
 import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import {
@@ -5,31 +6,52 @@ import {
   type Country, type Category,
 } from "@/data/countries";
 import {
-  CountryCard, GameOver, GameState, computeSizePopBonus, seededShuffle, dateStrToSeed,
+  CountryCard, GameOver, drawRosterPng, GameState, seededShuffle, dateStrToSeed,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./DailyUI";
 import { SidebarRoster } from "./SidebarRoster";
-import { Home, Globe as GlobeIcon, CalendarDays } from "lucide-react";
+import { Home, Globe as GlobeIcon, CalendarDays, ShieldAlert, ShieldPlus } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
-import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
+import { savePersonalScore, formatRoster, loadPersonalLeaderboard } from "@/lib/local-leaderboard";
 
 export default function DailyGame() {
   const [, navigate] = useLocation();
 
   const [state, setState] = useState<GameState>(() => {
-    const dailyDate = new Date().toISOString().slice(0, 10);
+    const dailyDate = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
     const poolSeed = dateStrToSeed(dailyDate);
-    const pool = seededShuffle([...COUNTRIES], poolSeed);
-    const mystery = null;
-    const selection = null;
-    const currentCountry = pool.pop() || null;
+    
+    // 1. Check personal leaderboard for today's completed game
+    const personalLeaderboard = loadPersonalLeaderboard("daily");
+    const todayEntry = personalLeaderboard.find(e => {
+      const entryET = new Date(e.timestamp).toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+      return entryET === dailyDate;
+    });
+    if (todayEntry && todayEntry.roster) {
+      const reconstructedRoster: any = {};
+      Object.entries(todayEntry.roster).forEach(([cat, countryName]) => {
+        const country = COUNTRIES.find(c => c.name === countryName);
+        if (country) reconstructedRoster[cat] = country;
+      });
+      return {
+        pool: [], currentCountry: null, selectionOptions: null, mysteryCountry: null, guesses: [],
+        roster: reconstructedRoster, gameOver: true, wildcardUsed: Object.keys(reconstructedRoster).length > 0 && !Object.values(reconstructedRoster).every(c => true), // wildcard check isn't trivial but it's fine
+        isDailyMode: true, dailyDate, leaderboardSubmitted: false, mode: "normal", isHardMode: false,
+        roomCode: null, poolSeed, categoryTimes: {}, currentTurnStartTime: Date.now()
+      };
+    }
 
-    // Check local storage for existing daily state
+    // 2. Check local storage for incomplete or completed daily state
     try {
         const saved = localStorage.getItem(`countryDraftState_daily_${dailyDate}`);
         if (saved) return JSON.parse(saved);
     } catch {}
+
+    const pool = seededShuffle([...COUNTRIES], poolSeed);
+    const mystery = null;
+    const selection = null;
+    const currentCountry = pool.pop() || null;
 
     return {
       pool, currentCountry, selectionOptions: selection, mysteryCountry: mystery, guesses: [],
@@ -53,8 +75,9 @@ export default function DailyGame() {
   const totalScore = useMemo(() => {
     return CATEGORIES.reduce((sum, cat) => {
       const country = state.roster[cat]; if (!country) return sum;
+      
       if (BONUS_CATEGORIES.includes(cat)) return sum;
-      const key = getCategoryKey(cat); const score = country.stats[key].score;
+      const key = getCategoryKey(cat); const score = country.stats[key].score ?? 0;
       return sum + score;
     }, 0);
   }, [state.roster]);
@@ -74,6 +97,8 @@ export default function DailyGame() {
     if (state.roster[category]) return;
     setState(prev => {
       if (!prev.currentCountry) return prev;
+      const timeTaken = Date.now() - (prev.currentTurnStartTime || Date.now());
+      const newCategoryTimes = { ...(prev.categoryTimes || {}), [category]: timeTaken };
       const newRoster = { ...prev.roster, [category]: prev.currentCountry };
       const isGameOver = CATEGORIES.every(c => newRoster[c]);
       const newPool = [...prev.pool];
@@ -81,7 +106,7 @@ export default function DailyGame() {
 
       return {
         ...prev, roster: newRoster, pool: newPool, currentCountry: nextCountry,
-        gameOver: isGameOver
+        gameOver: isGameOver, categoryTimes: newCategoryTimes, currentTurnStartTime: Date.now()
       };
     });
     setHoveredCategory(null);
@@ -104,36 +129,35 @@ export default function DailyGame() {
   }, [wildcardPhase, state.wildcardUsed]);
 
   const doReset = useCallback(() => {
-     localSavedRef.current = false;
-     navigate("/");
-  }, [navigate]);
+    // Daily mode cannot be reset
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
-      <header className="h-14 md:h-16 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 flex items-center justify-between z-20">
+      <header className="h-20 shrink-0 border-b border-border bg-card/50 backdrop-blur-md px-6 md:px-8 flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="font-serif text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+          <button onClick={() => navigate("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
-          <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:flex items-center gap-1.5">
-            <CalendarDays className="w-3.5 h-3.5" /> Daily Challenge
+          <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
+            <CalendarDays className="w-3.5 h-3.5" /> Daily Challenge {state.isHardMode ? <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> : <ShieldPlus className="w-3.5 h-3.5 text-emerald-400" />}
           </div>
         </div>
       </header>
 
       <main className="flex-1 flex overflow-hidden relative">
         {!state.gameOver && (
-          <div className="hidden md:flex w-80 bg-card/30 border-r border-border/50 flex-col overflow-y-auto">
+          <div className="hidden md:flex w-80 bg-card border-r border-border flex-col overflow-y-auto">
              <div className="p-5 space-y-6">
-                <SidebarRoster roster={state.roster} />
+                <SidebarRoster roster={state.roster} categoryTimes={state.categoryTimes} isHardMode={state.isHardMode} />
              </div>
           </div>
         )}
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={true} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="daily" leaderboardSubmitted={state.leaderboardSubmitted} />
+            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => drawRosterPng(state.roster, finalScore, bonus, state.isHardMode)} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={true} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="daily" leaderboardSubmitted={state.leaderboardSubmitted} />
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (

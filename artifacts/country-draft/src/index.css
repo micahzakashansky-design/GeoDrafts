@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
@@ -58,7 +58,6 @@
   --color-sidebar-ring: hsl(var(--sidebar-ring));
 
   --font-sans: var(--app-font-sans);
-  --font-serif: var(--app-font-serif);
   --font-mono: var(--app-font-mono);
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -74,32 +73,32 @@
   --elevate-1: rgba(0,0,0, .03);
   --elevate-2: rgba(0,0,0, .08);
 
-  /* Deep navy + gold theme (dark mode default) */
-  --background: 222 47% 7%;
-  --foreground: 210 40% 92%;
-  --border: 217 30% 18%;
-  --card: 222 40% 10%;
-  --card-foreground: 210 40% 92%;
-  --card-border: 217 30% 18%;
-  --sidebar: 222 40% 9%;
-  --sidebar-foreground: 210 40% 88%;
-  --sidebar-border: 217 30% 16%;
+  /* Deep OLED Black + Gold theme (dark mode default) */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 98%;
+  --border: 0 0% 12%;
+  --card: 0 0% 3%;
+  --card-foreground: 0 0% 98%;
+  --card-border: 0 0% 12%;
+  --sidebar: 0 0% 3%;
+  --sidebar-foreground: 0 0% 96%;
+  --sidebar-border: 0 0% 12%;
   --sidebar-primary: 43 90% 55%;
-  --sidebar-primary-foreground: 222 47% 7%;
-  --sidebar-accent: 222 35% 16%;
-  --sidebar-accent-foreground: 210 40% 90%;
+  --sidebar-primary-foreground: 0 0% 0%;
+  --sidebar-accent: 0 0% 10%;
+  --sidebar-accent-foreground: 0 0% 96%;
   --sidebar-ring: 43 90% 55%;
-  --popover: 222 40% 10%;
-  --popover-foreground: 210 40% 92%;
-  --popover-border: 217 30% 18%;
+  --popover: 0 0% 3%;
+  --popover-foreground: 0 0% 98%;
+  --popover-border: 0 0% 12%;
   --primary: 43 90% 55%;
-  --primary-foreground: 222 47% 7%;
-  --secondary: 222 35% 16%;
-  --secondary-foreground: 210 40% 90%;
-  --muted: 222 35% 14%;
-  --muted-foreground: 215 20% 55%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 10%;
+  --secondary-foreground: 0 0% 96%;
+  --muted: 0 0% 10%;
+  --muted-foreground: 0 0% 60%;
   --accent: 43 90% 55%;
-  --accent-foreground: 222 47% 7%;
+  --accent-foreground: 0 0% 0%;
   --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
   --input: 217 30% 20%;
@@ -111,17 +110,16 @@
   --chart-5: 0 72% 51%;
 
   --app-font-sans: 'Inter', sans-serif;
-  --app-font-serif: 'Playfair Display', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: .5rem;
-  --shadow-2xs: 0px 2px 0px 0px rgba(0,0,0,0.3);
-  --shadow-xs: 0px 2px 4px 0px rgba(0,0,0,0.3);
-  --shadow-sm: 0px 2px 4px 0px rgba(0,0,0,0.3), 0px 1px 2px -1px rgba(0,0,0,0.2);
-  --shadow: 0px 4px 8px 0px rgba(0,0,0,0.4), 0px 2px 4px -1px rgba(0,0,0,0.3);
-  --shadow-md: 0px 6px 12px 0px rgba(0,0,0,0.5), 0px 2px 4px -1px rgba(0,0,0,0.4);
-  --shadow-lg: 0px 8px 24px 0px rgba(0,0,0,0.6), 0px 4px 8px -2px rgba(0,0,0,0.4);
-  --shadow-xl: 0px 12px 32px 0px rgba(0,0,0,0.7), 0px 8px 16px -4px rgba(0,0,0,0.5);
-  --shadow-2xl: 0px 24px 48px 0px rgba(0,0,0,0.8);
+  --shadow-2xs: 0px 2px 0px 0px rgba(0,0,0,0.5);
+  --shadow-xs: 0px 2px 8px -2px rgba(0,0,0,0.6);
+  --shadow-sm: 0px 4px 12px -2px rgba(0,0,0,0.7), 0px 2px 4px -1px rgba(0,0,0,0.4);
+  --shadow: 0px 8px 24px -4px rgba(0,0,0,0.8), 0px 4px 8px -2px rgba(0,0,0,0.5);
+  --shadow-md: 0px 16px 32px -8px rgba(0,0,0,0.9), 0px 8px 16px -4px rgba(0,0,0,0.6);
+  --shadow-lg: 0px 24px 48px -12px rgba(0,0,0,1), 0px 12px 24px -6px rgba(0,0,0,0.7);
+  --shadow-xl: 0px 32px 64px -16px rgba(0,0,0,1), 0px 16px 32px -8px rgba(0,0,0,0.8);
+  --shadow-2xl: 0px 48px 96px -24px rgba(0,0,0,1);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
 
@@ -197,7 +195,10 @@
     @apply border-border;
   }
   body {
-    @apply font-sans antialiased bg-background text-foreground;
+    @apply font-sans antialiased bg-background text-foreground tracking-tight;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply tracking-tighter;
   }
 }
 
@@ -285,13 +286,13 @@
   }
 
   .slot-fill {
-    animation: slotFill 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: slotFill 0.1s cubic-bezier(0, 0, 0.2, 1) forwards;
   }
 
   @keyframes slotFill {
     from {
       opacity: 0;
-      transform: scale(0.92);
+      transform: scale(0.96);
     }
     to {
       opacity: 1;
@@ -306,5 +307,36 @@
   @keyframes pulseGold {
     0%, 100% { box-shadow: 0 0 0 0 rgba(218, 165, 32, 0); }
     50% { box-shadow: 0 0 0 6px rgba(218, 165, 32, 0.15); }
+  }
+}
+
+@layer base {
+  ::view-transition-group(root) {
+    animation-duration: 0.7s;
+  }
+  
+  ::view-transition-new(root),
+  ::view-transition-old(root) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+  
+  /* The transition runs when the theme is toggled */
+  .transition-theme-switch::view-transition-old(root) {
+    z-index: 1;
+  }
+  
+  .transition-theme-switch::view-transition-new(root) {
+    z-index: 2;
+    animation: wipe-down 0.7s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  @keyframes wipe-down {
+    from {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+    }
+    to {
+      clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
   }
 }

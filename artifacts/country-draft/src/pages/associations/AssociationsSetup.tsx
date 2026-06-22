@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
-import { COUNTRIES, Country } from "@/data/countries";
+import { ALL_COUNTRIES as COUNTRIES, Country } from "@/data/countries";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft, Flag, Map as MapIcon, Globe, Brain, HelpCircle, CheckCircle2, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Flag, Map as MapIcon, Globe, Brain, HelpCircle, CheckCircle2, Users } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Logo } from "@/components/Logo";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { createRoom } from "@/lib/firestore";
 
@@ -91,35 +93,49 @@ export function AssociationsSetup() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-6 pt-12 md:p-12 overflow-y-auto">
-      <div className="max-w-4xl mx-auto space-y-8 pb-32">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => setLocation("/")}>
-            <ChevronLeft className="w-6 h-6" />
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold font-serif tracking-tight">Associations Mode</h1>
-            <p className="text-muted-foreground">Test your knowledge across different association tasks.</p>
+    <div className="flex flex-col h-screen bg-background text-foreground overflow-hidden font-sans">
+      <header className="h-20 shrink-0 border-b border-border/50 bg-card/50 backdrop-blur-md px-6 md:px-8 flex items-center justify-between z-20">
+        <div className="flex items-center gap-3">
+          <button onClick={() => setLocation("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
+            <Logo className="w-5 h-5" />GeoDrafts
+          </button>
+          <div className="h-4 w-px bg-border hidden md:block" />
+          <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:block tracking-widest uppercase">
+            Associations Setup
           </div>
         </div>
+      </header>
+
+      <div className="flex-1 overflow-y-auto p-6 md:p-12">
+        <div className="max-w-4xl mx-auto space-y-8 pb-32">
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Tasks Section */}
           <div className="space-y-4">
             <h2 className="text-xl font-bold">1. Select Tasks</h2>
-            <div className="space-y-2 bg-card border border-border rounded-xl p-4">
-              {TASK_TYPES.map(task => (
-                <label key={task.id} className="flex items-center gap-3 p-3 rounded-lg hover:bg-secondary/50 cursor-pointer transition-colors">
-                  <Checkbox 
-                    checked={selectedTasks.includes(task.id)}
-                    onCheckedChange={() => toggleTask(task.id)}
-                  />
-                  <div className="p-1 rounded bg-secondary/80">
-                    {task.icon}
-                  </div>
-                  <span className="text-sm font-medium">{task.label}</span>
-                </label>
-              ))}
+            <div className="space-y-2 bg-background border border-border rounded-xl p-4">
+              {TASK_TYPES.map(task => {
+                const isActive = selectedTasks.includes(task.id);
+                return (
+                  <label
+                    key={task.id}
+                    className={`flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-colors ${
+                      isActive
+                        ? "border-primary/50 bg-primary/5"
+                        : "border-border bg-card hover:bg-muted/50"
+                    }`}
+                  >
+                    <Checkbox
+                      checked={isActive}
+                      onCheckedChange={() => toggleTask(task.id)}
+                    />
+                    <div className="p-1.5 rounded-md bg-foreground/5 text-foreground shrink-0">
+                      {task.icon}
+                    </div>
+                    <span className={`text-sm font-bold ${isActive ? "text-foreground" : "text-foreground/80"}`}>{task.label}</span>
+                  </label>
+                );
+              })}
             </div>
             {selectedTasks.length === 0 && (
               <p className="text-sm text-red-400">Please select at least one task.</p>
@@ -133,36 +149,48 @@ export function AssociationsSetup() {
               <span className="text-sm text-muted-foreground">{selectedCountries.length} / {COUNTRIES.length} selected</span>
             </div>
             
-            <div className="space-y-4">
+            <div className="flex flex-col gap-3">
               {countriesByRegion.map(([region, countries]) => {
-                const allSelected = countries.every(c => selectedCountries.includes(c.name));
-                const someSelected = countries.some(c => selectedCountries.includes(c.name));
-                
+                const selectedCount = countries.filter(c => selectedCountries.includes(c.name)).length;
+                const allSelected = selectedCount === countries.length;
+                const someSelected = selectedCount > 0;
                 return (
-                  <div key={region} className="bg-card border border-border rounded-xl overflow-hidden">
-                    <div className="p-3 bg-secondary/30 border-b border-border flex justify-between items-center">
-                      <div className="font-bold">{region}</div>
-                      <Button 
-                        variant="secondary" 
-                        size="sm" 
-                        onClick={() => toggleRegion(region, countries)}
-                      >
-                        {allSelected ? "Deselect All" : "Select All"}
-                      </Button>
+                  <div key={region} className="border border-border rounded-xl overflow-hidden bg-card flex items-stretch">
+                    <div className="px-5 cursor-pointer flex items-center justify-center hover:bg-muted/50 transition-colors border-r border-border" onClick={() => toggleRegion(region, countries)}>
+                      <Checkbox checked={allSelected ? true : someSelected ? "indeterminate" : false} />
                     </div>
-                    <div className="p-3 grid grid-cols-2 sm:grid-cols-3 gap-2">
-                      {countries.map(country => (
-                        <label key={country.name} className="flex items-center gap-2 cursor-pointer group">
-                          <Checkbox 
-                            checked={selectedCountries.includes(country.name)}
-                            onCheckedChange={() => toggleCountry(country.name)}
-                          />
-                          <span className="text-sm truncate group-hover:text-primary transition-colors">
-                            {country.flag} {country.name}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button className="flex-1 flex items-center p-4 text-left hover:bg-muted/50 transition-colors">
+                          <div className="font-bold text-lg">{region}</div>
+                          <div className="text-sm font-medium text-muted-foreground ml-auto">
+                            {selectedCount} / {countries.length}
+                          </div>
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="max-h-[85vh] flex flex-col sm:max-w-md">
+                        <DialogHeader>
+                          <DialogTitle className="text-2xl font-black">{region}</DialogTitle>
+                        </DialogHeader>
+                        <div className="flex-1 overflow-y-auto p-4 grid grid-cols-1 gap-2">
+                          {countries.map(c => {
+                            const isCountrySelected = selectedCountries.includes(c.name);
+                            return (
+                              <label 
+                                key={c.name} 
+                                className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-colors ${isCountrySelected ? "bg-primary/5 border border-primary/20" : "hover:bg-muted border border-transparent"}`}
+                              >
+                                <Checkbox 
+                                  checked={isCountrySelected}
+                                  onCheckedChange={() => toggleCountry(c.name)}
+                                />
+                                <span className="text-base font-bold">{c.flag} {c.name}</span>
+                              </label>
+                            );
+                          })}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 );
               })}
@@ -199,6 +227,7 @@ export function AssociationsSetup() {
               </Button>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>

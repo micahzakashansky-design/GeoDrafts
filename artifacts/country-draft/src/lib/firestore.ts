@@ -1,7 +1,7 @@
 import { where,
   collection, doc, getDoc, setDoc, addDoc, updateDoc,
   query, orderBy, limit, getDocs, serverTimestamp,
-  onSnapshot, type Timestamp,
+  onSnapshot, type Timestamp, deleteDoc, arrayUnion
 } from "firebase/firestore";
 import { firestore } from "./firebase";
 
@@ -11,6 +11,13 @@ export type UserProfile = {
   createdAt: Timestamp | null;
   bestScore: number;
   totalGames: number;
+  unlockedAchievements?: string[];
+  firstTryGuesses?: number;
+  fastDrafts?: number;
+  uniqueCountriesUsed?: string[];
+  dailyStreak?: number;
+  lastDailyDate?: string;
+  bestDoubleScore?: number;
 };
 
 export type LeaderboardEntry = {
@@ -20,6 +27,8 @@ export type LeaderboardEntry = {
   score: number;
   mode: string;
   roster: Record<string, string>;
+  guesses?: string[];
+  mysteryCountry?: string;
   createdAt: Timestamp | null;
   date: string;
 };
@@ -60,6 +69,14 @@ export async function updateUsername(uid: string, username: string): Promise<voi
   await updateDoc(doc(firestore, "users", uid), { username });
 }
 
+export async function unlockAchievements(uid: string, achievements: string[]): Promise<void> {
+  const validAchievements = achievements.filter(Boolean);
+  if (validAchievements.length === 0) return;
+  await updateDoc(doc(firestore, "users", uid), {
+    unlockedAchievements: arrayUnion(...validAchievements)
+  });
+}
+
 export async function checkUsernameExists(username: string): Promise<boolean> {
   const q = query(collection(firestore, "users"), where("username", "==", username), limit(1));
   const snap = await getDocs(q);
@@ -75,6 +92,117 @@ export async function createUserProfile(uid: string, username: string): Promise<
   };
   await setDoc(doc(firestore, "users", uid), profile);
   return { uid, ...profile, createdAt: null };
+}
+
+
+export type GameEndStats = {
+  score?: number;
+  mode: string;
+  roster?: Record<string, string>;
+  totalTimeMs?: number;
+  firstTryGuess?: boolean;
+  achievementsToUnlock?: string[];
+  isDaily?: boolean;
+};
+
+export async function processGameEndStats(uid: string, stats: GameEndStats): Promise<void> {
+  const profile = await getUserProfile(uid);
+  if (!profile) return;
+
+  const updates: Partial<UserProfile> = {
+    totalGames: (profile.totalGames || 0) + 1,
+  };
+
+  const newUnlocked = new Set<string>(profile.unlockedAchievements || []);
+  if (stats.achievementsToUnlock) {
+    stats.achievementsToUnlock.forEach(a => newUnlocked.add(a));
+  }
+
+  // Best Score (Normal Mode)
+  if (stats.mode === "normal" && stats.score !== undefined) {
+    updates.bestScore = Math.max(profile.bestScore || 0, stats.score);
+    if (updates.bestScore >= 165) newUnlocked.add("Superpower");
+    if (updates.bestScore >= 175) newUnlocked.add("God Tier");
+  }
+
+  // Best Score (Double Mode)
+  if (stats.mode === "double" && stats.score !== undefined) {
+    updates.bestDoubleScore = Math.max(profile.bestDoubleScore || 0, stats.score);
+    if (updates.bestDoubleScore >= 165) newUnlocked.add("Double Threat");
+  }
+
+  // First Try Guesses
+  if (stats.firstTryGuess) {
+    updates.firstTryGuesses = (profile.firstTryGuesses || 0) + 1;
+    if (updates.firstTryGuesses >= 10) newUnlocked.add("Geography Genius");
+    if (updates.firstTryGuesses >= 50) newUnlocked.add("Flawless Guesser");
+  }
+
+  // Fast Drafts
+  if (stats.totalTimeMs && stats.totalTimeMs < 120000) {
+    updates.fastDrafts = (profile.fastDrafts || 0) + 1;
+    newUnlocked.add("Speed Demon");
+    if (updates.fastDrafts >= 10) newUnlocked.add("Quick Thinker");
+  }
+  if (stats.totalTimeMs && stats.totalTimeMs < 60000) {
+    newUnlocked.add("Lightning Fast");
+  }
+
+  // Unique Countries
+  if (stats.roster) {
+    const existingCountries = new Set(profile.uniqueCountriesUsed || []);
+    Object.values(stats.roster).forEach(c => existingCountries.add(c));
+    updates.uniqueCountriesUsed = Array.from(existingCountries);
+    if (updates.uniqueCountriesUsed.length >= 50) newUnlocked.add("World Traveler");
+    if (updates.uniqueCountriesUsed.length >= 100) newUnlocked.add("Globetrotter");
+    if (updates.uniqueCountriesUsed.length >= 150) newUnlocked.add("Mr. Worldwide");
+  }
+
+  // Daily Streak
+  if (stats.isDaily) {
+    const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+    const lastDate = profile.lastDailyDate;
+    if (lastDate !== today) {
+      if (!lastDate) {
+        updates.dailyStreak = 1;
+      } else {
+        const lastDateObj = new Date(lastDate);
+        const todayObj = new Date(today);
+        const diffTime = Math.abs(todayObj.getTime() - lastDateObj.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) {
+          updates.dailyStreak = (profile.dailyStreak || 0) + 1;
+        } else {
+          updates.dailyStreak = 1;
+        }
+      }
+      updates.lastDailyDate = today;
+      if (updates.dailyStreak >= 7) newUnlocked.add("Daily Streak");
+      if (updates.dailyStreak >= 30) newUnlocked.add("Dedicated Player");
+    }
+  }
+
+  // Games Played
+  if (updates.totalGames! >= 100) {
+    newUnlocked.add("Draft Master");
+  }
+  if (updates.totalGames! >= 500) {
+    newUnlocked.add("Veteran Drafter");
+  }
+  if (updates.totalGames! >= 1000) {
+    newUnlocked.add("Addict");
+  }
+
+  const finalUnlocked = Array.from(newUnlocked);
+  
+  await setDoc(
+    doc(firestore, "users", uid),
+    {
+      ...updates,
+      unlockedAchievements: finalUnlocked
+    },
+    { merge: true }
+  );
 }
 
 async function updateUserStats(uid: string, score: number): Promise<void> {
@@ -95,9 +223,11 @@ export async function saveScore(
   username: string,
   score: number,
   mode: string,
-  roster: Record<string, string>
+  roster: Record<string, string>,
+  guesses?: string[],
+  mysteryCountry?: string
 ): Promise<string> {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 
   if (mode === "daily") {
     const dailyDocId = `daily_${uid}_${today}`;
@@ -109,20 +239,52 @@ export async function saveScore(
     }
     await setDoc(doc(firestore, "leaderboard", dailyDocId), {
       uid, username, score, mode, roster,
+      ...(guesses && { guesses }),
+      ...(mysteryCountry && { mysteryCountry }),
       createdAt: serverTimestamp(),
       date: today,
     });
-    await updateUserStats(uid, score);
     return dailyDocId;
   }
 
   const docRef = await addDoc(collection(firestore, "leaderboard"), {
     uid, username, score, mode, roster,
+    ...(guesses && { guesses }),
+    ...(mysteryCountry && { mysteryCountry }),
     createdAt: serverTimestamp(),
     date: today,
   });
-  await updateUserStats(uid, score);
   return docRef.id;
+}
+
+export async function saveCloudPersonalScore(uid: string, mode: string, entryData: any): Promise<void> {
+  await addDoc(collection(firestore, "personal_records"), {
+    uid,
+    mode,
+    ...entryData,
+    createdAt: serverTimestamp(),
+  });
+}
+
+export async function getCloudPersonalScores(uid: string, mode: string): Promise<any[]> {
+  const isAsc = mode === "guess";
+  const q = query(
+    collection(firestore, "personal_records"),
+    where("uid", "==", uid),
+    where("mode", "==", mode),
+    orderBy("score", isAsc ? "asc" : "desc")
+  );
+  
+  const snap = await getDocs(q);
+  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+}
+
+export async function deleteCloudPersonalScore(id: string): Promise<void> {
+  await deleteDoc(doc(firestore, "personal_records", id));
+}
+
+export async function deleteGlobalScore(id: string): Promise<void> {
+  await deleteDoc(doc(firestore, "leaderboard", id));
 }
 
 export async function getTopScores(modeFilter?: string, topN = 10): Promise<LeaderboardEntry[]> {
@@ -163,7 +325,7 @@ export async function getTopScores(modeFilter?: string, topN = 10): Promise<Lead
 }
 
 export async function checkDailySubmitted(uid: string): Promise<boolean> {
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
   const snap = await getDoc(doc(firestore, "leaderboard", `daily_${uid}_${today}`));
   return snap.exists();
 }

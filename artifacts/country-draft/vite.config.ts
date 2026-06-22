@@ -10,9 +10,7 @@ const basePath = process.env.BASE_PATH ?? '/';
 
 export default defineConfig({
   base: basePath,
-  define: {
-    "import.meta.env.VITE_FIREBASE_API_KEY": JSON.stringify(process.env.GOOGLE_API_KEY ?? ""),
-  },
+
   plugins: [
     react(),
     tailwindcss(),
@@ -59,5 +57,6 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./src/setupTests.ts"],
+    exclude: ["**/node_modules/**", "**/dist/**", "**/tests/e2e/**"],
   },
 });

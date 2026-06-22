@@ -6,7 +6,7 @@ import {
   ZoomableGroup,
   Marker,
 } from "react-simple-maps";
-import { COUNTRIES, Country } from "@/data/countries";
+import { ALL_COUNTRIES as COUNTRIES, Country } from "@/data/countries";
 
 // Pointing to the downloaded topojson file
 const geoUrl = "/features.json";
@@ -38,7 +38,7 @@ export function WorldMap({
   }, []);
 
   return (
-    <div className="w-full h-full bg-secondary/20 rounded-xl overflow-hidden border border-border relative">
+    <div className="w-full h-full bg-foreground/5 rounded-xl overflow-hidden border border-border relative">
       <ComposableMap
         projectionConfig={{
           scale: 140,
@@ -50,13 +50,12 @@ export function WorldMap({
           zoom={zoomToCountry ? 4 : 1} 
           center={zoomToCountry?.coordinates || [0, 0]}
           maxZoom={8}
-          translateExtent={[[0, 0], [800, 400]]}
         >
           <Geographies geography={geoUrl}>
             {({ geographies }) =>
               geographies.map((geo) => {
                 const geoIso = geo.id;
-                const isHighlighted = geoIso === highlightedCountryIso;
+                const isHighlighted = !!highlightedCountryIso && !!geoIso && geoIso === highlightedCountryIso;
                 const country = countryByIso.get(geoIso);
                 
                 // Determine if this country is part of the game pool
@@ -106,7 +105,7 @@ export function WorldMap({
             if (!country.area || country.area >= 60000 || !country.coordinates) return null;
             
             const geoIso = country.isoNumeric;
-            const isHighlighted = geoIso === highlightedCountryIso;
+            const isHighlighted = !!highlightedCountryIso && !!geoIso && geoIso === highlightedCountryIso;
             const isValid = validIsos ? validIsos.includes(geoIso!) : true;
             const isClickable = interactive && isValid;
             

@@ -1,9 +1,10 @@
+import { computeSizePopBonus } from "@/lib/achievements-logic";
 import React from "react";
 import { Category, Country, CATEGORIES, getCategoryKey } from "@/data/countries";
-import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, computeSizePopBonus, BONUS_CATEGORIES } from "./GuessUI";
+import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, BONUS_CATEGORIES } from "./GuessUI";
 import { Users, Plus } from "lucide-react";
 
-export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Country>> }) {
+export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean ; categoryTimes?: Partial<Record<Category, number>>; }) {
   const assignedCategories = CATEGORIES.filter((c: Category) => roster[c]);
   const hasSizeAndPop = roster["Size"] && roster["Population"];
 
@@ -32,7 +33,7 @@ export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Cou
             const catKey = getCategoryKey(category);
             const isBonus = BONUS_CATEGORIES.includes(category);
             const stars = getCategoryStars(category);
-            const score = !isBonus ? assigned.stats[catKey].score : null;
+            const score = !isBonus ? (assigned.stats[catKey].score ?? 0) : null;
 
             return (
               <div key={category} className="w-full rounded-lg border border-border/25 bg-muted/10 opacity-80 text-left transition-all">
@@ -46,7 +47,7 @@ export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Cou
                   </div>
                   <div className="flex flex-col items-end gap-1 shrink-0">
                     <span className="text-[9px] text-yellow-400/40">{stars}</span>
-                    {!isBonus && score !== null && (
+                    {!isBonus && score !== null && !isHardMode && (
                       <span className="text-[10px] font-bold text-primary">{getPtsDisplay(score, category)}</span>
                     )}
                   </div>
@@ -72,7 +73,7 @@ export function SidebarRoster({ roster }: { roster: Partial<Record<Category, Cou
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1 shrink-0">
-                <span className="text-[10px] font-bold text-yellow-500">+{computeSizePopBonus(roster)} pts</span>
+                {!isHardMode && <span className="text-[10px] font-bold text-yellow-500">+{computeSizePopBonus(roster)} pts</span>}
               </div>
             </div>
           </div>

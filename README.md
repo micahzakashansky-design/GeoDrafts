@@ -14,21 +14,12 @@ GeoDrafts is a nation-building draft game where players build their ideal nation
 ## Tech Stack
 
 - **Frontend:** React 19, Vite 7, Tailwind CSS 4, Framer Motion 12, Wouter 3.
-- **Backend:** Express 5, Node.js 22.
-- **Database:** PostgreSQL with Drizzle ORM.
-- **Authentication:** Firebase Auth.
-- **API:** OpenAPI (Swagger) with Orval for client/Zod schema codegen.
+- **Backend/Database:** Firebase Auth, Cloud Firestore.
 - **Package Manager:** pnpm with Workspaces.
 
 ## Monorepo Structure
 
 - `artifacts/country-draft`: The main React frontend application.
-- `artifacts/api-server`: Express backend serving the API and leaderboard.
-- `lib/db`: Shared database schema and Drizzle client.
-- `lib/api-spec`: OpenAPI specification and Orval configuration.
-- `lib/api-client-react`: Generated React Query hooks for the API.
-- `lib/api-zod`: Generated Zod schemas for API validation.
-- `lib/firebase-auth-web`: Firebase Auth integration for the web.
 
 ## Getting Started
 
@@ -44,17 +35,7 @@ GeoDrafts is a nation-building draft game where players build their ideal nation
     pnpm install
     ```
 
-2.  **Environment Variables:**
-    Create a `.env` file or set the following:
-    - `DATABASE_URL`: Your PostgreSQL connection string.
-    - `PORT`: Port for the API server (default 5000).
-
-3.  **Run the API server:**
-    ```bash
-    pnpm --filter @workspace/api-server run dev
-    ```
-
-4.  **Run the Frontend:**
+2.  **Run the Frontend:**
     ```bash
     pnpm --filter @workspace/country-draft run dev
     ```
@@ -63,5 +44,3 @@ GeoDrafts is a nation-building draft game where players build their ideal nation
 
 - `pnpm run build`: Typecheck and build all packages.
 - `pnpm run typecheck`: Run TypeScript type checking across the entire monorepo.
-- `pnpm --filter @workspace/api-spec run codegen`: Regenerate API hooks and Zod schemas from the OpenAPI spec.
-- `pnpm --filter @workspace/db run push`: Push database schema changes to the database.

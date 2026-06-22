@@ -1,4 +1,6 @@
 import type { Country, Category } from "@/data/countries";
+import { auth } from "./firebase";
+import { saveCloudPersonalScore } from "./firestore";
 
 export type PersonalLeaderboardEntry = {
   score: number;
@@ -9,7 +11,7 @@ export type PersonalLeaderboardEntry = {
   mysteryCountry?: string; // Used for guess the country
 };
 
-export type GameMode = "normal" | "hard" | "daily" | "double" | "guess";
+export type GameMode = "normal" | "hard" | "daily" | "double" | "double_hard" | "guess";
 
 function getStorageKey(mode: GameMode): string {
   return `countryDraftPersonal_${mode}`;
@@ -33,6 +35,10 @@ export function savePersonalScore(mode: GameMode, entryData: Omit<PersonalLeader
     timestamp: Date.now(),
   };
 
+  if (auth.currentUser) {
+    saveCloudPersonalScore(auth.currentUser.uid, mode, entry).catch(console.error);
+  }
+
   board.push(entry);
 
   if (mode === "guess") {
@@ -43,8 +49,14 @@ export function savePersonalScore(mode: GameMode, entryData: Omit<PersonalLeader
     board.sort((a, b) => b.score - a.score);
   }
 
-  // Keep top 20 personal records per mode
-  localStorage.setItem(getStorageKey(mode), JSON.stringify(board.slice(0, 20)));
+  // Keep all personal records per mode (entire history)
+  localStorage.setItem(getStorageKey(mode), JSON.stringify(board));
+}
+
+export function deleteLocalPersonalScore(mode: GameMode, timestamp: number) {
+  const board = loadPersonalLeaderboard(mode);
+  const updated = board.filter(entry => entry.timestamp !== timestamp);
+  localStorage.setItem(getStorageKey(mode), JSON.stringify(updated));
 }
 
 export function formatRoster(roster: Partial<Record<Category, Country>>): Record<string, string> {

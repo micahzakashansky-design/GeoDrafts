@@ -9,6 +9,8 @@ import { ArrowUp, ArrowDown, Check, X as LucideX,
   Handshake, Umbrella, Info, Search, Lightbulb, HelpCircle
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { RATINGS, ARCHETYPES, BONUS_PATHS, getAchievementIcon } from "@/lib/achievements";
+import { getRating, getCountryArchetype, getBonusPath, computeSizePopBonus } from "@/lib/achievements-logic";
 import {
   COUNTRIES, CATEGORIES, getCategoryKey,
   type Country, type Category, extractBonusText
@@ -73,7 +75,7 @@ export function pngRatingLabel(total: number): string {
   if (total >= 110) return "Regional Power"; if (total >= 80) return "Developing Nation";
   return "Struggling State";
 }
-export async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalScore: number, bonus: number): Promise<void> {
+export async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalScore: number, bonus: number, isHardMode: boolean = false): Promise<void> {
   const DPR = 2, W = 1180, HDR = 88, PAD = 20, GAP = 10, COLS = 2;
   const CARD_W = (W - PAD * 3) / COLS; const CARD_H = 112; const ROWS = Math.ceil(CATEGORIES.length / COLS);
   const H = HDR + PAD + ROWS * (CARD_H + GAP) - GAP + PAD;
@@ -115,14 +117,24 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
   if (bonus > 0) {
     ctx.fillStyle = C.fgDim;
     ctx.font = "12px sans-serif";
-    ctx.fillText(`(incl. +${bonus} size/population bonus)`, PAD, 76);
+    const archName = (roster.Size && roster.Population) ? getArchetypeData(roster).name : "population structure";
+    const displayBonus = Number.isInteger(bonus) ? bonus : bonus.toFixed(1).replace(/\.0$/, '');
+    ctx.fillText(`(incl. +${displayBonus} ${archName} bonus)`, PAD, 76);
   }
   const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
-  if (roster.Size && roster.Population) { displayCats.push("Population Structure" as any); }
+  
+  let comboName = "Population Structure";
+  let comboDesc = "Combined structure bonus applied";
+  if (roster.Size && roster.Population) { 
+    const arch = getArchetypeData(roster);
+    comboName = arch.name;
+    comboDesc = arch.desc;
+    displayCats.push(comboName as any); 
+  }
   else { if (roster.Size) displayCats.push("Size" as any); if (roster.Population) displayCats.push("Population" as any); }
 
   displayCats.forEach((cat, i) => {
-    const isCombo = cat === "Population Structure";
+    const isCombo = (roster.Size && roster.Population && cat === comboName);
     const actualCat = isCombo ? "Size" : (cat as Category);
     const assigned = roster[actualCat];
     const col = i % COLS;
@@ -152,39 +164,41 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
 
       let scoreVal = 0, weight = 1, desc = "", maxScore = 10;
       if (isCombo) {
-        scoreVal = (assigned.stats.size.score + roster.Population!.stats.population.score) / 2;
+        scoreVal = ((assigned.stats.size.score ?? 0) + (roster.Population!.stats.population.score ?? 0)) / 2;
         weight = 1;
         desc = "Combined structure bonus applied";
       } else {
         const ck = getCategoryKey(actualCat);
-        scoreVal = assigned.stats[ck].score;
+        scoreVal = assigned.stats[ck].score ?? 0;
         weight = CATEGORY_MAX_SCORES[actualCat] ?? 10;
         desc = assigned.stats[ck].description;
       }
 
       const isBonus = BONUS_CATEGORIES.includes(actualCat) || isCombo;
 
-      if (!isBonus) {
-        ctx.fillStyle = pngScoreBar(scoreVal);
-        ctx.font = "bold 13px sans-serif";
-        const wScore = scoreVal;
-        ctx.fillText(`${wScore} pts`, x + CARD_W - 60, y + 20);
+      if (!isHardMode) {
+        if (!isBonus) {
+          ctx.fillStyle = pngScoreBar(scoreVal);
+          ctx.font = "bold 13px sans-serif";
+          const wScore = scoreVal;
+          ctx.fillText(`${wScore} pts`, x + CARD_W - 60, y + 20);
 
-        const sl = pngScoreLabel(scoreVal);
-        ctx.fillStyle = C.fgDim;
-        ctx.font = "10px sans-serif";
-        ctx.fillText(sl, x + CARD_W - 12 - ctx.measureText(sl).width, y + 34);
+          const sl = pngScoreLabel(scoreVal);
+          ctx.fillStyle = C.fgDim;
+          ctx.font = "10px sans-serif";
+          ctx.fillText(sl, x + CARD_W - 12 - ctx.measureText(sl).width, y + 34);
 
-        ctx.fillStyle = C.border;
-        canvasRoundRect(ctx, x + 12, y + 54, CARD_W - 24, 4, 2);
-        ctx.fill();
-        ctx.fillStyle = pngScoreBar(scoreVal);
-        canvasRoundRect(ctx, x + 12, y + 54, ((CARD_W - 24) * scoreVal) / weight, 4, 2);
-        ctx.fill();
-      } else {
-        ctx.fillStyle = C.gold;
-        ctx.font = "bold 13px sans-serif";
-        ctx.fillText(isCombo ? `+${bonus} pts` : `+${Math.floor(scoreVal/2)} pts`, x + CARD_W - 60, y + 20);
+          ctx.fillStyle = C.border;
+          canvasRoundRect(ctx, x + 12, y + 54, CARD_W - 24, 4, 2);
+          ctx.fill();
+          ctx.fillStyle = pngScoreBar(scoreVal);
+          canvasRoundRect(ctx, x + 12, y + 54, ((CARD_W - 24) * scoreVal) / weight, 4, 2);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = C.gold;
+          ctx.font = "bold 13px sans-serif";
+          ctx.fillText(isCombo ? `+${bonus} pts` : `+${Math.floor(scoreVal/2)} pts`, x + CARD_W - 60, y + 20);
+        }
       }
 
       ctx.fillStyle = C.fgDim;
@@ -250,52 +264,31 @@ export function getScoreLabel(score: number, maxScore: number = 15): { label: st
   if (score >= 5) return { label: "Weak", color: "text-orange-400" };
   return { label: "Critical", color: "text-red-400" };
 }
-export function getRating(total: number): { label: string; color: string; icon: React.ReactNode; desc: string } {
-  if (total >= 165) return { label: "Superpower", color: "text-yellow-400", icon: <Star className="w-5 h-5 text-yellow-400 fill-yellow-400" />, desc: "Unrivaled global influence and capabilities." };
-  if (total >= 140) return { label: "Major Power", color: "text-blue-400", icon: <Globe className="w-5 h-5 text-blue-400" />, desc: "Significant influence on the world stage." };
-  if (total >= 110) return { label: "Regional Power", color: "text-green-400", icon: <Shield className="w-5 h-5 text-green-400" />, desc: "Strong capabilities within its geographic sphere." };
-  if (total >= 80) return { label: "Developing Nation", color: "text-orange-400", icon: <TrendingUp className="w-5 h-5 text-orange-400" />, desc: "Growing capabilities and emerging potential." };
-  return { label: "Struggling State", color: "text-red-400", icon: <Building className="w-5 h-5 text-red-400" />, desc: "Facing significant challenges and limitations." };
-}
-export function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
-  let b = 0;
-  if (roster.Size) b += Math.floor(roster.Size.stats.size.score / 2);
-  if (roster.Population) b += Math.floor(roster.Population.stats.population.score / 2);
-  if (roster.Size && roster.Population) {
-    if (roster.Size.stats.size.score >= 8 && roster.Population.stats.population.score >= 8) b += 5;
-    else if (roster.Size.stats.size.score <= 3 && roster.Population.stats.population.score <= 3) b += 5;
-  }
-  return b;
+export function getBonusPathData(roster: Partial<Record<Category, Country>>) {
+  const name = getBonusPath(roster);
+  if (!name) return null;
+  const data = BONUS_PATHS.find(b => b.name === name)!;
+  return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
 
 export type Archetype = { name: string; icon: React.ReactNode; desc: string };
-export function getBonusPath(roster: Partial<Record<Category, Country>>): "agricultural" | "urban" | null {
-  const size = roster.Size?.stats.size.score ?? 5;
-  const pop = roster.Population?.stats.population.score ?? 5;
-  if (size >= 8 && pop <= 4) return "agricultural";
-  if (size <= 4 && pop >= 8) return "urban";
-  return null;
+
+export function getRatingData(total: number) {
+  const name = getRating(total);
+  const data = RATINGS.find(r => r.name === name)!;
+  return { label: data.name, color: data.color, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
-export function getCountryArchetype(roster: Partial<Record<Category, Country>>): Archetype {
-  const m = roster.Military?.stats.military.score ?? 0;
-  const e = roster.Economy?.stats.economy.score ?? 0;
-  const t = roster.Technology?.stats.technology.score ?? 0;
-  const h = roster.Healthcare?.stats.healthcare.score ?? 0;
-  const ed = roster.Education?.stats.education.score ?? 0;
-  const g = roster.Government?.stats.government.score ?? 0;
-  if (m >= 8 && e >= 8 && t >= 8) return { name: "Military Superstate", icon: <Swords className="w-5 h-5 text-red-400" />, desc: "Unmatched hard power." };
-  if (e >= 8 && t >= 8 && ed >= 8) return { name: "Techno-Utopia", icon: <Laptop className="w-5 h-5 text-blue-400" />, desc: "A beacon of innovation." };
-  if (h >= 8 && ed >= 8 && g >= 8) return { name: "Nordic Model", icon: <Heart className="w-5 h-5 text-green-400" />, desc: "World-leading quality of life." };
-  if (roster.Size && roster.Population) {
-    const s = roster.Size.stats.size.score; const p = roster.Population.stats.population.score;
-    if (s <= 3 && p <= 3 && e >= 7) return { name: "Wealthy City-State", icon: <Building className="w-5 h-5 text-yellow-400" />, desc: "Small but mighty." };
-  }
-  return { name: "Balanced Republic", icon: <Globe className="w-5 h-5 text-primary" />, desc: "A well-rounded nation." };
+
+export function getArchetypeData(roster: Partial<Record<Category, Country>>): Archetype {
+  const name = getCountryArchetype(roster);
+  const data = ARCHETYPES.find(a => a.name === name)!;
+  return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
+
 
 // ─── UI Components ────────────────────────────────────────────────────────
 
-export function ExpandableDescription({ description }: { description: string }) {
+export function ExpandableDescription({ description, isHovered = false }: { description: string, isHovered?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -307,7 +300,7 @@ export function ExpandableDescription({ description }: { description: string }) 
   
   return (
     <div className="relative">
-      <p ref={textRef} className={`text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic ${expanded ? "opacity-0 pointer-events-none" : "line-clamp-2"}`}>
+      <p ref={textRef} className={`text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2 ${expanded ? "opacity-0 pointer-events-none" : ""}`}>
         {description}
       </p>
       
@@ -321,8 +314,10 @@ export function ExpandableDescription({ description }: { description: string }) 
       )}
 
       {expanded && (
-        <div className="absolute top-[-8px] left-[calc(-1rem-1px)] right-[calc(-1rem-1px)] md:left-[calc(-1.25rem-1px)] md:right-[calc(-1.25rem-1px)] bg-card border-x border-b border-border/50 rounded-b-2xl px-4 md:px-5 pt-[8px] pb-4 md:pb-5 z-50 shadow-2xl">
-          <p className="text-[11px] md:text-xs text-foreground/90 leading-relaxed italic">
+        <div className={`absolute top-[-8px] left-[calc(-1rem-1px)] right-[calc(-1rem-1px)] md:left-[calc(-1.25rem-1px)] md:right-[calc(-1.25rem-1px)] bg-card border-x border-b rounded-b-2xl px-4 md:px-5 pt-[8px] pb-4 md:pb-5 z-50 shadow-2xl ${isHovered ? "border-primary" : "border-border/50"}`}>
+          {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-b-2xl pointer-events-none" />}
+          <div className="relative z-10">
+            <p className="text-[11px] md:text-xs text-foreground/90 leading-relaxed italic">
             {description}
           </p>
           <button 
@@ -330,7 +325,8 @@ export function ExpandableDescription({ description }: { description: string }) 
             className="text-[10px] uppercase font-bold text-yellow-500 hover:text-yellow-400 mt-3 flex items-center gap-1 group w-max transition-colors"
           >
             Show Less <ChevronUp className="w-3 h-3 group-hover:-translate-y-0.5 transition-transform" />
-          </button>
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -340,13 +336,13 @@ export function ExpandableDescription({ description }: { description: string }) 
 export function SelectionPhase({ options, onPick, isHardMode, mode }: { options: Country[]; onPick: (c: Country) => void; isHardMode: boolean; mode: string; }) {
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1">
-      <div className="text-center"><h2 className="text-3xl font-serif font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-muted-foreground text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
+      <div className="text-center"><h2 className="text-3xl font-sans font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-muted-foreground text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {options.map((country, idx) => (
-          <motion.button key={country.name + idx} whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }} onClick={() => onPick(country)} className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl text-left group">
-            <div className="p-8 border-b border-border bg-secondary/10 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-serif font-bold text-foreground">{country.name}</h3><p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{country.region}</p></div>
-            <div className="p-5 space-y-4"><p className="text-sm text-foreground/70 leading-relaxed italic line-clamp-2">"{country.knownFor}"</p>
-               {!isHardMode && (<div className="grid grid-cols-3 gap-2">{["Military", "Economy", "Government"].map(cat => { const score = country.stats[getCategoryKey(cat as Category)].score; return (<div key={cat} className="text-center p-2 rounded-lg bg-secondary/30 border border-border/40"><div className="text-[9px] uppercase font-bold text-muted-foreground">{cat}</div><div className="text-sm font-bold text-primary">{score}/10</div></div>) })}</div>)}
+          <motion.button key={country.name + idx} whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }} onClick={() => onPick(country)} className="bg-background border border-border rounded-2xl overflow-hidden shadow-xl text-left group">
+            <div className="p-8 border-b border-border bg-foreground/5 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-sans font-bold text-foreground">{country.name}</h3><p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{country.region}</p></div>
+            <div className="p-5 space-y-4"><p className="text-sm text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{country.knownFor}"</p>
+               {!isHardMode && (<div className="grid grid-cols-3 gap-2">{["Military", "Economy", "Government"].map(cat => { const score = country.stats[getCategoryKey(cat as Category)].score; return (<div key={cat} className="text-center p-2 rounded-lg bg-foreground/5 border border-border/40"><div className="text-[9px] uppercase font-bold text-muted-foreground">{cat}</div><div className="text-sm font-bold text-primary">{score}/10</div></div>) })}</div>)}
                <div className="w-full py-2.5 rounded-xl bg-primary/10 text-primary text-center font-bold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-primary/20">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div>
             </div>
           </motion.button>
@@ -374,49 +370,49 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess, hintsRevealed, on
   return (
     <div className="p-6 flex flex-col gap-6 items-center justify-center flex-1 max-w-5xl mx-auto w-full overflow-y-auto">
       <div className="text-center">
-        <h2 className="text-4xl font-serif font-bold mb-2">Guess the Country</h2>
+        <h2 className="text-4xl font-sans font-bold mb-2">Guess the Country</h2>
         <p className="text-muted-foreground text-sm max-w-md mx-auto">Use the numeric ratings below to identify the mystery nation. Be precise!</p>
         <p className="font-bold text-primary text-sm mt-1">Get the lowest score!</p>
       </div>
       <div className="w-full max-w-5xl relative mt-4">
         <div className="relative group"><div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><Search className="w-5 h-5 text-muted-foreground group-focus-within:text-primary transition-colors" /></div>
-          <input id="guess-input" name="guess-input" type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-secondary/50 border border-border rounded-2xl pl-12 pr-24 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
+          <input id="guess-input" name="guess-input" type="text" value={input} onChange={e => { setInput(e.target.value); setShowSuggestions(true); }} onKeyDown={e => { if (e.key === "Enter" && input.trim() === "bypass:devtest3781") { onGuess(input.trim()); setInput(""); setShowSuggestions(false); } }} placeholder="Start typing a country name..." className="w-full bg-foreground/10 border border-border rounded-2xl pl-12 pr-24 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all shadow-inner" onFocus={() => setShowSuggestions(true)} />
           
           <div className="absolute inset-y-2 right-2 flex items-center">
             <button 
               onClick={onRevealHint} 
               disabled={hintsRevealed >= 3}
-              className={`px-3 py-1.5 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center gap-1.5 ${hintsRevealed >= 3 ? 'bg-secondary/50 text-muted-foreground opacity-50 cursor-not-allowed' : 'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20'}`}
+              className={`px-3 py-1.5 rounded-xl font-bold text-sm transition-all shadow-sm flex items-center gap-1.5 ${hintsRevealed >= 3 ? 'bg-foreground/10 text-muted-foreground opacity-50 cursor-not-allowed' : 'bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20'}`}
             >
               Get Hint
               <div className="relative group/tooltip flex items-center">
                 <HelpCircle className="w-4 h-4 text-primary/70 hover:text-primary transition-colors cursor-help" />
-                <div className="absolute right-0 bottom-full mb-2 w-64 bg-card border border-border shadow-lg rounded-xl p-3 text-xs font-medium text-muted-foreground opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:pointer-events-auto transition-opacity z-50 text-left font-normal normal-case">
+                <div className="absolute right-0 bottom-full mb-2 w-64 bg-background border border-border shadow-lg rounded-xl p-3 text-xs font-medium text-muted-foreground opacity-0 pointer-events-none group-hover/tooltip:opacity-100 group-hover/tooltip:pointer-events-auto transition-opacity z-50 text-left font-normal normal-case">
                   Each hint costs 1 point. You can reveal up to 3 hints to help identify the country.
                 </div>
               </div>
             </button>
           </div>
 
-          {showSuggestions && suggestions.length > 0 && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-full left-0 w-full mb-3 bg-card border border-border rounded-2xl shadow-2xl overflow-hidden z-50">{suggestions.map(s => (<button key={s.name} onClick={() => { onGuess(s.name); setInput(""); setShowSuggestions(false); }} className="w-full px-5 py-4 text-left hover:bg-primary/10 transition-colors border-b border-border last:border-0 flex items-center justify-between group"><div className="flex items-center gap-4"><span className="text-2xl">{s.flag}</span><span className="font-bold text-foreground">{s.name}</span></div><ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" /></button>))}</motion.div>)}
+          {showSuggestions && suggestions.length > 0 && (<motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="absolute bottom-full left-0 w-full mb-3 bg-background border border-border rounded-2xl shadow-2xl overflow-hidden z-50">{suggestions.map(s => (<button key={s.name} onClick={() => { onGuess(s.name); setInput(""); setShowSuggestions(false); }} className="w-full px-5 py-4 text-left hover:bg-primary/10 transition-colors border-b border-border last:border-0 flex items-center justify-between group"><div className="flex items-center gap-4"><span className="text-2xl">{s.flag}</span><span className="font-bold text-foreground">{s.name}</span></div><ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" /></button>))}</motion.div>)}
         </div>
         
         {hintsRevealed > 0 && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} className="mt-4 flex flex-col gap-2">
             {hintsRevealed >= 1 && (
-              <div className="px-4 py-3 bg-secondary/30 border border-border rounded-xl text-sm flex items-center gap-3">
+              <div className="px-4 py-3 bg-foreground/5 border border-border rounded-xl text-sm flex items-center gap-3">
                 <span className="bg-primary/20 text-primary font-bold px-2 py-0.5 rounded text-xs">HINT 1</span>
                 <span className="text-foreground">This country is located in <span className="font-bold">{mysteryCountry.region}</span>.</span>
               </div>
             )}
             {hintsRevealed >= 2 && (
-              <div className="px-4 py-3 bg-secondary/30 border border-border rounded-xl text-sm flex items-center gap-3">
+              <div className="px-4 py-3 bg-foreground/5 border border-border rounded-xl text-sm flex items-center gap-3">
                 <span className="bg-primary/20 text-primary font-bold px-2 py-0.5 rounded text-xs">HINT 2</span>
                 <span className="text-foreground">Its flag contains the color <span className="font-bold">{mysteryCountry.flagColors[Math.floor(mysteryCountry.name.length % mysteryCountry.flagColors.length)]}</span>.</span>
               </div>
             )}
             {hintsRevealed >= 3 && (
-              <div className="px-4 py-3 bg-secondary/30 border border-border rounded-xl text-sm flex items-center gap-3">
+              <div className="px-4 py-3 bg-foreground/5 border border-border rounded-xl text-sm flex items-center gap-3">
                 <span className="bg-primary/20 text-primary font-bold px-2 py-0.5 rounded text-xs">HINT 3</span>
                 <span className="text-foreground italic">"{mysteryCountry.knownFor}"</span>
               </div>
@@ -476,7 +472,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
         <div className="flex items-start gap-4 md:gap-6">
           <div className="text-4xl md:text-5xl mt-1 drop-shadow-md">{country.flag}</div>
           <div>
-            <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground tracking-tight">{country.name}</h2>
+            <h2 className="text-2xl md:text-3xl font-sans font-bold text-foreground tracking-tight">{country.name}</h2>
             <p className="text-sm text-muted-foreground mt-0.5">{country.capital} &bull; {country.region}</p>
             <div className="mt-4 max-w-2xl text-sm text-foreground/80 leading-relaxed">
               {country.knownFor}
@@ -490,10 +486,10 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
             const stat = country.stats[getCategoryKey(cat)];
             const isHovered = hoveredCategory === cat;
             const maxScore = CATEGORY_MAX_SCORES[cat] ?? 10;
-            const scoreLabel = getScoreLabel(stat.score, maxScore);
+            const scoreLabel = getScoreLabel(stat.score ?? 0, maxScore);
             
             return (
-              <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-secondary/20 cursor-pointer shadow-sm"}`}>
+              <div key={cat} onMouseEnter={() => onHover(cat)} onMouseLeave={() => onHover(null)} onClick={() => onAssign(cat)} className={`p-5 rounded-xl border flex flex-col transition-all relative ${isHovered ? "bg-primary/5 border-primary shadow-md scale-[1.02] cursor-pointer" : "bg-card border-border/60 hover:bg-foreground/5 cursor-pointer shadow-sm"}`}>
                 {isHovered && <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-xl" />}
                 
                 <div className="relative z-10 flex flex-col h-full">
@@ -513,13 +509,13 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                       <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>
                         {BONUS_CATEGORIES.includes(cat) 
                           ? extractBonusText(stat.description, cat) 
-                          : getPtsDisplay(stat.score, cat)}
+                          : getPtsDisplay(stat.score ?? 0, cat)}
                       </div>
                     </div>
                   )}
                   
                   <div className={!isHardMode ? "mt-1" : "mt-1"}>
-                    <ExpandableDescription description={stat.description} />
+                    <ExpandableDescription description={stat.description} isHovered={isHovered} />
                   </div>
                 </div>
               </div>
@@ -531,39 +527,141 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
   );
 }
 
-export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players }: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[]; }) {
-  const rating = getRating(totalScore); const archetype = getCountryArchetype(roster); const bPath = getBonusPath(roster); const isGuest = room && gameMode === "sabotage" && players;
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
+import { unlockAchievements } from "@/lib/firestore";
+
+export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players , categoryTimes}: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[];  categoryTimes?: Partial<Record<Category, number>>; }) {
+  const rating = getRatingData(totalScore); const archetype = getArchetypeData(roster); const bPath = getBonusPathData(roster); const isGuest = room && gameMode === "sabotage" && players;
+  const { firebaseUser } = useFirebaseAuth();
+
+  const isMounted = useRef(true);
+  const achievementsRef = useRef<string[]>([]);
+  
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [isAtTop, setIsAtTop] = useState(true);
+
+  useEffect(() => {
+    const bName = bPath?.name;
+    const toUnlock = [rating.label, archetype.name];
+    if (bName) toUnlock.push(bName);
+    achievementsRef.current = toUnlock;
+  }, [rating.label, archetype.name, bPath]);
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false;
+      setTimeout(() => {
+        if (!isMounted.current && firebaseUser && !isGuest && achievementsRef.current.length > 0) {
+          unlockAchievements(firebaseUser.uid, achievementsRef.current).catch(console.error);
+        }
+      }, 100);
+    };
+  }, [firebaseUser, isGuest]);
+
+  useEffect(() => {
+    const el = rosterRef?.current;
+    if (!el) return;
+
+    const handleScroll = () => {
+      if (el.scrollHeight - el.scrollTop - el.clientHeight < 300) {
+        setIsAtBottom(true);
+      } else {
+        setIsAtBottom(false);
+      }
+      if (el.scrollTop < 300) {
+        setIsAtTop(true);
+      } else {
+        setIsAtTop(false);
+      }
+    };
+    
+    handleScroll();
+    el.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    
+    return () => {
+      el.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [rosterRef]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "r" || e.key === "R") {
+        onReset();
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (rosterRef && 'current' in rosterRef && rosterRef.current) {
+          rosterRef.current.scrollTo({ top: rosterRef.current.scrollHeight, behavior: 'smooth' });
+        }
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (rosterRef && 'current' in rosterRef && rosterRef.current) {
+          rosterRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onReset, rosterRef]);
   const isMultiplayerGame = gameMode === "sabotage" || gameMode === "party";
   return (
     <div className="p-4 md:p-8 flex-1 overflow-y-auto" ref={rosterRef}>
       <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 pb-20">
         <div className="text-center space-y-3 md:space-y-4 animate-in slide-in-from-bottom-4 fade-in duration-700">
-          <h2 className="text-3xl md:text-5xl font-serif font-bold text-foreground">Draft Complete</h2>
+          <h2 className="text-3xl md:text-5xl font-sans font-bold text-foreground">Draft Complete</h2>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-sm md:text-base">
             <span className="text-muted-foreground font-medium tracking-wide">Final Score:</span>
             <div className="flex items-center gap-3">
               <span className="text-2xl md:text-3xl font-bold text-primary">{totalScore} <span className="text-sm text-primary/60">pts</span></span>
+    {categoryTimes && Object.keys(categoryTimes).length > 0 && (
+      <div className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground mt-1">
+        <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        <span>Total Draft Time: {(Object.values(categoryTimes).reduce((a, b) => a + b, 0) / 1000).toFixed(1)}s</span>
+      </div>
+    )}
               </div>
           </div>
           </div>
         <div className={`grid grid-cols-1 sm:grid-cols-2 ${bPath ? "lg:grid-cols-3" : ""} gap-4 animate-in slide-in-from-bottom-8 fade-in duration-700 delay-200`}>
-          <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-            <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{archetype.icon}</div>
+          <div className="p-4 md:p-5 rounded-2xl bg-background border border-border shadow-sm flex items-start gap-4">
+            <div className="p-3 bg-foreground/5 rounded-xl shrink-0">{archetype.icon}</div>
             <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{archetype.name}</h3><p className="text-xs text-muted-foreground">{archetype.desc}</p></div>
           </div>
-          <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-            <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{rating.icon}</div>
+          <div className="p-4 md:p-5 rounded-2xl bg-background border border-border shadow-sm flex items-start gap-4">
+            <div className="p-3 bg-foreground/5 rounded-xl shrink-0">{rating.icon}</div>
             <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{rating.label}</h3><p className="text-xs text-muted-foreground">{rating.desc}</p></div>
           </div>
           {bPath && (
-            <div className="p-4 md:p-5 rounded-2xl bg-card border border-border shadow-sm flex items-start gap-4">
-              <div className="p-3 bg-secondary/30 rounded-xl shrink-0">{bPath === "agricultural" ? <Leaf className="w-5 h-5 text-yellow-400" /> : <Building className="w-5 h-5 text-yellow-400" />}</div>
-              <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{bPath === "agricultural" ? "Agricultural Giant" : "Urban Powerhouse"}</h3><p className="text-xs text-muted-foreground">{bPath === "agricultural" ? "Vast lands with sparse population." : "Dense population in a compact area."}</p></div>
+            <div className="p-4 md:p-5 rounded-2xl bg-background border border-border shadow-sm flex items-start gap-4">
+              <div className="p-3 bg-muted rounded-xl shrink-0 text-foreground">{bPath.icon}</div>
+              <div><h3 className="font-bold text-foreground text-sm md:text-base mb-1">{bPath.name}</h3><p className="text-xs text-muted-foreground">{bPath.desc}</p></div>
             </div>
           )}
         </div>
+        {!isDailyMode && (
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 mb-12">
+            <button onClick={onReset} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-base hover:opacity-90 transition-opacity shadow-lg">
+              <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again <span className="ml-1 text-xs opacity-60 bg-black/20 px-1.5 py-0.5 rounded font-mono">[R]</span>
+            </button>
+            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-foreground font-bold text-sm md:text-base hover:bg-muted/80 transition-colors border border-border shadow-sm">
+              <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
+            </button>
+            {!leaderboardSubmitted && (
+              <button onClick={onSubmitLeaderboard} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary/20 text-primary border border-primary/40 font-bold text-sm md:text-base hover:bg-primary/30 transition-colors shadow-sm">
+                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Submit Score
+              </button>
+            )}
+            {leaderboardSubmitted && (
+              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground border border-border font-bold text-sm md:text-base">
+                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
+              </div>
+            )}
+          </div>
+        )}
         <div className="space-y-4">
-          <h3 className="text-lg md:text-xl font-serif font-bold text-foreground px-2 flex items-center justify-between">
+          <h3 className="text-lg md:text-xl font-sans font-bold text-foreground px-2 flex items-center justify-between">
             <span>Your Nation's Roster</span>
             {!wildcardUsed && !wildcardPhase && (
               <button onClick={onWildcard} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 text-blue-400 font-semibold hover:bg-blue-500/20 transition-colors border border-blue-500/30">
@@ -571,7 +669,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
               </button>
             )}
             {wildcardPhase && (
-              <button onClick={() => setWildcardPhase(false)} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary text-muted-foreground font-semibold hover:text-foreground transition-colors">
+              <button onClick={() => setWildcardPhase(false)} className="font-sans text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-foreground/10 text-muted-foreground font-semibold hover:text-foreground transition-colors">
                 Cancel
               </button>
             )}
@@ -580,8 +678,8 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
             {(() => {
               const displayCats: string[] = CATEGORIES.filter(c => !BONUS_CATEGORIES.includes(c));
-              if (roster.Size && roster.Population && !wildcardPhase) { displayCats.push("Population Structure"); }
-              else { if (roster.Size || wildcardPhase) displayCats.push("Size"); if (roster.Population || wildcardPhase) displayCats.push("Population"); }
+              if (roster.Size && roster.Population) { displayCats.push("Population Structure"); }
+              else { if (roster.Size) displayCats.push("Size"); if (roster.Population) displayCats.push("Population"); }
               return displayCats.map((cat, idx) => {
                 const isCombo = cat === "Population Structure"; const actualCat = isCombo ? "Size" : (cat as Category); const assigned = roster[actualCat];
                 if (!assigned) return null;
@@ -597,12 +695,20 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                         const stat = splitAssigned.stats[ck];
                         return (
                           <div key={sCat} onClick={() => onWildcardSelect(sCat)} className="p-3 md:p-4 rounded-2xl border flex flex-col gap-2 relative transition-all cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card">
-                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-muted-foreground">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-foreground/80">{sCat}</span></div></div>
+                            <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-muted-foreground">{CATEGORY_ICONS[sCat]}<span className="text-[9px] md:text-[10px] font-bold uppercase tracking-widest text-foreground/80">{sCat}</span>
+    {categoryTimes?.[sCat] !== undefined && (
+      <span className="ml-2 text-[8px] md:text-[9px] font-mono bg-foreground/10 px-1.5 py-0.5 rounded text-muted-foreground/80">
+        {(categoryTimes[sCat] / 1000).toFixed(1)}s
+      </span>
+    )}
+    </div></div>
                             <div><div className="text-sm md:text-base font-bold text-foreground flex items-center gap-1.5">{splitAssigned.flag} <span className="truncate">{splitAssigned.name}</span></div></div>
                             {!isHardMode && (
-                              <div className="space-y-1 mt-3">
-                                <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50`}>Bonus Contributor</div>
-                                <div className="font-bold text-foreground text-xs">{extractBonusText(stat.description, sCat)}</div>
+                              <div className="flex flex-col items-start gap-1 mt-3">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <div className="font-bold text-foreground text-xs">{extractBonusText(stat.description, sCat)}</div>
+                                  <div className="text-[8px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-foreground/10">Bonus</div>
+                                </div>
                               </div>
                             )}
                             <p className="text-[9px] text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
@@ -616,38 +722,85 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                   const sizeCountry = Array.isArray(assigned) ? assigned[0] : assigned;
                   const popCountry = Array.isArray(roster.Population) ? roster.Population[0] : roster.Population;
                   return (
-                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border/50 bg-card" : "bg-card border-border/50"}`}>
+                    <div key={cat} onClick={() => { if (isWildcardTarget && !isCombo) onWildcardSelect(actualCat); }} className={`p-4 md:p-5 rounded-2xl border flex flex-col gap-3 relative transition-all ${isWildcardTarget && !isCombo ? "cursor-pointer hover:border-blue-500/50 hover:bg-blue-500/5 hover:scale-[1.02] border-border bg-card" : "bg-card border-border"}`}>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-muted-foreground">
+                        <div className="flex items-center gap-1.5 text-muted-foreground">
                           {CATEGORY_ICONS["Size"]}
                           <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-foreground/80">Population Structure</span>
+                          {categoryTimes && categoryTimes.Size !== undefined && categoryTimes.Population !== undefined && (
+                            <span className="ml-2 text-[8px] md:text-[9px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                              {(categoryTimes.Size / 1000).toFixed(1)}s + {(categoryTimes.Population / 1000).toFixed(1)}s
+                            </span>
+                          )}
+                        </div>
+                        <div className="font-bold text-foreground text-base md:text-lg">
+                           {!isHardMode && (
+                             <><span className="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-br from-foreground to-foreground/70">+{(sizeCountry as any).stats.size.score + (popCountry as any).stats.population.score}</span> <span className="text-[10px] uppercase tracking-wider opacity-75">pts</span></>
+                           )}
                         </div>
                       </div>
-                      <div className="flex flex-col gap-1">
-                        <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2">{(sizeCountry as any).flag} {(sizeCountry as any).name}{(sizeCountry as any).name !== (popCountry as any).name && " (Size)"}</div>
-                        {(sizeCountry as any).name !== (popCountry as any).name && (
-                           <div className="text-base md:text-lg font-bold text-foreground flex items-center gap-2 mt-0.5">{(popCountry as any).flag} {(popCountry as any).name} (Population)</div>
+                                            <div className="w-full mt-2">
+                        {(sizeCountry as any).name !== (popCountry as any).name ? (
+                          <div className="flex items-start justify-center w-full gap-2">
+                            <div className="flex-1 flex flex-col items-center text-center gap-2">
+                              <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-center gap-1.5 w-full">
+                                {(sizeCountry as any).flag} <span className="truncate">{(sizeCountry as any).name}</span>
+                              </div>
+                              <div className="space-y-1 flex flex-col items-center">
+                                {!isHardMode && (
+                                  <div className="flex flex-col gap-1 items-center">
+                                    <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
+                                    <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-foreground/10">Size Bonus</div>
+                                  </div>
+                                )}
+                                <p className="text-[10px] text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(sizeCountry as any).stats.size.description}"</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-center pt-1">
+                              <span className="text-muted-foreground font-bold shrink-0">+</span>
+                            </div>
+                            <div className="flex-1 flex flex-col items-center text-center gap-2">
+                              <div className="text-sm md:text-base font-bold text-foreground flex items-center justify-center gap-1.5 w-full">
+                                <span className="truncate">{(popCountry as any).name}</span> {(popCountry as any).flag}
+                              </div>
+                              <div className="space-y-1 flex flex-col items-center">
+                                {!isHardMode && (
+                                  <div className="flex flex-col gap-1 items-center">
+                                    <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
+                                    <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-foreground/10">Pop Bonus</div>
+                                  </div>
+                                )}
+                                <p className="text-[10px] text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(popCountry as any).stats.population.description}"</p>
+                              </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col items-center w-full gap-3">
+                            <div className="text-base md:text-lg font-bold text-foreground flex items-center justify-center gap-2">
+                              {(sizeCountry as any).flag} {(sizeCountry as any).name}
+                            </div>
+                            <div className="grid grid-cols-2 gap-3 w-full">
+                              <div className="space-y-1 flex flex-col items-center text-center">
+                                {!isHardMode && (
+                                  <div className="flex flex-col gap-1 items-center">
+                                    <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
+                                    <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-foreground/10">Size Bonus</div>
+                                  </div>
+                                )}
+                                <p className="text-[10px] text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(sizeCountry as any).stats.size.description}"</p>
+                              </div>
+                              <div className="space-y-1 flex flex-col items-center text-center">
+                                {!isHardMode && (
+                                  <div className="flex flex-col gap-1 items-center">
+                                    <span className="font-bold text-foreground text-[11px] leading-tight">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
+                                    <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-foreground/10">Pop Bonus</div>
+                                  </div>
+                                )}
+                                <p className="text-[10px] text-muted-foreground/80 leading-snug italic line-clamp-3 mt-1 text-center">"{(popCountry as any).stats.population.description}"</p>
+                              </div>
+                            </div>
+                          </div>
                         )}
-                      </div>
-                      <div className="space-y-3 mt-3">
-                        <div className="space-y-1">
-                          {!isHardMode && (
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-foreground text-xs">{extractBonusText((sizeCountry as any).stats.size.description, "Size")}</span>
-                              <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Size Bonus</div>
-                            </div>
-                          )}
-                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{(sizeCountry as any).stats.size.description}"</p>
-                        </div>
-                        <div className="space-y-1">
-                          {!isHardMode && (
-                            <div className="flex items-center gap-2">
-                              <span className="font-bold text-foreground text-xs">{extractBonusText((popCountry as any).stats.population.description, "Population")}</span>
-                              <div className="text-[9px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50">Pop Bonus</div>
-                            </div>
-                          )}
-                          <p className="text-[11px] md:text-xs text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{(popCountry as any).stats.population.description}"</p>
-                        </div>
                       </div>
                     </div>
                   );
@@ -660,7 +813,7 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                     {(() => {
                       let scoreVal = 0, weight = 1, desc = "", maxScore = 10;
                       const ck = getCategoryKey(actualCat); 
-                      scoreVal = assigned.stats[ck].score; 
+                      scoreVal = assigned.stats[ck].score ?? 0; 
                       maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; 
                       desc = assigned.stats[ck].description; 
                       
@@ -673,11 +826,11 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
                               {!isBonus && !isSizeOrPop ? (
-                                <><div className="flex items-center gap-2"><span className="text-lg md:text-xl font-black text-primary">{scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-muted-foreground font-semibold">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-secondary/50`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
+                                <><div className="flex items-center gap-2"><span className="text-lg md:text-xl font-black text-primary">{scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-muted-foreground font-semibold">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-foreground/10`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
                               ) : isSizeOrPop ? (
                                 <div className="flex items-center gap-2">
                                   <span className="font-bold text-foreground text-xs">{extractBonusText(desc, actualCat)}</span>
-                                  <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-secondary/50`}>Bonus Contributor</div>
+                                  <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-foreground/10`}>Bonus Contributor</div>
                                 </div>
                               ) : (
                                 <span className="font-bold text-foreground text-lg">{extractBonusText(desc, actualCat)}</span>
@@ -694,27 +847,31 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
             })()}
           </div>
         </div>
-        {!isDailyMode && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 md:pt-8 border-t border-border">
-            <button onClick={onReset} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-base hover:opacity-90 transition-opacity shadow-lg">
-              <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again
-            </button>
-            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-secondary text-foreground font-bold text-sm md:text-base hover:bg-secondary/80 transition-colors border border-border shadow-sm">
-              <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
-            </button>
-            {!leaderboardSubmitted && (
-              <button onClick={onSubmitLeaderboard} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary/20 text-primary border border-primary/40 font-bold text-sm md:text-base hover:bg-primary/30 transition-colors shadow-sm">
-                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Submit Score
-              </button>
-            )}
-            {leaderboardSubmitted && (
-              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-secondary/50 text-muted-foreground border border-border font-bold text-sm md:text-base">
-                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
-              </div>
-            )}
-          </div>
-        )}
       </div>
+
+      <button
+        onClick={() => {
+          if (rosterRef && 'current' in rosterRef && rosterRef.current) {
+            rosterRef.current.scrollTo({ top: rosterRef.current.scrollHeight, behavior: 'smooth' });
+          }
+        }}
+        title="Scroll to bottom"
+        className={`fixed bottom-6 right-6 md:bottom-8 md:right-8 p-3 md:p-4 rounded-full bg-card text-foreground shadow-xl hover:scale-105 active:scale-95 transition-all z-50 flex items-center justify-center border border-border group duration-300 ${isAtBottom ? 'opacity-0 pointer-events-none translate-y-4' : 'opacity-100 translate-y-0'}`}
+      >
+        <ChevronDown className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-y-0.5 transition-transform" />
+      </button>
+
+      <button
+        onClick={() => {
+          if (rosterRef && 'current' in rosterRef && rosterRef.current) {
+            rosterRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+        title="Scroll to top"
+        className={`fixed top-20 right-6 md:top-24 md:right-8 p-3 md:p-4 rounded-full bg-card text-foreground shadow-xl hover:scale-105 active:scale-95 transition-all z-50 flex items-center justify-center border border-border group duration-300 ${isAtTop ? 'opacity-0 pointer-events-none -translate-y-4' : 'opacity-100 translate-y-0'}`}
+      >
+        <ChevronUp className="w-5 h-5 md:w-6 md:h-6 group-hover:-translate-y-0.5 transition-transform" />
+      </button>
     </div>
   );
 }
@@ -736,6 +893,8 @@ export type GameState = {
   isHardMode: boolean;
   roomCode: string | null;
   poolSeed: number;
+  categoryTimes: Partial<Record<Category, number>>;
+  currentTurnStartTime: number;
 };
 
 export function seededRng(seed: number): () => number {
