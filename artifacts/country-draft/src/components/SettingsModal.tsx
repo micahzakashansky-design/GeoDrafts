@@ -177,7 +177,7 @@ export function SettingsModal({ onClose }: Props) {
                 </p>
               </div>
 
-              {profile?.username === "DevTest" && (
+              {profile?.username?.toLowerCase() === "devtest" && (
                 <div className="pt-5 border-t border-border flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Bug className="w-4 h-4 text-primary" />

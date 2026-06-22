@@ -14,7 +14,7 @@ export const DEV_CATEGORY_MAX_SCORES: Record<Category, number> = {
 };
 
 export function isDevModeActive(username: string | undefined | null): boolean {
-  if (username !== "DevTest") return false;
+  if (username?.toLowerCase() !== "devtest") return false;
   return localStorage.getItem("geoDraftsDevMode") === "true";
 }
 
