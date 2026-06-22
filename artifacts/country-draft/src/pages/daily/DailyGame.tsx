@@ -14,6 +14,7 @@ import { Home, Globe as GlobeIcon, CalendarDays, ShieldAlert, ShieldPlus } from 
 import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster, loadPersonalLeaderboard } from "@/lib/local-leaderboard";
+import { SettingsButton } from "@/components/SettingsButton";
 
 export default function DailyGame() {
   const [, navigate] = useLocation();
@@ -143,6 +144,9 @@ export default function DailyGame() {
           <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
             <CalendarDays className="w-3.5 h-3.5" /> Daily Challenge {state.isHardMode ? <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> : <ShieldPlus className="w-3.5 h-3.5 text-emerald-400" />}
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <SettingsButton />
         </div>
       </header>
 

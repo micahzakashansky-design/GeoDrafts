@@ -15,6 +15,7 @@ import {
 import { SidebarRoster } from "./SidebarRoster";
 import { Home, Globe as GlobeIcon, Users } from "lucide-react";
 import { Logo } from "../../components/Logo";
+import { SettingsButton } from "@/components/SettingsButton";
 
 export default function DoubleDraftMultiplayer() {
   const [, navigate] = useLocation();
@@ -140,6 +141,9 @@ export default function DoubleDraftMultiplayer() {
           <div className="px-2.5 py-1 rounded-md bg-secondary text-xs font-semibold text-muted-foreground border border-border hidden sm:flex items-center gap-1.5">
             <Users className="w-3.5 h-3.5" /> Double Draft Party
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <SettingsButton />
         </div>
       </header>
 

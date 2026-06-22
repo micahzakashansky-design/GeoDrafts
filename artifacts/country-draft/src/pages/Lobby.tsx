@@ -5,6 +5,7 @@ import { useFirebaseAuth } from "../lib/use-firebase-auth";
 import { listenToRoom, listenToPlayers, updateRoom, type Room, type RoomPlayer } from "../lib/firestore";
 import { Logo } from "../components/Logo";
 import { motion } from "framer-motion";
+import { SettingsButton } from "@/components/SettingsButton";
 
 export default function Lobby() {
   const [, navigate] = useLocation();
@@ -84,6 +85,9 @@ export default function Lobby() {
           <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
             <Users className="w-3.5 h-3.5" /> Multiplayer Lobby
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <SettingsButton />
         </div>
       </header>
 

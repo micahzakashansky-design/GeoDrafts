@@ -10,6 +10,7 @@ import { getTopScores, getCloudPersonalScores, deleteCloudPersonalScore, deleteG
 import { loadPersonalLeaderboard, deleteLocalPersonalScore, type GameMode, type PersonalLeaderboardEntry } from "@/lib/local-leaderboard";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { SettingsButton } from "@/components/SettingsButton";
 
 function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDelete, onPublish }: { rank: number; entry: LeaderboardEntry | PersonalLeaderboardEntry; isPersonal?: boolean; isOwner?: boolean; onDelete?: () => void; onPublish?: () => void }) {
   const [expanded, setExpanded] = useState(false);
@@ -241,6 +242,9 @@ export default function Leaderboard() {
           <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:block tracking-widest uppercase">
             Leaderboards
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <SettingsButton />
         </div>
       </header>
 

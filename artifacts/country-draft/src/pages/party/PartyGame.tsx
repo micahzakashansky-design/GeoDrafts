@@ -14,6 +14,7 @@ import {
 import { Home, Globe as GlobeIcon, Users, PartyPopper, ShieldAlert, ShieldPlus } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SidebarRoster } from "./SidebarRoster";
+import { SettingsButton } from "@/components/SettingsButton";
 
 export default function PartyGame() {
   const [, navigate] = useLocation();
@@ -123,6 +124,9 @@ export default function PartyGame() {
           <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
             <Users className="w-3.5 h-3.5" /> Party Mode {state.isHardMode ? <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> : <ShieldPlus className="w-3.5 h-3.5 text-emerald-400" />}
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <SettingsButton />
         </div>
       </header>
 

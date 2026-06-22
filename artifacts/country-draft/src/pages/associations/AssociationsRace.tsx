@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { listenToRoom, listenToPlayers, updateRoom, updatePlayer, type Room, type RoomPlayer } from "@/lib/firestore";
 import type { TaskType, Question } from "./AssociationsGame";
+import { SettingsButton } from "@/components/SettingsButton";
 
 // Simple seeded PRNG
 function mulberry32(a: number) {
@@ -216,6 +217,9 @@ export default function AssociationsRace() {
           <div className="text-sm font-medium bg-secondary/50 px-3 py-1 rounded-full">
             {currentIndex + 1} / {questions.length} • Score: {score}
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <SettingsButton />
         </div>
       </header>
 

@@ -1,12 +1,8 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation, Link } from "wouter";
+import { useLocation } from "wouter";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  Globe, ShieldAlert, ShieldPlus, Trophy, BookOpen, CalendarDays, X,
-  Moon, Sun, Users, Swords, PartyPopper, ArrowLeftRight, Gamepad2,
-  Search, Zap, Star, Calculator, ChevronRight, Settings, LogIn, User, Loader2, Brain, Medal, Target, Shield
-} from "lucide-react";
+import { Globe, Trophy, Play, Users, MapPin, Zap, Crown, User, Brain, HelpCircle, CheckCircle2, ChevronRight, BookOpen, ShieldAlert, ShieldPlus, CalendarDays, X, Moon, Sun, Swords, PartyPopper, ArrowLeftRight, Gamepad2, Search, Star, Calculator, Settings, LogIn, Loader2, Shield, Target } from "lucide-react";
 import { useTheme } from "../lib/theme-context";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
 import { checkDailySubmitted, getDailyState, createRoom, joinRoom, getTopScores } from "../lib/firestore";
@@ -17,6 +13,7 @@ import { ContactModal } from "../components/ContactModal";
 import { AboutModal } from "../components/AboutModal";
 import { Logo } from "../components/Logo";
 import { AchievementsCard } from "../components/AchievementsCard";
+import { SettingsButton } from "../components/SettingsButton";
 import { toast } from "sonner";
 
 const NATION_RANKS = [
@@ -407,35 +404,6 @@ function DailyCard() {
   );
 }
 
-function MultiplayerModal({ onClose, onSignIn }: { onClose: () => void, onSignIn: () => void }) {
-  const [, navigate] = useLocation(); const { firebaseUser, profile } = useFirebaseAuth(); const [loading, setLoading] = useState(false); const [error, setError] = useState<string | null>(null); const [joinCode, setJoinCode] = useState(""); const [isJoining, setIsJoining] = useState(false); const [difficulty, setDifficulty] = useState<"easy" | "hard">("easy");
-  async function handleHost(mode: "sabotage" | "party" | "double_draft") { if (!firebaseUser || !profile) return; setLoading(true); try { const code = await createRoom(firebaseUser.uid, profile.username, mode, difficulty); localStorage.setItem("countryDraftRoomCode", code); navigate(`/game/${mode}?room=${code}`); } catch (e) { setError(e instanceof Error ? e.message : "Failed to create room"); } finally { setLoading(false); } }
-  async function handleJoin() { if (!firebaseUser || !profile) return; if (joinCode.length !== 6) return; setLoading(true); try { const room = await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username); localStorage.setItem("countryDraftRoomCode", joinCode.toUpperCase()); navigate(`/game/${room.mode}?room=${joinCode.toUpperCase()}`); } catch (e) { setError(e instanceof Error ? e.message : "Failed to join room"); } finally { setLoading(false); } }
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-md">
-      <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="bg-card border border-border w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-secondary/30"><div className="flex items-center gap-2"><Users className="w-5 h-5 text-primary" /><h2 className="font-serif text-xl font-bold">Multiplayer Hub</h2></div><button onClick={onClose} className="p-1 rounded-lg hover:bg-secondary transition-colors"><X className="w-5 h-5" /></button></div>
-        {!firebaseUser ? (
-          <div className="p-8 text-center space-y-4">
-            <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
-              <Users className="w-8 h-8 text-primary" />
-            </div>
-            <h3 className="text-xl font-bold">Sign in Required</h3>
-            <p className="text-muted-foreground">You need an account to play with others and save your progress.</p>
-            <button onClick={onSignIn} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity">Sign in to Continue</button>
-          </div>
-        ) : isJoining ? (
-          <div className="p-6 space-y-6"><div className="space-y-2 text-center"><h3 className="text-lg font-bold">Join Game</h3><p className="text-sm text-muted-foreground">Enter the 6-character room code</p></div>{error && <div className="p-3 rounded-lg bg-red-500/10 text-red-400 text-xs border border-red-500/20">{error}</div>}<div className="flex justify-center"><input value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())} maxLength={6} className="w-48 bg-secondary border border-border rounded-xl px-4 py-3 text-xl font-bold text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-primary/50" placeholder="ABCDEF" /></div><button onClick={handleJoin} disabled={loading} className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity disabled:opacity-50">{loading ? "Joining..." : "Join Game"}</button><button onClick={() => setIsJoining(false)} className="w-full text-sm text-muted-foreground hover:text-foreground">Back to Hosting</button></div>
-        ) : (
-          <div className="space-y-6 p-6"><div className="space-y-3"><h3 className="text-sm font-semibold text-muted-foreground uppercase">Host Difficulty</h3><div className="flex gap-2 p-1 bg-secondary/30 rounded-xl border border-border"><button onClick={() => setDifficulty("easy")} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${difficulty === "easy" ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>Classic</button><button onClick={() => setDifficulty("hard")} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${difficulty === "hard" ? "bg-red-500 text-white shadow-sm" : "text-muted-foreground hover:text-foreground"}`}>Hard</button></div></div>
-            <div className="space-y-3"><h3 className="text-sm font-semibold text-muted-foreground uppercase">Host a Game</h3><div className="grid grid-cols-1 gap-3"><button onClick={() => handleHost("sabotage")} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/20 hover:bg-secondary/40 transition-colors text-left"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center text-red-400"><Swords className="w-5 h-5" /></div><div><div className="font-bold">Sabotage (2 Player)</div><div className="text-xs text-muted-foreground">Pick for your opponent</div></div></div><ChevronRight className="w-4 h-4 text-muted-foreground" /></button><button onClick={() => handleHost("party")} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/20 hover:bg-secondary/40 transition-colors text-left"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-400"><PartyPopper className="w-5 h-5" /></div><div><div className="font-bold">Party (No Limit)</div><div className="text-xs text-muted-foreground">Same countries for everyone</div></div></div><ChevronRight className="w-4 h-4 text-muted-foreground" /></button><button onClick={() => handleHost("double_draft")} className="flex items-center justify-between p-4 rounded-xl border border-border bg-secondary/20 hover:bg-secondary/40 transition-colors text-left"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center text-blue-400"><Users className="w-5 h-5" /></div><div><div className="font-bold">Double Draft (Party)</div><div className="text-xs text-muted-foreground">Draft 2 at a time with others</div></div></div><ChevronRight className="w-4 h-4 text-muted-foreground" /></button></div></div>
-            <div className="flex items-center gap-2"><div className="h-px flex-1 bg-border" /><span className="text-xs text-muted-foreground uppercase">or</span><div className="h-px flex-1 bg-border" /></div><button onClick={() => setIsJoining(true)} className="w-full py-3 rounded-xl border border-primary/30 bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors">Join Existing Game</button></div>
-        )}
-      </motion.div>
-    </motion.div>
-  );
-}
-
 function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onShowGuidebook: () => void }) {
   const [, setLocation] = useLocation();
   return (
@@ -491,12 +459,11 @@ export default function Home() {
 
   const [, navigate] = useLocation();
   const [showGuidebook, setShowGuidebook] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
-  const { isLight, toggleTheme } = useTheme();
-  const { firebaseUser, profile, signInWithGoogle, needsUsername, refreshProfile, isLoading } = useFirebaseAuth();
+  const [showSettings, setShowSettings] = useState(false);
+  const { firebaseUser, profile, needsUsername, refreshProfile, isLoading } = useFirebaseAuth();
 
   const [joinCode, setJoinCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
@@ -561,13 +528,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <header className="px-6 py-3 flex items-center justify-end bg-transparent sticky top-0 z-40">
-        <button
-          onClick={() => setShowSettings(true)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-semibold bg-card border border-border text-card-foreground hover:bg-muted transition-colors shadow-sm"
-        >
-          <Settings className="w-4 h-4 opacity-70" />
-          <span>{firebaseUser ? profile?.username || "Account" : "Settings"}</span>
-        </button>
+        <SettingsButton />
       </header>
 
       {!firebaseUser ? (

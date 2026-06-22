@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, Brain } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { motion } from "framer-motion";
+import { SettingsButton } from "@/components/SettingsButton";
 
 export type TaskType = 
   | "identify_from_flag" 
@@ -140,6 +141,9 @@ export default function AssociationsGame() {
             <span className="w-1 h-1 rounded-full bg-border" />
             <span className="font-bold text-foreground">Score: {score}</span>
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <SettingsButton />
         </div>
       </header>
 

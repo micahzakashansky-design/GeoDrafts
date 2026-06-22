@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Logo } from "@/components/Logo";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { createRoom } from "@/lib/firestore";
+import { SettingsButton } from "@/components/SettingsButton";
 
 export const TASK_TYPES = [
   { id: "identify_from_flag", label: "Identify a country from its flag", icon: <Flag className="w-4 h-4 text-red-400" /> },
@@ -103,6 +104,9 @@ export function AssociationsSetup() {
           <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:block tracking-widest uppercase">
             Associations Setup
           </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <SettingsButton />
         </div>
       </header>
 
