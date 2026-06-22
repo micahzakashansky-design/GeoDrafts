@@ -8,7 +8,7 @@ import {
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { updatePlayer, listenToRoom, listenToPlayers, type Room, type RoomPlayer, updateRoom } from "@/lib/firestore";
 import {
-  CountryCard, GameOver, GameState, seededShuffle, dateStrToSeed,
+  CountryCard, GameOver, drawRosterPng, GameState, seededShuffle, dateStrToSeed,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./PartyUI";
 import { Home, Globe as GlobeIcon, Users, PartyPopper, ShieldAlert, ShieldPlus } from "lucide-react";
@@ -137,7 +137,7 @@ export default function PartyGame() {
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="party" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
+            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => drawRosterPng(state.roster, finalScore, bonus, state.isHardMode)} onWildcard={() => {}} onWildcardSelect={() => {}} setWildcardPhase={() => {}} wildcardUsed={false} wildcardPhase={false} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="party" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (

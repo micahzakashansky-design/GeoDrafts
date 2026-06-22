@@ -116,14 +116,24 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
   if (bonus > 0) {
     ctx.fillStyle = C.fgDim;
     ctx.font = "12px sans-serif";
-    ctx.fillText(`(incl. +${bonus} population structure bonus)`, PAD, 76);
+    const archName = (roster.Size && roster.Population) ? getArchetypeData(roster).name : "population structure";
+    const displayBonus = Number.isInteger(bonus) ? bonus : bonus.toFixed(1).replace(/\.0$/, '');
+    ctx.fillText(`(incl. +${displayBonus} ${archName} bonus)`, PAD, 76);
   }
   const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
-  if (roster.Size && roster.Population) { displayCats.push("Population Structure" as any); }
+  
+  let comboName = "Population Structure";
+  let comboDesc = "Combined structure bonus applied";
+  if (roster.Size && roster.Population) { 
+    const arch = getArchetypeData(roster);
+    comboName = arch.name;
+    comboDesc = arch.desc;
+    displayCats.push(comboName as any); 
+  }
   else { if (roster.Size) displayCats.push("Size" as any); if (roster.Population) displayCats.push("Population" as any); }
 
   displayCats.forEach((cat, i) => {
-    const isCombo = cat === "Population Structure";
+    const isCombo = (roster.Size && roster.Population && cat === comboName);
     const actualCat = isCombo ? "Size" : (cat as Category);
     const assigned = roster[actualCat];
     const col = i % COLS;
@@ -155,7 +165,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
       if (isCombo) {
         scoreVal = 0;
         weight = 1;
-        desc = "Combined structure bonus applied";
+        desc = comboDesc;
       } else {
         const ck = getCategoryKey(actualCat);
         scoreVal = assigned.stats[ck].score ?? 0;
@@ -186,7 +196,8 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
         } else {
           ctx.fillStyle = C.gold;
           ctx.font = "bold 13px sans-serif";
-          ctx.fillText(isCombo ? `+${bonus} pts` : `Pending`, x + CARD_W - 60, y + 20);
+          const displayBonus = Number.isInteger(bonus) ? bonus : bonus.toFixed(1).replace(/\.0$/, '');
+          ctx.fillText(isCombo ? `+${displayBonus} pts` : `Pending`, x + CARD_W - 60, y + 20);
         }
       }
 

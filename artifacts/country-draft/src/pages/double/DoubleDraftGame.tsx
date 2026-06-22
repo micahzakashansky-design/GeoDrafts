@@ -6,7 +6,7 @@ import {
   type Country, type Category,
 } from "@/data/countries";
 import {
-  CountryCard, GameOver, SelectionPhase, GameState,
+  CountryCard, GameOver, drawRosterPng, SelectionPhase, GameState,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./DoubleUI";
 import { SidebarRoster } from "./SidebarRoster";
@@ -164,7 +164,7 @@ export default function DoubleDraftGame() {
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} wildcardOptions={state.selectionOptions} wildcardTargetCategory={state.wildcardTargetCategory} onResolveWildcard={onResolveWildcard} />
+            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => drawRosterPng(state.roster, finalScore, bonus, state.isHardMode)} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} wildcardOptions={state.selectionOptions} wildcardTargetCategory={state.wildcardTargetCategory} onResolveWildcard={onResolveWildcard} />
           ) : state.selectionOptions ? (
              <SelectionPhase options={state.selectionOptions} onPick={onSelectionPick} isHardMode={state.isHardMode} mode="double" />
           ) : state.currentCountry ? (

@@ -22,21 +22,42 @@ import { Agentation } from "agentation";
 
 const queryClient = new QueryClient();
 
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/lobby" component={Lobby} />
-      <Route path="/game/normal" component={NormalGame} />
-      <Route path="/game/double" component={DoubleDraftGame} />
-      <Route path="/game/guess" component={GuessGame} />
-      <Route path="/game/daily" component={DailyGame} />
-      <Route path="/game/party" component={PartyGame} />
-      <Route path="/game/sabotage" component={SabotageGame} />
-      <Route path="/game/associations/setup" component={AssociationsSetup} />
-      <Route path="/game/associations" component={AssociationsGame} />
       <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/about" component={About} />
+      
+      <Route path="/lobby">
+        <ProtectedRoute><Lobby /></ProtectedRoute>
+      </Route>
+      <Route path="/game/normal">
+        <ProtectedRoute><NormalGame /></ProtectedRoute>
+      </Route>
+      <Route path="/game/double">
+        <ProtectedRoute><DoubleDraftGame /></ProtectedRoute>
+      </Route>
+      <Route path="/game/guess">
+        <ProtectedRoute><GuessGame /></ProtectedRoute>
+      </Route>
+      <Route path="/game/daily">
+        <ProtectedRoute><DailyGame /></ProtectedRoute>
+      </Route>
+      <Route path="/game/party">
+        <ProtectedRoute><PartyGame /></ProtectedRoute>
+      </Route>
+      <Route path="/game/sabotage">
+        <ProtectedRoute><SabotageGame /></ProtectedRoute>
+      </Route>
+      <Route path="/game/associations/setup">
+        <ProtectedRoute><AssociationsSetup /></ProtectedRoute>
+      </Route>
+      <Route path="/game/associations">
+        <ProtectedRoute><AssociationsGame /></ProtectedRoute>
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );

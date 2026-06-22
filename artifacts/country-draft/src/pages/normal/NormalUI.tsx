@@ -116,14 +116,24 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
   if (bonus > 0) {
     ctx.fillStyle = C.fgDim;
     ctx.font = "12px sans-serif";
-    ctx.fillText(`(incl. +${bonus} population structure bonus)`, PAD, 76);
+    const archName = (roster.Size && roster.Population) ? getArchetypeData(roster).name : "population structure";
+    const displayBonus = Number.isInteger(bonus) ? bonus : bonus.toFixed(1).replace(/\.0$/, '');
+    ctx.fillText(`(incl. +${displayBonus} ${archName} bonus)`, PAD, 76);
   }
   const displayCats: string[] = CATEGORIES.filter(c => c !== "Size" && c !== "Population");
-  if (roster.Size && roster.Population) { displayCats.push("Population Structure" as any); }
+  
+  let comboName = "Population Structure";
+  let comboDesc = "Combined structure bonus applied";
+  if (roster.Size && roster.Population) { 
+    const arch = getArchetypeData(roster);
+    comboName = arch.name;
+    comboDesc = arch.desc;
+    displayCats.push(comboName as any); 
+  }
   else { if (roster.Size) displayCats.push("Size" as any); if (roster.Population) displayCats.push("Population" as any); }
 
   displayCats.forEach((cat, i) => {
-    const isCombo = cat === "Population Structure";
+    const isCombo = (roster.Size && roster.Population && cat === comboName);
     const actualCat = isCombo ? "Size" : (cat as Category);
     const assigned = roster[actualCat];
     const col = i % COLS;
@@ -155,7 +165,7 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
       if (isCombo) {
         scoreVal = 0;
         weight = 1;
-        desc = "Combined structure bonus applied";
+        desc = comboDesc;
       } else {
         const ck = getCategoryKey(actualCat);
         scoreVal = assigned.stats[ck].score ?? 0;
@@ -186,7 +196,8 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
         } else {
           ctx.fillStyle = C.gold;
           ctx.font = "bold 13px sans-serif";
-          ctx.fillText(isCombo ? `+${bonus} pts` : `Pending`, x + CARD_W - 60, y + 20);
+          const displayBonus = Number.isInteger(bonus) ? bonus : bonus.toFixed(1).replace(/\.0$/, '');
+          ctx.fillText(isCombo ? `+${displayBonus} pts` : `Pending`, x + CARD_W - 60, y + 20);
         }
       }
 
@@ -552,26 +563,26 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
             </div>
           )}
         </div>
-        {!isDailyMode && (
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 mb-12">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-4 pt-4 mb-12">
+          {!isDailyMode && (
             <button onClick={onReset} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm md:text-base hover:opacity-90 transition-opacity shadow-lg">
               <RotateCcw className="w-4 h-4 md:w-5 md:h-5" /> Play Again <span className="ml-1 text-xs opacity-60 bg-black/20 px-1.5 py-0.5 rounded font-mono">[R]</span>
             </button>
-            <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground font-bold text-sm md:text-base hover:bg-muted/80 transition-colors border border-border shadow-sm">
-              <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
+          )}
+          <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground font-bold text-sm md:text-base hover:bg-muted/80 transition-colors border border-border shadow-sm">
+            <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
+          </button>
+          {!leaderboardSubmitted && (
+            <button onClick={onSubmitLeaderboard} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary/20 text-primary border border-primary/40 font-bold text-sm md:text-base hover:bg-primary/30 transition-colors shadow-sm">
+              <Medal className="w-4 h-4 md:w-5 md:h-5" /> Submit Score
             </button>
-            {!leaderboardSubmitted && (
-              <button onClick={onSubmitLeaderboard} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary/20 text-primary border border-primary/40 font-bold text-sm md:text-base hover:bg-primary/30 transition-colors shadow-sm">
-                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Submit Score
-              </button>
-            )}
-            {leaderboardSubmitted && (
-              <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground border border-border font-bold text-sm md:text-base">
-                <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
-              </div>
-            )}
-          </div>
-        )}
+          )}
+          {leaderboardSubmitted && (
+            <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground border border-border font-bold text-sm md:text-base">
+              <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
+            </div>
+          )}
+        </div>
         <div className="space-y-4">
           <h3 className="text-lg md:text-xl font-sans font-bold text-foreground px-2 flex items-center justify-between">
             <span>Your Nation's Roster</span>
