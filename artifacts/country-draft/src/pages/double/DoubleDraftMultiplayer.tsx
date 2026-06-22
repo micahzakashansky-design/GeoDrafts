@@ -7,8 +7,9 @@ import {
 import { seededShuffle } from "../party/PartyUI";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { updatePlayer, listenToRoom, listenToPlayers, type Room, type RoomPlayer, updateRoom } from "@/lib/firestore";
+import { computeSizePopBonus } from "@/lib/achievements-logic";
 import {
-  CountryCard, GameOver, SelectionPhase, GameState, computeSizePopBonus,
+  CountryCard, GameOver, SelectionPhase, GameState,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./DoubleUI";
 import { SidebarRoster } from "./SidebarRoster";
