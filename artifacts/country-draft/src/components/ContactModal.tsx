@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, X, Loader2, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
-import emailjs from "@emailjs/browser";
 
 export function ContactModal({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -26,33 +25,21 @@ export function ContactModal({ onClose }: { onClose: () => void }) {
     
     setLoading(true);
     try {
-      // These variables need to be set in the .env file
-      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-      if (!serviceId || !templateId || !publicKey) {
-        throw new Error("EmailJS is not configured. Please set the VITE_EMAILJS environment variables.");
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, subject, message }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to send message");
       }
-
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: email,
-          reply_to: email,
-          subject: subject || "GeoDrafts Suggestion",
-          message: message,
-          to_email: "darabrawl1@gmail.com" // You can set this in the EmailJS template as well
-        },
-        publicKey
-      );
       
       toast.success("Message sent successfully! We'll get back to you soon.");
       onClose();
-    } catch (error: any) {
+    } catch (error) {
       console.error(error);
-      toast.error(error?.message || "Failed to send message. Please try again later.");
+      toast.error("Failed to send message. Please try again later.");
     } finally {
       setLoading(false);
     }
