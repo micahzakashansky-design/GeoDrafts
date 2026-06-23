@@ -389,7 +389,6 @@ export async function createRoom(
     finishedRound: false,
     sabotageChoice: null,
     sabotageOptions: null,
-    completionTime: undefined,
   };
   await setDoc(playerRef, player);
 
@@ -416,7 +415,6 @@ export async function joinRoom(code: string, uid: string, username: string): Pro
     finishedRound: false,
     sabotageChoice: null,
     sabotageOptions: null,
-    completionTime: undefined,
   };
   await setDoc(playerRef, player);
   return room;
