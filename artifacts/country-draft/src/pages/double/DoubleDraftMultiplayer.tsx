@@ -9,7 +9,7 @@ import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { updatePlayer, listenToRoom, listenToPlayers, type Room, type RoomPlayer, updateRoom } from "@/lib/firestore";
 import { computeSizePopBonus } from "@/lib/achievements-logic";
 import {
-  CountryCard, GameOver, SelectionPhase, GameState,
+  CountryCard, GameOver, SelectionPhase, GameState, drawRosterPng,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./DoubleUI";
 import { SidebarRoster } from "./SidebarRoster";
@@ -94,11 +94,60 @@ export default function DoubleDraftMultiplayer() {
       const newRoster = { ...prev.roster };
       delete newRoster[cat];
       const newPool = [...prev.pool];
-      const nextCountry = newPool.pop() || null;
-      return { ...prev, roster: newRoster, currentCountry: nextCountry, pool: newPool, wildcardUsed: true, selectionOptions: null };
+      let c1, c2;
+      const currentPlayer = players.find(p => p.uid === firebaseUser?.uid);
+      if (isDevModeActive(currentPlayer?.username)) {
+         c1 = drawDevCountry(newPool, newRoster);
+         c2 = drawDevCountry(newPool, newRoster);
+      } else {
+         c1 = newPool.pop(); c2 = newPool.pop();
+      }
+      const options = c1 && c2 ? [c1, c2] : null;
+      return { 
+        ...prev, 
+        selectionOptions: options, 
+        wildcardTargetCategory: cat, 
+        currentTurnStartTime: Date.now(),
+        currentCountry: null, 
+        pool: newPool, 
+        wildcardUsed: true, 
+        gameOver: true 
+      };
     });
     setWildcardPhase(false);
-  }, [wildcardPhase, state.wildcardUsed]);
+  }, [wildcardPhase, state.wildcardUsed, players, firebaseUser]);
+
+  const onResolveWildcard = useCallback((country: Country) => {
+    setState(prev => {
+      if (!prev.wildcardTargetCategory) return prev;
+      const newRoster = { ...prev.roster };
+      newRoster[prev.wildcardTargetCategory] = country;
+      
+      const baseScore = CATEGORIES.reduce((sum, cat) => {
+        const c = newRoster[cat]; if (!c) return sum;
+        if (BONUS_CATEGORIES.includes(cat)) return sum;
+        const key = getCategoryKey(cat); return sum + (c.stats[key]?.score || 0);
+      }, 0);
+      const bonusScore = computeSizePopBonus(newRoster);
+      const finalScore = baseScore + bonusScore;
+      
+      const mappedRoster = {} as Record<string, string>;
+      for (const cat of CATEGORIES) {
+         if (newRoster[cat]) mappedRoster[cat] = newRoster[cat].name;
+      }
+      if (roomCode && firebaseUser) {
+        updatePlayer(roomCode, firebaseUser.uid, { finishedRound: true, score: finalScore, roster: mappedRoster });
+      }
+
+      return {
+        ...prev,
+        currentTurnStartTime: Date.now(),
+        roster: newRoster,
+        selectionOptions: null,
+        wildcardTargetCategory: null,
+      };
+    });
+  }, [roomCode, firebaseUser]);
 
   const assignCountry = useCallback((category: Category) => {
     if (state.roster[category] || !roomCode || !firebaseUser) return;
@@ -179,12 +228,12 @@ export default function DoubleDraftMultiplayer() {
         )}
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
-          {state.gameOver ? (
-            <GameOver roster={state.roster} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => {}} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} />
+          {state.gameOver && !state.selectionOptions ? (
+            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => drawRosterPng(state.roster, finalScore, bonus, state.isHardMode)} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => {}} gameMode="double" leaderboardSubmitted={state.leaderboardSubmitted} room={room} players={players} wildcardOptions={state.selectionOptions} wildcardTargetCategory={state.wildcardTargetCategory} onResolveWildcard={onResolveWildcard} />
           ) : room && room.status === "waiting" ? (
             <div className="flex-1 flex flex-col items-center justify-center p-6 text-center"><div className="p-4 rounded-3xl bg-primary/10 border border-primary/20 mb-4 animate-pulse"><Users className="w-12 h-12 text-primary" /></div><h2 className="text-3xl font-serif font-bold mb-2">Game Lobby</h2><p className="text-muted-foreground mb-8">Room Code: <span className="text-foreground font-bold tracking-widest">{room.code}</span></p><div className="w-full max-w-sm space-y-3 mb-8"><p className="text-xs font-bold text-muted-foreground uppercase tracking-widest text-left">Players ({players.length})</p>{players.map(p => (<div key={p.uid} className="flex items-center justify-between p-3 rounded-xl bg-card border border-border shadow-sm"><div className="flex items-center gap-3"><div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">{p.username[0].toUpperCase()}</div><span className="font-semibold">{p.username}</span></div>{p.uid === room.hostId && <span className="text-[10px] bg-yellow-400/20 text-yellow-400 px-2 py-0.5 rounded-full font-bold">HOST</span>}</div>))}</div>{firebaseUser?.uid === room.hostId ? (<button onClick={() => updateRoom(room.code, { status: "playing" })} className="px-12 py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:opacity-90 transition-opacity disabled:opacity-50 shadow-xl">Start Match</button>) : (<p className="text-primary font-medium animate-pulse">Waiting for host to begin...</p>)}</div>
           ) : state.selectionOptions ? (
-             <SelectionPhase options={state.selectionOptions} onPick={onSelectionPick} isHardMode={state.isHardMode} mode="double" />
+             <SelectionPhase options={state.selectionOptions} onPick={state.gameOver ? onResolveWildcard : onSelectionPick} isHardMode={state.isHardMode} mode="double" />
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (
