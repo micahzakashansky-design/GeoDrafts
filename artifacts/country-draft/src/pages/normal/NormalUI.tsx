@@ -171,6 +171,9 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
         scoreVal = assigned.stats[ck].score ?? 0;
         weight = CATEGORY_MAX_SCORES[actualCat] ?? 10;
         desc = assigned.stats[ck].description;
+        if (isBetaMode && actualCat === "Economy" && assigned.stats.economy.industryType) {
+          desc = `[Industry Type: ${assigned.stats.economy.industryType}/5] ${desc}`;
+        }
       }
 
       const isBonus = BONUS_CATEGORIES.includes(actualCat) || isCombo;
@@ -416,7 +419,11 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                 
                 <div className="mt-1">
                   <ExpandableDescription 
-                    description={stat.description} 
+                    description={
+                      isBetaMode && cat === "Economy" && stat.industryType 
+                        ? `[Industry Type: ${stat.industryType}/5] ${stat.description}` 
+                        : stat.description
+                    } 
                     isHovered={isHovered} 
                     expanded={expanded}
                     setExpanded={hideInteractive ? () => {} : (val) => setExpandedCat(val ? cat : null)}
@@ -458,7 +465,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { unlockAchievements } from "@/lib/firestore";
 
-export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players , categoryTimes}: { roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[];  categoryTimes?: Partial<Record<Category, number>>; }) {
+export function GameOver({ isBetaMode, roster, totalScore, bonus, onReset, onDownload, onWildcard, onWildcardSelect, setWildcardPhase, wildcardUsed, wildcardPhase, rosterRef, isHardMode, isDailyMode, onSubmitLeaderboard, gameMode, leaderboardSubmitted, room, players , categoryTimes}: { isBetaMode?: boolean; roster: Partial<Record<Category, Country>>; totalScore: number; bonus: number; onReset: () => void; onDownload: () => void; onWildcard: () => void; onWildcardSelect: (cat: Category) => void; wildcardUsed: boolean; wildcardPhase: boolean; setWildcardPhase: (val: boolean) => void; rosterRef: React.RefObject<HTMLDivElement | null>; isHardMode: boolean; isDailyMode: boolean; onSubmitLeaderboard: () => void; gameMode: string; leaderboardSubmitted: boolean; room?: any | null; players?: any[];  categoryTimes?: Partial<Record<Category, number>>; }) {
   const rating = getRatingData(totalScore); const archetype = getArchetypeData(roster); const bPath = getBonusPathData(roster); const isGuest = room && gameMode === "sabotage" && players;
   const { firebaseUser } = useFirebaseAuth();
   
@@ -572,12 +579,12 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
           <button onClick={onDownload} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground font-bold text-sm md:text-base hover:bg-muted/80 transition-colors border border-border shadow-sm">
             <Download className="w-4 h-4 md:w-5 md:h-5" /> Save Image
           </button>
-          {!leaderboardSubmitted && (
+          {!isBetaMode && !leaderboardSubmitted && (
             <button onClick={onSubmitLeaderboard} className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-primary/20 text-primary border border-primary/40 font-bold text-sm md:text-base hover:bg-primary/30 transition-colors shadow-sm">
               <Medal className="w-4 h-4 md:w-5 md:h-5" /> Submit Score
             </button>
           )}
-          {leaderboardSubmitted && (
+          {!isBetaMode && leaderboardSubmitted && (
             <div className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 md:px-8 md:py-4 rounded-xl bg-muted text-muted-foreground border border-border font-bold text-sm md:text-base">
               <Medal className="w-4 h-4 md:w-5 md:h-5" /> Score Submitted
             </div>
@@ -634,7 +641,9 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                                 </div>
                               </div>
                             )}
-                            <p className="text-[9px] text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{stat.description}"</p>
+                            <p className="text-[9px] text-muted-foreground/80 leading-relaxed italic line-clamp-2">
+                              "{isBetaMode && sCat === "Economy" && stat.industryType ? `[Ind. ${stat.industryType}/5] ${stat.description}` : stat.description}"
+                            </p>
                           </div>
                         );
                       })}
@@ -745,6 +754,9 @@ export function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWil
                       scoreVal = assigned.stats[ck].score ?? 0; 
                       maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; 
                       desc = assigned.stats[ck].description;
+                      if (isBetaMode && cat === "Economy" && assigned.stats.economy.industryType) {
+                        desc = `[Ind. ${assigned.stats.economy.industryType}/5] ${desc}`;
+                      }
                       const isBonus = BONUS_CATEGORIES.includes(actualCat);
                       const isSizeOrPop = actualCat === "Size" || actualCat === "Population";
 

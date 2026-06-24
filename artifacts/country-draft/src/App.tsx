@@ -7,7 +7,6 @@ import { ThemeProvider } from "@/lib/theme-context";
 import { AuthProvider } from "@/lib/use-firebase-auth";
 import NotFound from "@/pages/not-found";
 import NormalGame from "@/pages/normal/NormalGame";
-import BetaNormalGame from "@/pages/beta/BetaNormalGame";
 import DoubleDraftGame from "@/pages/double/DoubleDraftGame";
 import DoubleDraftMultiplayer from "@/pages/double/DoubleDraftMultiplayer";
 import GuessGame from "@/pages/guess/GuessGame";
@@ -42,7 +41,7 @@ function Router() {
         <ProtectedRoute><NormalGame /></ProtectedRoute>
       </Route>
       <Route path="/game/beta-normal">
-        <ProtectedRoute><BetaNormalGame /></ProtectedRoute>
+        <ProtectedRoute><NormalGame isBetaMode={true} /></ProtectedRoute>
       </Route>
       <Route path="/game/double">
         <ProtectedRoute><DoubleDraftGame /></ProtectedRoute>

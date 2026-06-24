@@ -16,9 +16,10 @@ import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 import { SettingsButton } from "@/components/SettingsButton";
 import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
-import { useFirebaseAuth } from "@/lib/use-firebase-auth";
+import { computeBetaSizePopBonus } from "@/lib/beta-logic";
+import { computeSizePopBonus } from "@/lib/achievements-logic";
 
-export default function NormalGame() {
+export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolean }) {
   const [, navigate] = useLocation();
   const { profile } = useFirebaseAuth();
 
@@ -59,7 +60,7 @@ export default function NormalGame() {
     }, 0);
   }, [state.roster]);
 
-  const bonus = useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
+  const bonus = useMemo(() => isBetaMode ? computeBetaSizePopBonus(state.roster) : computeSizePopBonus(state.roster), [state.roster, isBetaMode]);
   const finalScore = totalScore + bonus;
 
   React.useEffect(() => {
@@ -166,7 +167,7 @@ export default function NormalGame() {
 
         <div className="flex-1 flex flex-col overflow-y-auto relative">
           {state.gameOver ? (
-            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => drawRosterPng(state.roster, finalScore, bonus, state.isHardMode)} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="daily" leaderboardSubmitted={state.leaderboardSubmitted} />
+            <GameOver roster={state.roster} categoryTimes={state.categoryTimes} totalScore={finalScore} bonus={bonus} onReset={doReset} onDownload={() => drawRosterPng(state.roster, finalScore, bonus, state.isHardMode)} onWildcard={() => setWildcardPhase(true)} onWildcardSelect={applyWildcard} setWildcardPhase={setWildcardPhase} wildcardUsed={state.wildcardUsed} wildcardPhase={wildcardPhase} rosterRef={rosterRef} isHardMode={state.isHardMode} isDailyMode={false} onSubmitLeaderboard={() => setShowSubmitDialog(true)} gameMode="daily" leaderboardSubmitted={state.leaderboardSubmitted} isBetaMode={isBetaMode} />
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (
