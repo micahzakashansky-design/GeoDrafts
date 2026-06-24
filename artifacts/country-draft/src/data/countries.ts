@@ -1,6 +1,7 @@
 export type CategoryStats = {
   score?: number;
   description: string;
+  industryType?: number;
 };
 
 export type Country = {
@@ -69,6 +70,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 15,
+        industryType: 5,
         description: "World's largest economy at $27T GDP; Wall Street dominance; reserve currency nation; home to most Fortune 500 companies"
       },
       culture: {
@@ -150,6 +152,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 14,
+        industryType: 5,
         description: "World's 3rd largest economy; export champion; BMW, Volkswagen, Siemens, SAP; Mittelstand industrial base unmatched"
       },
       culture: {
@@ -230,6 +233,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 14,
+        industryType: 5,
         description: "World's 4th largest economy; Toyota, Sony, Nintendo, Honda; precision manufacturing; largest creditor nation"
       },
       culture: {
@@ -316,6 +320,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 14,
+        industryType: 5,
         description: "6th largest economy; London as global financial center; FTSE 100; strong services, pharma, and creative industries"
       },
       culture: {
@@ -397,6 +402,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 14,
+        industryType: 5,
         description: "7th largest economy; luxury goods empire (LVMH); Airbus; TotalEnergies; major agricultural exporter"
       },
       culture: {
@@ -477,6 +483,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "High-income economy; IKEA, H&M, Spotify, Volvo, Ericsson; strong innovation ecosystem; high GDP per capita"
       },
       culture: {
@@ -558,6 +565,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "World's largest sovereign wealth fund ($1.6T); oil and gas wealth; highest GDP per capita in mainland Europe"
       },
       culture: {
@@ -638,6 +646,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "Highest GDP per capita in Europe; private banking ($7.5T managed); pharma giants Novartis, Roche; luxury watchmaking"
       },
       culture: {
@@ -718,6 +727,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "Top 10 economy; vast natural resources; oil sands; tech sector growing; strong banking system; G7 member"
       },
       culture: {
@@ -799,6 +809,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "Top 15 economy; 30 years uninterrupted growth until COVID; mining superpower; strong services; high per capita income"
       },
       culture: {
@@ -885,6 +896,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "World's 13th largest economy; Samsung, Hyundai, LG, SK Hynix — semiconductor and EV battery dominance"
       },
       culture: {
@@ -965,6 +977,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "World's busiest port; #1 financial hub in Asia after Hong Kong; highest per-capita wealth in Asia; zero corruption"
       },
       culture: {
@@ -1045,6 +1058,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "High-income flexicurity economy; Maersk shipping; Novo Nordisk (Ozempic); Lego; wind energy exports; strong pharma"
       },
       culture: {
@@ -1125,6 +1139,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "High-income; Nokia legacy; KONE elevators; Rovio (Angry Birds); strong forestry and paper; advanced manufacturing"
       },
       culture: {
@@ -1206,6 +1221,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "5th largest EU economy; Rotterdam world's busiest port outside Asia; ASML (world's only EUV chipmaker); Shell; Heineken"
       },
       culture: {
@@ -1289,6 +1305,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "High-income; dairy and agriculture exports; growing tech; film industry (Weta Workshop); tourism powerhouse"
       },
       culture: {
@@ -1369,6 +1386,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "High-income; tourism powerhouse; engineering exports; OMV energy; Vienna as Eastern European business hub"
       },
       culture: {
@@ -1450,6 +1468,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "EU HQ economy; diamond trade (Antwerp); chocolate and beer exports; strong pharma (UCB, Solvay); port of Antwerp"
       },
       culture: {
@@ -1531,6 +1550,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "EU's fastest growing economy; 12.5% corporate tax attracted Google, Apple, Meta HQ; pharma exports; FDI champion"
       },
       culture: {
@@ -1612,6 +1632,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "8th largest economy; fashion (Gucci, Armani, Prada); Ferrari, Lamborghini; food exports; tourism; but high debt"
       },
       culture: {
@@ -1692,6 +1713,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "4th largest EU economy; Inditex (Zara); tourism #2 globally; Telefonica; Iberdrola renewables; wine and olive oil exports"
       },
       culture: {
@@ -1773,6 +1795,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "Growing tech sector; Lisbon startup scene; golden visa controversy; wine exports; cork monopoly; tourism boom"
       },
       culture: {
@@ -1856,6 +1879,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "Highest GDP per capita in Central/Eastern Europe; Skoda cars (VW group); strong manufacturing; Avast cybersecurity"
       },
       culture: {
@@ -1936,6 +1960,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "EU's fastest growing large economy; 6th in EU; Warsaw financial hub; strong IT sector; Allegro; CD Projekt Red"
       },
       culture: {
@@ -2017,6 +2042,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "11th largest economy; energy superpower (oil, gas); but sanctions-hit; Gazprom, Rosatom; over-reliant on hydrocarbons"
       },
       culture: {
@@ -2097,6 +2123,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 15,
+        industryType: 5,
         description: "World's 2nd largest ($18T); manufacturing hegemon; Belt and Road Initiative; Alibaba, Tencent, Huawei; largest trade partner"
       },
       culture: {
@@ -2179,6 +2206,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "20th largest economy; tourism powerhouse; strong manufacturing; automotive; textiles; but inflation crisis (85% in 2022)"
       },
       culture: {
@@ -2254,6 +2282,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 4,
         description: "Disrupted by war; pre-war 50th globally; grain export champion (5th worldwide); Naftogaz energy; IT sector resilient"
       },
       culture: {
@@ -2336,6 +2365,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "Fastest growing EU economy 2023; strong IT sector; Dacia/Renault cars; agriculture; tech outsourcing hub"
       },
       culture: {
@@ -2418,6 +2448,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "Growing manufacturing; Samsung, BMW, Mercedes plants; Budapest financial hub; but EU rule-of-law funds suspended"
       },
       culture: {
@@ -2498,6 +2529,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "Startup Nation — most VC investment per capita; Intel, Google, Microsoft R&D centers; Waze, Mobileye, Check Point"
       },
       culture: {
@@ -2578,6 +2610,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "Recovered from 2010 debt crisis; shipping (largest merchant fleet); tourism; but GDP still below pre-crisis levels"
       },
       culture: {
@@ -2659,6 +2692,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 5,
         description: "Highest GDP per capita in Baltics; Skype founded here; TransferWise (Wise); e-Residency program; startup density high"
       },
       culture: {
@@ -2741,6 +2775,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 5,
         description: "World's highest car production per capita; Volkswagen, Kia, Jaguar Land Rover, Stellantis plants; strong EU manufacturing"
       },
       culture: {
@@ -2822,6 +2857,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 4,
         description: "Joined Euro 2023; Rimac electric hypercar (founder!); tourism powerhouse; strong IT sector; Schengen admission"
       },
       culture: {
@@ -2902,6 +2938,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "Oil and mineral wealth (uranium world's largest producer); Tengiz and Kashagan oil fields; growing Astana financial hub"
       },
       culture: {
@@ -2983,6 +3020,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 6,
+        industryType: 4,
         description: "Fastest reforming economy; low flat tax; wine exports; tourism booming; Batumi Black Sea resort; Baku-Tbilisi-Ceyhan pipeline"
       },
       culture: {
@@ -3065,6 +3103,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 6,
+        industryType: 4,
         description: "Growing tech sector; Yerevan startup hub; diamond processing; cognac exports; Russia trade dependence challenged"
       },
       culture: {
@@ -3148,6 +3187,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 6,
+        industryType: 5,
         description: "High-income; fishing and geothermal energy; banking crisis recovered fully; aluminum smelting; tourism explosion"
       },
       culture: {
@@ -3230,6 +3270,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 5,
         description: "Highest income in former Yugoslavia; strong manufacturing (Gorenje, Krka pharma); Trieste corridor; EU well-integrated"
       },
       culture: {
@@ -3311,6 +3352,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 5,
         description: "Riga Baltic financial hub; strong IT and manufacturing; AirBaltic airline; timber exports; growing tech ecosystem"
       },
       culture: {
@@ -3393,6 +3435,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 5,
         description: "Fastest Baltic growth; Vilnius fintech hub; Vinted secondhand marketplace; strong IT outsourcing; tax-friendly for business"
       },
       culture: {
@@ -3475,6 +3518,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "Saudi Aramco world's most profitable company; Vision 2030 diversification; Neom; $700B+ sovereign wealth fund"
       },
       culture: {
@@ -3557,6 +3601,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "Dubai global financial and tourism hub; Abu Dhabi wealth fund #3 globally; diversified beyond oil; DP World ports"
       },
       culture: {
@@ -3637,6 +3682,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "World's highest GDP per capita; Qatar Investment Authority $500B+; LNG export revenue; diversified via QIA investments"
       },
       culture: {
@@ -3719,6 +3765,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 14,
+        industryType: 5,
         description: "5th largest GDP at $3.7T; fastest growing major economy; IT superpower; UPI digital payments; manufacturing rising"
       },
       culture: {
@@ -3802,6 +3849,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "15th largest GDP; nearshoring boom from US-China decoupling; auto manufacturing; USMCA anchor; oil through Pemex"
       },
       culture: {
@@ -3886,6 +3934,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "8th largest GDP at $2.1T; agriculture superpower (soy, beef, coffee); Embraer; Petrobras oil; fintech giant Nubank"
       },
       culture: {
@@ -3967,6 +4016,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "Chronic hyperinflation and debt cycles; but agriculture powerhouse (soy, beef); Vaca Muerta shale; Milei shock therapy"
       },
       culture: {
@@ -4048,6 +4098,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "Most stable Latin American economy; copper world #1; lithium world #2; OECD member; sound fiscal policy; Pacific Alliance"
       },
       culture: {
@@ -4128,6 +4179,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 5,
         description: "Mining-driven (copper, gold, zinc); Lima as business hub; inequality severe; but consistent growth past two decades"
       },
       culture: {
@@ -4208,6 +4260,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 13,
+        industryType: 5,
         description: "16th largest GDP; fastest growing G20; digital economy GoTo and Sea Group; nickel EV battery supply chain; palm oil export"
       },
       culture: {
@@ -4290,6 +4343,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "BPO industry $30B; OFW remittances $36B; growing tourism; middle-income trap challenge; Marcos economic policy unclear"
       },
       culture: {
@@ -4372,6 +4426,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "Suez Canal $9B revenue; tourism; natural gas (Zohr field); but high debt, inflation 30%+; IMF bailouts recurring challenge"
       },
       culture: {
@@ -4452,6 +4507,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "Largest in Africa by GDP at $440B; oil via NNPC; Nollywood industry booming; Lagos fintech Flutterwave and Paystack; agri-sector huge"
       },
       culture: {
@@ -4538,6 +4594,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 5,
         description: "Most industrialized in Africa; Johannesburg financial hub; mining, finance, tourism, auto manufacturing; but inequality extreme"
       },
       culture: {
@@ -4619,6 +4676,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 5,
         description: "World-class capabilities and global influence."
       },
       government: {
@@ -4702,6 +4760,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -4784,6 +4843,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 12,
+        industryType: 2,
         description: "World-class capabilities and global influence."
       },
       government: {
@@ -4865,6 +4925,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -4946,6 +5007,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -5028,6 +5090,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -5108,6 +5171,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -5190,6 +5254,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -5272,6 +5337,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -5357,6 +5423,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -5439,6 +5506,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -5521,6 +5589,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -5603,6 +5672,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -5684,6 +5754,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 1,
+        industryType: 1,
         description: "Critical limitations restricting overall effectiveness."
       },
       government: {
@@ -5768,6 +5839,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -5851,6 +5923,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -5934,6 +6007,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -6015,6 +6089,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -6095,6 +6170,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -6176,6 +6252,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -6257,6 +6334,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -6341,6 +6419,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -6423,6 +6502,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 5,
+        industryType: 2,
         description: "Developing sector with some systemic challenges."
       },
       government: {
@@ -6506,6 +6586,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -6588,6 +6669,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -6669,6 +6751,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 10,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -6750,6 +6833,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 5,
+        industryType: 2,
         description: "Developing sector with some systemic challenges."
       },
       government: {
@@ -6833,6 +6917,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 5,
+        industryType: 2,
         description: "Developing sector with some systemic challenges."
       },
       government: {
@@ -6914,6 +6999,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 11,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -6997,6 +7083,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7079,6 +7166,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 6,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7162,6 +7250,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7244,6 +7333,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7326,6 +7416,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 1,
+        industryType: 1,
         description: "Critical limitations restricting overall effectiveness."
       },
       government: {
@@ -7407,6 +7498,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7490,6 +7582,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -7571,6 +7664,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7653,6 +7747,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7735,6 +7830,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 7,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7820,6 +7916,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7902,6 +7999,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 8,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -7984,6 +8082,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 6,
+        industryType: 2,
         description: "Moderate infrastructure with ongoing modernization efforts."
       },
       government: {
@@ -8066,6 +8165,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 5,
+        industryType: 2,
         description: "Developing sector with some systemic challenges."
       },
       government: {
@@ -8149,6 +8249,7 @@ export const ALL_COUNTRIES: Country[] = [
       },
       economy: {
         score: 9,
+        industryType: 2,
         description: "Strong regional presence and advanced development."
       },
       government: {
@@ -8222,7 +8323,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8255,7 +8360,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8288,7 +8397,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8321,7 +8434,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8354,7 +8471,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8387,7 +8508,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8420,7 +8545,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8453,7 +8582,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8486,7 +8619,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8519,7 +8656,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8552,7 +8693,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8585,7 +8730,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8618,7 +8767,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8651,7 +8804,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8684,7 +8841,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8717,7 +8878,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8750,7 +8915,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8783,7 +8952,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8816,7 +8989,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8849,7 +9026,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8882,7 +9063,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8915,7 +9100,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8948,7 +9137,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -8981,7 +9174,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9014,7 +9211,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9047,7 +9248,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9080,7 +9285,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9113,7 +9322,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9146,7 +9359,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9179,7 +9396,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9212,7 +9433,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9245,7 +9470,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9278,7 +9507,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9311,7 +9544,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9344,7 +9581,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9377,7 +9618,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9410,7 +9655,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9443,7 +9692,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9476,7 +9729,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9509,7 +9766,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9542,7 +9803,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9575,7 +9840,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9608,7 +9877,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9641,7 +9914,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9674,7 +9951,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9707,7 +9988,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9740,7 +10025,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9773,7 +10062,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9806,7 +10099,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9839,7 +10136,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9872,7 +10173,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9905,7 +10210,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9938,7 +10247,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -9971,7 +10284,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10004,7 +10321,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10037,7 +10358,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10070,7 +10395,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10103,7 +10432,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10136,7 +10469,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10169,7 +10506,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10202,7 +10543,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10235,7 +10580,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10268,7 +10617,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10301,7 +10654,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10334,7 +10691,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10367,7 +10728,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10400,7 +10765,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10433,7 +10802,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10465,7 +10838,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10498,7 +10875,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10531,7 +10912,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10564,7 +10949,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10596,7 +10985,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10629,7 +11022,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10662,7 +11059,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10695,7 +11096,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10727,7 +11132,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10760,7 +11169,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
@@ -10793,7 +11206,11 @@ export const ALL_COUNTRIES: Country[] = [
     knownFor: "Not available",
     stats: {
       military: { score: 0, description: "Not available for drafting." },
-      economy: { score: 0, description: "Not available for drafting." },
+      economy: {
+        score: 0,
+        industryType: 1,
+        description: "Not available for drafting."
+      },
       culture: { score: 0, description: "Not available for drafting." },
       healthcare: { score: 0, description: "Not available for drafting." },
       internationalRelationships: { score: 0, description: "Not available for drafting." },
