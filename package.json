@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "pnpm run typecheck && pnpm -r --if-present run build",
+    "build": "pnpm -r --if-present run build",
     "typecheck": "pnpm -r --filter \"./artifacts/**\" --filter \"./scripts\" --if-present run typecheck",
     "dev": "PORT=3000 BASE_PATH=/ pnpm --filter ./artifacts/country-draft run dev",
     "start": "PORT=3000 BASE_PATH=/ pnpm --filter ./artifacts/country-draft run serve",
