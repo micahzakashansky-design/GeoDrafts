@@ -639,25 +639,25 @@ export default function Home() {
                   </div>
                 </div>
 
+                  {/* Beta 1.0 Draft for Everyone */}
+                  <div className="col-span-1 md:col-span-2 bg-card border-t border-border p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+                    <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-5 text-center md:text-left">
+                      <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                        <ShieldAlert className="w-6 h-6 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="font-sans text-2xl font-bold mb-2 text-card-foreground">BETA 1.0 Classic Draft</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">Test the new size/population synergy formula and economy industry types!</p>
+                      </div>
+                    </div>
+                    <div className="relative z-10 w-full md:w-auto flex items-center justify-center">
+                      <button onClick={() => startGame("beta-normal", false)} className="w-full sm:w-auto px-6 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg">
+                        Play Beta Draft
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            {/* Beta 1.0 Draft for Everyone */}
-            <div className="mt-8 border border-primary/30 rounded-2xl p-6 bg-primary/5 shadow-xl w-full text-center">
-              <div className="flex items-center justify-center gap-2 mb-3 text-primary">
-                <ShieldAlert className="w-5 h-5" />
-                <h3 className="font-sans text-xl font-bold">BETA 1.0 Classic Draft</h3>
-              </div>
-              <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-                Test the new size/population synergy formula and economy industry types!
-              </p>
-              <button 
-                onClick={() => startGame("beta-normal", false)}
-                className="px-6 py-3 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 active:scale-95 transition-all shadow-md"
-              >
-                Play Beta Draft
-              </button>
-            </div>
 
             <AchievementsCard profile={profile} />
 
