@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
@@ -27,6 +27,7 @@ export default defineConfig({
     rollupOptions: {
       cache: false,
       maxParallelFileOps: 1,
+      external: ["lucide-react", "react-simple-maps", "topojson-client", "d3-geo", "framer-motion", "react", "react-dom", "recharts"],
     },
   },
   server: {
