@@ -33,6 +33,7 @@ export function SettingsModal({ onClose }: Props) {
   function toggleDevMode(checked: boolean) {
     setDevModeEnabled(checked);
     localStorage.setItem("geoDraftsDevMode", String(checked));
+    window.dispatchEvent(new Event("devModeChanged"));
   }
 
   async function handleUpdateUsername() {
