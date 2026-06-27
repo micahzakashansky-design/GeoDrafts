@@ -10,7 +10,9 @@ const basePath = process.env.BASE_PATH ?? '/';
 
 export default defineConfig({
   base: basePath,
-
+  json: {
+    stringify: true,
+  },
   plugins: [
     react(),
     tailwindcss(),
