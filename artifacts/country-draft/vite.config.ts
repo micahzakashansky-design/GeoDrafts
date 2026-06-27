@@ -5,14 +5,10 @@ import tailwindcss from "@tailwindcss/vite";
 import path from "path";
 
 const port = Number(process.env.PORT ?? '3000');
-
 const basePath = process.env.BASE_PATH ?? '/';
 
 export default defineConfig({
   base: basePath,
-  json: {
-    stringify: true,
-  },
   plugins: [
     react(),
     tailwindcss(),
@@ -29,13 +25,9 @@ export default defineConfig({
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
     rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ["react", "react-dom", "framer-motion", "lucide-react", "firebase/firestore", "firebase/app"],
-        },
-      },
+      cache: false,
+      maxParallelFileOps: 1,
     },
-    minify: true,
   },
   server: {
     port,

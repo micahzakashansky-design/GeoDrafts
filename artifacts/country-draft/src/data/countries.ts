@@ -37,7 +37,8 @@ export type Country = {
   excludeFromDraft?: boolean;
 };
 
-import countriesData from './countries.json';
+import countriesDataRaw from './countries.json?raw';
+const countriesData = JSON.parse(countriesDataRaw);
 export const ALL_COUNTRIES: Country[] = countriesData as Country[];
 
 export const CATEGORIES = [
