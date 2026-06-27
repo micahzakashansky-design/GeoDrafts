@@ -27,7 +27,7 @@ export default defineConfig({
     rollupOptions: {
       cache: false,
       maxParallelFileOps: 1,
-      external: ["lucide-react", "react-simple-maps", "topojson-client", "d3-geo", "framer-motion", "react", "react-dom", "recharts"],
+      external: ["lucide-react", "react-simple-maps", "topojson-client", "d3-geo", "framer-motion", "react", "react-dom", "recharts", "firebase/app", "firebase/firestore", "firebase/auth", "firebase/database"],
     },
   },
   server: {

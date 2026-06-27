@@ -20,7 +20,7 @@ import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 import { SettingsButton } from "@/components/SettingsButton";
 import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
 import { computeBetaSizePopBonus } from "@/lib/beta-logic";
-import { computeSizePopBonus } from "@/lib/achievements-logic";
+import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
 export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolean }) {
   const [, navigate] = useLocation();

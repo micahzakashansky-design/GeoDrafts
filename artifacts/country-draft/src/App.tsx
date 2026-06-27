@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { loadCountriesData } from "@/data/countries";
 import { Switch, Route, Router as WouterRouter } from "wouter";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -76,6 +78,16 @@ function Router() {
 }
 
 function App() {
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  useEffect(() => {
+    loadCountriesData().then(() => setDataLoaded(true));
+  }, []);
+
+  if (!dataLoaded) {
+    return <div className="min-h-screen flex items-center justify-center">Loading game data...</div>;
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>

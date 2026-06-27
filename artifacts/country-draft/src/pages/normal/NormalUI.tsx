@@ -205,11 +205,11 @@ export async function drawRosterPng(roster: Partial<Record<Category, Country>>, 
         desc = comboDesc;
       } else {
         const ck = getCategoryKey(actualCat);
-        scoreVal = assigned.stats[ck].score ?? 0;
+        scoreVal = assigned?.stats[ck].score ?? 0;
         weight = CATEGORY_MAX_SCORES[actualCat] ?? 10;
-        desc = assigned.stats[ck].description;
-        if (isBetaMode && actualCat === "Economy" && assigned.stats.economy.industryType) {
-          desc = `[Industry Type: ${assigned.stats.economy.industryType}/5] ${desc}`;
+        desc = assigned?.stats[ck].description;
+        if (false && actualCat === "Economy" && assigned?.stats.economy.industryType) {
+          desc = `[Industry Type: ${assigned?.stats.economy.industryType}/5] ${desc}`;
         }
       }
 
@@ -457,7 +457,7 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                 <div className="mt-1">
                   <ExpandableDescription 
                     description={
-                      isBetaMode && cat === "Economy" && stat.industryType 
+                      false && cat === "Economy" && stat.industryType 
                         ? `[Industry Type: ${stat.industryType}/5] ${stat.description}` 
                         : stat.description
                     } 
@@ -788,11 +788,11 @@ export function GameOver({ isBetaMode, roster, totalScore, bonus, onReset, onDow
                     {(() => {
                       let scoreVal = 0, weight = 1, desc = "", maxScore = 10;
                       const ck = getCategoryKey(actualCat); 
-                      scoreVal = assigned.stats[ck].score ?? 0; 
+                      scoreVal = assigned?.stats[ck].score ?? 0; 
                       maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; 
-                      desc = assigned.stats[ck].description;
-                      if (isBetaMode && cat === "Economy" && assigned.stats.economy.industryType) {
-                        desc = `[Ind. ${assigned.stats.economy.industryType}/5] ${desc}`;
+                      desc = assigned?.stats[ck].description;
+                      if (false && cat === "Economy" && assigned?.stats.economy.industryType) {
+                        desc = `[Ind. ${assigned?.stats.economy.industryType}/5] ${desc}`;
                       }
                       const isBonus = BONUS_CATEGORIES.includes(actualCat);
                       const isSizeOrPop = actualCat === "Size" || actualCat === "Population";

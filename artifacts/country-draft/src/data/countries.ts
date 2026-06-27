@@ -37,9 +37,14 @@ export type Country = {
   excludeFromDraft?: boolean;
 };
 
-import countriesDataRaw from './countries.json?raw';
-const countriesData = JSON.parse(countriesDataRaw);
-export const ALL_COUNTRIES: Country[] = countriesData as Country[];
+export const ALL_COUNTRIES: Country[] = [];
+export const COUNTRIES: Country[] = [];
+export async function loadCountriesData() {
+  if (ALL_COUNTRIES.length > 0) return;
+  const data = await fetch('/countries.json').then(res => res.json());
+  ALL_COUNTRIES.push(...data);
+  COUNTRIES.push(...data.filter((c: Country) => !c.excludeFromDraft));
+}
 
 export const CATEGORIES = [
   "Military",
@@ -117,7 +122,6 @@ export function extractBonusText(desc: string, cat: string) {
   if (match) {
     return match[1].trim();
   }
+
   return "";
 }
-
-export const COUNTRIES = ALL_COUNTRIES.filter(c => !c.excludeFromDraft);
