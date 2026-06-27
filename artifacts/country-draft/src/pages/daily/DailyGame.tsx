@@ -10,7 +10,11 @@ import {
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./DailyUI";
 import { SidebarRoster } from "./SidebarRoster";
-import { Home, Globe as GlobeIcon, CalendarDays, ShieldAlert, ShieldPlus } from "lucide-react";
+import Home from "lucide-react/dist/esm/icons/home";
+import GlobeIcon from "lucide-react/dist/esm/icons/globe";
+import CalendarDays from "lucide-react/dist/esm/icons/calendar-days";
+import ShieldAlert from "lucide-react/dist/esm/icons/shield-alert";
+import ShieldPlus from "lucide-react/dist/esm/icons/shield-plus";
 import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster, loadPersonalLeaderboard } from "@/lib/local-leaderboard";

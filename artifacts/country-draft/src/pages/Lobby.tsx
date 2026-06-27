@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Users, Swords, PartyPopper, ChevronLeft, ArrowLeftRight, Brain } from "lucide-react";
+import Users from "lucide-react/dist/esm/icons/users";
+import Swords from "lucide-react/dist/esm/icons/swords";
+import PartyPopper from "lucide-react/dist/esm/icons/party-popper";
+import ChevronLeft from "lucide-react/dist/esm/icons/chevron-left";
+import ArrowLeftRight from "lucide-react/dist/esm/icons/arrow-left-right";
+import Brain from "lucide-react/dist/esm/icons/brain";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
 import { listenToRoom, listenToPlayers, updateRoom, type Room, type RoomPlayer } from "../lib/firestore";
 import { Logo } from "../components/Logo";

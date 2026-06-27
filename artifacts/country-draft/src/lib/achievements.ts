@@ -1,8 +1,28 @@
 import React from "react";
-import { 
-  Globe, Heart, Laptop, Shield, Swords, TrendingUp, Building, Star, Leaf, Mountain,
-  Crown, Sun, Zap, Anchor, Briefcase, Stethoscope, BookOpen, Skull, Plane, Scale, Calendar, Trophy, FastForward, CheckCircle2
-} from "lucide-react";
+import Globe from "lucide-react/dist/esm/icons/globe";
+import Heart from "lucide-react/dist/esm/icons/heart";
+import Laptop from "lucide-react/dist/esm/icons/laptop";
+import Shield from "lucide-react/dist/esm/icons/shield";
+import Swords from "lucide-react/dist/esm/icons/swords";
+import TrendingUp from "lucide-react/dist/esm/icons/trending-up";
+import Building from "lucide-react/dist/esm/icons/building";
+import Star from "lucide-react/dist/esm/icons/star";
+import Leaf from "lucide-react/dist/esm/icons/leaf";
+import Mountain from "lucide-react/dist/esm/icons/mountain";
+import Crown from "lucide-react/dist/esm/icons/crown";
+import Sun from "lucide-react/dist/esm/icons/sun";
+import Zap from "lucide-react/dist/esm/icons/zap";
+import Anchor from "lucide-react/dist/esm/icons/anchor";
+import Briefcase from "lucide-react/dist/esm/icons/briefcase";
+import Stethoscope from "lucide-react/dist/esm/icons/stethoscope";
+import BookOpen from "lucide-react/dist/esm/icons/book-open";
+import Skull from "lucide-react/dist/esm/icons/skull";
+import Plane from "lucide-react/dist/esm/icons/plane";
+import Scale from "lucide-react/dist/esm/icons/scale";
+import Calendar from "lucide-react/dist/esm/icons/calendar";
+import Trophy from "lucide-react/dist/esm/icons/trophy";
+import FastForward from "lucide-react/dist/esm/icons/fast-forward";
+import CheckCircle2 from "lucide-react/dist/esm/icons/check-circle-2";
 
 
 export const ACCOUNT_STATS = [

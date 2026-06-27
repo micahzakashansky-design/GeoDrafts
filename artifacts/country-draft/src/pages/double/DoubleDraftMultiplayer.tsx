@@ -13,7 +13,9 @@ import {
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./DoubleUI";
 import { SidebarRoster } from "./SidebarRoster";
-import { Home, Globe as GlobeIcon, Users } from "lucide-react";
+import Home from "lucide-react/dist/esm/icons/home";
+import GlobeIcon from "lucide-react/dist/esm/icons/globe";
+import Users from "lucide-react/dist/esm/icons/users";
 import { Logo } from "../../components/Logo";
 import { SettingsButton } from "@/components/SettingsButton";
 import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";

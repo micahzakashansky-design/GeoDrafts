@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Info, X } from "lucide-react";
+import Info from "lucide-react/dist/esm/icons/info";
+import X from "lucide-react/dist/esm/icons/x";
 
 export function AboutModal({ onClose }: { onClose: () => void }) {
   return (

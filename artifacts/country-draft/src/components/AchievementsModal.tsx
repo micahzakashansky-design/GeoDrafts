@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X } from "lucide-react";
+import X from "lucide-react/dist/esm/icons/x";
 import { getAchievementIcon } from "@/lib/achievements";
 
 export function AchievementsModal({

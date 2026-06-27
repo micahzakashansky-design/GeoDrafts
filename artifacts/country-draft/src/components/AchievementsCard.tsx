@@ -3,7 +3,11 @@ import { motion } from "framer-motion";
 import { RATINGS, ARCHETYPES, BONUS_PATHS, ACCOUNT_STATS } from "@/lib/achievements";
 import { AchievementsModal } from "./AchievementsModal";
 import { UserProfile } from "@/lib/firestore";
-import { Award, Star, BookOpen, Crown, Trophy } from "lucide-react";
+import Award from "lucide-react/dist/esm/icons/award";
+import Star from "lucide-react/dist/esm/icons/star";
+import BookOpen from "lucide-react/dist/esm/icons/book-open";
+import Crown from "lucide-react/dist/esm/icons/crown";
+import Trophy from "lucide-react/dist/esm/icons/trophy";
 
 export function AchievementsCard({ profile }: { profile: UserProfile | null }) {
   const [modalType, setModalType] = useState<"ratings" | "archetypes" | "bonusPaths" | "accountStats" | null>(null);

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Send, X, Loader2, MessageSquare } from "lucide-react";
+import Send from "lucide-react/dist/esm/icons/send";
+import X from "lucide-react/dist/esm/icons/x";
+import Loader2 from "lucide-react/dist/esm/icons/loader-2";
+import MessageSquare from "lucide-react/dist/esm/icons/message-square";
 import { toast } from "sonner";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { firestore } from "@/lib/firebase";

@@ -28,6 +28,13 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "framer-motion", "lucide-react", "firebase/firestore", "firebase/app"],
+        },
+      },
+    },
     minify: true,
   },
   server: {

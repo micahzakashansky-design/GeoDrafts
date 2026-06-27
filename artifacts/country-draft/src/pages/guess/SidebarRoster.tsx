@@ -2,7 +2,8 @@ import { computeSizePopBonus } from "@/lib/achievements-logic";
 import React from "react";
 import { Category, Country, CATEGORIES, getCategoryKey } from "@/data/countries";
 import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, BONUS_CATEGORIES } from "./GuessUI";
-import { Users, Plus } from "lucide-react";
+import Users from "lucide-react/dist/esm/icons/users";
+import Plus from "lucide-react/dist/esm/icons/plus";
 
 export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean ; categoryTimes?: Partial<Record<Category, number>>; }) {
   const assignedCategories = CATEGORIES.filter((c: Category) => roster[c]);

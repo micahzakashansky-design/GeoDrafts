@@ -10,7 +10,15 @@ import { updatePlayer, listenToRoom, listenToPlayers, type Room, type RoomPlayer
 import {
   CountryCard, GameOver, drawRosterPng, SelectionPhase, GameState, CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./SabotageUI";
-import { Home, Globe as GlobeIcon, Users, UserX, Skull, Bomb, Target, ShieldAlert, ShieldPlus } from "lucide-react";
+import Home from "lucide-react/dist/esm/icons/home";
+import GlobeIcon from "lucide-react/dist/esm/icons/globe";
+import Users from "lucide-react/dist/esm/icons/users";
+import UserX from "lucide-react/dist/esm/icons/user-x";
+import Skull from "lucide-react/dist/esm/icons/skull";
+import Bomb from "lucide-react/dist/esm/icons/bomb";
+import Target from "lucide-react/dist/esm/icons/target";
+import ShieldAlert from "lucide-react/dist/esm/icons/shield-alert";
+import ShieldPlus from "lucide-react/dist/esm/icons/shield-plus";
 import { Logo } from "../../components/Logo";
 import { SidebarRoster } from "./SidebarRoster";
 import { SettingsButton } from "@/components/SettingsButton";

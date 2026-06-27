@@ -11,7 +11,12 @@ import {
   CountryCard, GameOver, drawRosterPng, GameState, seededShuffle, dateStrToSeed,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./PartyUI";
-import { Home, Globe as GlobeIcon, Users, PartyPopper, ShieldAlert, ShieldPlus } from "lucide-react";
+import Home from "lucide-react/dist/esm/icons/home";
+import GlobeIcon from "lucide-react/dist/esm/icons/globe";
+import Users from "lucide-react/dist/esm/icons/users";
+import PartyPopper from "lucide-react/dist/esm/icons/party-popper";
+import ShieldAlert from "lucide-react/dist/esm/icons/shield-alert";
+import ShieldPlus from "lucide-react/dist/esm/icons/shield-plus";
 import { Logo } from "../../components/Logo";
 import { SidebarRoster } from "./SidebarRoster";
 import { SettingsButton } from "@/components/SettingsButton";

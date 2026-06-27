@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Settings, Bug } from "lucide-react";
+import Settings from "lucide-react/dist/esm/icons/settings";
+import Bug from "lucide-react/dist/esm/icons/bug";
 import { SettingsModal } from "./SettingsModal";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { Switch } from "@/components/ui/switch";

@@ -1,12 +1,20 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { X, User, LogOut, Check, Loader2, Moon, Sun, Settings, Laptop } from "lucide-react";
+import X from "lucide-react/dist/esm/icons/x";
+import User from "lucide-react/dist/esm/icons/user";
+import LogOut from "lucide-react/dist/esm/icons/log-out";
+import Check from "lucide-react/dist/esm/icons/check";
+import Loader2 from "lucide-react/dist/esm/icons/loader-2";
+import Moon from "lucide-react/dist/esm/icons/moon";
+import Sun from "lucide-react/dist/esm/icons/sun";
+import Settings from "lucide-react/dist/esm/icons/settings";
+import Laptop from "lucide-react/dist/esm/icons/laptop";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { updateUsername, checkUsernameExists } from "@/lib/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/lib/theme-context";
 import { Switch } from "@/components/ui/switch";
-import { Bug } from "lucide-react";
+import Bug from "lucide-react/dist/esm/icons/bug";
 
 interface Props {
   onClose: () => void;

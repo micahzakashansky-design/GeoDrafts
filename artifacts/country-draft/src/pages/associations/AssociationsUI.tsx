@@ -3,7 +3,13 @@ import { Question } from "./AssociationsGame";
 import { WorldMap } from "./WorldMap";
 import { Country, ALL_COUNTRIES as COUNTRIES } from "@/data/countries";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, ChevronRight, XCircle, CheckCircle, SkipForward, CornerDownLeft, ArrowUpDown } from "lucide-react";
+import Search from "lucide-react/dist/esm/icons/search";
+import ChevronRight from "lucide-react/dist/esm/icons/chevron-right";
+import XCircle from "lucide-react/dist/esm/icons/x-circle";
+import CheckCircle from "lucide-react/dist/esm/icons/check-circle";
+import SkipForward from "lucide-react/dist/esm/icons/skip-forward";
+import CornerDownLeft from "lucide-react/dist/esm/icons/corner-down-left";
+import ArrowUpDown from "lucide-react/dist/esm/icons/arrow-up-down";
 
 interface AssociationsUIProps {
   question: Question;

@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useLocation } from "wouter";
-import { Trophy, X, PartyPopper, Lock, LogIn, Send } from "lucide-react";
+import Trophy from "lucide-react/dist/esm/icons/trophy";
+import X from "lucide-react/dist/esm/icons/x";
+import PartyPopper from "lucide-react/dist/esm/icons/party-popper";
+import Lock from "lucide-react/dist/esm/icons/lock";
+import LogIn from "lucide-react/dist/esm/icons/log-in";
+import Send from "lucide-react/dist/esm/icons/send";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { saveScore } from "@/lib/firestore";
 import type { Country, Category } from "@/data/countries";

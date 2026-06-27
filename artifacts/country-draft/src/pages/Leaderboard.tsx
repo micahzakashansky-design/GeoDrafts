@@ -1,6 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
-import { Trophy, ChevronDown, ArrowLeft, Globe, CalendarDays, User, Medal, Trash2, Upload } from "lucide-react";
+import Trophy from "lucide-react/dist/esm/icons/trophy";
+import ChevronDown from "lucide-react/dist/esm/icons/chevron-down";
+import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left";
+import Globe from "lucide-react/dist/esm/icons/globe";
+import CalendarDays from "lucide-react/dist/esm/icons/calendar-days";
+import User from "lucide-react/dist/esm/icons/user";
+import Medal from "lucide-react/dist/esm/icons/medal";
+import Trash2 from "lucide-react/dist/esm/icons/trash-2";
+import Upload from "lucide-react/dist/esm/icons/upload";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/lib/theme-context";
 import { Logo } from "@/components/Logo";

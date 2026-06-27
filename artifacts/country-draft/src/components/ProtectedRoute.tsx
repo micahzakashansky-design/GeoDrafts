@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 import { useLocation } from "wouter";
-import { Loader2 } from "lucide-react";
+import Loader2 from "lucide-react/dist/esm/icons/loader-2";
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const { firebaseUser, isLoading } = useFirebaseAuth();

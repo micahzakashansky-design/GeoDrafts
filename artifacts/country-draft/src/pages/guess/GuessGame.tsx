@@ -9,7 +9,17 @@ import {
   GuessPhase, GameState,
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./GuessUI";
-import { Home, Globe as GlobeIcon, PartyPopper, ChevronDown, ChevronRight, X, MapPin, Trophy, ShieldAlert, ShieldPlus, ArrowDown } from "lucide-react";
+import Home from "lucide-react/dist/esm/icons/home";
+import GlobeIcon from "lucide-react/dist/esm/icons/globe";
+import PartyPopper from "lucide-react/dist/esm/icons/party-popper";
+import ChevronDown from "lucide-react/dist/esm/icons/chevron-down";
+import ChevronRight from "lucide-react/dist/esm/icons/chevron-right";
+import X from "lucide-react/dist/esm/icons/x";
+import MapPin from "lucide-react/dist/esm/icons/map-pin";
+import Trophy from "lucide-react/dist/esm/icons/trophy";
+import ShieldAlert from "lucide-react/dist/esm/icons/shield-alert";
+import ShieldPlus from "lucide-react/dist/esm/icons/shield-plus";
+import ArrowDown from "lucide-react/dist/esm/icons/arrow-down";
 import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore } from "@/lib/local-leaderboard";

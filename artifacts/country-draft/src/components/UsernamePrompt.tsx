@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Globe, Check } from "lucide-react";
+import Globe from "lucide-react/dist/esm/icons/globe";
+import Check from "lucide-react/dist/esm/icons/check";
 import { createUserProfile, checkUsernameExists } from "@/lib/firestore";
 import type { User } from "firebase/auth";
 

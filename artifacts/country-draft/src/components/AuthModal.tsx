@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Lock, LogIn, Send, X } from "lucide-react";
+import Lock from "lucide-react/dist/esm/icons/lock";
+import LogIn from "lucide-react/dist/esm/icons/log-in";
+import Send from "lucide-react/dist/esm/icons/send";
+import X from "lucide-react/dist/esm/icons/x";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
 export function AuthModal({ onClose, title = "Sign In" }: { onClose: () => void, title?: string }) {

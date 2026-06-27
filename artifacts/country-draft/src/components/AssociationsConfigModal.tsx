@@ -3,7 +3,14 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ALL_COUNTRIES as COUNTRIES, Country } from "@/data/countries";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Flag, Map as MapIcon, Globe, HelpCircle, CheckCircle2, Brain, Settings2, X } from "lucide-react";
+import Flag from "lucide-react/dist/esm/icons/flag";
+import MapIcon from "lucide-react/dist/esm/icons/map";
+import Globe from "lucide-react/dist/esm/icons/globe";
+import HelpCircle from "lucide-react/dist/esm/icons/help-circle";
+import CheckCircle2 from "lucide-react/dist/esm/icons/check-circle-2";
+import Brain from "lucide-react/dist/esm/icons/brain";
+import Settings2 from "lucide-react/dist/esm/icons/settings-2";
+import X from "lucide-react/dist/esm/icons/x";
 import { motion } from "framer-motion";
 
 export const TASK_TYPES = [

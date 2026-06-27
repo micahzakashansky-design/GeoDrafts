@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "wouter";
-import { Globe, ArrowLeft } from "lucide-react";
+import Globe from "lucide-react/dist/esm/icons/globe";
+import ArrowLeft from "lucide-react/dist/esm/icons/arrow-left";
 import { toast } from "sonner";
 import { AnimatePresence, motion } from "framer-motion";
 import { ContactModal } from "../components/ContactModal";
