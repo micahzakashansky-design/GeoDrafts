@@ -36,6 +36,7 @@ import Target from "lucide-react/dist/esm/icons/target";
 import Medal from "lucide-react/dist/esm/icons/medal";
 import { useTheme } from "../lib/theme-context";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
+import { isDevModeActive } from "@/lib/dev-logic";
 import { checkDailySubmitted, getDailyState, createRoom, joinRoom, getTopScores } from "../lib/firestore";
 import { UsernamePrompt } from "../components/UsernamePrompt";
 import { SettingsModal } from "../components/SettingsModal";
@@ -683,7 +684,7 @@ export default function Home() {
                 </div>
 
                   {/* Beta 1.0 Draft for Everyone */}
-                  {import.meta.env.DEV && (
+                  {isDevModeActive(profile?.username) && (
                     <div className="col-span-1 md:col-span-2 bg-card border-t border-border p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
                       <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-5 text-center md:text-left">
                         <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
