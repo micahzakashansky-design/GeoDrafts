@@ -501,13 +501,19 @@ export default function Home() {
   const [isJoining, setIsJoining] = useState(false);
   const [isHosting, setIsHosting] = useState(false);
 
-  const [devModeActive, setDevModeActive] = useState(() => isDevModeActive(profile?.username));
+  const [devModeActive, setDevModeActive] = useState(() => localStorage.getItem("geoDraftsDevMode") === "true");
+
+  useEffect(() => {
+    // Sync with profile once it loads
+    setDevModeActive(isDevModeActive(profile?.username));
+  }, [profile?.username]);
 
   useEffect(() => {
     const handleDevModeChanged = () => {
-      setDevModeActive(isDevModeActive(profile?.username));
+      // Read directly from localStorage so we never have a stale-closure on profile
+      const enabled = localStorage.getItem("geoDraftsDevMode") === "true";
+      setDevModeActive(enabled && profile?.username?.toLowerCase() === "devtest");
     };
-    handleDevModeChanged();
     window.addEventListener("devModeChanged", handleDevModeChanged);
     return () => window.removeEventListener("devModeChanged", handleDevModeChanged);
   }, [profile?.username]);
