@@ -474,7 +474,10 @@ export default function Home() {
   }, [firebaseUser, refreshProfile]);
 
   async function handleHost() {
-    if (!firebaseUser || !profile) return;
+    if (!firebaseUser || !profile) {
+      if (!firebaseUser) setShowAuthModal(true);
+      return;
+    }
     setIsHosting(true);
     try {
       const code = await createRoom(firebaseUser.uid, profile.username, "party", "easy");
@@ -488,7 +491,10 @@ export default function Home() {
 
   async function handleJoin(e?: React.FormEvent) {
     if (e) e.preventDefault();
-    if (!firebaseUser || !profile) return;
+    if (!firebaseUser || !profile) {
+      if (!firebaseUser) setShowAuthModal(true);
+      return;
+    }
     if (joinCode.length !== 6) {
       toast.error("Room code must be 6 characters");
       return;
@@ -632,8 +638,14 @@ export default function Home() {
                         placeholder="CODE"
                         className="w-full sm:w-32 bg-card text-foreground placeholder-muted-foreground border border-border rounded-xl px-4 py-4 font-bold tracking-widest focus:outline-none focus:ring-2 focus:ring-ring uppercase text-center text-sm"
                       />
-                      <button type="submit" disabled={isJoining || joinCode.length !== 6} className="absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-lg bg-foreground text-background font-bold hover:bg-foreground/90 active:scale-95 transition-all disabled:opacity-0 disabled:scale-90 duration-300 text-xs">
-                        Join
+                      <button 
+                        type="submit" 
+                        disabled={isJoining || joinCode.length !== 6} 
+                        className={`absolute right-1.5 top-1.5 bottom-1.5 px-3 rounded-lg bg-foreground text-background font-bold transition-all duration-300 text-xs flex items-center justify-center ${
+                          (joinCode.length !== 6 && !isJoining) ? "opacity-0 scale-90 pointer-events-none" : "opacity-100 scale-100 hover:bg-foreground/90 active:scale-95"
+                        } ${isJoining ? "opacity-50 pointer-events-none" : ""}`}
+                      >
+                        {isJoining ? <Loader2 className="w-4 h-4 animate-spin" /> : "Join"}
                       </button>
                     </form>
                   </div>

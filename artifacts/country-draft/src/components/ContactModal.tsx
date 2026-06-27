@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Send, X, Loader2, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { firestore } from "@/lib/firebase";
 
 export function ContactModal({ onClose }: { onClose: () => void }) {
   const [loading, setLoading] = useState(false);
@@ -25,15 +27,12 @@ export function ContactModal({ onClose }: { onClose: () => void }) {
     
     setLoading(true);
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, subject, message }),
+      await addDoc(collection(firestore, "messages"), {
+        email: email.trim(),
+        subject: subject.trim(),
+        message: message.trim(),
+        createdAt: serverTimestamp(),
       });
-      
-      if (!response.ok) {
-        throw new Error("Failed to send message");
-      }
       
       toast.success("Message sent successfully! We'll get back to you soon.");
       onClose();

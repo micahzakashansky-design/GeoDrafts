@@ -151,6 +151,18 @@ export function SettingsModal({ onClose }: Props) {
 
           {firebaseUser && (
             <>
+              {profile?.username?.toLowerCase().trim() === "devtest" && (
+                <div className="pt-5 border-t border-border flex items-center justify-between">
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    Developer Mode
+                  </label>
+                  <div className="flex items-center gap-3 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                    <Bug className="w-5 h-5 text-amber-600 dark:text-amber-500" />
+                    <Switch checked={devModeEnabled} onCheckedChange={toggleDevMode} />
+                  </div>
+                </div>
+              )}
+
               <div className="space-y-3 pt-5 border-t border-border">
                 <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   Change Username

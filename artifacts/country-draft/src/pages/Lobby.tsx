@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { Users, Swords, PartyPopper, ChevronLeft } from "lucide-react";
+import { Users, Swords, PartyPopper, ChevronLeft, ArrowLeftRight, Brain } from "lucide-react";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
 import { listenToRoom, listenToPlayers, updateRoom, type Room, type RoomPlayer } from "../lib/firestore";
 import { Logo } from "../components/Logo";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { SettingsButton } from "@/components/SettingsButton";
+import { AssociationsConfigModal } from "@/components/AssociationsConfigModal";
 
 export default function Lobby() {
   const [, navigate] = useLocation();
@@ -56,9 +57,14 @@ export default function Lobby() {
     }
   };
 
-  const handleModeChange = (mode: "sabotage" | "party") => {
+  const handleModeChange = (mode: "sabotage" | "party" | "double_draft" | "associations_race") => {
     if (isHost && room.mode !== mode) {
-      updateRoom(room.code, { mode: mode });
+      if (mode === "associations_race") {
+        // Provide default options if switching to associations race
+        updateRoom(room.code, { mode, associationsSettings: { tasks: ["identify_from_flag", "identify_from_map", "click_on_map", "find_flag", "identify_capital", "identify_country_from_capital"], countries: [] } });
+      } else {
+        updateRoom(room.code, { mode });
+      }
     }
   };
 
@@ -147,85 +153,186 @@ export default function Lobby() {
             <div className="absolute top-0 right-0 w-64 h-64 bg-foreground/5 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/3 pointer-events-none" />
 
             {/* Difficulty Radio (Pills) */}
-            <div className="flex bg-background rounded-2xl p-1.5 shadow-inner border border-border/50">
-              <button
-                onClick={() => handleDifficultyChange("easy")}
-                disabled={!isHost}
-                className={`flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
-                  room.difficulty === "easy"
-                    ? "bg-white text-black shadow-sm"
-                    : "text-muted-foreground hover:text-foreground/80"
-                } ${!isHost && "cursor-default opacity-80"}`}
-              >
-                Normal
-              </button>
-              <button
-                onClick={() => handleDifficultyChange("hard")}
-                disabled={!isHost}
-                className={`flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
-                  room.difficulty === "hard"
-                    ? "bg-white text-black shadow-sm"
-                    : "text-muted-foreground hover:text-foreground/80"
-                } ${!isHost && "cursor-default opacity-80"}`}
-              >
-                Hard
-              </button>
-            </div>
+            <AnimatePresence>
+              {(room.mode === "party" || room.mode === "sabotage") && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="pb-6">
+                    <div className="flex bg-background rounded-2xl p-1.5 shadow-inner border border-border/50">
+                      {(isHost || room.difficulty === "easy") && (
+                        <button
+                          onClick={() => handleDifficultyChange("easy")}
+                          disabled={!isHost}
+                          className={`flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
+                            room.difficulty === "easy"
+                              ? "bg-white text-black shadow-sm"
+                              : "text-muted-foreground hover:text-foreground/80"
+                          } ${!isHost && "cursor-default"}`}
+                        >
+                          Normal
+                        </button>
+                      )}
+                      {(isHost || room.difficulty === "hard") && (
+                        <button
+                          onClick={() => handleDifficultyChange("hard")}
+                          disabled={!isHost}
+                          className={`flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
+                            room.difficulty === "hard"
+                              ? "bg-white text-black shadow-sm"
+                              : "text-muted-foreground hover:text-foreground/80"
+                          } ${!isHost && "cursor-default"}`}
+                        >
+                          Hard
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Game Mode Radio */}
             <div className="space-y-3">
-              <motion.button
-                whileHover={isHost ? { scale: 1.02 } : {}}
-                whileTap={isHost ? { scale: 0.98 } : {}}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                onClick={() => handleModeChange("sabotage")}
-                disabled={!isHost}
-                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
-                  room.mode === "sabotage"
-                    ? "border-red-500/50 bg-red-500/10"
-                    : "border-border bg-background hover:bg-foreground/5"
-                } ${!isHost && "cursor-default"}`}
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "bg-red-500/20 text-red-500" : "bg-foreground/10 text-muted-foreground"}`}>
-                  <Swords className="w-7 h-7" />
-                </div>
-                <div>
-                  <div className={`font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-foreground" : "text-foreground/80"}`}>Sabotage</div>
-                  <div className="text-sm font-medium text-muted-foreground mt-1">Pick for your opponent</div>
-                </div>
-                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "border-red-500" : "border-border"}`}>
-                  {room.mode === "sabotage" && (
-                    <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-red-500" />
-                  )}
-                </div>
-              </motion.button>
+              {(isHost || room.mode === "sabotage") && (
+                <motion.button
+                  whileHover={isHost ? { scale: 1.02 } : {}}
+                  whileTap={isHost ? { scale: 0.98 } : {}}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  onClick={() => handleModeChange("sabotage")}
+                  disabled={!isHost}
+                  className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
+                    room.mode === "sabotage"
+                      ? "border-red-500/50 bg-red-500/10"
+                      : "border-border bg-background hover:bg-foreground/5"
+                  } ${!isHost && "cursor-default"}`}
+                >
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "bg-red-500/20 text-red-500" : "bg-foreground/10 text-muted-foreground"}`}>
+                    <Swords className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <div className={`font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-foreground" : "text-foreground/80"}`}>Sabotage</div>
+                    <div className="text-sm font-medium text-muted-foreground mt-1">Pick for your opponent</div>
+                  </div>
+                  <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "border-red-500" : "border-border"} ${!isHost ? "hidden" : ""}`}>
+                    {room.mode === "sabotage" && (
+                      <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-red-500" />
+                    )}
+                  </div>
+                </motion.button>
+              )}
 
-              <motion.button
-                whileHover={isHost ? { scale: 1.02 } : {}}
-                whileTap={isHost ? { scale: 0.98 } : {}}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                onClick={() => handleModeChange("party")}
-                disabled={!isHost}
-                className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
-                  room.mode === "party"
-                    ? "border-emerald-500/50 bg-emerald-500/10"
-                    : "border-border bg-background hover:bg-foreground/5"
-                } ${!isHost && "cursor-default"}`}
-              >
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "party" ? "bg-emerald-500/20 text-emerald-500" : "bg-foreground/10 text-muted-foreground"}`}>
-                  <PartyPopper className="w-7 h-7" />
-                </div>
-                <div>
-                  <div className={`font-black text-xl tracking-tight ${room.mode === "party" ? "text-foreground" : "text-foreground/80"}`}>Party</div>
-                  <div className="text-sm font-medium text-muted-foreground mt-1">Same countries for all</div>
-                </div>
-                <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "party" ? "border-emerald-500" : "border-border"}`}>
-                  {room.mode === "party" && (
-                    <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-emerald-500" />
-                  )}
-                </div>
-              </motion.button>
+              {(isHost || room.mode === "party") && (
+                <motion.button
+                  whileHover={isHost ? { scale: 1.02 } : {}}
+                  whileTap={isHost ? { scale: 0.98 } : {}}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  onClick={() => handleModeChange("party")}
+                  disabled={!isHost}
+                  className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
+                    room.mode === "party"
+                      ? "border-emerald-500/50 bg-emerald-500/10"
+                      : "border-border bg-background hover:bg-foreground/5"
+                  } ${!isHost && "cursor-default"}`}
+                >
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "party" ? "bg-emerald-500/20 text-emerald-500" : "bg-foreground/10 text-muted-foreground"}`}>
+                    <PartyPopper className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <div className={`font-black text-xl tracking-tight ${room.mode === "party" ? "text-foreground" : "text-foreground/80"}`}>Party</div>
+                    <div className="text-sm font-medium text-muted-foreground mt-1">Same countries for all</div>
+                  </div>
+                  <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "party" ? "border-emerald-500" : "border-border"} ${!isHost ? "hidden" : ""}`}>
+                    {room.mode === "party" && (
+                      <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-emerald-500" />
+                    )}
+                  </div>
+                </motion.button>
+              )}
+
+              {(isHost || room.mode === "double_draft") && (
+                <motion.button
+                  whileHover={isHost ? { scale: 1.02 } : {}}
+                  whileTap={isHost ? { scale: 0.98 } : {}}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  onClick={() => handleModeChange("double_draft")}
+                  disabled={!isHost}
+                  className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
+                    room.mode === "double_draft"
+                      ? "border-blue-500/50 bg-blue-500/10"
+                      : "border-border bg-background hover:bg-foreground/5"
+                  } ${!isHost && "cursor-default"}`}
+                >
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "double_draft" ? "bg-blue-500/20 text-blue-500" : "bg-foreground/10 text-muted-foreground"}`}>
+                    <ArrowLeftRight className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <div className={`font-black text-xl tracking-tight ${room.mode === "double_draft" ? "text-foreground" : "text-foreground/80"}`}>Double Draft</div>
+                    <div className="text-sm font-medium text-muted-foreground mt-1">Pick from random pairs</div>
+                  </div>
+                  <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "double_draft" ? "border-blue-500" : "border-border"} ${!isHost ? "hidden" : ""}`}>
+                    {room.mode === "double_draft" && (
+                      <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-blue-500" />
+                    )}
+                  </div>
+                </motion.button>
+              )}
+
+              {(isHost || room.mode === "associations_race") && (
+                <motion.button
+                  whileHover={isHost ? { scale: 1.02 } : {}}
+                  whileTap={isHost ? { scale: 0.98 } : {}}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  onClick={() => handleModeChange("associations_race")}
+                  disabled={!isHost}
+                  className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
+                    room.mode === "associations_race"
+                      ? "border-pink-500/50 bg-pink-500/10"
+                      : "border-border bg-background hover:bg-foreground/5"
+                  } ${!isHost && "cursor-default"}`}
+                >
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "associations_race" ? "bg-pink-500/20 text-pink-500" : "bg-foreground/10 text-muted-foreground"}`}>
+                    <Brain className="w-7 h-7" />
+                  </div>
+                  <div>
+                    <div className={`font-black text-xl tracking-tight ${room.mode === "associations_race" ? "text-foreground" : "text-foreground/80"}`}>Associations</div>
+                    <div className="text-sm font-medium text-muted-foreground mt-1">Link countries & facts</div>
+                  </div>
+                  <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "associations_race" ? "border-pink-500" : "border-border"} ${!isHost ? "hidden" : ""}`}>
+                    {room.mode === "associations_race" && (
+                      <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-pink-500" />
+                    )}
+                  </div>
+                </motion.button>
+              )}
             </div>
+
+            <AnimatePresence>
+              {room.mode === "associations_race" && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <div className="pt-3 pb-1">
+                    <AssociationsConfigModal 
+                      initialTasks={room.associationsSettings?.tasks}
+                      initialCountries={room.associationsSettings?.countries}
+                      onSave={(tasks, countries) => {
+                        updateRoom(room.code, { associationsSettings: { tasks, countries } });
+                      }}
+                      disabled={!isHost}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Play Button */}
             {isHost ? (

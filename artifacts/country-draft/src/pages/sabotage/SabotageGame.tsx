@@ -62,33 +62,45 @@ export default function SabotageGame() {
 
     if (!me || !opponent) return;
 
-    if (!me.sabotageChoice && !state.selectionOptions && !me.finishedRound) {
+    if (me.sabotageChoice && state.waitingForSabotageSync) {
+       setState(prev => ({ ...prev, waitingForSabotageSync: false }));
+    }
+
+    if (!me.sabotageChoice && !state.selectionOptions && !me.finishedRound && !state.waitingForSabotageSync) {
        // We need to pick a sabotage choice for the opponent
        // In a real implementation we'd use the seeded pool, but for now just pick 2
        const pool = [...state.pool];
-       let c1, c2;
+       let c1, c2, c3, c4;
        
        if (isDevModeActive(me.username)) {
            // Provide max stat options for dev mode
            c1 = drawDevCountry(pool, {});
            c2 = drawDevCountry(pool, {});
+           c3 = drawDevCountry(pool, {});
+           c4 = drawDevCountry(pool, {});
        } else {
-           c1 = pool.pop(); c2 = pool.pop();
+           c1 = pool.pop(); c2 = pool.pop(); c3 = pool.pop(); c4 = pool.pop();
        }
        
-       if (c1 && c2) {
-           setState(prev => ({ ...prev, pool, selectionOptions: [c1, c2] }));
+       if (c1 && c2 && c3 && c4) {
+           const myOptions = firebaseUser.uid === room.hostId ? [c1, c2] : [c3, c4];
+           setState(prev => ({ ...prev, pool, selectionOptions: myOptions }));
        }
-    } else if (me.sabotageChoice && opponent.sabotageChoice && !state.currentCountry && !me.finishedRound) {
+    } else if (me.finishedRound && state.waitingForRoundSync) {
+       setState(prev => ({ ...prev, waitingForRoundSync: false }));
+    } else if (me.sabotageChoice && opponent.sabotageChoice && !state.currentCountry && !me.finishedRound && !state.waitingForRoundSync) {
        // We've both chosen, give me my opponent's choice
        const myCountry = COUNTRIES.find(c => c.name === opponent.sabotageChoice) || null;
        setState(prev => ({ ...prev, currentCountry: myCountry }));
     } else if (me.finishedRound && opponent.finishedRound) {
        // Round over, reset for next
-       updatePlayer(room.code, firebaseUser.uid, { finishedRound: false, sabotageChoice: null });
+       if (firebaseUser.uid === room.hostId) {
+         updatePlayer(room.code, firebaseUser.uid, { finishedRound: false, sabotageChoice: null });
+         updatePlayer(room.code, opponent.uid, { finishedRound: false, sabotageChoice: null });
+       }
     }
 
-  }, [room, players, firebaseUser, state.gameOver, state.selectionOptions, state.currentCountry, state.pool]);
+  }, [room, players, firebaseUser, state.gameOver, state.selectionOptions, state.currentCountry, state.pool, state.waitingForSabotageSync]);
 
 
   const totalScore = useMemo(() => {
@@ -106,7 +118,7 @@ export default function SabotageGame() {
   const onSelectionPick = useCallback((country: Country) => {
      if (roomCode && firebaseUser) {
         updatePlayer(roomCode, firebaseUser.uid, { sabotageChoice: country.name });
-        setState(prev => ({ ...prev, selectionOptions: null }));
+        setState(prev => ({ ...prev, selectionOptions: null, waitingForSabotageSync: true }));
      }
   }, [roomCode, firebaseUser]);
 
@@ -138,8 +150,8 @@ export default function SabotageGame() {
 
       return {
         ...prev, roster: newRoster, currentCountry: null,
-        gameOver: isGameOver
-      ,
+        gameOver: isGameOver,
+        waitingForRoundSync: true,
         categoryTimes: newCategoryTimes, currentTurnStartTime: Date.now()
       };
     });
@@ -186,7 +198,15 @@ export default function SabotageGame() {
           ) : state.currentCountry ? (
             <CountryCard country={state.currentCountry} hoveredCategory={hoveredCategory} poolRemaining={state.pool.length} isHardMode={state.isHardMode} roster={state.roster} onAssign={assignCountry} onHover={setHoveredCategory} />
           ) : (
-            <div className="flex-1 flex items-center justify-center text-muted-foreground">Loading game...</div>
+            <div className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+               <div className="w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-6" />
+               <h2 className="text-2xl font-sans font-bold mb-2">
+                 {room?.status === "playing" ? "Waiting for other player..." : "Loading game..."}
+               </h2>
+               {room?.status === "playing" && (
+                 <p className="text-muted-foreground mt-2">Your opponent is picking a country to sabotage you with.</p>
+               )}
+            </div>
           )}
         </div>
       </main>

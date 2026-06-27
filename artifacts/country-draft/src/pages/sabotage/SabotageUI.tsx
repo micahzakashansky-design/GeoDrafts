@@ -338,13 +338,34 @@ export function SelectionPhase({ options, onPick, isHardMode, mode }: { options:
       <div className="text-center"><h2 className="text-3xl font-sans font-bold mb-1">{mode === "sabotage" ? "Sabotage Choice" : "Double Draft Choice"}</h2><p className="text-muted-foreground text-sm">{mode === "sabotage" ? "Pick a country for your opponent to use." : "Choose which country to add to your roster."}</p></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl">
         {options.map((country, idx) => (
-          <motion.button key={country.name + idx} whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }} onClick={() => onPick(country)} className="bg-background border border-border rounded-2xl overflow-hidden shadow-xl text-left group">
-            <div className="p-8 border-b border-border bg-foreground/5 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-sans font-bold text-foreground">{country.name}</h3><p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{country.region}</p></div>
-            <div className="p-5 space-y-4"><p className="text-sm text-muted-foreground/80 leading-relaxed italic line-clamp-2">"{country.knownFor}"</p>
-               {!isHardMode && (<div className="grid grid-cols-3 gap-2">{["Military", "Economy", "Government"].map(cat => { const score = country.stats[getCategoryKey(cat as Category)].score; return (<div key={cat} className="text-center p-2 rounded-lg bg-foreground/5 border border-border/40"><div className="text-[9px] uppercase font-bold text-muted-foreground">{cat}</div><div className="text-sm font-bold text-primary">{score}/10</div></div>) })}</div>)}
-               <div className="w-full py-2.5 rounded-xl bg-primary/10 text-primary text-center font-bold text-sm group-hover:bg-primary group-hover:text-primary-foreground transition-colors border border-primary/20">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div>
+          <motion.div 
+            key={country.name + idx} 
+            whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }} 
+            onClick={() => onPick(country)} 
+            className="bg-card border border-border rounded-2xl overflow-hidden shadow-xl text-left group cursor-pointer"
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          >
+            <div className="p-8 border-b border-border bg-muted/50 flex flex-col items-center text-center"><div className="text-7xl mb-4 group-hover:scale-110 transition-transform">{country.flag}</div><h3 className="text-2xl font-sans font-bold text-foreground">{country.name}</h3><p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">{country.region}</p></div>
+            <div className="p-5 space-y-4">
+               <ExpandableDescription description={country.knownFor} />
+               {!isHardMode && (() => {
+                 const threeStars = ["Military", "Economy", "Government"] as Category[];
+                 const twoStars = ["International Relationships", "Technology", "Education", "Natural Resources", "Healthcare"] as Category[];
+                 const oneStars = ["Location", "Size", "Population", "Culture", "Climate", "History", "Tourism"] as Category[];
+                 const avg3 = Math.round(threeStars.reduce((acc, cat) => acc + (country.stats[getCategoryKey(cat)].score ?? 0), 0) / threeStars.length);
+                 const avg2 = Math.round(twoStars.reduce((acc, cat) => acc + (country.stats[getCategoryKey(cat)].score ?? 0), 0) / twoStars.length);
+                 const avg1 = Math.round(oneStars.reduce((acc, cat) => acc + (country.stats[getCategoryKey(cat)].score ?? 0), 0) / oneStars.length);
+                 return (
+                   <div className="grid grid-cols-3 gap-2">
+                     <div className="text-center p-2 rounded-lg bg-muted border border-border"><div className="text-[9px] uppercase font-bold text-muted-foreground">3-Star Avg</div><div className="text-sm font-bold text-foreground">{avg3}/15</div></div>
+                     <div className="text-center p-2 rounded-lg bg-muted border border-border"><div className="text-[9px] uppercase font-bold text-muted-foreground">2-Star Avg</div><div className="text-sm font-bold text-foreground">{avg2}/12</div></div>
+                     <div className="text-center p-2 rounded-lg bg-muted border border-border"><div className="text-[9px] uppercase font-bold text-muted-foreground">1-Star Avg</div><div className="text-sm font-bold text-foreground">{avg1}/10</div></div>
+                   </div>
+                 );
+               })()}
+               <div className="mt-auto pt-4"><div className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-center font-bold text-sm group-hover:opacity-90 transition-opacity border border-transparent">{mode === "sabotage" ? `Give ${country.name}` : `Pick ${country.name}`}</div></div>
             </div>
-          </motion.button>
+          </motion.div>
         ))}
       </div>
     </div>
@@ -797,6 +818,8 @@ export type GameState = {
   poolSeed: number;
   categoryTimes: Partial<Record<Category, number>>;
   currentTurnStartTime: number;
+  waitingForSabotageSync?: boolean;
+  waitingForRoundSync?: boolean;
 };
 
 export function seededRng(seed: number): () => number {

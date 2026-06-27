@@ -4,11 +4,9 @@ import { motion } from "framer-motion";
 import { ALL_COUNTRIES as COUNTRIES, Country } from "@/data/countries";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ChevronLeft, ChevronRight, Flag, Map as MapIcon, Globe, Brain, HelpCircle, CheckCircle2, Users } from "lucide-react";
+import { ChevronLeft, ChevronRight, Flag, Map as MapIcon, Globe, Brain, HelpCircle, CheckCircle2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Logo } from "@/components/Logo";
-import { useFirebaseAuth } from "@/lib/use-firebase-auth";
-import { createRoom } from "@/lib/firestore";
 import { SettingsButton } from "@/components/SettingsButton";
 
 export const TASK_TYPES = [
@@ -22,8 +20,6 @@ export const TASK_TYPES = [
 
 export function AssociationsSetup() {
   const [, setLocation] = useLocation();
-  const { firebaseUser, profile } = useFirebaseAuth();
-  const [loading, setLoading] = useState(false);
 
   const [selectedTasks, setSelectedTasks] = useState<string[]>(TASK_TYPES.map(t => t.id));
   const [selectedCountries, setSelectedCountries] = useState<string[]>(COUNTRIES.map(c => c.name));
@@ -70,27 +66,6 @@ export function AssociationsSetup() {
     sessionStorage.setItem("associations_countries", JSON.stringify(selectedCountries));
     
     setLocation("/game/associations");
-  };
-
-  const hostMultiplayerRace = async () => {
-    if (!firebaseUser || !profile) {
-      alert("You must be signed in to host a multiplayer race.");
-      return;
-    }
-    if (selectedTasks.length === 0 || selectedCountries.length === 0) return;
-    
-    setLoading(true);
-    try {
-      const code = await createRoom(firebaseUser.uid, profile.username, "associations_race", "easy", {
-        tasks: selectedTasks,
-        countries: selectedCountries
-      });
-      setLocation(`/game/associations_race?room=${code}`);
-    } catch (e) {
-      alert(e instanceof Error ? e.message : "Failed to create room");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -213,21 +188,12 @@ export function AssociationsSetup() {
             </div>
             <div className="flex items-center gap-3">
               <Button 
-                size="lg"
-                variant="outline"
-                onClick={hostMultiplayerRace}
-                disabled={selectedTasks.length === 0 || selectedCountries.length === 0 || loading}
-                className="font-bold text-lg px-8 flex items-center gap-2"
-              >
-                <Users className="w-5 h-5" /> {loading ? "Creating..." : "Host Multiplayer Race"}
-              </Button>
-              <Button 
                 size="lg" 
                 onClick={startGame}
-                disabled={selectedTasks.length === 0 || selectedCountries.length === 0 || loading}
+                disabled={selectedTasks.length === 0 || selectedCountries.length === 0}
                 className="font-bold text-lg px-8"
               >
-                Start Local Game
+                Start Game
               </Button>
             </div>
           </div>
