@@ -48283,19 +48283,32 @@ function getRating(total) {
   if (total >= 30) return "Collapsed State";
   return "Struggling State";
 }
+function getRawArea(country) {
+  if (country?.area) return country.area;
+  if (!country?.stats?.size?.description) return 1e5;
+  const desc = country.stats.size.description;
+  const match = desc.match(/([\d,.]+)\s*([KMBkmb])?\s*(?:sq\s*km|km²|square\s*km)/i) || desc.match(/([\d,.]+)\s*([KMBkmb])?\s*km/i);
+  if (!match) return 1e5;
+  let val = parseFloat(match[1].replace(/,/g, ""));
+  const unit = match[2] ? match[2].toLowerCase() : "";
+  if (unit === "m") val *= 1e6;
+  if (unit === "k") val *= 1e3;
+  if (unit === "b") val *= 1e9;
+  return val || 1e5;
+}
 function computeBetaSizePopBonus(roster) {
-  if (!roster.Size || !roster.Population || !roster.Economy || !roster.Technology || !roster.Climate || !roster["Natural Resources"]) {
+  if (!roster.Size || !roster.Population || !roster.Economy) {
     return 0;
   }
   const pop = getRawPopulation(roster.Population.stats.population.description);
-  const size2 = roster.Size.area || 1e5;
+  const size2 = getRawArea(roster.Size);
   const x2 = pop / size2;
   const I = roster.Economy.stats.economy.industryType || 3;
-  const T = roster.Technology.stats.technology.score || 5;
-  const E = roster.Economy.stats.economy.score || 5;
-  const C2 = roster.Climate.stats.climate.score || 5;
-  const R = roster["Natural Resources"].stats.naturalResources.score || 5;
-  const S2 = roster.Size.stats.size.score || 5;
+  const T = roster.Technology?.stats.technology.score ?? 5;
+  const E = roster.Economy.stats.economy.score ?? 5;
+  const C2 = roster.Climate?.stats.climate.score ?? 5;
+  const R = roster["Natural Resources"]?.stats.naturalResources.score ?? 5;
+  const S2 = roster.Size.stats.size.score ?? 5;
   const numerator = 150 * Math.pow(I, 1.5) * Math.pow(T, 0.75) * Math.pow(E, 0.15);
   const denominator = Math.pow(C2, 0.05) * Math.pow(R, 0.05) * Math.pow(S2, 0.25);
   if (denominator === 0) return 0;
