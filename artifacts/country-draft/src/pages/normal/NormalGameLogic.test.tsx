@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import NormalGame from './NormalGame';
-import { CATEGORIES } from '@/data/countries';
+import { CATEGORIES, COUNTRIES, type Country } from '@/data/countries';
 
 // Mock wouter
 vi.mock('wouter', () => ({
@@ -27,10 +27,48 @@ const localStorageMock = {
 };
 vi.stubGlobal('localStorage', localStorageMock);
 
+function createMockCountry(name: string): Country {
+  const dummyStats = { score: 8, description: "Great stat", industryType: 3 };
+  return {
+    name,
+    isoNumeric: "000",
+    aliases: [],
+    capitalAliases: [],
+    flag: "🇺🇸",
+    flagColors: ["red", "white", "blue"],
+    tier: "first",
+    capital: "Capital",
+    region: "Region",
+    knownFor: "Test Country",
+    stats: {
+      military: dummyStats,
+      economy: dummyStats,
+      culture: dummyStats,
+      healthcare: dummyStats,
+      internationalRelationships: dummyStats,
+      government: dummyStats,
+      climate: dummyStats,
+      technology: dummyStats,
+      size: dummyStats,
+      population: dummyStats,
+      history: dummyStats,
+      tourism: dummyStats,
+      education: dummyStats,
+      location: dummyStats,
+      naturalResources: dummyStats,
+    }
+  };
+}
+
 describe('NormalGame logic', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorageMock.clear();
+    if (COUNTRIES.length === 0) {
+      for (let i = 0; i < 30; i++) {
+        COUNTRIES.push(createMockCountry(`Country ${i + 1}`));
+      }
+    }
   });
 
   it('renders a country card on initialization', async () => {

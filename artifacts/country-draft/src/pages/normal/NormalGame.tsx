@@ -9,16 +9,14 @@ import {
   CATEGORY_ICONS, CATEGORY_MAX_SCORES, BONUS_CATEGORIES, getCategoryStars, getPtsDisplay
 } from "./NormalUI";
 import { SidebarRoster } from "./SidebarRoster";
-import Home from "lucide-react/dist/esm/icons/home";
-import CalendarDays from "lucide-react/dist/esm/icons/calendar-days";
-import ShieldAlert from "lucide-react/dist/esm/icons/shield-alert";
-import ShieldPlus from "lucide-react/dist/esm/icons/shield-plus";
+import { Home, CalendarDays, ShieldAlert, ShieldPlus } from "lucide-react";
 import { Logo } from "../../components/Logo";
 import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 import { SettingsButton } from "@/components/SettingsButton";
 import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
 import { computeBetaSizePopBonus } from "@/lib/beta-logic";
+import { computeSizePopBonus } from "@/lib/achievements-logic";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
 
 export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolean }) {

@@ -48143,58 +48143,334 @@ function NotFound() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 text-sm text-gray-600", children: "Did you forget to add the page to the router?" })
   ] }) }) });
 }
-const __iconNode$1b = [
-  [
-    "path",
-    {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
+function getRawPopulation(desc) {
+  const match = desc.match(/^(?:Pre-war\s*)?([\d,.]+)\s*(million|billion|K|M|B)?/i);
+  if (!match) return 5e6;
+  let val = parseFloat(match[1].replace(/,/g, ""));
+  const unit = match[2] ? match[2].toLowerCase() : "";
+  if (unit === "million" || unit === "m") val *= 1e6;
+  if (unit === "billion" || unit === "b") val *= 1e9;
+  if (unit === "k") val *= 1e3;
+  return val;
+}
+function computeSizePopBonus(roster) {
+  if (!roster.Size || !roster.Population) return 0;
+  const pop = getRawPopulation(roster.Population.stats.population.description);
+  const size2 = roster.Size.area || 1e5;
+  const rawDensity = pop / size2;
+  const sCountryPop = getRawPopulation(roster.Size.stats.population.description);
+  const s = sCountryPop / size2;
+  const pCountryArea = roster.Population.area || 1e5;
+  const p = pop / pCountryArea;
+  const getScore = (cat) => {
+    let statKey = cat.toLowerCase();
+    if (cat === "Natural Resources") statKey = "naturalResources";
+    if (cat === "International Relationships") statKey = "internationalRelationships";
+    const rawScore = roster[cat]?.stats[statKey]?.score || 5;
+    if (cat === "Climate" || cat === "Location" || cat === "Tourism") {
+      return rawScore;
     }
-  ]
+    return rawScore * 10 / 12;
+  };
+  const techScore = getScore("Technology");
+  const climateScore = getScore("Climate");
+  const locationScore = getScore("Location");
+  const intlScore = getScore("International Relationships");
+  const eduScore = getScore("Education");
+  const healthScore = getScore("Healthcare");
+  const tourismScore = getScore("Tourism");
+  if (rawDensity < 100) {
+    const target = 40;
+    let effectiveDensity = rawDensity;
+    if (Math.abs(rawDensity - target) <= 30) {
+      effectiveDensity = target;
+    } else if (rawDensity > target) {
+      effectiveDensity = rawDensity - 30;
+    } else {
+      effectiveDensity = rawDensity + 30;
+    }
+    const synergy = Math.max(1, 2.5 - Math.abs(Math.log10(effectiveDensity / target)));
+    const avg = (climateScore + locationScore) / 2;
+    return Math.floor(avg * synergy);
+  } else if (rawDensity <= 1e3) {
+    const diff = Math.max(1e-4, Math.abs(s - p));
+    const synergy = Math.min(2.5, 1 + 1 / diff);
+    const avg = (intlScore + eduScore + healthScore + climateScore + tourismScore) / 5;
+    return Math.floor(avg * synergy);
+  } else {
+    const target = size2 < 36193 ? 2e4 : 1e4;
+    let effectiveDensity = rawDensity;
+    if (Math.abs(rawDensity - target) <= 30) {
+      effectiveDensity = target;
+    } else if (rawDensity > target) {
+      effectiveDensity = rawDensity - 30;
+    } else {
+      effectiveDensity = rawDensity + 30;
+    }
+    const synergy = Math.max(1, 2.5 - Math.abs(Math.log10(effectiveDensity / target)));
+    return Math.floor(techScore * synergy);
+  }
+}
+function getBonusPath(roster) {
+  if (!roster.Size || !roster.Population) return null;
+  const pop = getRawPopulation(roster.Population.stats.population.description);
+  const size2 = roster.Size.area || 1e5;
+  const rawDensity = pop / size2;
+  const techScore = roster.Technology?.stats.technology?.score || 0;
+  const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
+  const climateScore = roster.Climate?.stats.climate?.score || 0;
+  const geoScore = roster.Climate?.stats.climate?.score || 0;
+  const econScore = roster.Economy?.stats.economy?.score || 0;
+  const eduScore = roster.Education?.stats.education?.score || 0;
+  if (rawDensity > 1e3 && geoScore >= 8) return "Trade Hub";
+  if (size2 > 2e6 && rawDensity < 5) return "Nomadic Steppe";
+  if (eduScore >= 8 && techScore >= 8 && resourcesScore <= 3) return "Service Economy";
+  if (pop > 1e8 && resourcesScore >= 8 && rawDensity > 50 && rawDensity < 500) return "Manufacturing Powerhouse";
+  if (size2 <= 1e4 && pop <= 1e6 && econScore >= 9) return "Tax Haven";
+  if (climateScore >= 9 && geoScore >= 8) return "Tourism Mecca";
+  if (size2 <= 5e4 && geoScore >= 9) return "Strategic Chokepoint";
+  if (climateScore <= 3 && pop > 5e7) return "Wasteland Survival";
+  if (climateScore <= 4 && geoScore >= 8 && rawDensity < 20) return "Frozen Fortress";
+  if (size2 > 15e5 && climateScore >= 7 && pop > 8e7) return "Agrarian Giant";
+  if (rawDensity < 100) return "Agricultural society";
+  if (rawDensity <= 1e3) return "Generalist";
+  return "Tech Megacity";
+}
+function getCountryArchetype(roster) {
+  const m = roster.Military?.stats.military?.score ?? 0;
+  const e = roster.Economy?.stats.economy?.score ?? 0;
+  const t = roster.Technology?.stats.technology?.score ?? 0;
+  const h = roster.Healthcare?.stats.healthcare?.score ?? 0;
+  const ed = roster.Education?.stats.education?.score ?? 0;
+  const g = roster.Government?.stats.government?.score ?? 0;
+  const tour = roster.Tourism?.stats.tourism?.score ?? 5;
+  const ind = roster.Economy?.stats.economy?.score ?? 5;
+  const res = roster["Natural Resources"]?.stats.naturalResources?.score ?? 5;
+  const cli = roster.Climate?.stats.climate?.score ?? 5;
+  const geo = roster.Climate?.stats.climate?.score ?? 5;
+  const size2 = roster.Size?.area || 1e5;
+  const pop = roster.Population ? getRawPopulation(roster.Population.stats.population.description) : 5e6;
+  if (tour >= 8 && e >= 8 && ed >= 8) return "Cultural Hegemon";
+  if (res >= 8 && e >= 8 && ind >= 8) return "Industrial Juggernaut";
+  if (m >= 8 && geo >= 8 && tour <= 4) return "Fortress State";
+  if (t >= 9 && g >= 9) return "Cyberocracy";
+  if (cli >= 9 && h >= 8 && ind <= 4) return "Eco-Paradise";
+  if (e >= 8 && geo >= 8 && g >= 8) return "Trade Empire";
+  if (h >= 8 && ed >= 8 && t >= 8) return "Global Medic";
+  if (ed >= 9 && t >= 9) return "Knowledge Hub";
+  if (res >= 9 && g <= 4 && e <= 5) return "Resource Curse";
+  if (m >= 9 && h <= 5 && ed <= 5) return "Spartan Society";
+  if (m >= 8 && e >= 8 && t >= 8) return "Military Superstate";
+  if (e >= 8 && t >= 8 && ed >= 8) return "Techno-Utopia";
+  if (h >= 8 && ed >= 8 && g >= 8) return "Nordic Model";
+  if (size2 <= 5e4 && pop <= 15e6 && e >= 7) return "Wealthy City-State";
+  return "Balanced Republic";
+}
+function getRating(total) {
+  if (total >= 180) return "Global Hegemon";
+  if (total >= 170) return "Hyperpower";
+  if (total >= 165) return "Superpower";
+  if (total >= 150) return "Great Power";
+  if (total >= 140) return "Major Power";
+  if (total >= 125) return "Middle Power";
+  if (total >= 110) return "Regional Power";
+  if (total >= 100) return "Emerging Power";
+  if (total >= 90) return "Stable Nation";
+  if (total >= 80) return "Developing Nation";
+  if (total >= 70) return "Transitional State";
+  if (total >= 60) return "Fragile State";
+  if (total >= 45) return "Failed State";
+  if (total >= 30) return "Collapsed State";
+  return "Struggling State";
+}
+function computeBetaSizePopBonus(roster) {
+  if (!roster.Size || !roster.Population || !roster.Economy || !roster.Technology || !roster.Climate || !roster["Natural Resources"]) {
+    return 0;
+  }
+  const pop = getRawPopulation(roster.Population.stats.population.description);
+  const size2 = roster.Size.area || 1e5;
+  const x2 = pop / size2;
+  const I = roster.Economy.stats.economy.industryType || 3;
+  const T = roster.Technology.stats.technology.score || 5;
+  const E = roster.Economy.stats.economy.score || 5;
+  const C2 = roster.Climate.stats.climate.score || 5;
+  const R = roster["Natural Resources"].stats.naturalResources.score || 5;
+  const S2 = roster.Size.stats.size.score || 5;
+  const numerator = 150 * Math.pow(I, 1.5) * Math.pow(T, 0.75) * Math.pow(E, 0.15);
+  const denominator = Math.pow(C2, 0.05) * Math.pow(R, 0.05) * Math.pow(S2, 0.25);
+  if (denominator === 0) return 0;
+  const idealDensity = numerator / denominator;
+  const z2 = (x2 - idealDensity) / 4e3;
+  const y = 25 * Math.exp(-0.5 * Math.pow(z2, 2));
+  return Math.round(y);
+}
+const __iconNode$1b = [
+  ["path", { d: "M12 22V8", key: "qkxhtm" }],
+  ["path", { d: "M5 12H2a10 10 0 0 0 20 0h-3", key: "1hv3nh" }],
+  ["circle", { cx: "12", cy: "5", r: "3", key: "rqqgnr" }]
 ];
-const Shield = createLucideIcon("shield", __iconNode$1b);
+const Anchor = createLucideIcon("anchor", __iconNode$1b);
 const __iconNode$1a = [
-  ["path", { d: "M16 7h6v6", key: "box55l" }],
-  ["path", { d: "m22 7-8.5 8.5-5-5L2 17", key: "1t1m79" }]
+  ["path", { d: "M12 5v14", key: "s699le" }],
+  ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const TrendingUp = createLucideIcon("trending-up", __iconNode$1a);
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$1a);
 const __iconNode$19 = [
+  ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
+  ["path", { d: "M4 7h16", key: "6tx8e3" }],
+  ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
+  ["path", { d: "M20 17H4", key: "h6l3hr" }]
+];
+const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$19);
+const __iconNode$18 = [
+  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
+  ["path", { d: "M19 12H5", key: "x3x0zl" }]
+];
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$18);
+const __iconNode$17 = [
+  ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
+  ["path", { d: "M17 20V4", key: "1ejh1v" }],
+  ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
+  ["path", { d: "M7 4v16", key: "1glfcx" }]
+];
+const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$17);
+const __iconNode$16 = [
   [
     "path",
     {
-      d: "M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z",
-      key: "e79jfc"
+      d: "m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",
+      key: "1yiouv"
     }
   ],
-  ["circle", { cx: "13.5", cy: "6.5", r: ".5", fill: "currentColor", key: "1okk4w" }],
-  ["circle", { cx: "17.5", cy: "10.5", r: ".5", fill: "currentColor", key: "f64h9f" }],
-  ["circle", { cx: "6.5", cy: "12.5", r: ".5", fill: "currentColor", key: "qy21gx" }],
-  ["circle", { cx: "8.5", cy: "7.5", r: ".5", fill: "currentColor", key: "fotxhn" }]
+  ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
 ];
-const Palette = createLucideIcon("palette", __iconNode$19);
-const __iconNode$18 = [
+const Award = createLucideIcon("award", __iconNode$16);
+const __iconNode$15 = [
+  ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
     {
-      d: "M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5",
-      key: "mvr1a0"
+      d: "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",
+      key: "ruj8y"
     }
   ]
 ];
-const Heart = createLucideIcon("heart", __iconNode$18);
-const __iconNode$17 = [
-  ["circle", { cx: "12", cy: "12", r: "4", key: "4exip2" }],
-  ["path", { d: "M12 2v2", key: "tus03m" }],
-  ["path", { d: "M12 20v2", key: "1lh1kg" }],
-  ["path", { d: "m4.93 4.93 1.41 1.41", key: "149t6j" }],
-  ["path", { d: "m17.66 17.66 1.41 1.41", key: "ptbguv" }],
-  ["path", { d: "M2 12h2", key: "1t8f8n" }],
-  ["path", { d: "M20 12h2", key: "1q8mjw" }],
-  ["path", { d: "m6.34 17.66-1.41 1.41", key: "1m8zz5" }],
-  ["path", { d: "m19.07 4.93-1.41 1.41", key: "1shlcs" }]
+const BookOpen = createLucideIcon("book-open", __iconNode$15);
+const __iconNode$14 = [
+  ["path", { d: "M12 18V5", key: "adv99a" }],
+  ["path", { d: "M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4", key: "1e3is1" }],
+  ["path", { d: "M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5", key: "1gqd8o" }],
+  ["path", { d: "M17.997 5.125a4 4 0 0 1 2.526 5.77", key: "iwvgf7" }],
+  ["path", { d: "M18 18a4 4 0 0 0 2-7.464", key: "efp6ie" }],
+  ["path", { d: "M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517", key: "1gq6am" }],
+  ["path", { d: "M6 18a4 4 0 0 1-2-7.464", key: "k1g0md" }],
+  ["path", { d: "M6.003 5.125a4 4 0 0 0-2.526 5.77", key: "q97ue3" }]
 ];
-const Sun = createLucideIcon("sun", __iconNode$17);
-const __iconNode$16 = [
+const Brain = createLucideIcon("brain", __iconNode$14);
+const __iconNode$13 = [
+  ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
+  ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
+];
+const Briefcase = createLucideIcon("briefcase", __iconNode$13);
+const __iconNode$12 = [
+  ["path", { d: "M12 20v-9", key: "1qisl0" }],
+  ["path", { d: "M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z", key: "uouzyp" }],
+  ["path", { d: "M14.12 3.88 16 2", key: "qol33r" }],
+  ["path", { d: "M21 21a4 4 0 0 0-3.81-4", key: "1b0z45" }],
+  ["path", { d: "M21 5a4 4 0 0 1-3.55 3.97", key: "5cxbf6" }],
+  ["path", { d: "M22 13h-4", key: "1jl80f" }],
+  ["path", { d: "M3 21a4 4 0 0 1 3.81-4", key: "1fjd4g" }],
+  ["path", { d: "M3 5a4 4 0 0 0 3.55 3.97", key: "1d7oge" }],
+  ["path", { d: "M6 13H2", key: "82j7cp" }],
+  ["path", { d: "m8 2 1.88 1.88", key: "fmnt4t" }],
+  ["path", { d: "M9 7.13V6a3 3 0 1 1 6 0v1.13", key: "1vgav8" }]
+];
+const Bug = createLucideIcon("bug", __iconNode$12);
+const __iconNode$11 = [
+  ["path", { d: "M12 10h.01", key: "1nrarc" }],
+  ["path", { d: "M12 14h.01", key: "1etili" }],
+  ["path", { d: "M12 6h.01", key: "1vi96p" }],
+  ["path", { d: "M16 10h.01", key: "1m94wz" }],
+  ["path", { d: "M16 14h.01", key: "1gbofw" }],
+  ["path", { d: "M16 6h.01", key: "1x0f13" }],
+  ["path", { d: "M8 10h.01", key: "19clt8" }],
+  ["path", { d: "M8 14h.01", key: "6423bh" }],
+  ["path", { d: "M8 6h.01", key: "1dz90k" }],
+  ["path", { d: "M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", key: "cabbwy" }],
+  ["rect", { x: "4", y: "2", width: "16", height: "20", rx: "2", key: "1uxh74" }]
+];
+const Building = createLucideIcon("building", __iconNode$11);
+const __iconNode$10 = [
+  ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
+  ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
+  ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
+  ["path", { d: "M16 10h.01", key: "1m94wz" }],
+  ["path", { d: "M12 10h.01", key: "1nrarc" }],
+  ["path", { d: "M8 10h.01", key: "19clt8" }],
+  ["path", { d: "M12 14h.01", key: "1etili" }],
+  ["path", { d: "M8 14h.01", key: "6423bh" }],
+  ["path", { d: "M12 18h.01", key: "mhygvu" }],
+  ["path", { d: "M8 18h.01", key: "lrp35t" }]
+];
+const Calculator = createLucideIcon("calculator", __iconNode$10);
+const __iconNode$$ = [
+  ["path", { d: "M8 2v4", key: "1cmpym" }],
+  ["path", { d: "M16 2v4", key: "4m81vk" }],
+  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
+  ["path", { d: "M3 10h18", key: "8toen8" }],
+  ["path", { d: "M8 14h.01", key: "6423bh" }],
+  ["path", { d: "M12 14h.01", key: "1etili" }],
+  ["path", { d: "M16 14h.01", key: "1gbofw" }],
+  ["path", { d: "M8 18h.01", key: "lrp35t" }],
+  ["path", { d: "M12 18h.01", key: "mhygvu" }],
+  ["path", { d: "M16 18h.01", key: "kzsmim" }]
+];
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$$);
+const __iconNode$_ = [
+  ["path", { d: "M8 2v4", key: "1cmpym" }],
+  ["path", { d: "M16 2v4", key: "4m81vk" }],
+  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
+  ["path", { d: "M3 10h18", key: "8toen8" }]
+];
+const Calendar = createLucideIcon("calendar", __iconNode$_);
+const __iconNode$Z = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$Z);
+const __iconNode$Y = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$Y);
+const __iconNode$X = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$X);
+const __iconNode$W = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$W);
+const __iconNode$V = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$V);
+const __iconNode$U = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$U);
+const __iconNode$T = [
+  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+];
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$T);
+const __iconNode$S = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
+  ["path", { d: "M12 17h.01", key: "p32p05" }]
+];
+const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$S);
+const __iconNode$R = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
+  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
+];
+const CircleX = createLucideIcon("circle-x", __iconNode$R);
+const __iconNode$Q = [
+  ["path", { d: "M20 4v7a4 4 0 0 1-4 4H4", key: "6o5b7l" }],
+  ["path", { d: "m9 10-5 5 5 5", key: "1kshq7" }]
+];
+const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$Q);
+const __iconNode$P = [
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M17 20v2", key: "1rnc9c" }],
@@ -48210,8 +48486,160 @@ const __iconNode$16 = [
   ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
   ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
 ];
-const Cpu = createLucideIcon("cpu", __iconNode$16);
-const __iconNode$15 = [
+const Cpu = createLucideIcon("cpu", __iconNode$P);
+const __iconNode$O = [
+  [
+    "path",
+    {
+      d: "M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z",
+      key: "1vdc57"
+    }
+  ],
+  ["path", { d: "M5 21h14", key: "11awu3" }]
+];
+const Crown = createLucideIcon("crown", __iconNode$O);
+const __iconNode$N = [
+  ["path", { d: "M12 15V3", key: "m9g1x1" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
+];
+const Download = createLucideIcon("download", __iconNode$N);
+const __iconNode$M = [
+  [
+    "path",
+    { d: "M12 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 12 18z", key: "b19h5q" }
+  ],
+  [
+    "path",
+    { d: "M2 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 2 18z", key: "h7h5ge" }
+  ]
+];
+const FastForward = createLucideIcon("fast-forward", __iconNode$M);
+const __iconNode$L = [
+  [
+    "path",
+    {
+      d: "M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528",
+      key: "1jaruq"
+    }
+  ]
+];
+const Flag = createLucideIcon("flag", __iconNode$L);
+const __iconNode$K = [
+  ["line", { x1: "6", x2: "10", y1: "11", y2: "11", key: "1gktln" }],
+  ["line", { x1: "8", x2: "8", y1: "9", y2: "13", key: "qnk9ow" }],
+  ["line", { x1: "15", x2: "15.01", y1: "12", y2: "12", key: "krot7o" }],
+  ["line", { x1: "18", x2: "18.01", y1: "10", y2: "10", key: "1lcuu1" }],
+  [
+    "path",
+    {
+      d: "M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z",
+      key: "mfqc10"
+    }
+  ]
+];
+const Gamepad2 = createLucideIcon("gamepad-2", __iconNode$K);
+const __iconNode$J = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
+  ["path", { d: "M2 12h20", key: "9i4pu4" }]
+];
+const Globe = createLucideIcon("globe", __iconNode$J);
+const __iconNode$I = [
+  [
+    "path",
+    {
+      d: "M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z",
+      key: "j76jl0"
+    }
+  ],
+  ["path", { d: "M22 10v6", key: "1lu8f3" }],
+  ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
+];
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$I);
+const __iconNode$H = [
+  ["path", { d: "m11 17 2 2a1 1 0 1 0 3-3", key: "efffak" }],
+  [
+    "path",
+    {
+      d: "m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4",
+      key: "9pr0kb"
+    }
+  ],
+  ["path", { d: "m21 3 1 11h-2", key: "1tisrp" }],
+  ["path", { d: "M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3", key: "1uvwmv" }],
+  ["path", { d: "M3 4h8", key: "1ep09j" }]
+];
+const Handshake = createLucideIcon("handshake", __iconNode$H);
+const __iconNode$G = [
+  [
+    "path",
+    {
+      d: "M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5",
+      key: "mvr1a0"
+    }
+  ]
+];
+const Heart = createLucideIcon("heart", __iconNode$G);
+const __iconNode$F = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 16v-4", key: "1dtifu" }],
+  ["path", { d: "M12 8h.01", key: "e9boi3" }]
+];
+const Info = createLucideIcon("info", __iconNode$F);
+const __iconNode$E = [
+  [
+    "path",
+    {
+      d: "M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z",
+      key: "1pdavp"
+    }
+  ],
+  ["path", { d: "M20.054 15.987H3.946", key: "14rxg9" }]
+];
+const Laptop = createLucideIcon("laptop", __iconNode$E);
+const __iconNode$D = [
+  [
+    "path",
+    {
+      d: "M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z",
+      key: "nnexq3"
+    }
+  ],
+  ["path", { d: "M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12", key: "mt58a7" }]
+];
+const Leaf = createLucideIcon("leaf", __iconNode$D);
+const __iconNode$C = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$C);
+const __iconNode$B = [
+  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
+  ["path", { d: "M15 12H3", key: "6jk70r" }],
+  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
+];
+const LogIn = createLucideIcon("log-in", __iconNode$B);
+const __iconNode$A = [
+  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
+  ["path", { d: "M21 12H9", key: "dn1m92" }],
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
+];
+const LogOut = createLucideIcon("log-out", __iconNode$A);
+const __iconNode$z = [
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+];
+const Lock = createLucideIcon("lock", __iconNode$z);
+const __iconNode$y = [
+  [
+    "path",
+    {
+      d: "M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0",
+      key: "1r0f0z"
+    }
+  ],
+  ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
+];
+const MapPin = createLucideIcon("map-pin", __iconNode$y);
+const __iconNode$x = [
   [
     "path",
     {
@@ -48222,65 +48650,8 @@ const __iconNode$15 = [
   ["path", { d: "M15 5.764v15", key: "1pn4in" }],
   ["path", { d: "M9 3.236v15", key: "1uimfh" }]
 ];
-const Map$1 = createLucideIcon("map", __iconNode$15);
-const __iconNode$14 = [
-  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
-  ["path", { d: "M16 3.128a4 4 0 0 1 0 7.744", key: "16gr8j" }],
-  ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
-  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }]
-];
-const Users = createLucideIcon("users", __iconNode$14);
-const __iconNode$13 = [
-  ["path", { d: "M12 7v14", key: "1akyts" }],
-  [
-    "path",
-    {
-      d: "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",
-      key: "ruj8y"
-    }
-  ]
-];
-const BookOpen = createLucideIcon("book-open", __iconNode$13);
-const __iconNode$12 = [
-  ["path", { d: "M12 10h.01", key: "1nrarc" }],
-  ["path", { d: "M12 14h.01", key: "1etili" }],
-  ["path", { d: "M12 6h.01", key: "1vi96p" }],
-  ["path", { d: "M16 10h.01", key: "1m94wz" }],
-  ["path", { d: "M16 14h.01", key: "1gbofw" }],
-  ["path", { d: "M16 6h.01", key: "1x0f13" }],
-  ["path", { d: "M8 10h.01", key: "19clt8" }],
-  ["path", { d: "M8 14h.01", key: "6423bh" }],
-  ["path", { d: "M8 6h.01", key: "1dz90k" }],
-  ["path", { d: "M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", key: "cabbwy" }],
-  ["rect", { x: "4", y: "2", width: "16", height: "20", rx: "2", key: "1uxh74" }]
-];
-const Building = createLucideIcon("building", __iconNode$12);
-const __iconNode$11 = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$11);
-const __iconNode$10 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$10);
-const __iconNode$$ = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$$);
-const __iconNode$_ = [
-  ["path", { d: "M12 15V3", key: "m9g1x1" }],
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
-];
-const Download = createLucideIcon("download", __iconNode$_);
-const __iconNode$Z = [
-  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
-  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
-];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$Z);
-const __iconNode$Y = [
-  ["path", { d: "m18 14 4 4-4 4", key: "10pe0f" }],
-  ["path", { d: "m18 2 4 4-4 4", key: "pucp1d" }],
-  ["path", { d: "M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22", key: "1ailkh" }],
-  ["path", { d: "M2 6h1.972a4 4 0 0 1 3.6 2.2", key: "km57vx" }],
-  ["path", { d: "M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45", key: "os18l9" }]
-];
-const Shuffle = createLucideIcon("shuffle", __iconNode$Y);
-const __iconNode$X = [
+const Map$1 = createLucideIcon("map", __iconNode$x);
+const __iconNode$w = [
   [
     "path",
     {
@@ -48294,31 +48665,71 @@ const __iconNode$X = [
   ["circle", { cx: "12", cy: "17", r: "5", key: "qbz8iq" }],
   ["path", { d: "M12 18v-2h-.5", key: "fawc4q" }]
 ];
-const Medal = createLucideIcon("medal", __iconNode$X);
-const __iconNode$W = [
+const Medal = createLucideIcon("medal", __iconNode$w);
+const __iconNode$v = [
   [
     "path",
     {
-      d: "M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z",
-      key: "j76jl0"
+      d: "M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z",
+      key: "18887p"
     }
-  ],
-  ["path", { d: "M22 10v6", key: "1lu8f3" }],
-  ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
+  ]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$W);
-const __iconNode$V = [
+const MessageSquare = createLucideIcon("message-square", __iconNode$v);
+const __iconNode$u = [
   [
     "path",
     {
-      d: "M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0",
-      key: "1r0f0z"
+      d: "M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401",
+      key: "kfwtm"
+    }
+  ]
+];
+const Moon = createLucideIcon("moon", __iconNode$u);
+const __iconNode$t = [["path", { d: "m8 3 4 8 5-5 5 15H2L8 3z", key: "otkl63" }]];
+const Mountain = createLucideIcon("mountain", __iconNode$t);
+const __iconNode$s = [
+  [
+    "path",
+    {
+      d: "M12 22a1 1 0 0 1 0-20 10 9 0 0 1 10 9 5 5 0 0 1-5 5h-2.25a1.75 1.75 0 0 0-1.4 2.8l.3.4a1.75 1.75 0 0 1-1.4 2.8z",
+      key: "e79jfc"
     }
   ],
-  ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
+  ["circle", { cx: "13.5", cy: "6.5", r: ".5", fill: "currentColor", key: "1okk4w" }],
+  ["circle", { cx: "17.5", cy: "10.5", r: ".5", fill: "currentColor", key: "f64h9f" }],
+  ["circle", { cx: "6.5", cy: "12.5", r: ".5", fill: "currentColor", key: "qy21gx" }],
+  ["circle", { cx: "8.5", cy: "7.5", r: ".5", fill: "currentColor", key: "fotxhn" }]
 ];
-const MapPin = createLucideIcon("map-pin", __iconNode$V);
-const __iconNode$U = [
+const Palette = createLucideIcon("palette", __iconNode$s);
+const __iconNode$r = [
+  ["path", { d: "M5.8 11.3 2 22l10.7-3.79", key: "gwxi1d" }],
+  ["path", { d: "M4 3h.01", key: "1vcuye" }],
+  ["path", { d: "M22 8h.01", key: "1mrtc2" }],
+  ["path", { d: "M15 2h.01", key: "1cjtqr" }],
+  ["path", { d: "M22 20h.01", key: "1mrys2" }],
+  [
+    "path",
+    {
+      d: "m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10",
+      key: "hbicv8"
+    }
+  ],
+  [
+    "path",
+    { d: "m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17", key: "1i94pl" }
+  ],
+  ["path", { d: "m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7", key: "1cofks" }],
+  [
+    "path",
+    {
+      d: "M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z",
+      key: "4kbmks"
+    }
+  ]
+];
+const PartyPopper = createLucideIcon("party-popper", __iconNode$r);
+const __iconNode$q = [
   [
     "path",
     {
@@ -48327,37 +48738,394 @@ const __iconNode$U = [
     }
   ]
 ];
-const Plane = createLucideIcon("plane", __iconNode$U);
-const __iconNode$T = [
-  [
-    "path",
-    {
-      d: "M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z",
-      key: "nnexq3"
-    }
-  ],
-  ["path", { d: "M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12", key: "mt58a7" }]
+const Plane = createLucideIcon("plane", __iconNode$q);
+const __iconNode$p = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
 ];
-const Leaf = createLucideIcon("leaf", __iconNode$T);
-const __iconNode$S = [
-  ["path", { d: "m11 17 2 2a1 1 0 1 0 3-3", key: "efffak" }],
-  [
-    "path",
-    {
-      d: "m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4",
-      key: "9pr0kb"
-    }
-  ],
-  ["path", { d: "m21 3 1 11h-2", key: "1tisrp" }],
-  ["path", { d: "M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3", key: "1uvwmv" }],
-  ["path", { d: "M3 4h8", key: "1ep09j" }]
+const Plus = createLucideIcon("plus", __iconNode$p);
+const __iconNode$o = [
+  ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
+  ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const Handshake = createLucideIcon("handshake", __iconNode$S);
-const __iconNode$R = [
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$o);
+const __iconNode$n = [
+  ["path", { d: "m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z", key: "7g6ntu" }],
+  ["path", { d: "m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z", key: "ijws7r" }],
+  ["path", { d: "M7 21h10", key: "1b0cd5" }],
+  ["path", { d: "M12 3v18", key: "108xh3" }],
+  ["path", { d: "M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2", key: "3gwbw2" }]
+];
+const Scale = createLucideIcon("scale", __iconNode$n);
+const __iconNode$m = [
   ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
   ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const Search = createLucideIcon("search", __iconNode$R);
+const Search = createLucideIcon("search", __iconNode$m);
+const __iconNode$l = [
+  [
+    "path",
+    {
+      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
+      key: "1ffxy3"
+    }
+  ],
+  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
+];
+const Send = createLucideIcon("send", __iconNode$l);
+const __iconNode$k = [
+  ["path", { d: "M14 17H5", key: "gfn3mx" }],
+  ["path", { d: "M19 7h-9", key: "6i9tg" }],
+  ["circle", { cx: "17", cy: "17", r: "3", key: "18b49y" }],
+  ["circle", { cx: "7", cy: "7", r: "3", key: "dfmy0x" }]
+];
+const Settings2 = createLucideIcon("settings-2", __iconNode$k);
+const __iconNode$j = [
+  [
+    "path",
+    {
+      d: "M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915",
+      key: "1i5ecw"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+];
+const Settings = createLucideIcon("settings", __iconNode$j);
+const __iconNode$i = [
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "M12 8v4", key: "1got3b" }],
+  ["path", { d: "M12 16h.01", key: "1drbdi" }]
+];
+const ShieldAlert = createLucideIcon("shield-alert", __iconNode$i);
+const __iconNode$h = [
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "M9 12h6", key: "1c52cq" }],
+  ["path", { d: "M12 9v6", key: "199k2o" }]
+];
+const ShieldPlus = createLucideIcon("shield-plus", __iconNode$h);
+const __iconNode$g = [
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ]
+];
+const Shield = createLucideIcon("shield", __iconNode$g);
+const __iconNode$f = [
+  ["path", { d: "m18 14 4 4-4 4", key: "10pe0f" }],
+  ["path", { d: "m18 2 4 4-4 4", key: "pucp1d" }],
+  ["path", { d: "M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22", key: "1ailkh" }],
+  ["path", { d: "M2 6h1.972a4 4 0 0 1 3.6 2.2", key: "km57vx" }],
+  ["path", { d: "M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45", key: "os18l9" }]
+];
+const Shuffle = createLucideIcon("shuffle", __iconNode$f);
+const __iconNode$e = [
+  ["path", { d: "M21 4v16", key: "7j8fe9" }],
+  [
+    "path",
+    {
+      d: "M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z",
+      key: "zs4d6"
+    }
+  ]
+];
+const SkipForward = createLucideIcon("skip-forward", __iconNode$e);
+const __iconNode$d = [
+  ["path", { d: "m12.5 17-.5-1-.5 1h1z", key: "3me087" }],
+  [
+    "path",
+    {
+      d: "M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z",
+      key: "1o5pge"
+    }
+  ],
+  ["circle", { cx: "15", cy: "12", r: "1", key: "1tmaij" }],
+  ["circle", { cx: "9", cy: "12", r: "1", key: "1vctgf" }]
+];
+const Skull = createLucideIcon("skull", __iconNode$d);
+const __iconNode$c = [
+  [
+    "path",
+    {
+      d: "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z",
+      key: "r04s7s"
+    }
+  ]
+];
+const Star = createLucideIcon("star", __iconNode$c);
+const __iconNode$b = [
+  ["path", { d: "M11 2v2", key: "1539x4" }],
+  ["path", { d: "M5 2v2", key: "1yf1q8" }],
+  ["path", { d: "M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1", key: "rb5t3r" }],
+  ["path", { d: "M8 15a6 6 0 0 0 12 0v-3", key: "x18d4x" }],
+  ["circle", { cx: "20", cy: "10", r: "2", key: "ts1r5v" }]
+];
+const Stethoscope = createLucideIcon("stethoscope", __iconNode$b);
+const __iconNode$a = [
+  ["circle", { cx: "12", cy: "12", r: "4", key: "4exip2" }],
+  ["path", { d: "M12 2v2", key: "tus03m" }],
+  ["path", { d: "M12 20v2", key: "1lh1kg" }],
+  ["path", { d: "m4.93 4.93 1.41 1.41", key: "149t6j" }],
+  ["path", { d: "m17.66 17.66 1.41 1.41", key: "ptbguv" }],
+  ["path", { d: "M2 12h2", key: "1t8f8n" }],
+  ["path", { d: "M20 12h2", key: "1q8mjw" }],
+  ["path", { d: "m6.34 17.66-1.41 1.41", key: "1m8zz5" }],
+  ["path", { d: "m19.07 4.93-1.41 1.41", key: "1shlcs" }]
+];
+const Sun = createLucideIcon("sun", __iconNode$a);
+const __iconNode$9 = [
+  ["polyline", { points: "14.5 17.5 3 6 3 3 6 3 17.5 14.5", key: "1hfsw2" }],
+  ["line", { x1: "13", x2: "19", y1: "19", y2: "13", key: "1vrmhu" }],
+  ["line", { x1: "16", x2: "20", y1: "16", y2: "20", key: "1bron3" }],
+  ["line", { x1: "19", x2: "21", y1: "21", y2: "19", key: "13pww6" }],
+  ["polyline", { points: "14.5 6.5 18 3 21 3 21 6 17.5 9.5", key: "hbey2j" }],
+  ["line", { x1: "5", x2: "9", y1: "14", y2: "18", key: "1hf58s" }],
+  ["line", { x1: "7", x2: "4", y1: "17", y2: "20", key: "pidxm4" }],
+  ["line", { x1: "3", x2: "5", y1: "19", y2: "21", key: "1pehsh" }]
+];
+const Swords = createLucideIcon("swords", __iconNode$9);
+const __iconNode$8 = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
+  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
+];
+const Target = createLucideIcon("target", __iconNode$8);
+const __iconNode$7 = [
+  ["path", { d: "M10 11v6", key: "nco0om" }],
+  ["path", { d: "M14 11v6", key: "outv1u" }],
+  ["path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", key: "miytrc" }],
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", key: "e791ji" }]
+];
+const Trash2 = createLucideIcon("trash-2", __iconNode$7);
+const __iconNode$6 = [
+  ["path", { d: "M16 7h6v6", key: "box55l" }],
+  ["path", { d: "m22 7-8.5 8.5-5-5L2 17", key: "1t1m79" }]
+];
+const TrendingUp = createLucideIcon("trending-up", __iconNode$6);
+const __iconNode$5 = [
+  ["path", { d: "M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978", key: "1n3hpd" }],
+  ["path", { d: "M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978", key: "rfe1zi" }],
+  ["path", { d: "M18 9h1.5a1 1 0 0 0 0-5H18", key: "7xy6bh" }],
+  ["path", { d: "M4 22h16", key: "57wxv0" }],
+  ["path", { d: "M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z", key: "1mhfuq" }],
+  ["path", { d: "M6 9H4.5a1 1 0 0 1 0-5H6", key: "tex48p" }]
+];
+const Trophy = createLucideIcon("trophy", __iconNode$5);
+const __iconNode$4 = [
+  ["path", { d: "M12 3v12", key: "1x0j5s" }],
+  ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
+];
+const Upload = createLucideIcon("upload", __iconNode$4);
+const __iconNode$3 = [
+  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
+  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
+  ["line", { x1: "17", x2: "22", y1: "8", y2: "13", key: "3nzzx3" }],
+  ["line", { x1: "22", x2: "17", y1: "8", y2: "13", key: "1swrse" }]
+];
+const UserX = createLucideIcon("user-x", __iconNode$3);
+const __iconNode$2 = [
+  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
+  ["path", { d: "M16 3.128a4 4 0 0 1 0 7.744", key: "16gr8j" }],
+  ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
+  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }]
+];
+const Users = createLucideIcon("users", __iconNode$2);
+const __iconNode$1 = [
+  ["path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", key: "975kel" }],
+  ["circle", { cx: "12", cy: "7", r: "4", key: "17ys0d" }]
+];
+const User2 = createLucideIcon("user", __iconNode$1);
+const __iconNode = [
+  [
+    "path",
+    {
+      d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",
+      key: "1xq2db"
+    }
+  ]
+];
+const Zap = createLucideIcon("zap", __iconNode);
+function DensityScoreBox({
+  roster,
+  isHardMode = false,
+  isBetaMode = false
+}) {
+  const [showInfo, setShowInfo] = reactExports.useState(false);
+  if (!isBetaMode) return null;
+  const hasSize = !!roster.Size;
+  const hasPop = !!roster.Population;
+  const hasEcon = !!roster.Economy;
+  const hasOneOfThree = hasSize || hasPop || hasEcon;
+  const allThree = hasSize && hasPop && hasEcon;
+  if (!hasOneOfThree) return null;
+  const bonus = computeBetaSizePopBonus(roster);
+  const categories = [
+    { id: "Size", name: "Size", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Map$1, { className: "w-3.5 h-3.5" }), country: roster.Size },
+    { id: "Population", name: "Population", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-3.5 h-3.5" }), country: roster.Population },
+    { id: "Economy", name: "Economy", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-3.5 h-3.5" }), country: roster.Economy }
+  ];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full mt-3 rounded-2xl border border-blue-500/30 bg-blue-500/5 p-4 text-left relative shadow-sm", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-1.5 rounded-lg bg-blue-500/20 text-blue-400", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-4 h-4" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold uppercase tracking-wider text-blue-400", children: "Population Density Score" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => setShowInfo(true),
+          className: "flex items-center gap-1 px-2 py-1 rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-bold text-xs border border-blue-500/40 transition-colors cursor-pointer",
+          title: "Scoring Info",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { className: "w-3.5 h-3.5" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "(i)" })
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-2 mb-2", children: categories.map((cat) => {
+      const isDrafted = !!cat.country;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: `p-2.5 rounded-xl border flex flex-col justify-between transition-all ${isDrafted ? "border-blue-500/40 bg-card/80 text-foreground" : "border-dashed border-border/60 bg-muted/20 opacity-40 text-muted-foreground"}`,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider mb-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: isDrafted ? "text-blue-400" : "text-muted-foreground", children: cat.icon }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: cat.name })
+            ] }),
+            isDrafted ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-bold truncate", children: [
+              cat.country.flag,
+              " ",
+              cat.country.name,
+              cat.id === "Economy" && cat.country.stats.economy.industryType && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[9px] text-blue-400 font-semibold mt-0.5", children: [
+                "Ind. ",
+                cat.country.stats.economy.industryType,
+                "/5"
+              ] })
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-[10px] italic", children: "Not drafted" })
+          ]
+        },
+        cat.id
+      );
+    }) }),
+    !allThree ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground font-medium text-center mt-2 italic", children: "fill out these categories to get a population density score" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mt-2 pt-2 border-t border-blue-500/20", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-foreground", children: "Density Bonus" }),
+      !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-black text-blue-400", children: [
+        "+",
+        bonus,
+        " pts"
+      ] })
+    ] }),
+    showInfo && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-3xl p-6 max-w-lg w-full shadow-2xl relative space-y-4 text-left", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setShowInfo(false),
+          className: "absolute top-4 right-4 p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { className: "w-5 h-5" })
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-2xl bg-blue-500/20 text-blue-400", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { className: "w-6 h-6" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold text-foreground", children: "Population Density Scoring" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground leading-relaxed", children: [
+        "In ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "BETA 1.0" }),
+        ", your nation earns up to ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-blue-400", children: "25 bonus points" }),
+        " based on how closely your drafted population density matches your ideal target density!"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 rounded-xl bg-muted/40 border border-border/50 font-mono text-xs text-foreground space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-blue-400", children: "Equation:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card p-3 rounded-lg border border-border text-center font-bold text-xs text-primary overflow-x-auto", children: [
+          "y = 25 • e",
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("sup", { children: [
+            "-0.5 • ((x - Target) / 4000)",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "2" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[11px] text-muted-foreground leading-normal mt-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "x" }),
+          " = Actual Density = (Population / Size land area)",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Target" }),
+          " = 150 • (I",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "1.5" }),
+          " • T",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.75" }),
+          " • E",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.15" }),
+          ") / (C",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.05" }),
+          " • R",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.05" }),
+          " • S",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.25" }),
+          ")"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5 text-xs text-muted-foreground", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-foreground mb-1", children: "Variable Key:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          "• ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "I" }),
+          ": Industry Type (1–5) from Economy"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          "• ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "T" }),
+          ": Technology score"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          "• ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "E" }),
+          ": Economy score"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          "• ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "S" }),
+          ": Size score"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          "• ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "C" }),
+          ": Climate score"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          "• ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "R" }),
+          ": Natural Resources score"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          onClick: () => setShowInfo(false),
+          className: "w-full py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:opacity-90 transition-opacity mt-2 cursor-pointer",
+          children: "Got it!"
+        }
+      )
+    ] }) })
+  ] });
+}
 const LayoutGroupContext = reactExports.createContext({});
 function useConstant(init2) {
   const ref = reactExports.useRef(null);
@@ -56400,139 +57168,6 @@ const featureBundle = {
   ...layout
 };
 const motion = /* @__PURE__ */ createMotionProxy(featureBundle, createDomVisualElement);
-const __iconNode$Q = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
-  ["path", { d: "M2 12h20", key: "9i4pu4" }]
-];
-const Globe = createLucideIcon("globe", __iconNode$Q);
-const __iconNode$P = [
-  [
-    "path",
-    {
-      d: "M18 5a2 2 0 0 1 2 2v8.526a2 2 0 0 0 .212.897l1.068 2.127a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45l1.068-2.127A2 2 0 0 0 4 15.526V7a2 2 0 0 1 2-2z",
-      key: "1pdavp"
-    }
-  ],
-  ["path", { d: "M20.054 15.987H3.946", key: "14rxg9" }]
-];
-const Laptop = createLucideIcon("laptop", __iconNode$P);
-const __iconNode$O = [
-  ["polyline", { points: "14.5 17.5 3 6 3 3 6 3 17.5 14.5", key: "1hfsw2" }],
-  ["line", { x1: "13", x2: "19", y1: "19", y2: "13", key: "1vrmhu" }],
-  ["line", { x1: "16", x2: "20", y1: "16", y2: "20", key: "1bron3" }],
-  ["line", { x1: "19", x2: "21", y1: "21", y2: "19", key: "13pww6" }],
-  ["polyline", { points: "14.5 6.5 18 3 21 3 21 6 17.5 9.5", key: "hbey2j" }],
-  ["line", { x1: "5", x2: "9", y1: "14", y2: "18", key: "1hf58s" }],
-  ["line", { x1: "7", x2: "4", y1: "17", y2: "20", key: "pidxm4" }],
-  ["line", { x1: "3", x2: "5", y1: "19", y2: "21", key: "1pehsh" }]
-];
-const Swords = createLucideIcon("swords", __iconNode$O);
-const __iconNode$N = [
-  [
-    "path",
-    {
-      d: "M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z",
-      key: "r04s7s"
-    }
-  ]
-];
-const Star = createLucideIcon("star", __iconNode$N);
-const __iconNode$M = [["path", { d: "m8 3 4 8 5-5 5 15H2L8 3z", key: "otkl63" }]];
-const Mountain = createLucideIcon("mountain", __iconNode$M);
-const __iconNode$L = [
-  [
-    "path",
-    {
-      d: "M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z",
-      key: "1vdc57"
-    }
-  ],
-  ["path", { d: "M5 21h14", key: "11awu3" }]
-];
-const Crown = createLucideIcon("crown", __iconNode$L);
-const __iconNode$K = [
-  [
-    "path",
-    {
-      d: "M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z",
-      key: "1xq2db"
-    }
-  ]
-];
-const Zap = createLucideIcon("zap", __iconNode$K);
-const __iconNode$J = [
-  ["path", { d: "M12 22V8", key: "qkxhtm" }],
-  ["path", { d: "M5 12H2a10 10 0 0 0 20 0h-3", key: "1hv3nh" }],
-  ["circle", { cx: "12", cy: "5", r: "3", key: "rqqgnr" }]
-];
-const Anchor = createLucideIcon("anchor", __iconNode$J);
-const __iconNode$I = [
-  ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
-  ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
-];
-const Briefcase = createLucideIcon("briefcase", __iconNode$I);
-const __iconNode$H = [
-  ["path", { d: "M11 2v2", key: "1539x4" }],
-  ["path", { d: "M5 2v2", key: "1yf1q8" }],
-  ["path", { d: "M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1", key: "rb5t3r" }],
-  ["path", { d: "M8 15a6 6 0 0 0 12 0v-3", key: "x18d4x" }],
-  ["circle", { cx: "20", cy: "10", r: "2", key: "ts1r5v" }]
-];
-const Stethoscope = createLucideIcon("stethoscope", __iconNode$H);
-const __iconNode$G = [
-  ["path", { d: "m12.5 17-.5-1-.5 1h1z", key: "3me087" }],
-  [
-    "path",
-    {
-      d: "M15 22a1 1 0 0 0 1-1v-1a2 2 0 0 0 1.56-3.25 8 8 0 1 0-11.12 0A2 2 0 0 0 8 20v1a1 1 0 0 0 1 1z",
-      key: "1o5pge"
-    }
-  ],
-  ["circle", { cx: "15", cy: "12", r: "1", key: "1tmaij" }],
-  ["circle", { cx: "9", cy: "12", r: "1", key: "1vctgf" }]
-];
-const Skull = createLucideIcon("skull", __iconNode$G);
-const __iconNode$F = [
-  ["path", { d: "m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z", key: "7g6ntu" }],
-  ["path", { d: "m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z", key: "ijws7r" }],
-  ["path", { d: "M7 21h10", key: "1b0cd5" }],
-  ["path", { d: "M12 3v18", key: "108xh3" }],
-  ["path", { d: "M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2", key: "3gwbw2" }]
-];
-const Scale = createLucideIcon("scale", __iconNode$F);
-const __iconNode$E = [
-  ["path", { d: "M8 2v4", key: "1cmpym" }],
-  ["path", { d: "M16 2v4", key: "4m81vk" }],
-  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
-  ["path", { d: "M3 10h18", key: "8toen8" }]
-];
-const Calendar = createLucideIcon("calendar", __iconNode$E);
-const __iconNode$D = [
-  ["path", { d: "M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978", key: "1n3hpd" }],
-  ["path", { d: "M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978", key: "rfe1zi" }],
-  ["path", { d: "M18 9h1.5a1 1 0 0 0 0-5H18", key: "7xy6bh" }],
-  ["path", { d: "M4 22h16", key: "57wxv0" }],
-  ["path", { d: "M6 9a6 6 0 0 0 12 0V3a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1z", key: "1mhfuq" }],
-  ["path", { d: "M6 9H4.5a1 1 0 0 1 0-5H6", key: "tex48p" }]
-];
-const Trophy = createLucideIcon("trophy", __iconNode$D);
-const __iconNode$C = [
-  [
-    "path",
-    { d: "M12 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 12 18z", key: "b19h5q" }
-  ],
-  [
-    "path",
-    { d: "M2 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 2 18z", key: "h7h5ge" }
-  ]
-];
-const FastForward = createLucideIcon("fast-forward", __iconNode$C);
-const __iconNode$B = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
-];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$B);
 const ACCOUNT_STATS = [
   { id: "Draft Master", name: "Draft Master", color: "text-purple-400", desc: "Complete 100 games." },
   { id: "Veteran Drafter", name: "Veteran Drafter", color: "text-purple-500", desc: "Complete 500 games." },
@@ -56728,146 +57363,6 @@ function getAchievementIcon(name2, className = "w-5 h-5") {
     default:
       return React.createElement(Star, { className });
   }
-}
-function getRawPopulation(desc) {
-  const match = desc.match(/^(?:Pre-war\s*)?([\d,.]+)\s*(million|billion|K|M|B)?/i);
-  if (!match) return 5e6;
-  let val = parseFloat(match[1].replace(/,/g, ""));
-  const unit = match[2] ? match[2].toLowerCase() : "";
-  if (unit === "million" || unit === "m") val *= 1e6;
-  if (unit === "billion" || unit === "b") val *= 1e9;
-  if (unit === "k") val *= 1e3;
-  return val;
-}
-function computeSizePopBonus$1(roster) {
-  if (!roster.Size || !roster.Population) return 0;
-  const pop = getRawPopulation(roster.Population.stats.population.description);
-  const size2 = roster.Size.area || 1e5;
-  const rawDensity = pop / size2;
-  const sCountryPop = getRawPopulation(roster.Size.stats.population.description);
-  const s = sCountryPop / size2;
-  const pCountryArea = roster.Population.area || 1e5;
-  const p = pop / pCountryArea;
-  const getScore = (cat) => {
-    let statKey = cat.toLowerCase();
-    if (cat === "Natural Resources") statKey = "naturalResources";
-    if (cat === "International Relationships") statKey = "internationalRelationships";
-    const rawScore = roster[cat]?.stats[statKey]?.score || 5;
-    if (cat === "Climate" || cat === "Location" || cat === "Tourism") {
-      return rawScore;
-    }
-    return rawScore * 10 / 12;
-  };
-  const techScore = getScore("Technology");
-  const climateScore = getScore("Climate");
-  const locationScore = getScore("Location");
-  const intlScore = getScore("International Relationships");
-  const eduScore = getScore("Education");
-  const healthScore = getScore("Healthcare");
-  const tourismScore = getScore("Tourism");
-  if (rawDensity < 100) {
-    const target = 40;
-    let effectiveDensity = rawDensity;
-    if (Math.abs(rawDensity - target) <= 30) {
-      effectiveDensity = target;
-    } else if (rawDensity > target) {
-      effectiveDensity = rawDensity - 30;
-    } else {
-      effectiveDensity = rawDensity + 30;
-    }
-    const synergy = Math.max(1, 2.5 - Math.abs(Math.log10(effectiveDensity / target)));
-    const avg = (climateScore + locationScore) / 2;
-    return Math.floor(avg * synergy);
-  } else if (rawDensity <= 1e3) {
-    const diff = Math.max(1e-4, Math.abs(s - p));
-    const synergy = Math.min(2.5, 1 + 1 / diff);
-    const avg = (intlScore + eduScore + healthScore + climateScore + tourismScore) / 5;
-    return Math.floor(avg * synergy);
-  } else {
-    const target = size2 < 36193 ? 2e4 : 1e4;
-    let effectiveDensity = rawDensity;
-    if (Math.abs(rawDensity - target) <= 30) {
-      effectiveDensity = target;
-    } else if (rawDensity > target) {
-      effectiveDensity = rawDensity - 30;
-    } else {
-      effectiveDensity = rawDensity + 30;
-    }
-    const synergy = Math.max(1, 2.5 - Math.abs(Math.log10(effectiveDensity / target)));
-    return Math.floor(techScore * synergy);
-  }
-}
-function getBonusPath(roster) {
-  if (!roster.Size || !roster.Population) return null;
-  const pop = getRawPopulation(roster.Population.stats.population.description);
-  const size2 = roster.Size.area || 1e5;
-  const rawDensity = pop / size2;
-  const techScore = roster.Technology?.stats.technology?.score || 0;
-  const resourcesScore = roster["Natural Resources"]?.stats.naturalResources?.score || 0;
-  const climateScore = roster.Climate?.stats.climate?.score || 0;
-  const geoScore = roster.Climate?.stats.climate?.score || 0;
-  const econScore = roster.Economy?.stats.economy?.score || 0;
-  const eduScore = roster.Education?.stats.education?.score || 0;
-  if (rawDensity > 1e3 && geoScore >= 8) return "Trade Hub";
-  if (size2 > 2e6 && rawDensity < 5) return "Nomadic Steppe";
-  if (eduScore >= 8 && techScore >= 8 && resourcesScore <= 3) return "Service Economy";
-  if (pop > 1e8 && resourcesScore >= 8 && rawDensity > 50 && rawDensity < 500) return "Manufacturing Powerhouse";
-  if (size2 <= 1e4 && pop <= 1e6 && econScore >= 9) return "Tax Haven";
-  if (climateScore >= 9 && geoScore >= 8) return "Tourism Mecca";
-  if (size2 <= 5e4 && geoScore >= 9) return "Strategic Chokepoint";
-  if (climateScore <= 3 && pop > 5e7) return "Wasteland Survival";
-  if (climateScore <= 4 && geoScore >= 8 && rawDensity < 20) return "Frozen Fortress";
-  if (size2 > 15e5 && climateScore >= 7 && pop > 8e7) return "Agrarian Giant";
-  if (rawDensity < 100) return "Agricultural society";
-  if (rawDensity <= 1e3) return "Generalist";
-  return "Tech Megacity";
-}
-function getCountryArchetype(roster) {
-  const m = roster.Military?.stats.military?.score ?? 0;
-  const e = roster.Economy?.stats.economy?.score ?? 0;
-  const t = roster.Technology?.stats.technology?.score ?? 0;
-  const h = roster.Healthcare?.stats.healthcare?.score ?? 0;
-  const ed = roster.Education?.stats.education?.score ?? 0;
-  const g = roster.Government?.stats.government?.score ?? 0;
-  const tour = roster.Tourism?.stats.tourism?.score ?? 5;
-  const ind = roster.Economy?.stats.economy?.score ?? 5;
-  const res = roster["Natural Resources"]?.stats.naturalResources?.score ?? 5;
-  const cli = roster.Climate?.stats.climate?.score ?? 5;
-  const geo = roster.Climate?.stats.climate?.score ?? 5;
-  const size2 = roster.Size?.area || 1e5;
-  const pop = roster.Population ? getRawPopulation(roster.Population.stats.population.description) : 5e6;
-  if (tour >= 8 && e >= 8 && ed >= 8) return "Cultural Hegemon";
-  if (res >= 8 && e >= 8 && ind >= 8) return "Industrial Juggernaut";
-  if (m >= 8 && geo >= 8 && tour <= 4) return "Fortress State";
-  if (t >= 9 && g >= 9) return "Cyberocracy";
-  if (cli >= 9 && h >= 8 && ind <= 4) return "Eco-Paradise";
-  if (e >= 8 && geo >= 8 && g >= 8) return "Trade Empire";
-  if (h >= 8 && ed >= 8 && t >= 8) return "Global Medic";
-  if (ed >= 9 && t >= 9) return "Knowledge Hub";
-  if (res >= 9 && g <= 4 && e <= 5) return "Resource Curse";
-  if (m >= 9 && h <= 5 && ed <= 5) return "Spartan Society";
-  if (m >= 8 && e >= 8 && t >= 8) return "Military Superstate";
-  if (e >= 8 && t >= 8 && ed >= 8) return "Techno-Utopia";
-  if (h >= 8 && ed >= 8 && g >= 8) return "Nordic Model";
-  if (size2 <= 5e4 && pop <= 15e6 && e >= 7) return "Wealthy City-State";
-  return "Balanced Republic";
-}
-function getRating(total) {
-  if (total >= 180) return "Global Hegemon";
-  if (total >= 170) return "Hyperpower";
-  if (total >= 165) return "Superpower";
-  if (total >= 150) return "Great Power";
-  if (total >= 140) return "Major Power";
-  if (total >= 125) return "Middle Power";
-  if (total >= 110) return "Regional Power";
-  if (total >= 100) return "Emerging Power";
-  if (total >= 90) return "Stable Nation";
-  if (total >= 80) return "Developing Nation";
-  if (total >= 70) return "Transitional State";
-  if (total >= 60) return "Fragile State";
-  if (total >= 45) return "Failed State";
-  if (total >= 30) return "Collapsed State";
-  return "Struggling State";
 }
 const CATEGORY_ICONS$5 = {
   Military: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { className: "w-5 h-5" }),
@@ -57233,7 +57728,14 @@ function CountryCard$4({ country, hoveredCategory, poolRemaining, isHardMode, ro
         ] }) }),
         !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `text-sm font-bold ${BONUS_CATEGORIES$5.includes(cat) ? "text-foreground" : scoreLabel.color}`, children: BONUS_CATEGORIES$5.includes(cat) ? "Bonus Contributor" : scoreLabel.label }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `text-sm font-bold ${BONUS_CATEGORIES$5.includes(cat) ? "text-foreground" : scoreLabel.color}`, children: BONUS_CATEGORIES$5.includes(cat) ? extractBonusText(stat.description, cat) : getPtsDisplay$5(stat.score ?? 0, cat) })
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `text-sm font-bold flex items-center gap-1.5 ${BONUS_CATEGORIES$5.includes(cat) ? "text-foreground" : scoreLabel.color}`, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: BONUS_CATEGORIES$5.includes(cat) ? extractBonusText(stat.description, cat) : getPtsDisplay$5(stat.score ?? 0, cat) }),
+            isBetaMode && cat === "Economy" && stat.industryType && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30", children: [
+              "Ind. ",
+              stat.industryType,
+              "/5"
+            ] })
+          ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
           ExpandableDescription$4,
@@ -57568,7 +58070,7 @@ function GameOver$4({ isBetaMode, roster, totalScore, bonus, onReset, onDownload
                 const isBonus = BONUS_CATEGORIES$5.includes(actualCat);
                 const isSizeOrPop = actualCat === "Size" || actualCat === "Population";
                 return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2 mt-3", children: [
-                  !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-between text-sm", children: !isBonus && !isSizeOrPop ? /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                  !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-between text-sm", children: !isBonus && !isSizeOrPop ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: `text-lg md:text-xl font-black ${getScoreLabel$4(scoreVal, maxScore).color.split(" ")[0]}`, children: [
                       scoreVal * weight,
                       " ",
@@ -57579,8 +58081,13 @@ function GameOver$4({ isBetaMode, roster, totalScore, bonus, onReset, onDownload
                       " ",
                       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] md:text-xs text-muted-foreground font-semibold", children: "pts" })
                     ] }),
+                    isBetaMode && cat === "Economy" && assigned?.stats.economy.industryType && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30", children: [
+                      "Ind. ",
+                      assigned.stats.economy.industryType,
+                      "/5"
+                    ] }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel$4(scoreVal, maxScore).color} bg-muted`, children: getScoreLabel$4(scoreVal, maxScore).label })
-                  ] }) }) : isSizeOrPop ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                  ] }) : isSizeOrPop ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-foreground text-xs", children: extractBonusText(desc, actualCat) }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-muted`, children: "Bonus Contributor" })
                   ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-lg md:text-xl font-black text-yellow-400", children: [
@@ -57598,7 +58105,8 @@ function GameOver$4({ isBetaMode, roster, totalScore, bonus, onReset, onDownload
               })()
             ] }, cat);
           });
-        })() })
+        })() }),
+        isBetaMode && /* @__PURE__ */ jsxRuntimeExports.jsx(DensityScoreBox, { roster, isHardMode, isBetaMode })
       ] })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -57629,32 +58137,6 @@ function GameOver$4({ isBetaMode, roster, totalScore, bonus, onReset, onDownload
     )
   ] });
 }
-function computeBetaSizePopBonus(roster) {
-  if (!roster.Size || !roster.Population || !roster.Economy || !roster.Technology || !roster.Climate || !roster["Natural Resources"]) {
-    return 0;
-  }
-  const pop = getRawPopulation(roster.Population.stats.population.description);
-  const size2 = roster.Size.area || 1e5;
-  const x2 = pop / size2;
-  const I = roster.Economy.stats.economy.industryType || 3;
-  const T = roster.Technology.stats.technology.score || 5;
-  const E = roster.Economy.stats.economy.score || 5;
-  const C2 = roster.Climate.stats.climate.score || 5;
-  const R = roster["Natural Resources"].stats.naturalResources.score || 5;
-  const S2 = roster.Size.stats.size.score || 5;
-  const numerator = 150 * Math.pow(I, 1.5) * Math.pow(T, 0.75) * Math.pow(E, 0.15);
-  const denominator = Math.pow(C2, 0.05) * Math.pow(R, 0.05) * Math.pow(S2, 0.25);
-  if (denominator === 0) return 0;
-  const idealDensity = numerator / denominator;
-  const z2 = (x2 - idealDensity) / 4e3;
-  const y = 25 * Math.exp(-0.5 * Math.pow(z2, 2));
-  return Math.round(y);
-}
-const __iconNode$A = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
-];
-const Plus = createLucideIcon("plus", __iconNode$A);
 function SidebarRoster$4({ roster, isHardMode, categoryTimes, isBetaMode = false }) {
   const assignedCategories = CATEGORIES.filter((c) => roster[c]);
   const hasSizeAndPop = roster["Size"] && roster["Population"];
@@ -57670,7 +58152,7 @@ function SidebarRoster$4({ roster, isHardMode, categoryTimes, isBetaMode = false
           "nation!"
         ] })
       ] }) : assignedCategories.map((category) => {
-        if (hasSizeAndPop && (category === "Size" || category === "Population")) {
+        if (!isBetaMode && hasSizeAndPop && (category === "Size" || category === "Population")) {
           return null;
         }
         const assigned = roster[category];
@@ -57678,6 +58160,7 @@ function SidebarRoster$4({ roster, isHardMode, categoryTimes, isBetaMode = false
         const isBonus = BONUS_CATEGORIES$5.includes(category);
         const stars = getCategoryStars$4(category);
         const score = !isBonus ? assigned.stats[catKey].score ?? 0 : null;
+        const industryType = isBetaMode && category === "Economy" ? assigned.stats.economy.industryType : null;
         return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full rounded-lg border border-border bg-card text-left transition-all shadow-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-2 flex items-center justify-between", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 overflow-hidden", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground shrink-0", children: CATEGORY_ICONS$5[category] }),
@@ -57690,13 +58173,20 @@ function SidebarRoster$4({ roster, isHardMode, categoryTimes, isBetaMode = false
               ] })
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-end gap-1 shrink-0", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-end gap-0.5 shrink-0", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] text-yellow-500/80 dark:text-yellow-400/60", children: stars }),
-            !isBonus && score !== null && !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-primary", children: getPtsDisplay$5(score, category) })
+            !isBonus && score !== null && !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-primary", children: getPtsDisplay$5(score, category) }),
+              industryType && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] font-bold px-1 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30", children: [
+                "Ind. ",
+                industryType,
+                "/5"
+              ] })
+            ] })
           ] })
         ] }) }, category);
       }),
-      hasSizeAndPop && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full rounded-lg border border-yellow-500/30 bg-yellow-500/10 text-left transition-all", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-2 flex items-center justify-between", children: [
+      !isBetaMode && hasSizeAndPop && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full rounded-lg border border-yellow-500/30 bg-yellow-500/10 text-left transition-all", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-2 flex items-center justify-between", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 overflow-hidden", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-yellow-600 dark:text-yellow-500 shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-4 h-4" }) }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "truncate", children: [
@@ -57715,37 +58205,14 @@ function SidebarRoster$4({ roster, isHardMode, categoryTimes, isBetaMode = false
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col items-end gap-1 shrink-0", children: !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold text-yellow-600 dark:text-yellow-500", children: [
           "+",
-          isBetaMode ? computeBetaSizePopBonus(roster) : computeSizePopBonus$1(roster),
+          computeSizePopBonus(roster),
           " pts"
         ] }) })
-      ] }) }, "Population Structure")
+      ] }) }, "Population Structure"),
+      isBetaMode && /* @__PURE__ */ jsxRuntimeExports.jsx(DensityScoreBox, { roster, isHardMode, isBetaMode })
     ] })
   ] });
 }
-const __iconNode$z = [
-  [
-    "path",
-    {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
-    }
-  ],
-  ["path", { d: "M12 8v4", key: "1got3b" }],
-  ["path", { d: "M12 16h.01", key: "1drbdi" }]
-];
-const ShieldAlert = createLucideIcon("shield-alert", __iconNode$z);
-const __iconNode$y = [
-  [
-    "path",
-    {
-      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
-      key: "oel41y"
-    }
-  ],
-  ["path", { d: "M9 12h6", key: "1c52cq" }],
-  ["path", { d: "M12 9v6", key: "199k2o" }]
-];
-const ShieldPlus = createLucideIcon("shield-plus", __iconNode$y);
 function Logo({ className = "w-5 h-5" }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "img",
@@ -57756,55 +58223,6 @@ function Logo({ className = "w-5 h-5" }) {
     }
   );
 }
-const __iconNode$x = [
-  ["path", { d: "M5.8 11.3 2 22l10.7-3.79", key: "gwxi1d" }],
-  ["path", { d: "M4 3h.01", key: "1vcuye" }],
-  ["path", { d: "M22 8h.01", key: "1mrtc2" }],
-  ["path", { d: "M15 2h.01", key: "1cjtqr" }],
-  ["path", { d: "M22 20h.01", key: "1mrys2" }],
-  [
-    "path",
-    {
-      d: "m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10",
-      key: "hbicv8"
-    }
-  ],
-  [
-    "path",
-    { d: "m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17", key: "1i94pl" }
-  ],
-  ["path", { d: "m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7", key: "1cofks" }],
-  [
-    "path",
-    {
-      d: "M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z",
-      key: "4kbmks"
-    }
-  ]
-];
-const PartyPopper = createLucideIcon("party-popper", __iconNode$x);
-const __iconNode$w = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
-];
-const Lock = createLucideIcon("lock", __iconNode$w);
-const __iconNode$v = [
-  ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
-  ["path", { d: "M15 12H3", key: "6jk70r" }],
-  ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
-];
-const LogIn = createLucideIcon("log-in", __iconNode$v);
-const __iconNode$u = [
-  [
-    "path",
-    {
-      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
-      key: "1ffxy3"
-    }
-  ],
-  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
-];
-const Send = createLucideIcon("send", __iconNode$u);
 function SubmitDialog$3({ score, mode, roster, onClose, onSuccess }) {
   const [, navigate2] = useLocation();
   const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
@@ -57998,37 +58416,6 @@ function formatRoster(roster) {
     Object.entries(roster).filter(([, c]) => c !== void 0).map(([cat, c]) => [cat, c.name])
   );
 }
-const __iconNode$t = [
-  [
-    "path",
-    {
-      d: "M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915",
-      key: "1i5ecw"
-    }
-  ],
-  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
-];
-const Settings = createLucideIcon("settings", __iconNode$t);
-const __iconNode$s = [
-  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
-  ["path", { d: "M21 12H9", key: "dn1m92" }],
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
-];
-const LogOut = createLucideIcon("log-out", __iconNode$s);
-const __iconNode$r = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$r);
-const __iconNode$q = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$q);
-const __iconNode$p = [
-  [
-    "path",
-    {
-      d: "M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401",
-      key: "kfwtm"
-    }
-  ]
-];
-const Moon = createLucideIcon("moon", __iconNode$p);
 function usePrevious(value) {
   const ref = reactExports.useRef({ value, previous: value });
   return reactExports.useMemo(() => {
@@ -58285,20 +58672,6 @@ const Switch = reactExports.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 Switch.displayName = Switch$1.displayName;
-const __iconNode$o = [
-  ["path", { d: "M12 20v-9", key: "1qisl0" }],
-  ["path", { d: "M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z", key: "uouzyp" }],
-  ["path", { d: "M14.12 3.88 16 2", key: "qol33r" }],
-  ["path", { d: "M21 21a4 4 0 0 0-3.81-4", key: "1b0z45" }],
-  ["path", { d: "M21 5a4 4 0 0 1-3.55 3.97", key: "5cxbf6" }],
-  ["path", { d: "M22 13h-4", key: "1jl80f" }],
-  ["path", { d: "M3 21a4 4 0 0 1 3.81-4", key: "1fjd4g" }],
-  ["path", { d: "M3 5a4 4 0 0 0 3.55 3.97", key: "1d7oge" }],
-  ["path", { d: "M6 13H2", key: "82j7cp" }],
-  ["path", { d: "m8 2 1.88 1.88", key: "fmnt4t" }],
-  ["path", { d: "M9 7.13V6a3 3 0 1 1 6 0v1.13", key: "1vgav8" }]
-];
-const Bug = createLucideIcon("bug", __iconNode$o);
 function SettingsModal({ onClose }) {
   const { profile, logout, refreshProfile, firebaseUser } = useFirebaseAuth();
   const { toast: toast2 } = useToast();
@@ -59609,7 +59982,7 @@ function SidebarRoster$3({ roster, isHardMode, categoryTimes }) {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col items-end gap-1 shrink-0", children: !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold text-yellow-500", children: [
           "+",
-          computeSizePopBonus$1(roster),
+          computeSizePopBonus(roster),
           " pts"
         ] }) })
       ] }) }, "Population Structure")
@@ -59818,7 +60191,7 @@ function DoubleDraftGame() {
       return sum + score;
     }, 0);
   }, [state.roster]);
-  const bonus = reactExports.useMemo(() => computeSizePopBonus$1(state.roster), [state.roster]);
+  const bonus = reactExports.useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
   const finalScore = totalScore + bonus;
   React.useEffect(() => {
     if (state.gameOver && !localSavedRef.current) {
@@ -60789,7 +61162,7 @@ function DoubleDraftMultiplayer() {
       return sum + score;
     }, 0);
   }, [state.roster]);
-  const bonus = reactExports.useMemo(() => computeSizePopBonus$1(state.roster), [state.roster]);
+  const bonus = reactExports.useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
   const finalScore = totalScore + bonus;
   const onSelectionPick = reactExports.useCallback((country) => {
     setState((prev) => ({ ...prev, currentCountry: country, selectionOptions: null }));
@@ -60835,7 +61208,7 @@ function DoubleDraftMultiplayer() {
         const key = getCategoryKey(cat);
         return sum + (c.stats[key]?.score || 0);
       }, 0);
-      const bonusScore = computeSizePopBonus$1(newRoster);
+      const bonusScore = computeSizePopBonus(newRoster);
       const finalScore2 = baseScore + bonusScore;
       const mappedRoster = {};
       for (const cat of CATEGORIES) {
@@ -60881,7 +61254,7 @@ function DoubleDraftMultiplayer() {
           const key = getCategoryKey(cat);
           return sum + (country.stats[key]?.score || 0);
         }, 0);
-        const bonusScore = computeSizePopBonus$1(newRoster);
+        const bonusScore = computeSizePopBonus(newRoster);
         const finalScore2 = baseScore + bonusScore;
         const mappedRoster = {};
         for (const cat of CATEGORIES) {
@@ -60947,12 +61320,6 @@ function DoubleDraftMultiplayer() {
     ] })
   ] });
 }
-const __iconNode$n = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
-  ["path", { d: "M12 17h.01", key: "p32p05" }]
-];
-const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$n);
 const CATEGORY_ICONS$2 = {
   Military: /* @__PURE__ */ jsxRuntimeExports.jsx(Shield, { className: "w-5 h-5" }),
   Economy: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-5 h-5" }),
@@ -61103,11 +61470,6 @@ function GuessPhase({ mysteryCountry, guesses, onGuess, hintsRevealed, onRevealH
     }) })
   ] });
 }
-const __iconNode$m = [
-  ["path", { d: "M12 5v14", key: "s699le" }],
-  ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
-];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$m);
 function SubmitDialog$1({ score, mode, roster, guesses, mysteryCountry, onClose, onSuccess }) {
   const [, navigate2] = useLocation();
   const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
@@ -62347,26 +62709,13 @@ function SidebarRoster$2({ roster, isHardMode, categoryTimes }) {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col items-end gap-1 shrink-0", children: !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold text-yellow-500", children: [
           "+",
-          computeSizePopBonus$1(roster),
+          computeSizePopBonus(roster),
           " pts"
         ] }) })
       ] }) }, "Population Structure")
     ] })
   ] });
 }
-const __iconNode$l = [
-  ["path", { d: "M8 2v4", key: "1cmpym" }],
-  ["path", { d: "M16 2v4", key: "4m81vk" }],
-  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
-  ["path", { d: "M3 10h18", key: "8toen8" }],
-  ["path", { d: "M8 14h.01", key: "6423bh" }],
-  ["path", { d: "M12 14h.01", key: "1etili" }],
-  ["path", { d: "M16 14h.01", key: "1gbofw" }],
-  ["path", { d: "M8 18h.01", key: "lrp35t" }],
-  ["path", { d: "M12 18h.01", key: "mhygvu" }],
-  ["path", { d: "M16 18h.01", key: "kzsmim" }]
-];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$l);
 function SubmitDialog({ score, mode, roster, onClose, onSuccess }) {
   const [, navigate2] = useLocation();
   const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
@@ -62607,7 +62956,7 @@ function DailyGame() {
       return sum + score;
     }, 0);
   }, [state.roster]);
-  const bonus = reactExports.useMemo(() => computeSizePopBonus$1(state.roster), [state.roster]);
+  const bonus = reactExports.useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
   const finalScore = totalScore + bonus;
   React.useEffect(() => {
     if (state.gameOver && !localSavedRef.current) {
@@ -62738,7 +63087,7 @@ function SidebarRoster$1({ roster, isHardMode, categoryTimes }) {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col items-end gap-1 shrink-0", children: !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold text-yellow-500", children: [
           "+",
-          computeSizePopBonus$1(roster),
+          computeSizePopBonus(roster),
           " pts"
         ] }) })
       ] }) }, "Population Structure")
@@ -62811,7 +63160,7 @@ function PartyGame() {
       return sum + score;
     }, 0);
   }, [state.roster]);
-  const bonus = reactExports.useMemo(() => computeSizePopBonus$1(state.roster), [state.roster]);
+  const bonus = reactExports.useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
   const finalScore = totalScore + bonus;
   const assignCountry = reactExports.useCallback((category) => {
     if (state.roster[category] || !roomCode || !firebaseUser) return;
@@ -62839,7 +63188,7 @@ function PartyGame() {
           const key = getCategoryKey(cat);
           return sum + (country.stats[key].score ?? 0);
         }, 0);
-        const bonusScore = computeSizePopBonus$1(newRoster);
+        const bonusScore = computeSizePopBonus(newRoster);
         const finalScore2 = baseScore + bonusScore;
         const mappedRoster = {};
         for (const cat of CATEGORIES) {
@@ -63694,13 +64043,6 @@ function GameOver({ roster, totalScore, bonus, onReset, onDownload, onWildcard, 
     )
   ] });
 }
-const __iconNode$k = [
-  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
-  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
-  ["line", { x1: "17", x2: "22", y1: "8", y2: "13", key: "3nzzx3" }],
-  ["line", { x1: "22", x2: "17", y1: "8", y2: "13", key: "1swrse" }]
-];
-const UserX = createLucideIcon("user-x", __iconNode$k);
 function SidebarRoster({ roster, isHardMode, categoryTimes }) {
   const assignedCategories = CATEGORIES.filter((c) => roster[c]);
   const hasSizeAndPop = roster["Size"] && roster["Population"];
@@ -63761,7 +64103,7 @@ function SidebarRoster({ roster, isHardMode, categoryTimes }) {
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col items-end gap-1 shrink-0", children: !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold text-yellow-500", children: [
           "+",
-          computeSizePopBonus$1(roster),
+          computeSizePopBonus(roster),
           " pts"
         ] }) })
       ] }) }, "Population Structure")
@@ -63864,7 +64206,7 @@ function SabotageGame() {
       return sum + score;
     }, 0);
   }, [state.roster]);
-  const bonus = reactExports.useMemo(() => computeSizePopBonus$1(state.roster), [state.roster]);
+  const bonus = reactExports.useMemo(() => computeSizePopBonus(state.roster), [state.roster]);
   const finalScore = totalScore + bonus;
   const onSelectionPick = reactExports.useCallback((country) => {
     if (roomCode && firebaseUser) {
@@ -63887,7 +64229,7 @@ function SabotageGame() {
         const key = getCategoryKey(cat);
         return sum + (country.stats[key].score ?? 0);
       }, 0);
-      const bonusScore = computeSizePopBonus$1(newRoster);
+      const bonusScore = computeSizePopBonus(newRoster);
       const finalScore2 = baseScore + bonusScore;
       const mappedRoster = {};
       for (const cat of CATEGORIES) {
@@ -63943,57 +64285,6 @@ function SabotageGame() {
     ] })
   ] });
 }
-const __iconNode$j = [
-  ["path", { d: "M12 18V5", key: "adv99a" }],
-  ["path", { d: "M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4", key: "1e3is1" }],
-  ["path", { d: "M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5", key: "1gqd8o" }],
-  ["path", { d: "M17.997 5.125a4 4 0 0 1 2.526 5.77", key: "iwvgf7" }],
-  ["path", { d: "M18 18a4 4 0 0 0 2-7.464", key: "efp6ie" }],
-  ["path", { d: "M19.967 17.483A4 4 0 1 1 12 18a4 4 0 1 1-7.967-.517", key: "1gq6am" }],
-  ["path", { d: "M6 18a4 4 0 0 1-2-7.464", key: "k1g0md" }],
-  ["path", { d: "M6.003 5.125a4 4 0 0 0-2.526 5.77", key: "q97ue3" }]
-];
-const Brain = createLucideIcon("brain", __iconNode$j);
-const __iconNode$i = [
-  ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
-  ["path", { d: "M4 7h16", key: "6tx8e3" }],
-  ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
-  ["path", { d: "M20 17H4", key: "h6l3hr" }]
-];
-const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$i);
-const __iconNode$h = [
-  ["line", { x1: "6", x2: "10", y1: "11", y2: "11", key: "1gktln" }],
-  ["line", { x1: "8", x2: "8", y1: "9", y2: "13", key: "qnk9ow" }],
-  ["line", { x1: "15", x2: "15.01", y1: "12", y2: "12", key: "krot7o" }],
-  ["line", { x1: "18", x2: "18.01", y1: "10", y2: "10", key: "1lcuu1" }],
-  [
-    "path",
-    {
-      d: "M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z",
-      key: "mfqc10"
-    }
-  ]
-];
-const Gamepad2 = createLucideIcon("gamepad-2", __iconNode$h);
-const __iconNode$g = [
-  ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
-  ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
-  ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
-  ["path", { d: "M16 10h.01", key: "1m94wz" }],
-  ["path", { d: "M12 10h.01", key: "1nrarc" }],
-  ["path", { d: "M8 10h.01", key: "19clt8" }],
-  ["path", { d: "M12 14h.01", key: "1etili" }],
-  ["path", { d: "M8 14h.01", key: "6423bh" }],
-  ["path", { d: "M12 18h.01", key: "mhygvu" }],
-  ["path", { d: "M8 18h.01", key: "lrp35t" }]
-];
-const Calculator = createLucideIcon("calculator", __iconNode$g);
-const __iconNode$f = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
-  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
-];
-const Target = createLucideIcon("target", __iconNode$f);
 function UsernamePrompt({ user, onComplete }) {
   const suggested = (user.displayName || "").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20);
   const [username, setUsername] = reactExports.useState(suggested);
@@ -64174,16 +64465,6 @@ function AuthModal({ onClose, title = "Sign In" }) {
     ] })
   ] }) });
 }
-const __iconNode$e = [
-  [
-    "path",
-    {
-      d: "M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z",
-      key: "18887p"
-    }
-  ]
-];
-const MessageSquare = createLucideIcon("message-square", __iconNode$e);
 function ContactModal({ onClose }) {
   const [loading, setLoading] = reactExports.useState(false);
   const [email, setEmail] = reactExports.useState("");
@@ -64321,12 +64602,6 @@ function ContactModal({ onClose }) {
     )
   ] });
 }
-const __iconNode$d = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 16v-4", key: "1dtifu" }],
-  ["path", { d: "M12 8h.01", key: "e9boi3" }]
-];
-const Info = createLucideIcon("info", __iconNode$d);
 function AboutModal({ onClose }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, className: "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4", onClick: onClose, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { scale: 0.92, y: 16 }, animate: { scale: 1, y: 0 }, exit: { scale: 0.92, y: 16 }, className: "bg-background border border-border w-full max-w-md rounded-2xl shadow-2xl overflow-hidden", onClick: (e) => e.stopPropagation(), children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-4 border-b border-border flex items-center justify-between bg-foreground/5", children: [
@@ -64401,17 +64676,6 @@ function AchievementsModal({
     )
   ] }) });
 }
-const __iconNode$c = [
-  [
-    "path",
-    {
-      d: "m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526",
-      key: "1yiouv"
-    }
-  ],
-  ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
-];
-const Award = createLucideIcon("award", __iconNode$c);
 function AchievementsCard({ profile }) {
   const [modalType, setModalType] = reactExports.useState(null);
   const unlocked = profile?.unlockedAchievements || [];
@@ -65195,25 +65459,6 @@ function Home() {
     ] })
   ] });
 }
-const __iconNode$b = [
-  ["path", { d: "M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2", key: "975kel" }],
-  ["circle", { cx: "12", cy: "7", r: "4", key: "17ys0d" }]
-];
-const User2 = createLucideIcon("user", __iconNode$b);
-const __iconNode$a = [
-  ["path", { d: "M10 11v6", key: "nco0om" }],
-  ["path", { d: "M14 11v6", key: "outv1u" }],
-  ["path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", key: "miytrc" }],
-  ["path", { d: "M3 6h18", key: "d0wm0j" }],
-  ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", key: "e791ji" }]
-];
-const Trash2 = createLucideIcon("trash-2", __iconNode$a);
-const __iconNode$9 = [
-  ["path", { d: "M12 3v12", key: "1x0j5s" }],
-  ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
-];
-const Upload = createLucideIcon("upload", __iconNode$9);
 function SubmitToGlobalDialog({ entry, mode, onClose, onSuccess }) {
   const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
   const [loading, setLoading] = reactExports.useState(false);
@@ -65708,11 +65953,6 @@ function Leaderboard() {
     ) })
   ] });
 }
-const __iconNode$8 = [
-  ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
-  ["path", { d: "M19 12H5", key: "x3x0zl" }]
-];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$8);
 function About() {
   const [showContactModal, setShowContactModal] = reactExports.useState(false);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-background flex flex-col font-sans selection:bg-foreground/20", children: [
@@ -67218,23 +67458,6 @@ const Button = reactExports.forwardRef(
   }
 );
 Button.displayName = "Button";
-const __iconNode$7 = [
-  [
-    "path",
-    {
-      d: "M4 22V4a1 1 0 0 1 .4-.8A6 6 0 0 1 8 2c3 0 5 2 7.333 2q2 0 3.067-.8A1 1 0 0 1 20 4v10a1 1 0 0 1-.4.8A6 6 0 0 1 16 16c-3 0-5-2-8-2a6 6 0 0 0-4 1.528",
-      key: "1jaruq"
-    }
-  ]
-];
-const Flag = createLucideIcon("flag", __iconNode$7);
-const __iconNode$6 = [
-  ["path", { d: "M14 17H5", key: "gfn3mx" }],
-  ["path", { d: "M19 7h-9", key: "6i9tg" }],
-  ["circle", { cx: "17", cy: "17", r: "3", key: "18b49y" }],
-  ["circle", { cx: "7", cy: "7", r: "3", key: "dfmy0x" }]
-];
-const Settings2 = createLucideIcon("settings-2", __iconNode$6);
 const TASK_TYPES$1 = [
   { id: "identify_from_flag", label: "Identify from flag", desc: "See a flag, name the country", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Flag, { className: "w-5 h-5" }) },
   { id: "identify_from_map", label: "Identify from map", desc: "See a highlighted map, name it", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Map$1, { className: "w-5 h-5" }) },
@@ -74073,40 +74296,6 @@ function WorldMap({
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute bottom-2 right-2 text-xs text-muted-foreground bg-background/80 p-1 rounded", children: "Scroll to zoom, drag to pan" })
   ] });
 }
-const __iconNode$5 = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
-  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
-];
-const CircleX = createLucideIcon("circle-x", __iconNode$5);
-const __iconNode$4 = [
-  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
-];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$4);
-const __iconNode$3 = [
-  ["path", { d: "M21 4v16", key: "7j8fe9" }],
-  [
-    "path",
-    {
-      d: "M6.029 4.285A2 2 0 0 0 3 6v12a2 2 0 0 0 3.029 1.715l9.997-5.998a2 2 0 0 0 .003-3.432z",
-      key: "zs4d6"
-    }
-  ]
-];
-const SkipForward = createLucideIcon("skip-forward", __iconNode$3);
-const __iconNode$2 = [
-  ["path", { d: "M20 4v7a4 4 0 0 1-4 4H4", key: "6o5b7l" }],
-  ["path", { d: "m9 10-5 5 5 5", key: "1kshq7" }]
-];
-const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$2);
-const __iconNode$1 = [
-  ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
-  ["path", { d: "M17 20V4", key: "1ejh1v" }],
-  ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
-  ["path", { d: "M7 4v16", key: "1glfcx" }]
-];
-const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$1);
 const MAJOR_NON_CAPITAL_CITIES = [
   "New York",
   "Los Angeles",
@@ -74706,8 +74895,6 @@ function AssociationsGame() {
     ] })
   ] });
 }
-const __iconNode = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode);
 function mulberry32(a) {
   return function() {
     var t = a += 1831565813;

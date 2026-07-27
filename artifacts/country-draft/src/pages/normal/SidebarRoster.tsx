@@ -3,8 +3,8 @@ import { computeBetaSizePopBonus } from "@/lib/beta-logic";
 import React from "react";
 import { Category, Country, CATEGORIES, getCategoryKey } from "@/data/countries";
 import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, BONUS_CATEGORIES } from "./NormalUI";
-import Users from "lucide-react/dist/esm/icons/users";
-import Plus from "lucide-react/dist/esm/icons/plus";
+import { DensityScoreBox } from "./DensityScoreBox";
+import { Users, Plus } from "lucide-react";
 
 export function SidebarRoster({ roster, isHardMode, categoryTimes, isBetaMode = false }: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean; categoryTimes?: Partial<Record<Category, number>>; isBetaMode?: boolean; }) {
   const assignedCategories = CATEGORIES.filter((c: Category) => roster[c]);
@@ -26,8 +26,8 @@ export function SidebarRoster({ roster, isHardMode, categoryTimes, isBetaMode = 
           </div>
         ) : (
           assignedCategories.map((category: Category) => {
-            // If both Size and Pop are present, hide them individually and render a combined card below.
-            if (hasSizeAndPop && (category === "Size" || category === "Population")) {
+            // If in non-beta mode and both Size and Pop are present, hide them individually and render combined card below.
+            if (!isBetaMode && hasSizeAndPop && (category === "Size" || category === "Population")) {
               return null;
             }
 
@@ -36,6 +36,7 @@ export function SidebarRoster({ roster, isHardMode, categoryTimes, isBetaMode = 
             const isBonus = BONUS_CATEGORIES.includes(category);
             const stars = getCategoryStars(category);
             const score = !isBonus ? (assigned.stats[catKey].score ?? 0) : null;
+            const industryType = isBetaMode && category === "Economy" ? assigned.stats.economy.industryType : null;
 
             return (
               <div key={category} className="w-full rounded-lg border border-border bg-card text-left transition-all shadow-sm">
@@ -47,10 +48,17 @@ export function SidebarRoster({ roster, isHardMode, categoryTimes, isBetaMode = 
                       <div className="text-xs font-semibold text-foreground truncate">{assigned.flag} {assigned.name}</div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end gap-1 shrink-0">
+                  <div className="flex flex-col items-end gap-0.5 shrink-0">
                     <span className="text-[9px] text-yellow-500/80 dark:text-yellow-400/60">{stars}</span>
                     {!isBonus && score !== null && !isHardMode && (
-                      <span className="text-[10px] font-bold text-primary">{getPtsDisplay(score, category)}</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-primary">{getPtsDisplay(score, category)}</span>
+                        {industryType && (
+                          <span className="text-[9px] font-bold px-1 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                            Ind. {industryType}/5
+                          </span>
+                        )}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -59,7 +67,7 @@ export function SidebarRoster({ roster, isHardMode, categoryTimes, isBetaMode = 
           })
         )}
 
-        {hasSizeAndPop && (
+        {!isBetaMode && hasSizeAndPop && (
           <div key="Population Structure" className="w-full rounded-lg border border-yellow-500/30 bg-yellow-500/10 text-left transition-all">
             <div className="px-3 py-2 flex items-center justify-between">
               <div className="flex items-center gap-2 overflow-hidden">
@@ -75,13 +83,19 @@ export function SidebarRoster({ roster, isHardMode, categoryTimes, isBetaMode = 
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1 shrink-0">
-                {!isHardMode && <span className="text-[10px] font-bold text-yellow-600 dark:text-yellow-500">+{isBetaMode ? computeBetaSizePopBonus(roster) : computeSizePopBonus(roster)} pts</span>}
+                {!isHardMode && <span className="text-[10px] font-bold text-yellow-600 dark:text-yellow-500">+{computeSizePopBonus(roster)} pts</span>}
               </div>
             </div>
           </div>
+        )}
+
+        {/* Beta Density Score Box at the bottom of the roster list */}
+        {isBetaMode && (
+          <DensityScoreBox roster={roster} isHardMode={isHardMode} isBetaMode={isBetaMode} />
         )}
       </div>
     </div>
   );
 }
+
 

@@ -1,50 +1,13 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import Plus from "lucide-react/dist/esm/icons/plus";
-import Shield from "lucide-react/dist/esm/icons/shield";
-import TrendingUp from "lucide-react/dist/esm/icons/trending-up";
-import Palette from "lucide-react/dist/esm/icons/palette";
-import Heart from "lucide-react/dist/esm/icons/heart";
-import Globe from "lucide-react/dist/esm/icons/globe";
-import Sun from "lucide-react/dist/esm/icons/sun";
-import Cpu from "lucide-react/dist/esm/icons/cpu";
-import Map from "lucide-react/dist/esm/icons/map";
-import Users from "lucide-react/dist/esm/icons/users";
-import BookOpen from "lucide-react/dist/esm/icons/book-open";
-import Building from "lucide-react/dist/esm/icons/building";
-import ChevronRight from "lucide-react/dist/esm/icons/chevron-right";
-import ChevronDown from "lucide-react/dist/esm/icons/chevron-down";
-import ChevronUp from "lucide-react/dist/esm/icons/chevron-up";
-import Download from "lucide-react/dist/esm/icons/download";
-import RotateCcw from "lucide-react/dist/esm/icons/rotate-ccw";
-import Trophy from "lucide-react/dist/esm/icons/trophy";
-import Star from "lucide-react/dist/esm/icons/star";
-import Zap from "lucide-react/dist/esm/icons/zap";
-import Lock from "lucide-react/dist/esm/icons/lock";
-import Shuffle from "lucide-react/dist/esm/icons/shuffle";
-import X from "lucide-react/dist/esm/icons/x";
-import ArrowLeftRight from "lucide-react/dist/esm/icons/arrow-left-right";
-import List from "lucide-react/dist/esm/icons/list";
-import Medal from "lucide-react/dist/esm/icons/medal";
-import GraduationCap from "lucide-react/dist/esm/icons/graduation-cap";
-import MapPin from "lucide-react/dist/esm/icons/map-pin";
-import Mountain from "lucide-react/dist/esm/icons/mountain";
-import Camera from "lucide-react/dist/esm/icons/camera";
-import HomeIcon from "lucide-react/dist/esm/icons/home";
-import Moon from "lucide-react/dist/esm/icons/moon";
-import Send from "lucide-react/dist/esm/icons/send";
-import CalendarDays from "lucide-react/dist/esm/icons/calendar-days";
-import LogIn from "lucide-react/dist/esm/icons/log-in";
-import PartyPopper from "lucide-react/dist/esm/icons/party-popper";
-import Swords from "lucide-react/dist/esm/icons/swords";
-import Laptop from "lucide-react/dist/esm/icons/laptop";
-import GlobeIcon from "lucide-react/dist/esm/icons/globe";
-import Plane from "lucide-react/dist/esm/icons/plane";
-import Leaf from "lucide-react/dist/esm/icons/leaf";
-import Handshake from "lucide-react/dist/esm/icons/handshake";
-import Umbrella from "lucide-react/dist/esm/icons/umbrella";
-import Info from "lucide-react/dist/esm/icons/info";
-import Search from "lucide-react/dist/esm/icons/search";
-import Lightbulb from "lucide-react/dist/esm/icons/lightbulb";
+import { DensityScoreBox } from "./DensityScoreBox";
+import {
+  Plus, Shield, TrendingUp, Palette, Heart, Globe, Sun, Cpu, Map, Users,
+  BookOpen, Building, ChevronRight, ChevronDown, ChevronUp, Download, RotateCcw, Trophy,
+  Star, Zap, Lock, Shuffle, X, ArrowLeftRight, List, Medal,
+  GraduationCap, MapPin, Mountain, Camera, Home as HomeIcon, Moon, Send,
+  CalendarDays, LogIn, PartyPopper, Swords, Laptop, Globe as GlobeIcon, Plane, Leaf,
+  Handshake, Umbrella, Info, Search, Lightbulb
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { RATINGS, ARCHETYPES, BONUS_PATHS, getAchievementIcon } from "@/lib/achievements";
 import { getRating, getCountryArchetype, getBonusPath, computeSizePopBonus } from "@/lib/achievements-logic";
@@ -446,10 +409,17 @@ export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMod
                 {!isHardMode && (
                   <div className="flex items-center justify-between mb-1">
                     <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>{BONUS_CATEGORIES.includes(cat) ? "Bonus Contributor" : scoreLabel.label}</div>
-                    <div className={`text-sm font-bold ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>
-                      {BONUS_CATEGORIES.includes(cat) 
-                        ? extractBonusText(stat.description, cat) 
-                        : getPtsDisplay(stat.score ?? 0, cat)}
+                    <div className={`text-sm font-bold flex items-center gap-1.5 ${BONUS_CATEGORIES.includes(cat) ? "text-foreground" : scoreLabel.color}`}>
+                      <span>
+                        {BONUS_CATEGORIES.includes(cat) 
+                          ? extractBonusText(stat.description, cat) 
+                          : getPtsDisplay(stat.score ?? 0, cat)}
+                      </span>
+                      {isBetaMode && cat === "Economy" && stat.industryType && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                          Ind. {stat.industryType}/5
+                        </span>
+                      )}
                     </div>
                   </div>
                 )}
@@ -791,9 +761,6 @@ export function GameOver({ isBetaMode, roster, totalScore, bonus, onReset, onDow
                       scoreVal = assigned?.stats[ck].score ?? 0; 
                       maxScore = CATEGORY_MAX_SCORES[actualCat] ?? 10; 
                       desc = assigned?.stats[ck].description;
-                      if (false && cat === "Economy" && assigned?.stats.economy.industryType) {
-                        desc = `[Ind. ${assigned?.stats.economy.industryType}/5] ${desc}`;
-                      }
                       const isBonus = BONUS_CATEGORIES.includes(actualCat);
                       const isSizeOrPop = actualCat === "Size" || actualCat === "Population";
 
@@ -801,13 +768,28 @@ export function GameOver({ isBetaMode, roster, totalScore, bonus, onReset, onDow
                         <div className="space-y-2 mt-3">
                           {!isHardMode && (
                             <div className="flex items-center justify-between text-sm">
-                              {!isBonus && !isSizeOrPop ? ( <><div className="flex items-center gap-2"><span className={`text-lg md:text-xl font-black ${getScoreLabel(scoreVal, maxScore).color.split(' ')[0]}`}>{scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-muted-foreground font-semibold">pts</span></span><span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-muted`}>{getScoreLabel(scoreVal, maxScore).label}</span></div></>
+                              {!isBonus && !isSizeOrPop ? (
+                                <div className="flex items-center gap-2">
+                                  <span className={`text-lg md:text-xl font-black ${getScoreLabel(scoreVal, maxScore).color.split(' ')[0]}`}>
+                                    {scoreVal * weight} <span className="text-primary/50 text-sm md:text-base font-bold">/ {maxScore}</span> <span className="text-[11px] md:text-xs text-muted-foreground font-semibold">pts</span>
+                                  </span>
+                                  {isBetaMode && cat === "Economy" && assigned?.stats.economy.industryType && (
+                                    <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                      Ind. {assigned.stats.economy.industryType}/5
+                                    </span>
+                                  )}
+                                  <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${getScoreLabel(scoreVal, maxScore).color} bg-muted`}>
+                                    {getScoreLabel(scoreVal, maxScore).label}
+                                  </span>
+                                </div>
                               ) : isSizeOrPop ? (
                                 <div className="flex items-center gap-2">
                                   <span className="font-bold text-foreground text-xs">{extractBonusText(desc, actualCat)}</span>
                                   <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded w-max text-foreground bg-muted`}>Bonus Contributor</div>
                                 </div>
-                              ) : ( <span className="text-lg md:text-xl font-black text-yellow-400">+{Math.floor(scoreVal / 2)} <span className="text-[11px] md:text-xs text-yellow-400/60 font-semibold">pts</span></span> )}
+                              ) : (
+                                <span className="text-lg md:text-xl font-black text-yellow-400">+{Math.floor(scoreVal / 2)} <span className="text-[11px] md:text-xs text-yellow-400/60 font-semibold">pts</span></span>
+                              )}
                             </div>
                           )}
                           <p className="text-[11px] md:text-xs text-muted-foreground leading-relaxed italic line-clamp-2">"{desc}"</p>
@@ -819,6 +801,11 @@ export function GameOver({ isBetaMode, roster, totalScore, bonus, onReset, onDow
               });
             })()}
           </div>
+
+          {/* Density Score Box at bottom of roster list */}
+          {isBetaMode && (
+            <DensityScoreBox roster={roster} isHardMode={isHardMode} isBetaMode={isBetaMode} />
+          )}
         </div>
       </div>
       
