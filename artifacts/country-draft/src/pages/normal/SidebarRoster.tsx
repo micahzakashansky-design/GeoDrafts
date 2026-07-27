@@ -1,11 +1,12 @@
 import { computeSizePopBonus } from "@/lib/achievements-logic";
+import { computeBetaSizePopBonus } from "@/lib/beta-logic";
 import React from "react";
 import { Category, Country, CATEGORIES, getCategoryKey } from "@/data/countries";
 import { CATEGORY_ICONS, getCategoryStars, getPtsDisplay, BONUS_CATEGORIES } from "./NormalUI";
 import Users from "lucide-react/dist/esm/icons/users";
 import Plus from "lucide-react/dist/esm/icons/plus";
 
-export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean ; categoryTimes?: Partial<Record<Category, number>>; }) {
+export function SidebarRoster({ roster, isHardMode, categoryTimes, isBetaMode = false }: { roster: Partial<Record<Category, Country>>; isHardMode?: boolean; categoryTimes?: Partial<Record<Category, number>>; isBetaMode?: boolean; }) {
   const assignedCategories = CATEGORIES.filter((c: Category) => roster[c]);
   const hasSizeAndPop = roster["Size"] && roster["Population"];
 
@@ -74,7 +75,7 @@ export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: P
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1 shrink-0">
-                {!isHardMode && <span className="text-[10px] font-bold text-yellow-600 dark:text-yellow-500">+{computeSizePopBonus(roster)} pts</span>}
+                {!isHardMode && <span className="text-[10px] font-bold text-yellow-600 dark:text-yellow-500">+{isBetaMode ? computeBetaSizePopBonus(roster) : computeSizePopBonus(roster)} pts</span>}
               </div>
             </div>
           </div>
@@ -83,3 +84,4 @@ export function SidebarRoster({ roster, isHardMode , categoryTimes}: { roster: P
     </div>
   );
 }
+

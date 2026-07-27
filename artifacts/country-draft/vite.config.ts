@@ -29,6 +29,7 @@ export default defineConfig({
       maxParallelFileOps: 1,
       external: [],
     },
+    minify: false
   },
   server: {
     port,

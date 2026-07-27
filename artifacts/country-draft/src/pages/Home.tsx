@@ -368,6 +368,10 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                           <h4 className="font-bold text-indigo-400 mb-1 flex items-center gap-2"><CalendarDays className="w-4 h-4"/>Daily Challenge</h4>
                           <p className="text-sm text-muted-foreground">A unique global seed every day. Compete globally with the exact same country pool.</p>
                         </div>
+                        <div className="p-4 rounded-xl border border-purple-500/20 bg-purple-500/5 sm:col-span-2">
+                          <h4 className="font-bold text-purple-400 mb-1 flex items-center gap-2"><ShieldAlert className="w-4 h-4"/>BETA 1.0 Classic Draft</h4>
+                          <p className="text-sm text-muted-foreground">Original draft mode with bundled Economy Industry Types (1-5) and a new gaussian size/population density synergy score formula.</p>
+                        </div>
                       </div>
                     </div>
                   )}

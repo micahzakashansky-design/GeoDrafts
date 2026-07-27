@@ -111,7 +111,7 @@ export function pngRatingLabel(total: number): string {
   if (total >= 110) return "Regional Power"; if (total >= 80) return "Developing Nation";
   return "Struggling State";
 }
-export async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalScore: number, bonus: number, isHardMode: boolean = false): Promise<void> {
+export async function drawRosterPng(roster: Partial<Record<Category, Country>>, totalScore: number, bonus: number, isHardMode: boolean = false, isBetaMode: boolean = false): Promise<void> {
   const DPR = 2, W = 1180, HDR = 88, PAD = 20, GAP = 10, COLS = 2;
   const CARD_W = (W - PAD * 3) / COLS; const CARD_H = 112; const ROWS = Math.ceil(CATEGORIES.length / COLS);
   const H = HDR + PAD + ROWS * (CARD_H + GAP) - GAP + PAD;
@@ -403,7 +403,7 @@ export function GuessPhase({ mysteryCountry, guesses, onGuess }: { mysteryCountr
   );
 }
 
-export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMode, roster, onAssign, onHover }: { country: Country; hoveredCategory: Category | null; poolRemaining: number; isHardMode: boolean; roster: Partial<Record<Category, Country>>; onAssign: (cat: Category) => void; onHover: (cat: Category | null) => void; }) {
+export function CountryCard({ country, hoveredCategory, poolRemaining, isHardMode, roster, onAssign, onHover, isBetaMode = false }: { country: Country; hoveredCategory: Category | null; poolRemaining: number; isHardMode: boolean; roster: Partial<Record<Category, Country>>; onAssign: (cat: Category) => void; onHover: (cat: Category | null) => void; isBetaMode?: boolean; }) {
   const isComplete = CATEGORIES.every(c => roster[c]);
   const [expandedCat, setExpandedCat] = useState<Category | null>(null);
   if (isComplete) return null;
