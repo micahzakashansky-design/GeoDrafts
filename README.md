@@ -6,7 +6,7 @@ GeoDrafts is a nation-building draft game where players build their ideal nation
 
 - **15 Category Slots:** Strategic drafting across categories including Military, Economy, Technology, Culture, and more.
 - **Real-World Stats:** Scoring is based on comprehensive real-world data for a wide variety of countries.
-- **Easy & Hard Modes:** Play with stat ratings visible or challenge yourself with objective stats only.
+- **Normal & Blind Modes:** Play with stat ratings visible or challenge yourself with objective stats only.
 - **Daily Challenges:** A new shuffled pool every day. Compete with everyone else on the same set of countries.
 - **Global Leaderboard:** Submit your best scores and see how your nations rank against others.
 - **Bonus Mechanics:** Special scoring formulas like the Size + Population density bonus.

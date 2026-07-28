@@ -58388,7 +58388,7 @@ function SubmitDialog$3({ score, mode, roster, onClose, onSuccess }) {
   const [isSignUp, setIsSignUp] = reactExports.useState(false);
   const [email, setEmail] = reactExports.useState("");
   const [password, setPassword] = reactExports.useState("");
-  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Hard" : mode === "double" ? "Double Draft" : mode === "guess" ? "Guess the Country" : "Normal";
+  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Blind" : mode === "double" ? "Double Draft" : mode === "guess" ? "Guess the Country" : "Normal";
   const displayName = profile?.username ?? firebaseUser?.displayName ?? firebaseUser?.email ?? "Anonymous";
   const isAuthenticated = !!firebaseUser && !!profile;
   async function handleGoogleSignIn() {
@@ -59087,7 +59087,7 @@ function drawDevCountry(pool, roster) {
 }
 const BETA_DIFFICULTY_CONFIG = [
   {
-    name: "Easy",
+    name: "Normal",
     poolSize: 55,
     color: "text-emerald-400",
     border: "border-emerald-500/50",
@@ -59105,7 +59105,7 @@ const BETA_DIFFICULTY_CONFIG = [
     accent: "#eab308"
   },
   {
-    name: "Hard",
+    name: "Blind",
     poolSize: 125,
     color: "text-red-500",
     border: "border-red-500/50",
@@ -60349,7 +60349,7 @@ function SubmitDialog$2({ score, mode, roster, onClose, onSuccess }) {
   const [isSignUp, setIsSignUp] = reactExports.useState(false);
   const [email, setEmail] = reactExports.useState("");
   const [password, setPassword] = reactExports.useState("");
-  const modeLabel = mode === "double_hard" ? "Double Draft (Hard)" : "Double Draft";
+  const modeLabel = mode === "double_hard" ? "Double Draft (Blind)" : "Double Draft";
   const displayName = profile?.username ?? firebaseUser?.displayName ?? firebaseUser?.email ?? "Anonymous";
   const isAuthenticated = !!firebaseUser && !!profile;
   async function handleGoogleSignIn() {
@@ -61830,7 +61830,7 @@ function SubmitDialog$1({ score, mode, roster, guesses, mysteryCountry, onClose,
   const [isSignUp, setIsSignUp] = reactExports.useState(false);
   const [email, setEmail] = reactExports.useState("");
   const [password, setPassword] = reactExports.useState("");
-  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Hard" : mode === "double" ? "Double Draft" : mode === "guess" ? "Guess the Country" : "Normal";
+  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Blind" : mode === "double" ? "Double Draft" : mode === "guess" ? "Guess the Country" : "Normal";
   const displayName = profile?.username ?? firebaseUser?.displayName ?? firebaseUser?.email ?? "Anonymous";
   const isAuthenticated = !!firebaseUser && !!profile;
   async function handleGoogleSignIn() {
@@ -63076,7 +63076,7 @@ function SubmitDialog({ score, mode, roster, onClose, onSuccess }) {
   const [isSignUp, setIsSignUp] = reactExports.useState(false);
   const [email, setEmail] = reactExports.useState("");
   const [password, setPassword] = reactExports.useState("");
-  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Hard" : mode === "double" ? "Double Draft" : mode === "guess" ? "Guess the Country" : "Normal";
+  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Blind" : mode === "double" ? "Double Draft" : mode === "guess" ? "Guess the Country" : "Normal";
   const displayName = profile?.username ?? firebaseUser?.displayName ?? firebaseUser?.email ?? "Anonymous";
   const isAuthenticated = !!firebaseUser && !!profile;
   async function handleGoogleSignIn() {
@@ -65707,7 +65707,7 @@ function Home() {
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => startGame("normal", true), className: "py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { className: "w-3.5 h-3.5" }),
-              " Hard Mode"
+              " Blind Mode"
             ] })
           ] })
         ] }),
@@ -65724,7 +65724,7 @@ function Home() {
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => startGame("double", true), className: "py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { className: "w-3.5 h-3.5" }),
-              " Hard"
+              " Blind"
             ] })
           ] })
         ] }),
@@ -65818,7 +65818,7 @@ function SubmitToGlobalDialog({ entry, mode, onClose, onSuccess }) {
   const [isSignUp, setIsSignUp] = reactExports.useState(false);
   const [email, setEmail] = reactExports.useState("");
   const [password, setPassword] = reactExports.useState("");
-  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Hard" : mode === "double" ? "Double Draft" : mode === "double_hard" ? "Double Draft (Hard)" : mode === "guess" ? "Guess the Country" : "Normal";
+  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Blind" : mode === "double" ? "Double Draft" : mode === "double_hard" ? "Double Draft (Blind)" : mode === "guess" ? "Guess the Country" : "Normal";
   const displayName = profile?.username ?? firebaseUser?.displayName ?? firebaseUser?.email ?? "Anonymous";
   const isAuthenticated = !!firebaseUser && !!profile;
   async function handleGoogleSignIn() {
@@ -66003,7 +66003,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
                 "span",
                 {
                   className: `text-xs px-3 py-1 rounded-full font-black uppercase tracking-widest mr-2 ${isDaily ? "bg-amber-400/10 text-amber-400 border border-amber-400/20" : isHard ? "bg-red-500/10 text-red-500 border border-red-500/20" : isDouble ? "bg-purple-500/10 text-purple-400 border border-purple-500/20" : isDoubleHard ? "bg-fuchsia-500/10 text-fuchsia-500 border border-fuchsia-500/20" : isGuess ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "bg-foreground/10 text-muted-foreground/80 border border-border"}`,
-                  children: isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isDoubleHard ? "Double (Hard)" : isGuess ? "Guess" : "Normal"
+                  children: isDaily ? "Daily" : isHard ? "Blind" : isDouble ? "Double" : isDoubleHard ? "Double (Blind)" : isGuess ? "Guess" : "Normal"
                 }
               ),
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-muted-foreground mr-2 hidden sm:block", children: date }),
@@ -66232,7 +66232,7 @@ function Leaderboard() {
                 {
                   onClick: () => setDifficulty("hard"),
                   className: `px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest transition-all ${difficulty === "hard" ? "bg-red-500 text-white" : "text-muted-foreground hover:text-foreground"}`,
-                  children: "Hard Mode"
+                  children: "Blind Mode"
                 }
               )
             ] })
@@ -68206,7 +68206,7 @@ function Lobby() {
                       onClick: () => handleDifficultyChange("hard"),
                       disabled: !isHost,
                       className: `flex-1 py-3.5 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${room.difficulty === "hard" ? "bg-white text-black shadow-sm" : "text-muted-foreground hover:text-foreground/80"} ${!isHost && "cursor-default"}`,
-                      children: "Hard"
+                      children: "Blind"
                     }
                   )
                 ] }) })

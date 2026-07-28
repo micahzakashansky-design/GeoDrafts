@@ -81,7 +81,7 @@ function LeaderboardRow({ rank, entry, isPersonal = false, isOwner = false, onDe
                 : "bg-foreground/10 text-muted-foreground/80 border border-border"
             }`}
           >
-            {isDaily ? "Daily" : isHard ? "Hard" : isDouble ? "Double" : isDoubleHard ? "Double (Hard)" : isGuess ? "Guess" : "Normal"}
+            {isDaily ? "Daily" : isHard ? "Blind" : isDouble ? "Double" : isDoubleHard ? "Double (Blind)" : isGuess ? "Guess" : "Normal"}
           </span>
         )}
 
@@ -353,7 +353,7 @@ export default function Leaderboard() {
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    Hard Mode
+                    Blind Mode
                   </button>
                 </div>
               </motion.div>

@@ -629,7 +629,7 @@ export default function Home() {
                   
                   <div className="grid grid-cols-2 gap-2 mt-auto">
                     <button onClick={() => startGame("normal", false)} className="py-3 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldPlus className="w-3.5 h-3.5"/> Normal</button>
-                    <button onClick={() => startGame("normal", true)} className="py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldAlert className="w-3.5 h-3.5"/> Hard Mode</button>
+                    <button onClick={() => startGame("normal", true)} className="py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldAlert className="w-3.5 h-3.5"/> Blind Mode</button>
                   </div>
                 </div>
 
@@ -643,7 +643,7 @@ export default function Home() {
                   </div>
                   <div className="grid grid-cols-2 gap-2 mt-auto">
                     <button onClick={() => startGame("double", false)} className="py-3 rounded-xl bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldPlus className="w-3.5 h-3.5"/> Normal</button>
-                    <button onClick={() => startGame("double", true)} className="py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldAlert className="w-3.5 h-3.5"/> Hard</button>
+                    <button onClick={() => startGame("double", true)} className="py-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 text-sm font-bold transition-colors flex items-center justify-center gap-1"><ShieldAlert className="w-3.5 h-3.5"/> Blind</button>
                   </div>
                 </div>
 

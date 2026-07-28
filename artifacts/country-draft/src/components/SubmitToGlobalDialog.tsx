@@ -14,7 +14,7 @@ export function SubmitToGlobalDialog({ entry, mode, onClose, onSuccess }: { entr
   const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
   const [loading, setLoading] = useState(false); const [done, setDone] = useState(false); const [error, setError] = useState<string | null>(null);
   const [showEmail, setShowEmail] = useState(false); const [isSignUp, setIsSignUp] = useState(false); const [email, setEmail] = useState(""); const [password, setPassword] = useState("");
-  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Hard" : mode === "double" ? "Double Draft" : mode === "double_hard" ? "Double Draft (Hard)" : mode === "guess" ? "Guess the Country" : "Normal"; 
+  const modeLabel = mode === "daily" ? "Daily" : mode === "hard" ? "Blind" : mode === "double" ? "Double Draft" : mode === "double_hard" ? "Double Draft (Blind)" : mode === "guess" ? "Guess the Country" : "Normal"; 
   const displayName = profile?.username ?? firebaseUser?.displayName ?? firebaseUser?.email ?? "Anonymous"; 
   const isAuthenticated = !!firebaseUser && !!profile;
   

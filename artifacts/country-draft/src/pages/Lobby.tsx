@@ -192,7 +192,7 @@ export default function Lobby() {
                               : "text-muted-foreground hover:text-foreground/80"
                           } ${!isHost && "cursor-default"}`}
                         >
-                          Hard
+                          Blind
                         </button>
                       )}
                     </div>
