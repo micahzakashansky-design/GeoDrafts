@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useRef, useEffect, useMemo } from "react";
 import { useLocation } from "wouter";
 import {
-  COUNTRIES, CATEGORIES, getCategoryKey, shuffleArray,
+  COUNTRIES, ALL_COUNTRIES, CATEGORIES, getCategoryKey, shuffleArray,
   type Country, type Category,
 } from "@/data/countries";
 import {
@@ -25,8 +25,8 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
 
   const [state, setState] = useState<GameState>(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
-    
-    let pool = shuffleArray([...COUNTRIES]);
+    const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+    let pool = shuffleArray([...sourcePool]);
     
     // We can't access profile easily in useState initializer without it being a dependency,
     // but on initial load, roster is empty, so pool.pop() is fine even in dev mode.
@@ -125,10 +125,25 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
     setWildcardPhase(false);
   }, [wildcardPhase, state.wildcardUsed]);
 
+  React.useEffect(() => {
+    if (!state.currentCountry && !state.gameOver) {
+      const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+      if (sourcePool.length > 0) {
+        setState(prev => {
+          if (prev.currentCountry) return prev;
+          let newPool = shuffleArray([...sourcePool]);
+          const nextCountry = newPool.pop() || null;
+          return { ...prev, pool: newPool, currentCountry: nextCountry };
+        });
+      }
+    }
+  }, [state.currentCountry, state.gameOver, isBetaMode]);
+
   const doReset = useCallback(() => {
     localSavedRef.current = false;
     const isHardMode = state.isHardMode;
-    let pool = shuffleArray([...COUNTRIES]);
+    const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+    let pool = shuffleArray([...sourcePool]);
     const currentCountry = pool.pop() || null;
     setState({
       pool, currentCountry, selectionOptions: null, mysteryCountry: null, guesses: [],
@@ -137,7 +152,7 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
       roomCode: null, poolSeed: 0, categoryTimes: {}, currentTurnStartTime: Date.now()
     });
     setWildcardPhase(false);
-  }, [state.isHardMode]);
+  }, [state.isHardMode, isBetaMode]);
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground selection:bg-primary/20 overflow-hidden font-sans">

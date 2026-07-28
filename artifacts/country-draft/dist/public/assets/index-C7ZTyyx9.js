@@ -58948,7 +58948,8 @@ function NormalGame({ isBetaMode = false }) {
   const { profile } = useFirebaseAuth();
   const [state, setState] = reactExports.useState(() => {
     const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
-    let pool = shuffleArray$1([...COUNTRIES]);
+    const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+    let pool = shuffleArray$1([...sourcePool]);
     const currentCountry = pool.pop() || null;
     return {
       pool,
@@ -59044,10 +59045,24 @@ function NormalGame({ isBetaMode = false }) {
     });
     setWildcardPhase(false);
   }, [wildcardPhase, state.wildcardUsed]);
+  React.useEffect(() => {
+    if (!state.currentCountry && !state.gameOver) {
+      const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+      if (sourcePool.length > 0) {
+        setState((prev) => {
+          if (prev.currentCountry) return prev;
+          let newPool = shuffleArray$1([...sourcePool]);
+          const nextCountry = newPool.pop() || null;
+          return { ...prev, pool: newPool, currentCountry: nextCountry };
+        });
+      }
+    }
+  }, [state.currentCountry, state.gameOver, isBetaMode]);
   const doReset = reactExports.useCallback(() => {
     localSavedRef.current = false;
     const isHardMode = state.isHardMode;
-    let pool = shuffleArray$1([...COUNTRIES]);
+    const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+    let pool = shuffleArray$1([...sourcePool]);
     const currentCountry = pool.pop() || null;
     setState({
       pool,
@@ -59069,7 +59084,7 @@ function NormalGame({ isBetaMode = false }) {
       currentTurnStartTime: Date.now()
     });
     setWildcardPhase(false);
-  }, [state.isHardMode]);
+  }, [state.isHardMode, isBetaMode]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-screen bg-background text-foreground selection:bg-primary/20 overflow-hidden font-sans", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "h-20 shrink-0 border-b border-border bg-background px-6 md:px-8 flex items-center justify-between z-20", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [

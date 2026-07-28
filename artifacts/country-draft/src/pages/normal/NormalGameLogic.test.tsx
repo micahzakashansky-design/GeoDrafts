@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import NormalGame from './NormalGame';
-import { CATEGORIES, COUNTRIES, type Country } from '@/data/countries';
+import { CATEGORIES, COUNTRIES, ALL_COUNTRIES, type Country } from '@/data/countries';
 
 // Mock wouter
 vi.mock('wouter', () => ({
@@ -69,6 +69,11 @@ describe('NormalGame logic', () => {
         COUNTRIES.push(createMockCountry(`Country ${i + 1}`));
       }
     }
+    if (ALL_COUNTRIES.length === 0) {
+      for (let i = 0; i < 179; i++) {
+        ALL_COUNTRIES.push(createMockCountry(`All Country ${i + 1}`));
+      }
+    }
   });
 
   it('renders a country card on initialization', async () => {
@@ -77,6 +82,14 @@ describe('NormalGame logic', () => {
     await waitFor(() => {
       const els = screen.getAllByText('Military');
       expect(els.length).toBeGreaterThan(0);
+    });
+  });
+
+  it('uses full 179 country pool in Beta mode', async () => {
+    render(<NormalGame isBetaMode={true} />);
+    
+    await waitFor(() => {
+      expect(screen.getAllByText('Military').length).toBeGreaterThan(0);
     });
   });
 
