@@ -93,6 +93,16 @@ describe('NormalGame logic', () => {
     });
   });
 
+  it('renders Difficulty slider and Blind Mode button in Beta mode', async () => {
+    render(<NormalGame isBetaMode={true} />);
+    
+    await waitFor(() => {
+      expect(screen.getByText(/Difficulty:/i)).toBeInTheDocument();
+      expect(screen.getByText(/Blind Mode/i)).toBeInTheDocument();
+      expect(screen.getByText(/Expert \(179\)/i)).toBeInTheDocument();
+    });
+  });
+
   it('handles country selection and game over state correctly', async () => {
     render(<NormalGame />);
     

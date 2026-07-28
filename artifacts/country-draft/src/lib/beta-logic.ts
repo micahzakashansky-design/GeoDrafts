@@ -43,4 +43,28 @@ export function computeBetaSizePopBonus(roster: Partial<Record<Category, Country
   return Math.round(y);
 }
 
+export function getCountryAverageScore(country: Country): number {
+  if (!country || !country.stats) return 0;
+  const statKeys = Object.keys(country.stats) as Array<keyof Country["stats"]>;
+  let total = 0;
+  let count = 0;
+  for (const k of statKeys) {
+    const s = country.stats[k]?.score;
+    if (typeof s === "number") {
+      total += s;
+      count++;
+    }
+  }
+  return count > 0 ? total / count : 0;
+}
+
+export function getBetaPoolForDifficulty(allCountries: Country[], difficultyIndex: number): Country[] {
+  if (!allCountries || allCountries.length === 0) return [];
+  const sorted = [...allCountries].sort((a, b) => getCountryAverageScore(b) - getCountryAverageScore(a));
+  if (difficultyIndex === 0) return sorted.slice(0, 55); // Easy: Top 55
+  if (difficultyIndex === 1) return sorted.slice(0, 85); // Intermediate: Top 85
+  if (difficultyIndex === 2) return sorted.slice(0, 125); // Hard: Top 125
+  return sorted; // Expert: All 179
+}
+
 

@@ -16688,11 +16688,11 @@ const createLucideIcon = (iconName, iconNode) => {
   Component2.displayName = toPascalCase(iconName);
   return Component2;
 };
-const __iconNode$1d = [
+const __iconNode$1f = [
   ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ];
-const X$1 = createLucideIcon("x", __iconNode$1d);
+const X$1 = createLucideIcon("x", __iconNode$1f);
 const concatArrays = (array1, array2) => {
   const combinedArray = new Array(array1.length + array2.length);
   for (let i = 0; i < array1.length; i++) {
@@ -48128,12 +48128,12 @@ const CardFooter = reactExports.forwardRef(({ className, ...props }, ref) => /* 
   }
 ));
 CardFooter.displayName = "CardFooter";
-const __iconNode$1c = [
+const __iconNode$1e = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$1c);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$1e);
 function NotFound() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen w-full flex items-center justify-center bg-gray-50", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "w-full max-w-md mx-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex mb-4 gap-2", children: [
@@ -48317,37 +48317,59 @@ function computeBetaSizePopBonus(roster) {
   const y = 25 * Math.exp(-0.5 * Math.pow(z2, 2));
   return Math.round(y);
 }
-const __iconNode$1b = [
+function getCountryAverageScore(country) {
+  if (!country || !country.stats) return 0;
+  const statKeys = Object.keys(country.stats);
+  let total = 0;
+  let count2 = 0;
+  for (const k2 of statKeys) {
+    const s = country.stats[k2]?.score;
+    if (typeof s === "number") {
+      total += s;
+      count2++;
+    }
+  }
+  return count2 > 0 ? total / count2 : 0;
+}
+function getBetaPoolForDifficulty(allCountries, difficultyIndex) {
+  if (!allCountries || allCountries.length === 0) return [];
+  const sorted = [...allCountries].sort((a, b2) => getCountryAverageScore(b2) - getCountryAverageScore(a));
+  if (difficultyIndex === 0) return sorted.slice(0, 55);
+  if (difficultyIndex === 1) return sorted.slice(0, 85);
+  if (difficultyIndex === 2) return sorted.slice(0, 125);
+  return sorted;
+}
+const __iconNode$1d = [
   ["path", { d: "M12 22V8", key: "qkxhtm" }],
   ["path", { d: "M5 12H2a10 10 0 0 0 20 0h-3", key: "1hv3nh" }],
   ["circle", { cx: "12", cy: "5", r: "3", key: "rqqgnr" }]
 ];
-const Anchor = createLucideIcon("anchor", __iconNode$1b);
-const __iconNode$1a = [
+const Anchor = createLucideIcon("anchor", __iconNode$1d);
+const __iconNode$1c = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$1a);
-const __iconNode$19 = [
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$1c);
+const __iconNode$1b = [
   ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
   ["path", { d: "M4 7h16", key: "6tx8e3" }],
   ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
   ["path", { d: "M20 17H4", key: "h6l3hr" }]
 ];
-const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$19);
-const __iconNode$18 = [
+const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$1b);
+const __iconNode$1a = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$18);
-const __iconNode$17 = [
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1a);
+const __iconNode$19 = [
   ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
   ["path", { d: "M17 20V4", key: "1ejh1v" }],
   ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
   ["path", { d: "M7 4v16", key: "1glfcx" }]
 ];
-const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$17);
-const __iconNode$16 = [
+const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$19);
+const __iconNode$18 = [
   [
     "path",
     {
@@ -48357,8 +48379,8 @@ const __iconNode$16 = [
   ],
   ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
 ];
-const Award = createLucideIcon("award", __iconNode$16);
-const __iconNode$15 = [
+const Award = createLucideIcon("award", __iconNode$18);
+const __iconNode$17 = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -48368,8 +48390,8 @@ const __iconNode$15 = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$15);
-const __iconNode$14 = [
+const BookOpen = createLucideIcon("book-open", __iconNode$17);
+const __iconNode$16 = [
   ["path", { d: "M12 18V5", key: "adv99a" }],
   ["path", { d: "M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4", key: "1e3is1" }],
   ["path", { d: "M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5", key: "1gqd8o" }],
@@ -48379,13 +48401,13 @@ const __iconNode$14 = [
   ["path", { d: "M6 18a4 4 0 0 1-2-7.464", key: "k1g0md" }],
   ["path", { d: "M6.003 5.125a4 4 0 0 0-2.526 5.77", key: "q97ue3" }]
 ];
-const Brain = createLucideIcon("brain", __iconNode$14);
-const __iconNode$13 = [
+const Brain = createLucideIcon("brain", __iconNode$16);
+const __iconNode$15 = [
   ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
   ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
 ];
-const Briefcase = createLucideIcon("briefcase", __iconNode$13);
-const __iconNode$12 = [
+const Briefcase = createLucideIcon("briefcase", __iconNode$15);
+const __iconNode$14 = [
   ["path", { d: "M12 20v-9", key: "1qisl0" }],
   ["path", { d: "M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z", key: "uouzyp" }],
   ["path", { d: "M14.12 3.88 16 2", key: "qol33r" }],
@@ -48398,8 +48420,8 @@ const __iconNode$12 = [
   ["path", { d: "m8 2 1.88 1.88", key: "fmnt4t" }],
   ["path", { d: "M9 7.13V6a3 3 0 1 1 6 0v1.13", key: "1vgav8" }]
 ];
-const Bug = createLucideIcon("bug", __iconNode$12);
-const __iconNode$11 = [
+const Bug = createLucideIcon("bug", __iconNode$14);
+const __iconNode$13 = [
   ["path", { d: "M12 10h.01", key: "1nrarc" }],
   ["path", { d: "M12 14h.01", key: "1etili" }],
   ["path", { d: "M12 6h.01", key: "1vi96p" }],
@@ -48412,8 +48434,8 @@ const __iconNode$11 = [
   ["path", { d: "M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", key: "cabbwy" }],
   ["rect", { x: "4", y: "2", width: "16", height: "20", rx: "2", key: "1uxh74" }]
 ];
-const Building = createLucideIcon("building", __iconNode$11);
-const __iconNode$10 = [
+const Building = createLucideIcon("building", __iconNode$13);
+const __iconNode$12 = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -48425,8 +48447,8 @@ const __iconNode$10 = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$10);
-const __iconNode$$ = [
+const Calculator = createLucideIcon("calculator", __iconNode$12);
+const __iconNode$11 = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -48438,52 +48460,52 @@ const __iconNode$$ = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$$);
-const __iconNode$_ = [
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$11);
+const __iconNode$10 = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$_);
-const __iconNode$Z = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$Z);
-const __iconNode$Y = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$Y);
-const __iconNode$X = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$X);
-const __iconNode$W = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$W);
-const __iconNode$V = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$V);
-const __iconNode$U = [
+const Calendar = createLucideIcon("calendar", __iconNode$10);
+const __iconNode$$ = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$$);
+const __iconNode$_ = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$_);
+const __iconNode$Z = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$Z);
+const __iconNode$Y = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$Y);
+const __iconNode$X = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$X);
+const __iconNode$W = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$U);
-const __iconNode$T = [
+const CircleCheck = createLucideIcon("circle-check", __iconNode$W);
+const __iconNode$V = [
   ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
   ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$T);
-const __iconNode$S = [
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$V);
+const __iconNode$U = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$S);
-const __iconNode$R = [
+const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$U);
+const __iconNode$T = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
   ["path", { d: "m9 9 6 6", key: "z0biqf" }]
 ];
-const CircleX = createLucideIcon("circle-x", __iconNode$R);
-const __iconNode$Q = [
+const CircleX = createLucideIcon("circle-x", __iconNode$T);
+const __iconNode$S = [
   ["path", { d: "M20 4v7a4 4 0 0 1-4 4H4", key: "6o5b7l" }],
   ["path", { d: "m9 10-5 5 5 5", key: "1kshq7" }]
 ];
-const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$Q);
-const __iconNode$P = [
+const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$S);
+const __iconNode$R = [
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M17 20v2", key: "1rnc9c" }],
@@ -48499,8 +48521,8 @@ const __iconNode$P = [
   ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
   ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
 ];
-const Cpu = createLucideIcon("cpu", __iconNode$P);
-const __iconNode$O = [
+const Cpu = createLucideIcon("cpu", __iconNode$R);
+const __iconNode$Q = [
   [
     "path",
     {
@@ -48510,13 +48532,43 @@ const __iconNode$O = [
   ],
   ["path", { d: "M5 21h14", key: "11awu3" }]
 ];
-const Crown = createLucideIcon("crown", __iconNode$O);
-const __iconNode$N = [
+const Crown = createLucideIcon("crown", __iconNode$Q);
+const __iconNode$P = [
   ["path", { d: "M12 15V3", key: "m9g1x1" }],
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
   ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const Download = createLucideIcon("download", __iconNode$N);
+const Download = createLucideIcon("download", __iconNode$P);
+const __iconNode$O = [
+  [
+    "path",
+    {
+      d: "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49",
+      key: "ct8e1f"
+    }
+  ],
+  ["path", { d: "M14.084 14.158a3 3 0 0 1-4.242-4.242", key: "151rxh" }],
+  [
+    "path",
+    {
+      d: "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143",
+      key: "13bj9a"
+    }
+  ],
+  ["path", { d: "m2 2 20 20", key: "1ooewy" }]
+];
+const EyeOff = createLucideIcon("eye-off", __iconNode$O);
+const __iconNode$N = [
+  [
+    "path",
+    {
+      d: "M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0",
+      key: "1nclc0"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+];
+const Eye = createLucideIcon("eye", __iconNode$N);
 const __iconNode$M = [
   [
     "path",
@@ -58943,12 +58995,102 @@ function drawDevCountry(pool, roster) {
   }
   return pool.pop() || null;
 }
+const BETA_DIFFICULTY_CONFIG = [
+  {
+    name: "Easy",
+    poolSize: 55,
+    color: "text-emerald-400",
+    border: "border-emerald-500/50",
+    bg: "bg-emerald-500",
+    badgeBg: "bg-emerald-500/20",
+    accent: "#10b981"
+  },
+  {
+    name: "Intermediate",
+    poolSize: 85,
+    color: "text-yellow-400",
+    border: "border-yellow-500/50",
+    bg: "bg-yellow-500",
+    badgeBg: "bg-yellow-500/20",
+    accent: "#eab308"
+  },
+  {
+    name: "Hard",
+    poolSize: 125,
+    color: "text-red-500",
+    border: "border-red-500/50",
+    bg: "bg-red-500",
+    badgeBg: "bg-red-500/20",
+    accent: "#ef4444"
+  },
+  {
+    name: "Expert",
+    poolSize: 179,
+    color: "text-purple-400",
+    border: "border-purple-500/50",
+    bg: "bg-purple-500",
+    badgeBg: "bg-purple-500/20",
+    accent: "#a855f7"
+  }
+];
+function BetaControls({
+  difficultyIndex,
+  onDifficultyChange,
+  isBlindMode,
+  onBlindModeChange
+}) {
+  const currentConfig = BETA_DIFFICULTY_CONFIG[difficultyIndex] || BETA_DIFFICULTY_CONFIG[3];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 flex-wrap", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-card border border-border shadow-sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-bold text-muted-foreground uppercase tracking-wider", children: "Difficulty:" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "span",
+        {
+          className: `text-[11px] font-extrabold px-2 py-0.5 rounded-full border transition-all ${currentConfig.badgeBg} ${currentConfig.color} ${currentConfig.border}`,
+          children: [
+            currentConfig.name,
+            " (",
+            currentConfig.poolSize,
+            ")"
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "input",
+        {
+          type: "range",
+          min: "0",
+          max: "3",
+          step: "1",
+          value: difficultyIndex,
+          onChange: (e) => onDifficultyChange(parseInt(e.target.value, 10)),
+          style: { accentColor: currentConfig.accent },
+          className: "w-24 md:w-32 h-1.5 rounded-lg appearance-none cursor-pointer bg-muted transition-colors"
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        onClick: () => onBlindModeChange(!isBlindMode),
+        title: "Blind Mode hides all score numbers until the end of the draft",
+        className: `flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all border shadow-sm cursor-pointer ${isBlindMode ? "text-red-500 border-red-500/60 bg-red-500/15 shadow-red-500/10" : "text-muted-foreground border-border bg-card opacity-70 hover:opacity-100"}`,
+        children: [
+          isBlindMode ? /* @__PURE__ */ jsxRuntimeExports.jsx(EyeOff, { className: "w-4 h-4 text-red-500 shrink-0" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { className: "w-4 h-4 text-muted-foreground shrink-0" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Blind Mode" })
+        ]
+      }
+    )
+  ] });
+}
 function NormalGame({ isBetaMode = false }) {
   const [, navigate2] = useLocation();
   const { profile } = useFirebaseAuth();
+  const [difficultyIndex, setDifficultyIndex] = reactExports.useState(3);
+  const [isBlindMode, setIsBlindMode] = reactExports.useState(false);
   const [state, setState] = reactExports.useState(() => {
-    const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
-    const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+    const isHardMode = isBetaMode ? isBlindMode : localStorage.getItem("countryDraftHardMode") === "true";
+    const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, 3) : COUNTRIES;
     let pool = shuffleArray$1([...sourcePool]);
     const currentCountry = pool.pop() || null;
     return {
@@ -59047,7 +59189,7 @@ function NormalGame({ isBetaMode = false }) {
   }, [wildcardPhase, state.wildcardUsed]);
   React.useEffect(() => {
     if (!state.currentCountry && !state.gameOver) {
-      const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+      const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
       if (sourcePool.length > 0) {
         setState((prev) => {
           if (prev.currentCountry) return prev;
@@ -59057,11 +59199,36 @@ function NormalGame({ isBetaMode = false }) {
         });
       }
     }
-  }, [state.currentCountry, state.gameOver, isBetaMode]);
+  }, [state.currentCountry, state.gameOver, isBetaMode, difficultyIndex]);
+  const handleDifficultyChange = reactExports.useCallback((newIdx) => {
+    setDifficultyIndex(newIdx);
+    if (isBetaMode) {
+      localSavedRef.current = false;
+      const sourcePool = getBetaPoolForDifficulty(ALL_COUNTRIES, newIdx);
+      let pool = shuffleArray$1([...sourcePool]);
+      const currentCountry = pool.pop() || null;
+      setState((prev) => ({
+        ...prev,
+        pool,
+        currentCountry,
+        roster: {},
+        gameOver: false,
+        wildcardUsed: false,
+        categoryTimes: {},
+        currentTurnStartTime: Date.now()
+      }));
+    }
+  }, [isBetaMode]);
+  const handleBlindModeChange = reactExports.useCallback((val) => {
+    setIsBlindMode(val);
+    if (isBetaMode) {
+      setState((prev) => ({ ...prev, isHardMode: val }));
+    }
+  }, [isBetaMode]);
   const doReset = reactExports.useCallback(() => {
     localSavedRef.current = false;
-    const isHardMode = state.isHardMode;
-    const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+    const isHardMode = isBetaMode ? isBlindMode : state.isHardMode;
+    const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
     let pool = shuffleArray$1([...sourcePool]);
     const currentCountry = pool.pop() || null;
     setState({
@@ -59084,21 +59251,31 @@ function NormalGame({ isBetaMode = false }) {
       currentTurnStartTime: Date.now()
     });
     setWildcardPhase(false);
-  }, [state.isHardMode, isBetaMode]);
+  }, [state.isHardMode, isBetaMode, isBlindMode, difficultyIndex]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-screen bg-background text-foreground selection:bg-primary/20 overflow-hidden font-sans", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "h-20 shrink-0 border-b border-border bg-background px-6 md:px-8 flex items-center justify-between z-20", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "h-20 shrink-0 border-b border-border bg-background px-4 md:px-8 flex items-center justify-between z-20 gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 shrink-0", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => navigate2("/"), className: "font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Logo, { className: "w-5 h-5" }),
           "GeoDrafts"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-4 w-px bg-border hidden md:block" }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase", children: [
-          "Classic ",
+          isBetaMode ? "BETA 1.0" : "Classic",
+          " ",
           state.isHardMode ? /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { className: "w-3.5 h-3.5 text-red-400" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldPlus, { className: "w-3.5 h-3.5 text-emerald-400" })
         ] })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsButton, {}) })
+      isBetaMode && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        BetaControls,
+        {
+          difficultyIndex,
+          onDifficultyChange: handleDifficultyChange,
+          isBlindMode,
+          onBlindModeChange: handleBlindModeChange
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-3 shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsButton, {}) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "flex-1 flex overflow-hidden relative", children: [
       !state.gameOver && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "hidden md:flex w-80 bg-card border-r border-border flex-col overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-5 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarRoster$4, { roster: state.roster, categoryTimes: state.categoryTimes, isHardMode: state.isHardMode, isBetaMode }) }) }),

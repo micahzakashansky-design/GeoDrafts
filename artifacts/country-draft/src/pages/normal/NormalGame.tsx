@@ -15,17 +15,21 @@ import { SubmitDialog } from "./SubmitDialog";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
 import { SettingsButton } from "@/components/SettingsButton";
 import { drawDevCountry, isDevModeActive } from "@/lib/dev-logic";
-import { computeBetaSizePopBonus } from "@/lib/beta-logic";
+import { computeBetaSizePopBonus, getBetaPoolForDifficulty } from "@/lib/beta-logic";
 import { computeSizePopBonus } from "@/lib/achievements-logic";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
+import { BetaControls } from "./BetaControls";
 
 export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolean }) {
   const [, navigate] = useLocation();
   const { profile } = useFirebaseAuth();
 
+  const [difficultyIndex, setDifficultyIndex] = useState<number>(3); // 0: Easy, 1: Interm, 2: Hard, 3: Expert
+  const [isBlindMode, setIsBlindMode] = useState<boolean>(false);
+
   const [state, setState] = useState<GameState>(() => {
-    const isHardMode = localStorage.getItem("countryDraftHardMode") === "true";
-    const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+    const isHardMode = isBetaMode ? isBlindMode : (localStorage.getItem("countryDraftHardMode") === "true");
+    const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, 3) : COUNTRIES;
     let pool = shuffleArray([...sourcePool]);
     
     // We can't access profile easily in useState initializer without it being a dependency,
@@ -127,7 +131,7 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
 
   React.useEffect(() => {
     if (!state.currentCountry && !state.gameOver) {
-      const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+      const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
       if (sourcePool.length > 0) {
         setState(prev => {
           if (prev.currentCountry) return prev;
@@ -137,12 +141,39 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
         });
       }
     }
-  }, [state.currentCountry, state.gameOver, isBetaMode]);
+  }, [state.currentCountry, state.gameOver, isBetaMode, difficultyIndex]);
+
+  const handleDifficultyChange = useCallback((newIdx: number) => {
+    setDifficultyIndex(newIdx);
+    if (isBetaMode) {
+      localSavedRef.current = false;
+      const sourcePool = getBetaPoolForDifficulty(ALL_COUNTRIES, newIdx);
+      let pool = shuffleArray([...sourcePool]);
+      const currentCountry = pool.pop() || null;
+      setState(prev => ({
+        ...prev,
+        pool,
+        currentCountry,
+        roster: {},
+        gameOver: false,
+        wildcardUsed: false,
+        categoryTimes: {},
+        currentTurnStartTime: Date.now()
+      }));
+    }
+  }, [isBetaMode]);
+
+  const handleBlindModeChange = useCallback((val: boolean) => {
+    setIsBlindMode(val);
+    if (isBetaMode) {
+      setState(prev => ({ ...prev, isHardMode: val }));
+    }
+  }, [isBetaMode]);
 
   const doReset = useCallback(() => {
     localSavedRef.current = false;
-    const isHardMode = state.isHardMode;
-    const sourcePool = isBetaMode ? ALL_COUNTRIES : COUNTRIES;
+    const isHardMode = isBetaMode ? isBlindMode : state.isHardMode;
+    const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
     let pool = shuffleArray([...sourcePool]);
     const currentCountry = pool.pop() || null;
     setState({
@@ -152,21 +183,31 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
       roomCode: null, poolSeed: 0, categoryTimes: {}, currentTurnStartTime: Date.now()
     });
     setWildcardPhase(false);
-  }, [state.isHardMode, isBetaMode]);
+  }, [state.isHardMode, isBetaMode, isBlindMode, difficultyIndex]);
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground selection:bg-primary/20 overflow-hidden font-sans">
-      <header className="h-20 shrink-0 border-b border-border bg-background px-6 md:px-8 flex items-center justify-between z-20">
-        <div className="flex items-center gap-3">
+      <header className="h-20 shrink-0 border-b border-border bg-background px-4 md:px-8 flex items-center justify-between z-20 gap-4">
+        <div className="flex items-center gap-3 shrink-0">
           <button onClick={() => navigate("/")} className="font-sans text-lg md:text-xl font-bold tracking-tight flex items-center gap-2 hover:opacity-80 transition-opacity duration-75">
             <Logo className="w-5 h-5" />GeoDrafts
           </button>
           <div className="h-4 w-px bg-border hidden md:block" />
           <div className="px-3 py-1.5 rounded-full bg-card border border-border text-xs font-bold text-muted-foreground hidden sm:flex items-center gap-2 tracking-widest uppercase">
-            Classic {state.isHardMode ? <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> : <ShieldPlus className="w-3.5 h-3.5 text-emerald-400" />}
+            {isBetaMode ? "BETA 1.0" : "Classic"} {state.isHardMode ? <ShieldAlert className="w-3.5 h-3.5 text-red-400" /> : <ShieldPlus className="w-3.5 h-3.5 text-emerald-400" />}
           </div>
         </div>
-        <div className="flex items-center gap-3">
+
+        {isBetaMode && (
+          <BetaControls
+            difficultyIndex={difficultyIndex}
+            onDifficultyChange={handleDifficultyChange}
+            isBlindMode={isBlindMode}
+            onBlindModeChange={handleBlindModeChange}
+          />
+        )}
+
+        <div className="flex items-center gap-3 shrink-0">
           <SettingsButton />
         </div>
       </header>
