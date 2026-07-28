@@ -109,13 +109,17 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
       
       let newCountry = null;
       if (isDevModeActive(profile?.username)) {
-        // Technically for wildcard we are replacing one category.
-        // We can just pretend we don't have that category.
         const tempRoster = { ...prev.roster };
         delete tempRoster[categoryToReplace];
         newCountry = drawDevCountry(newPool, tempRoster);
       } else {
         newCountry = newPool.pop() || null;
+      }
+
+      if (!newCountry) {
+        const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
+        const available = sourcePool.filter(c => !Object.values(prev.roster).some(rc => rc?.name === c.name));
+        newCountry = shuffleArray(available)[0] || null;
       }
       
       if (!newCountry) return prev;
@@ -127,7 +131,7 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
       };
     });
     setWildcardPhase(false);
-  }, [wildcardPhase, state.wildcardUsed]);
+  }, [wildcardPhase, state.wildcardUsed, isBetaMode, difficultyIndex, profile?.username]);
 
   React.useEffect(() => {
     if (!state.currentCountry && !state.gameOver) {

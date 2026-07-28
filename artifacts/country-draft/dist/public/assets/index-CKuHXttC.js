@@ -59284,6 +59284,11 @@ function NormalGame({ isBetaMode = false }) {
       } else {
         newCountry = newPool.pop() || null;
       }
+      if (!newCountry) {
+        const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
+        const available = sourcePool.filter((c) => !Object.values(prev.roster).some((rc) => rc?.name === c.name));
+        newCountry = shuffleArray$1(available)[0] || null;
+      }
       if (!newCountry) return prev;
       return {
         ...prev,
@@ -59293,7 +59298,7 @@ function NormalGame({ isBetaMode = false }) {
       };
     });
     setWildcardPhase(false);
-  }, [wildcardPhase, state.wildcardUsed]);
+  }, [wildcardPhase, state.wildcardUsed, isBetaMode, difficultyIndex, profile?.username]);
   React.useEffect(() => {
     if (!state.currentCountry && !state.gameOver) {
       const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
