@@ -67,4 +67,54 @@ export function getBetaPoolForDifficulty(allCountries: Country[], difficultyInde
   return sorted; // Expert: All 179
 }
 
+export function getDensityBreakdown(roster: Partial<Record<Category, Country>>) {
+  if (!roster.Size || !roster.Population || !roster.Economy) return null;
+
+  const pop = getRawPopulation(roster.Population.stats.population.description);
+  const size = getRawArea(roster.Size);
+  const x = size > 0 ? pop / size : 0;
+
+  const I = roster.Economy.stats.economy.industryType || 3;
+  const T = roster.Technology?.stats.technology.score ?? 5;
+  const E = roster.Economy.stats.economy.score ?? 5;
+  const C = roster.Climate?.stats.climate.score ?? 5;
+  const R = roster["Natural Resources"]?.stats.naturalResources.score ?? 5;
+  const S = roster.Size.stats.size.score ?? 5;
+
+  const numerator = 150 * Math.pow(I, 1.5) * Math.pow(T, 0.75) * Math.pow(E, 0.15);
+  const denominator = Math.pow(C, 0.05) * Math.pow(R, 0.05) * Math.pow(S, 0.25);
+  const idealTargetDensity = denominator > 0 ? numerator / denominator : 0;
+
+  const diff = x - idealTargetDensity;
+  let status: "optimal" | "too_high" | "too_low" = "optimal";
+  let analysisText = "";
+
+  if (diff > 500) {
+    status = "too_high";
+    analysisText = `Your actual density (${Math.round(x).toLocaleString()} ppl/km²) is higher than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your population is overcrowded for your current tech & industrial capacity.`;
+  } else if (diff < -500) {
+    status = "too_low";
+    analysisText = `Your actual density (${Math.round(x).toLocaleString()} ppl/km²) is lower than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your land area is vast, but your high tech & industry levels could support much higher density.`;
+  } else {
+    status = "optimal";
+    analysisText = `Optimal Synergy! Your actual density (${Math.round(x).toLocaleString()} ppl/km²) closely matches your ideal target density (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²).`;
+  }
+
+  const synergyExplanation = `Industry Type (Ind. ${I}/5), Technology (${T}/10), and Economy (${E}/10) increase your target density capacity, while Climate (${C}/10), Resources (${R}/10), and Size (${S}/10) moderate land requirements.`;
+
+  return {
+    actualDensity: Math.round(x),
+    idealTargetDensity: Math.round(idealTargetDensity),
+    industryType: I,
+    techScore: T,
+    econScore: E,
+    climateScore: C,
+    resourcesScore: R,
+    sizeScore: S,
+    status,
+    analysisText,
+    synergyExplanation
+  };
+}
+
 

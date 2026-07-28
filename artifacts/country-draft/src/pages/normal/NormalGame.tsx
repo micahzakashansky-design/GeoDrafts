@@ -143,39 +143,21 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
     }
   }, [state.currentCountry, state.gameOver, isBetaMode, difficultyIndex]);
 
-  const handleDifficultyChange = useCallback((newIdx: number) => {
-    setDifficultyIndex(newIdx);
-    if (isBetaMode) {
-      localSavedRef.current = false;
-      const sourcePool = getBetaPoolForDifficulty(ALL_COUNTRIES, newIdx);
-      let pool = shuffleArray([...sourcePool]);
-      const currentCountry = pool.pop() || null;
-      setState(prev => ({
-        ...prev,
-        pool,
-        currentCountry,
-        roster: {},
-        gameOver: false,
-        wildcardUsed: false,
-        categoryTimes: {},
-        currentTurnStartTime: Date.now()
-      }));
-    }
-  }, [isBetaMode]);
+  const [pendingChange, setPendingChange] = useState<{ type: "difficulty" | "blind"; value: number | boolean } | null>(null);
 
-  const handleBlindModeChange = useCallback((val: boolean) => {
-    setIsBlindMode(val);
-    if (isBetaMode) {
-      setState(prev => ({ ...prev, isHardMode: val }));
-    }
-  }, [isBetaMode]);
+  const startNewRoundWithSettings = useCallback((newDiff?: number, newBlind?: boolean) => {
+    const nextDiff = newDiff !== undefined ? newDiff : difficultyIndex;
+    const nextBlind = newBlind !== undefined ? newBlind : isBlindMode;
 
-  const doReset = useCallback(() => {
+    if (newDiff !== undefined) setDifficultyIndex(newDiff);
+    if (newBlind !== undefined) setIsBlindMode(newBlind);
+
     localSavedRef.current = false;
-    const isHardMode = isBetaMode ? isBlindMode : state.isHardMode;
-    const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
+    const isHardMode = isBetaMode ? nextBlind : state.isHardMode;
+    const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, nextDiff) : COUNTRIES;
     let pool = shuffleArray([...sourcePool]);
     const currentCountry = pool.pop() || null;
+
     setState({
       pool, currentCountry, selectionOptions: null, mysteryCountry: null, guesses: [],
       roster: {}, gameOver: false, wildcardUsed: false, isDailyMode: false,
@@ -183,7 +165,39 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
       roomCode: null, poolSeed: 0, categoryTimes: {}, currentTurnStartTime: Date.now()
     });
     setWildcardPhase(false);
-  }, [state.isHardMode, isBetaMode, isBlindMode, difficultyIndex]);
+  }, [difficultyIndex, isBlindMode, isBetaMode, state.isHardMode]);
+
+  const handleDifficultyChange = useCallback((newIdx: number) => {
+    const isMidRound = Object.keys(state.roster).length > 0 && !state.gameOver;
+    if (isMidRound) {
+      setPendingChange({ type: "difficulty", value: newIdx });
+    } else {
+      startNewRoundWithSettings(newIdx, undefined);
+    }
+  }, [state.roster, state.gameOver, startNewRoundWithSettings]);
+
+  const handleBlindModeChange = useCallback((val: boolean) => {
+    const isMidRound = Object.keys(state.roster).length > 0 && !state.gameOver;
+    if (isMidRound) {
+      setPendingChange({ type: "blind", value: val });
+    } else {
+      startNewRoundWithSettings(undefined, val);
+    }
+  }, [state.roster, state.gameOver, startNewRoundWithSettings]);
+
+  const confirmPendingChange = useCallback(() => {
+    if (!pendingChange) return;
+    if (pendingChange.type === "difficulty") {
+      startNewRoundWithSettings(pendingChange.value as number, undefined);
+    } else if (pendingChange.type === "blind") {
+      startNewRoundWithSettings(undefined, pendingChange.value as boolean);
+    }
+    setPendingChange(null);
+  }, [pendingChange, startNewRoundWithSettings]);
+
+  const doReset = useCallback(() => {
+    startNewRoundWithSettings(difficultyIndex, isBlindMode);
+  }, [startNewRoundWithSettings, difficultyIndex, isBlindMode]);
 
   return (
     <div className="flex flex-col h-screen bg-background text-foreground selection:bg-primary/20 overflow-hidden font-sans">
@@ -233,6 +247,36 @@ export default function NormalGame({ isBetaMode = false }: { isBetaMode?: boolea
       </main>
       {showSubmitDialog && !isDevModeActive(profile?.username) && (
         <SubmitDialog score={finalScore} mode={state.isHardMode ? "hard" : "normal"} roster={state.roster} onClose={() => setShowSubmitDialog(false)} onSuccess={() => setState(prev => ({ ...prev, leaderboardSubmitted: true }))} />
+      )}
+
+      {pendingChange && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-card border border-border rounded-3xl p-6 max-w-md w-full shadow-2xl relative space-y-4 text-left">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-amber-500/20 text-amber-500">
+                <ShieldAlert className="w-6 h-6" />
+              </div>
+              <h3 className="text-xl font-bold text-foreground">Abandon Current Draft?</h3>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              You are currently in the middle of a draft round. Changing difficulty settings or toggling Blind Mode will abandon your current progress and start a brand new round.
+            </p>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                onClick={() => setPendingChange(null)}
+                className="px-4 py-2.5 rounded-xl border border-border bg-card text-foreground font-bold text-sm hover:bg-muted transition-colors cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmPendingChange}
+                className="px-4 py-2.5 rounded-xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-colors shadow-md cursor-pointer"
+              >
+                Start New Round
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

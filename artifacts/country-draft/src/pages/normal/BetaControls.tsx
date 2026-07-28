@@ -51,7 +51,19 @@ export function BetaControls({
   isBlindMode: boolean;
   onBlindModeChange: (val: boolean) => void;
 }) {
-  const currentConfig = BETA_DIFFICULTY_CONFIG[difficultyIndex] || BETA_DIFFICULTY_CONFIG[3];
+  const [localValue, setLocalValue] = React.useState<number>(difficultyIndex);
+
+  React.useEffect(() => {
+    setLocalValue(difficultyIndex);
+  }, [difficultyIndex]);
+
+  const currentConfig = BETA_DIFFICULTY_CONFIG[localValue] || BETA_DIFFICULTY_CONFIG[3];
+
+  const handleCommit = (val: number) => {
+    if (val !== difficultyIndex) {
+      onDifficultyChange(val);
+    }
+  };
 
   return (
     <div className="flex items-center gap-3 flex-wrap">
@@ -70,8 +82,16 @@ export function BetaControls({
           min="0"
           max="3"
           step="1"
-          value={difficultyIndex}
-          onChange={(e) => onDifficultyChange(parseInt(e.target.value, 10))}
+          value={localValue}
+          onChange={(e) => setLocalValue(parseInt(e.target.value, 10))}
+          onPointerUp={() => handleCommit(localValue)}
+          onMouseUp={() => handleCommit(localValue)}
+          onTouchEnd={() => handleCommit(localValue)}
+          onKeyUp={(e) => {
+            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+              handleCommit(localValue);
+            }
+          }}
           style={{ accentColor: currentConfig.accent }}
           className="w-24 md:w-32 h-1.5 rounded-lg appearance-none cursor-pointer bg-muted transition-colors"
         />

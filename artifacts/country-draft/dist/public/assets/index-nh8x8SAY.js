@@ -16688,11 +16688,11 @@ const createLucideIcon = (iconName, iconNode) => {
   Component2.displayName = toPascalCase(iconName);
   return Component2;
 };
-const __iconNode$1f = [
+const __iconNode$1h = [
   ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ];
-const X$1 = createLucideIcon("x", __iconNode$1f);
+const X$1 = createLucideIcon("x", __iconNode$1h);
 const concatArrays = (array1, array2) => {
   const combinedArray = new Array(array1.length + array2.length);
   for (let i = 0; i < array1.length; i++) {
@@ -48128,12 +48128,12 @@ const CardFooter = reactExports.forwardRef(({ className, ...props }, ref) => /* 
   }
 ));
 CardFooter.displayName = "CardFooter";
-const __iconNode$1e = [
+const __iconNode$1g = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$1e);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$1g);
 function NotFound() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen w-full flex items-center justify-center bg-gray-50", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "w-full max-w-md mx-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex mb-4 gap-2", children: [
@@ -48339,37 +48339,79 @@ function getBetaPoolForDifficulty(allCountries, difficultyIndex) {
   if (difficultyIndex === 2) return sorted.slice(0, 125);
   return sorted;
 }
-const __iconNode$1d = [
+function getDensityBreakdown(roster) {
+  if (!roster.Size || !roster.Population || !roster.Economy) return null;
+  const pop = getRawPopulation(roster.Population.stats.population.description);
+  const size2 = getRawArea(roster.Size);
+  const x2 = size2 > 0 ? pop / size2 : 0;
+  const I = roster.Economy.stats.economy.industryType || 3;
+  const T = roster.Technology?.stats.technology.score ?? 5;
+  const E = roster.Economy.stats.economy.score ?? 5;
+  const C2 = roster.Climate?.stats.climate.score ?? 5;
+  const R = roster["Natural Resources"]?.stats.naturalResources.score ?? 5;
+  const S2 = roster.Size.stats.size.score ?? 5;
+  const numerator = 150 * Math.pow(I, 1.5) * Math.pow(T, 0.75) * Math.pow(E, 0.15);
+  const denominator = Math.pow(C2, 0.05) * Math.pow(R, 0.05) * Math.pow(S2, 0.25);
+  const idealTargetDensity = denominator > 0 ? numerator / denominator : 0;
+  const diff = x2 - idealTargetDensity;
+  let status = "optimal";
+  let analysisText = "";
+  if (diff > 500) {
+    status = "too_high";
+    analysisText = `Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) is higher than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your population is overcrowded for your current tech & industrial capacity.`;
+  } else if (diff < -500) {
+    status = "too_low";
+    analysisText = `Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) is lower than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your land area is vast, but your high tech & industry levels could support much higher density.`;
+  } else {
+    status = "optimal";
+    analysisText = `Optimal Synergy! Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) closely matches your ideal target density (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²).`;
+  }
+  const synergyExplanation = `Industry Type (Ind. ${I}/5), Technology (${T}/10), and Economy (${E}/10) increase your target density capacity, while Climate (${C2}/10), Resources (${R}/10), and Size (${S2}/10) moderate land requirements.`;
+  return {
+    actualDensity: Math.round(x2),
+    idealTargetDensity: Math.round(idealTargetDensity),
+    industryType: I,
+    techScore: T,
+    econScore: E,
+    climateScore: C2,
+    resourcesScore: R,
+    sizeScore: S2,
+    status,
+    analysisText,
+    synergyExplanation
+  };
+}
+const __iconNode$1f = [
   ["path", { d: "M12 22V8", key: "qkxhtm" }],
   ["path", { d: "M5 12H2a10 10 0 0 0 20 0h-3", key: "1hv3nh" }],
   ["circle", { cx: "12", cy: "5", r: "3", key: "rqqgnr" }]
 ];
-const Anchor = createLucideIcon("anchor", __iconNode$1d);
-const __iconNode$1c = [
+const Anchor = createLucideIcon("anchor", __iconNode$1f);
+const __iconNode$1e = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$1c);
-const __iconNode$1b = [
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$1e);
+const __iconNode$1d = [
   ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
   ["path", { d: "M4 7h16", key: "6tx8e3" }],
   ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
   ["path", { d: "M20 17H4", key: "h6l3hr" }]
 ];
-const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$1b);
-const __iconNode$1a = [
+const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$1d);
+const __iconNode$1c = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1a);
-const __iconNode$19 = [
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1c);
+const __iconNode$1b = [
   ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
   ["path", { d: "M17 20V4", key: "1ejh1v" }],
   ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
   ["path", { d: "M7 4v16", key: "1glfcx" }]
 ];
-const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$19);
-const __iconNode$18 = [
+const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$1b);
+const __iconNode$1a = [
   [
     "path",
     {
@@ -48379,8 +48421,8 @@ const __iconNode$18 = [
   ],
   ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
 ];
-const Award = createLucideIcon("award", __iconNode$18);
-const __iconNode$17 = [
+const Award = createLucideIcon("award", __iconNode$1a);
+const __iconNode$19 = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -48390,8 +48432,8 @@ const __iconNode$17 = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$17);
-const __iconNode$16 = [
+const BookOpen = createLucideIcon("book-open", __iconNode$19);
+const __iconNode$18 = [
   ["path", { d: "M12 18V5", key: "adv99a" }],
   ["path", { d: "M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4", key: "1e3is1" }],
   ["path", { d: "M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5", key: "1gqd8o" }],
@@ -48401,13 +48443,13 @@ const __iconNode$16 = [
   ["path", { d: "M6 18a4 4 0 0 1-2-7.464", key: "k1g0md" }],
   ["path", { d: "M6.003 5.125a4 4 0 0 0-2.526 5.77", key: "q97ue3" }]
 ];
-const Brain = createLucideIcon("brain", __iconNode$16);
-const __iconNode$15 = [
+const Brain = createLucideIcon("brain", __iconNode$18);
+const __iconNode$17 = [
   ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
   ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
 ];
-const Briefcase = createLucideIcon("briefcase", __iconNode$15);
-const __iconNode$14 = [
+const Briefcase = createLucideIcon("briefcase", __iconNode$17);
+const __iconNode$16 = [
   ["path", { d: "M12 20v-9", key: "1qisl0" }],
   ["path", { d: "M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z", key: "uouzyp" }],
   ["path", { d: "M14.12 3.88 16 2", key: "qol33r" }],
@@ -48420,8 +48462,8 @@ const __iconNode$14 = [
   ["path", { d: "m8 2 1.88 1.88", key: "fmnt4t" }],
   ["path", { d: "M9 7.13V6a3 3 0 1 1 6 0v1.13", key: "1vgav8" }]
 ];
-const Bug = createLucideIcon("bug", __iconNode$14);
-const __iconNode$13 = [
+const Bug = createLucideIcon("bug", __iconNode$16);
+const __iconNode$15 = [
   ["path", { d: "M12 10h.01", key: "1nrarc" }],
   ["path", { d: "M12 14h.01", key: "1etili" }],
   ["path", { d: "M12 6h.01", key: "1vi96p" }],
@@ -48434,8 +48476,8 @@ const __iconNode$13 = [
   ["path", { d: "M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", key: "cabbwy" }],
   ["rect", { x: "4", y: "2", width: "16", height: "20", rx: "2", key: "1uxh74" }]
 ];
-const Building = createLucideIcon("building", __iconNode$13);
-const __iconNode$12 = [
+const Building = createLucideIcon("building", __iconNode$15);
+const __iconNode$14 = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -48447,8 +48489,8 @@ const __iconNode$12 = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$12);
-const __iconNode$11 = [
+const Calculator = createLucideIcon("calculator", __iconNode$14);
+const __iconNode$13 = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -48460,52 +48502,52 @@ const __iconNode$11 = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$11);
-const __iconNode$10 = [
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$13);
+const __iconNode$12 = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$10);
-const __iconNode$$ = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$$);
-const __iconNode$_ = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$_);
-const __iconNode$Z = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$Z);
-const __iconNode$Y = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$Y);
-const __iconNode$X = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$X);
-const __iconNode$W = [
+const Calendar = createLucideIcon("calendar", __iconNode$12);
+const __iconNode$11 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$11);
+const __iconNode$10 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$10);
+const __iconNode$$ = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$$);
+const __iconNode$_ = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$_);
+const __iconNode$Z = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$Z);
+const __iconNode$Y = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$W);
-const __iconNode$V = [
+const CircleCheck = createLucideIcon("circle-check", __iconNode$Y);
+const __iconNode$X = [
   ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
   ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$V);
-const __iconNode$U = [
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$X);
+const __iconNode$W = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$U);
-const __iconNode$T = [
+const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$W);
+const __iconNode$V = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
   ["path", { d: "m9 9 6 6", key: "z0biqf" }]
 ];
-const CircleX = createLucideIcon("circle-x", __iconNode$T);
-const __iconNode$S = [
+const CircleX = createLucideIcon("circle-x", __iconNode$V);
+const __iconNode$U = [
   ["path", { d: "M20 4v7a4 4 0 0 1-4 4H4", key: "6o5b7l" }],
   ["path", { d: "m9 10-5 5 5 5", key: "1kshq7" }]
 ];
-const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$S);
-const __iconNode$R = [
+const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$U);
+const __iconNode$T = [
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M17 20v2", key: "1rnc9c" }],
@@ -48521,8 +48563,8 @@ const __iconNode$R = [
   ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
   ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
 ];
-const Cpu = createLucideIcon("cpu", __iconNode$R);
-const __iconNode$Q = [
+const Cpu = createLucideIcon("cpu", __iconNode$T);
+const __iconNode$S = [
   [
     "path",
     {
@@ -48532,14 +48574,14 @@ const __iconNode$Q = [
   ],
   ["path", { d: "M5 21h14", key: "11awu3" }]
 ];
-const Crown = createLucideIcon("crown", __iconNode$Q);
-const __iconNode$P = [
+const Crown = createLucideIcon("crown", __iconNode$S);
+const __iconNode$R = [
   ["path", { d: "M12 15V3", key: "m9g1x1" }],
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
   ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const Download = createLucideIcon("download", __iconNode$P);
-const __iconNode$O = [
+const Download = createLucideIcon("download", __iconNode$R);
+const __iconNode$Q = [
   [
     "path",
     {
@@ -48557,8 +48599,8 @@ const __iconNode$O = [
   ],
   ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$O);
-const __iconNode$N = [
+const EyeOff = createLucideIcon("eye-off", __iconNode$Q);
+const __iconNode$P = [
   [
     "path",
     {
@@ -48568,8 +48610,8 @@ const __iconNode$N = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$N);
-const __iconNode$M = [
+const Eye = createLucideIcon("eye", __iconNode$P);
+const __iconNode$O = [
   [
     "path",
     { d: "M12 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 12 18z", key: "b19h5q" }
@@ -48579,8 +48621,8 @@ const __iconNode$M = [
     { d: "M2 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 2 18z", key: "h7h5ge" }
   ]
 ];
-const FastForward = createLucideIcon("fast-forward", __iconNode$M);
-const __iconNode$L = [
+const FastForward = createLucideIcon("fast-forward", __iconNode$O);
+const __iconNode$N = [
   [
     "path",
     {
@@ -48589,8 +48631,8 @@ const __iconNode$L = [
     }
   ]
 ];
-const Flag = createLucideIcon("flag", __iconNode$L);
-const __iconNode$K = [
+const Flag = createLucideIcon("flag", __iconNode$N);
+const __iconNode$M = [
   ["line", { x1: "6", x2: "10", y1: "11", y2: "11", key: "1gktln" }],
   ["line", { x1: "8", x2: "8", y1: "9", y2: "13", key: "qnk9ow" }],
   ["line", { x1: "15", x2: "15.01", y1: "12", y2: "12", key: "krot7o" }],
@@ -48603,14 +48645,14 @@ const __iconNode$K = [
     }
   ]
 ];
-const Gamepad2 = createLucideIcon("gamepad-2", __iconNode$K);
-const __iconNode$J = [
+const Gamepad2 = createLucideIcon("gamepad-2", __iconNode$M);
+const __iconNode$L = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
   ["path", { d: "M2 12h20", key: "9i4pu4" }]
 ];
-const Globe = createLucideIcon("globe", __iconNode$J);
-const __iconNode$I = [
+const Globe = createLucideIcon("globe", __iconNode$L);
+const __iconNode$K = [
   [
     "path",
     {
@@ -48621,8 +48663,8 @@ const __iconNode$I = [
   ["path", { d: "M22 10v6", key: "1lu8f3" }],
   ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$I);
-const __iconNode$H = [
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$K);
+const __iconNode$J = [
   ["path", { d: "m11 17 2 2a1 1 0 1 0 3-3", key: "efffak" }],
   [
     "path",
@@ -48635,8 +48677,8 @@ const __iconNode$H = [
   ["path", { d: "M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3", key: "1uvwmv" }],
   ["path", { d: "M3 4h8", key: "1ep09j" }]
 ];
-const Handshake = createLucideIcon("handshake", __iconNode$H);
-const __iconNode$G = [
+const Handshake = createLucideIcon("handshake", __iconNode$J);
+const __iconNode$I = [
   [
     "path",
     {
@@ -48645,14 +48687,14 @@ const __iconNode$G = [
     }
   ]
 ];
-const Heart = createLucideIcon("heart", __iconNode$G);
-const __iconNode$F = [
+const Heart = createLucideIcon("heart", __iconNode$I);
+const __iconNode$H = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 16v-4", key: "1dtifu" }],
   ["path", { d: "M12 8h.01", key: "e9boi3" }]
 ];
-const Info = createLucideIcon("info", __iconNode$F);
-const __iconNode$E = [
+const Info = createLucideIcon("info", __iconNode$H);
+const __iconNode$G = [
   [
     "path",
     {
@@ -48662,8 +48704,8 @@ const __iconNode$E = [
   ],
   ["path", { d: "M20.054 15.987H3.946", key: "14rxg9" }]
 ];
-const Laptop = createLucideIcon("laptop", __iconNode$E);
-const __iconNode$D = [
+const Laptop = createLucideIcon("laptop", __iconNode$G);
+const __iconNode$F = [
   [
     "path",
     {
@@ -48673,27 +48715,27 @@ const __iconNode$D = [
   ],
   ["path", { d: "M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12", key: "mt58a7" }]
 ];
-const Leaf = createLucideIcon("leaf", __iconNode$D);
-const __iconNode$C = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$C);
-const __iconNode$B = [
+const Leaf = createLucideIcon("leaf", __iconNode$F);
+const __iconNode$E = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$E);
+const __iconNode$D = [
   ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
   ["path", { d: "M15 12H3", key: "6jk70r" }],
   ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
 ];
-const LogIn = createLucideIcon("log-in", __iconNode$B);
-const __iconNode$A = [
+const LogIn = createLucideIcon("log-in", __iconNode$D);
+const __iconNode$C = [
   ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
   ["path", { d: "M21 12H9", key: "dn1m92" }],
   ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
 ];
-const LogOut = createLucideIcon("log-out", __iconNode$A);
-const __iconNode$z = [
+const LogOut = createLucideIcon("log-out", __iconNode$C);
+const __iconNode$B = [
   ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
   ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$z);
-const __iconNode$y = [
+const Lock = createLucideIcon("lock", __iconNode$B);
+const __iconNode$A = [
   [
     "path",
     {
@@ -48703,8 +48745,8 @@ const __iconNode$y = [
   ],
   ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
 ];
-const MapPin = createLucideIcon("map-pin", __iconNode$y);
-const __iconNode$x = [
+const MapPin = createLucideIcon("map-pin", __iconNode$A);
+const __iconNode$z = [
   [
     "path",
     {
@@ -48715,8 +48757,8 @@ const __iconNode$x = [
   ["path", { d: "M15 5.764v15", key: "1pn4in" }],
   ["path", { d: "M9 3.236v15", key: "1uimfh" }]
 ];
-const Map$1 = createLucideIcon("map", __iconNode$x);
-const __iconNode$w = [
+const Map$1 = createLucideIcon("map", __iconNode$z);
+const __iconNode$y = [
   [
     "path",
     {
@@ -48730,8 +48772,8 @@ const __iconNode$w = [
   ["circle", { cx: "12", cy: "17", r: "5", key: "qbz8iq" }],
   ["path", { d: "M12 18v-2h-.5", key: "fawc4q" }]
 ];
-const Medal = createLucideIcon("medal", __iconNode$w);
-const __iconNode$v = [
+const Medal = createLucideIcon("medal", __iconNode$y);
+const __iconNode$x = [
   [
     "path",
     {
@@ -48740,8 +48782,8 @@ const __iconNode$v = [
     }
   ]
 ];
-const MessageSquare = createLucideIcon("message-square", __iconNode$v);
-const __iconNode$u = [
+const MessageSquare = createLucideIcon("message-square", __iconNode$x);
+const __iconNode$w = [
   [
     "path",
     {
@@ -48750,10 +48792,10 @@ const __iconNode$u = [
     }
   ]
 ];
-const Moon = createLucideIcon("moon", __iconNode$u);
-const __iconNode$t = [["path", { d: "m8 3 4 8 5-5 5 15H2L8 3z", key: "otkl63" }]];
-const Mountain = createLucideIcon("mountain", __iconNode$t);
-const __iconNode$s = [
+const Moon = createLucideIcon("moon", __iconNode$w);
+const __iconNode$v = [["path", { d: "m8 3 4 8 5-5 5 15H2L8 3z", key: "otkl63" }]];
+const Mountain = createLucideIcon("mountain", __iconNode$v);
+const __iconNode$u = [
   [
     "path",
     {
@@ -48766,8 +48808,8 @@ const __iconNode$s = [
   ["circle", { cx: "6.5", cy: "12.5", r: ".5", fill: "currentColor", key: "qy21gx" }],
   ["circle", { cx: "8.5", cy: "7.5", r: ".5", fill: "currentColor", key: "fotxhn" }]
 ];
-const Palette = createLucideIcon("palette", __iconNode$s);
-const __iconNode$r = [
+const Palette = createLucideIcon("palette", __iconNode$u);
+const __iconNode$t = [
   ["path", { d: "M5.8 11.3 2 22l10.7-3.79", key: "gwxi1d" }],
   ["path", { d: "M4 3h.01", key: "1vcuye" }],
   ["path", { d: "M22 8h.01", key: "1mrtc2" }],
@@ -48793,8 +48835,8 @@ const __iconNode$r = [
     }
   ]
 ];
-const PartyPopper = createLucideIcon("party-popper", __iconNode$r);
-const __iconNode$q = [
+const PartyPopper = createLucideIcon("party-popper", __iconNode$t);
+const __iconNode$s = [
   [
     "path",
     {
@@ -48803,31 +48845,31 @@ const __iconNode$q = [
     }
   ]
 ];
-const Plane = createLucideIcon("plane", __iconNode$q);
-const __iconNode$p = [
+const Plane = createLucideIcon("plane", __iconNode$s);
+const __iconNode$r = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "M12 5v14", key: "s699le" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$p);
-const __iconNode$o = [
+const Plus = createLucideIcon("plus", __iconNode$r);
+const __iconNode$q = [
   ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
   ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$o);
-const __iconNode$n = [
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$q);
+const __iconNode$p = [
   ["path", { d: "m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z", key: "7g6ntu" }],
   ["path", { d: "m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z", key: "ijws7r" }],
   ["path", { d: "M7 21h10", key: "1b0cd5" }],
   ["path", { d: "M12 3v18", key: "108xh3" }],
   ["path", { d: "M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2", key: "3gwbw2" }]
 ];
-const Scale = createLucideIcon("scale", __iconNode$n);
-const __iconNode$m = [
+const Scale = createLucideIcon("scale", __iconNode$p);
+const __iconNode$o = [
   ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
   ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const Search = createLucideIcon("search", __iconNode$m);
-const __iconNode$l = [
+const Search = createLucideIcon("search", __iconNode$o);
+const __iconNode$n = [
   [
     "path",
     {
@@ -48837,15 +48879,15 @@ const __iconNode$l = [
   ],
   ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
 ];
-const Send = createLucideIcon("send", __iconNode$l);
-const __iconNode$k = [
+const Send = createLucideIcon("send", __iconNode$n);
+const __iconNode$m = [
   ["path", { d: "M14 17H5", key: "gfn3mx" }],
   ["path", { d: "M19 7h-9", key: "6i9tg" }],
   ["circle", { cx: "17", cy: "17", r: "3", key: "18b49y" }],
   ["circle", { cx: "7", cy: "7", r: "3", key: "dfmy0x" }]
 ];
-const Settings2 = createLucideIcon("settings-2", __iconNode$k);
-const __iconNode$j = [
+const Settings2 = createLucideIcon("settings-2", __iconNode$m);
+const __iconNode$l = [
   [
     "path",
     {
@@ -48855,8 +48897,8 @@ const __iconNode$j = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Settings = createLucideIcon("settings", __iconNode$j);
-const __iconNode$i = [
+const Settings = createLucideIcon("settings", __iconNode$l);
+const __iconNode$k = [
   [
     "path",
     {
@@ -48867,8 +48909,8 @@ const __iconNode$i = [
   ["path", { d: "M12 8v4", key: "1got3b" }],
   ["path", { d: "M12 16h.01", key: "1drbdi" }]
 ];
-const ShieldAlert = createLucideIcon("shield-alert", __iconNode$i);
-const __iconNode$h = [
+const ShieldAlert = createLucideIcon("shield-alert", __iconNode$k);
+const __iconNode$j = [
   [
     "path",
     {
@@ -48879,8 +48921,8 @@ const __iconNode$h = [
   ["path", { d: "M9 12h6", key: "1c52cq" }],
   ["path", { d: "M12 9v6", key: "199k2o" }]
 ];
-const ShieldPlus = createLucideIcon("shield-plus", __iconNode$h);
-const __iconNode$g = [
+const ShieldPlus = createLucideIcon("shield-plus", __iconNode$j);
+const __iconNode$i = [
   [
     "path",
     {
@@ -48889,16 +48931,16 @@ const __iconNode$g = [
     }
   ]
 ];
-const Shield = createLucideIcon("shield", __iconNode$g);
-const __iconNode$f = [
+const Shield = createLucideIcon("shield", __iconNode$i);
+const __iconNode$h = [
   ["path", { d: "m18 14 4 4-4 4", key: "10pe0f" }],
   ["path", { d: "m18 2 4 4-4 4", key: "pucp1d" }],
   ["path", { d: "M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22", key: "1ailkh" }],
   ["path", { d: "M2 6h1.972a4 4 0 0 1 3.6 2.2", key: "km57vx" }],
   ["path", { d: "M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45", key: "os18l9" }]
 ];
-const Shuffle = createLucideIcon("shuffle", __iconNode$f);
-const __iconNode$e = [
+const Shuffle = createLucideIcon("shuffle", __iconNode$h);
+const __iconNode$g = [
   ["path", { d: "M21 4v16", key: "7j8fe9" }],
   [
     "path",
@@ -48908,8 +48950,8 @@ const __iconNode$e = [
     }
   ]
 ];
-const SkipForward = createLucideIcon("skip-forward", __iconNode$e);
-const __iconNode$d = [
+const SkipForward = createLucideIcon("skip-forward", __iconNode$g);
+const __iconNode$f = [
   ["path", { d: "m12.5 17-.5-1-.5 1h1z", key: "3me087" }],
   [
     "path",
@@ -48921,8 +48963,8 @@ const __iconNode$d = [
   ["circle", { cx: "15", cy: "12", r: "1", key: "1tmaij" }],
   ["circle", { cx: "9", cy: "12", r: "1", key: "1vctgf" }]
 ];
-const Skull = createLucideIcon("skull", __iconNode$d);
-const __iconNode$c = [
+const Skull = createLucideIcon("skull", __iconNode$f);
+const __iconNode$e = [
   [
     "path",
     {
@@ -48931,16 +48973,16 @@ const __iconNode$c = [
     }
   ]
 ];
-const Star = createLucideIcon("star", __iconNode$c);
-const __iconNode$b = [
+const Star = createLucideIcon("star", __iconNode$e);
+const __iconNode$d = [
   ["path", { d: "M11 2v2", key: "1539x4" }],
   ["path", { d: "M5 2v2", key: "1yf1q8" }],
   ["path", { d: "M5 3H4a2 2 0 0 0-2 2v4a6 6 0 0 0 12 0V5a2 2 0 0 0-2-2h-1", key: "rb5t3r" }],
   ["path", { d: "M8 15a6 6 0 0 0 12 0v-3", key: "x18d4x" }],
   ["circle", { cx: "20", cy: "10", r: "2", key: "ts1r5v" }]
 ];
-const Stethoscope = createLucideIcon("stethoscope", __iconNode$b);
-const __iconNode$a = [
+const Stethoscope = createLucideIcon("stethoscope", __iconNode$d);
+const __iconNode$c = [
   ["circle", { cx: "12", cy: "12", r: "4", key: "4exip2" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
@@ -48951,8 +48993,8 @@ const __iconNode$a = [
   ["path", { d: "m6.34 17.66-1.41 1.41", key: "1m8zz5" }],
   ["path", { d: "m19.07 4.93-1.41 1.41", key: "1shlcs" }]
 ];
-const Sun = createLucideIcon("sun", __iconNode$a);
-const __iconNode$9 = [
+const Sun = createLucideIcon("sun", __iconNode$c);
+const __iconNode$b = [
   ["polyline", { points: "14.5 17.5 3 6 3 3 6 3 17.5 14.5", key: "1hfsw2" }],
   ["line", { x1: "13", x2: "19", y1: "19", y2: "13", key: "1vrmhu" }],
   ["line", { x1: "16", x2: "20", y1: "16", y2: "20", key: "1bron3" }],
@@ -48962,26 +49004,43 @@ const __iconNode$9 = [
   ["line", { x1: "7", x2: "4", y1: "17", y2: "20", key: "pidxm4" }],
   ["line", { x1: "3", x2: "5", y1: "19", y2: "21", key: "1pehsh" }]
 ];
-const Swords = createLucideIcon("swords", __iconNode$9);
-const __iconNode$8 = [
+const Swords = createLucideIcon("swords", __iconNode$b);
+const __iconNode$a = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["circle", { cx: "12", cy: "12", r: "6", key: "1vlfrh" }],
   ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }]
 ];
-const Target = createLucideIcon("target", __iconNode$8);
-const __iconNode$7 = [
+const Target = createLucideIcon("target", __iconNode$a);
+const __iconNode$9 = [
   ["path", { d: "M10 11v6", key: "nco0om" }],
   ["path", { d: "M14 11v6", key: "outv1u" }],
   ["path", { d: "M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6", key: "miytrc" }],
   ["path", { d: "M3 6h18", key: "d0wm0j" }],
   ["path", { d: "M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2", key: "e791ji" }]
 ];
-const Trash2 = createLucideIcon("trash-2", __iconNode$7);
-const __iconNode$6 = [
+const Trash2 = createLucideIcon("trash-2", __iconNode$9);
+const __iconNode$8 = [
+  ["path", { d: "M16 17h6v-6", key: "t6n2it" }],
+  ["path", { d: "m22 17-8.5-8.5-5 5L2 7", key: "x473p" }]
+];
+const TrendingDown = createLucideIcon("trending-down", __iconNode$8);
+const __iconNode$7 = [
   ["path", { d: "M16 7h6v6", key: "box55l" }],
   ["path", { d: "m22 7-8.5 8.5-5-5L2 17", key: "1t1m79" }]
 ];
-const TrendingUp = createLucideIcon("trending-up", __iconNode$6);
+const TrendingUp = createLucideIcon("trending-up", __iconNode$7);
+const __iconNode$6 = [
+  [
+    "path",
+    {
+      d: "m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3",
+      key: "wmoenq"
+    }
+  ],
+  ["path", { d: "M12 9v4", key: "juzpu7" }],
+  ["path", { d: "M12 17h.01", key: "p32p05" }]
+];
+const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$6);
 const __iconNode$5 = [
   ["path", { d: "M10 14.66v1.626a2 2 0 0 1-.976 1.696A5 5 0 0 0 7 21.978", key: "1n3hpd" }],
   ["path", { d: "M14 14.66v1.626a2 2 0 0 0 .976 1.696A5 5 0 0 1 17 21.978", key: "rfe1zi" }],
@@ -49039,24 +49098,24 @@ function DensityScoreBox({
   const hasOneOfThree = hasSize || hasPop || hasEcon;
   const allThree = hasSize && hasPop && hasEcon;
   if (!hasOneOfThree) return null;
-  const bonus = computeBetaSizePopBonus(roster);
+  const breakdown = allThree ? getDensityBreakdown(roster) : null;
   const categories = [
     { id: "Size", name: "Size", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Map$1, { className: "w-3.5 h-3.5" }), country: roster.Size },
     { id: "Population", name: "Population", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-3.5 h-3.5" }), country: roster.Population },
     { id: "Economy", name: "Economy", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { className: "w-3.5 h-3.5" }), country: roster.Economy }
   ];
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full mt-3 rounded-2xl border border-blue-500/30 bg-blue-500/5 p-4 text-left relative shadow-sm", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-3", children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full mt-3 rounded-2xl border border-blue-500/30 bg-card p-4 text-left relative shadow-sm space-y-3", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between border-b border-border/60 pb-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-1.5 rounded-lg bg-blue-500/20 text-blue-400", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-4 h-4" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold uppercase tracking-wider text-blue-400", children: "Population Density Score" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold uppercase tracking-wider text-blue-400", children: "Population Density Breakdown" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "button",
         {
           onClick: () => setShowInfo(true),
-          className: "flex items-center gap-1 px-2 py-1 rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-bold text-xs border border-blue-500/40 transition-colors cursor-pointer",
-          title: "Scoring Info",
+          className: "flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 font-bold text-xs border border-blue-500/40 transition-colors cursor-pointer",
+          title: "Scoring & Equation Info",
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { className: "w-3.5 h-3.5" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "(i)" })
@@ -49064,12 +49123,12 @@ function DensityScoreBox({
         }
       )
     ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-2 mb-2", children: categories.map((cat) => {
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-2", children: categories.map((cat) => {
       const isDrafted = !!cat.country;
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
-          className: `p-2.5 rounded-xl border flex flex-col justify-between transition-all ${isDrafted ? "border-blue-500/40 bg-card/80 text-foreground" : "border-dashed border-border/60 bg-muted/20 opacity-40 text-muted-foreground"}`,
+          className: `p-2.5 rounded-xl border flex flex-col justify-between transition-all ${isDrafted ? "border-blue-500/40 bg-card text-foreground" : "border-dashed border-border/60 bg-muted/20 opacity-40 text-muted-foreground"}`,
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider mb-1", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: isDrafted ? "text-blue-400" : "text-muted-foreground", children: cat.icon }),
@@ -49090,14 +49149,47 @@ function DensityScoreBox({
         cat.id
       );
     }) }),
-    !allThree ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground font-medium text-center mt-2 italic", children: "fill out these categories to get a population density score" }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mt-2 pt-2 border-t border-blue-500/20", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-foreground", children: "Density Bonus" }),
-      !isHardMode && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-black text-blue-400", children: [
-        "+",
-        bonus,
-        " pts"
+    !allThree ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground font-medium text-center mt-2 italic pt-1", children: "Draft Size, Population, and Economy to complete your Population Density Breakdown" }) : breakdown ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 pt-2 border-t border-border/60", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2.5 rounded-xl bg-muted/30 border border-border/50 flex flex-col", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-muted-foreground uppercase", children: "Actual Density (x)" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-black text-foreground mt-0.5", children: [
+            breakdown.actualDensity.toLocaleString(),
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-muted-foreground", children: "ppl/km²" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2.5 rounded-xl bg-muted/30 border border-border/50 flex flex-col", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-muted-foreground uppercase", children: "Target Density" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-black text-blue-400 mt-0.5", children: [
+            breakdown.idealTargetDensity.toLocaleString(),
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-muted-foreground", children: "ppl/km²" })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl border bg-muted/20 space-y-1.5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+          breakdown.status === "too_high" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1 text-xs font-bold text-amber-500", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "w-4 h-4 shrink-0" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Density Too High (Overcrowded)" })
+          ] }),
+          breakdown.status === "too_low" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1 text-xs font-bold text-sky-400", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingDown, { className: "w-4 h-4 shrink-0" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Density Too Low (Underpopulated)" })
+          ] }),
+          breakdown.status === "optimal" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1 text-xs font-bold text-emerald-400", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { className: "w-4 h-4 shrink-0" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Optimal Density Synergy" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: breakdown.analysisText })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl border border-blue-500/20 bg-blue-500/5 space-y-1 text-xs", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-blue-400", children: "Synergy Factors:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground leading-relaxed", children: breakdown.synergyExplanation })
       ] })
-    ] }),
+    ] }) : null,
     showInfo && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-3xl p-6 max-w-lg w-full shadow-2xl relative space-y-4 text-left", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
@@ -49109,14 +49201,12 @@ function DensityScoreBox({
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-2xl bg-blue-500/20 text-blue-400", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Info, { className: "w-6 h-6" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold text-foreground", children: "Population Density Scoring" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold text-foreground", children: "Population Density Breakdown" })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground leading-relaxed", children: [
         "In ",
         /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "BETA 1.0" }),
-        ", your nation earns up to ",
-        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-blue-400", children: "25 bonus points" }),
-        " based on how closely your drafted population density matches your ideal target density!"
+        ", your nation earns bonus points based on how closely your actual population density matches your ideal target density capacity!"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 rounded-xl bg-muted/40 border border-border/50 font-mono text-xs text-foreground space-y-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-blue-400", children: "Equation:" }),
@@ -59039,7 +59129,16 @@ function BetaControls({
   isBlindMode,
   onBlindModeChange
 }) {
-  const currentConfig = BETA_DIFFICULTY_CONFIG[difficultyIndex] || BETA_DIFFICULTY_CONFIG[3];
+  const [localValue, setLocalValue] = React.useState(difficultyIndex);
+  React.useEffect(() => {
+    setLocalValue(difficultyIndex);
+  }, [difficultyIndex]);
+  const currentConfig = BETA_DIFFICULTY_CONFIG[localValue] || BETA_DIFFICULTY_CONFIG[3];
+  const handleCommit = (val) => {
+    if (val !== difficultyIndex) {
+      onDifficultyChange(val);
+    }
+  };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 flex-wrap", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-card border border-border shadow-sm", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-bold text-muted-foreground uppercase tracking-wider", children: "Difficulty:" }),
@@ -59062,8 +59161,16 @@ function BetaControls({
           min: "0",
           max: "3",
           step: "1",
-          value: difficultyIndex,
-          onChange: (e) => onDifficultyChange(parseInt(e.target.value, 10)),
+          value: localValue,
+          onChange: (e) => setLocalValue(parseInt(e.target.value, 10)),
+          onPointerUp: () => handleCommit(localValue),
+          onMouseUp: () => handleCommit(localValue),
+          onTouchEnd: () => handleCommit(localValue),
+          onKeyUp: (e) => {
+            if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+              handleCommit(localValue);
+            }
+          },
           style: { accentColor: currentConfig.accent },
           className: "w-24 md:w-32 h-1.5 rounded-lg appearance-none cursor-pointer bg-muted transition-colors"
         }
@@ -59200,35 +59307,15 @@ function NormalGame({ isBetaMode = false }) {
       }
     }
   }, [state.currentCountry, state.gameOver, isBetaMode, difficultyIndex]);
-  const handleDifficultyChange = reactExports.useCallback((newIdx) => {
-    setDifficultyIndex(newIdx);
-    if (isBetaMode) {
-      localSavedRef.current = false;
-      const sourcePool = getBetaPoolForDifficulty(ALL_COUNTRIES, newIdx);
-      let pool = shuffleArray$1([...sourcePool]);
-      const currentCountry = pool.pop() || null;
-      setState((prev) => ({
-        ...prev,
-        pool,
-        currentCountry,
-        roster: {},
-        gameOver: false,
-        wildcardUsed: false,
-        categoryTimes: {},
-        currentTurnStartTime: Date.now()
-      }));
-    }
-  }, [isBetaMode]);
-  const handleBlindModeChange = reactExports.useCallback((val) => {
-    setIsBlindMode(val);
-    if (isBetaMode) {
-      setState((prev) => ({ ...prev, isHardMode: val }));
-    }
-  }, [isBetaMode]);
-  const doReset = reactExports.useCallback(() => {
+  const [pendingChange, setPendingChange] = reactExports.useState(null);
+  const startNewRoundWithSettings = reactExports.useCallback((newDiff, newBlind) => {
+    const nextDiff = newDiff !== void 0 ? newDiff : difficultyIndex;
+    const nextBlind = newBlind !== void 0 ? newBlind : isBlindMode;
+    if (newDiff !== void 0) setDifficultyIndex(newDiff);
+    if (newBlind !== void 0) setIsBlindMode(newBlind);
     localSavedRef.current = false;
-    const isHardMode = isBetaMode ? isBlindMode : state.isHardMode;
-    const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, difficultyIndex) : COUNTRIES;
+    const isHardMode = isBetaMode ? nextBlind : state.isHardMode;
+    const sourcePool = isBetaMode ? getBetaPoolForDifficulty(ALL_COUNTRIES, nextDiff) : COUNTRIES;
     let pool = shuffleArray$1([...sourcePool]);
     const currentCountry = pool.pop() || null;
     setState({
@@ -59251,7 +59338,35 @@ function NormalGame({ isBetaMode = false }) {
       currentTurnStartTime: Date.now()
     });
     setWildcardPhase(false);
-  }, [state.isHardMode, isBetaMode, isBlindMode, difficultyIndex]);
+  }, [difficultyIndex, isBlindMode, isBetaMode, state.isHardMode]);
+  const handleDifficultyChange = reactExports.useCallback((newIdx) => {
+    const isMidRound = Object.keys(state.roster).length > 0 && !state.gameOver;
+    if (isMidRound) {
+      setPendingChange({ type: "difficulty", value: newIdx });
+    } else {
+      startNewRoundWithSettings(newIdx, void 0);
+    }
+  }, [state.roster, state.gameOver, startNewRoundWithSettings]);
+  const handleBlindModeChange = reactExports.useCallback((val) => {
+    const isMidRound = Object.keys(state.roster).length > 0 && !state.gameOver;
+    if (isMidRound) {
+      setPendingChange({ type: "blind", value: val });
+    } else {
+      startNewRoundWithSettings(void 0, val);
+    }
+  }, [state.roster, state.gameOver, startNewRoundWithSettings]);
+  const confirmPendingChange = reactExports.useCallback(() => {
+    if (!pendingChange) return;
+    if (pendingChange.type === "difficulty") {
+      startNewRoundWithSettings(pendingChange.value, void 0);
+    } else if (pendingChange.type === "blind") {
+      startNewRoundWithSettings(void 0, pendingChange.value);
+    }
+    setPendingChange(null);
+  }, [pendingChange, startNewRoundWithSettings]);
+  const doReset = reactExports.useCallback(() => {
+    startNewRoundWithSettings(difficultyIndex, isBlindMode);
+  }, [startNewRoundWithSettings, difficultyIndex, isBlindMode]);
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-screen bg-background text-foreground selection:bg-primary/20 overflow-hidden font-sans", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "h-20 shrink-0 border-b border-border bg-background px-4 md:px-8 flex items-center justify-between z-20 gap-4", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 shrink-0", children: [
@@ -59281,7 +59396,32 @@ function NormalGame({ isBetaMode = false }) {
       !state.gameOver && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "hidden md:flex w-80 bg-card border-r border-border flex-col overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-5 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SidebarRoster$4, { roster: state.roster, categoryTimes: state.categoryTimes, isHardMode: state.isHardMode, isBetaMode }) }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex flex-col overflow-y-auto relative", children: state.gameOver ? /* @__PURE__ */ jsxRuntimeExports.jsx(GameOver$4, { roster: state.roster, categoryTimes: state.categoryTimes, totalScore: finalScore, bonus, onReset: doReset, onDownload: () => drawRosterPng$4(state.roster, finalScore, bonus, state.isHardMode, isBetaMode), onWildcard: () => setWildcardPhase(true), onWildcardSelect: applyWildcard, setWildcardPhase, wildcardUsed: state.wildcardUsed, wildcardPhase, rosterRef, isHardMode: state.isHardMode, isDailyMode: false, onSubmitLeaderboard: () => setShowSubmitDialog(true), gameMode: "daily", leaderboardSubmitted: state.leaderboardSubmitted, isBetaMode }) : state.currentCountry ? /* @__PURE__ */ jsxRuntimeExports.jsx(CountryCard$4, { country: state.currentCountry, hoveredCategory, poolRemaining: state.pool.length, isHardMode: state.isHardMode, roster: state.roster, onAssign: assignCountry, onHover: setHoveredCategory, isBetaMode }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex items-center justify-center text-muted-foreground", children: "Loading game..." }) })
     ] }),
-    showSubmitDialog && !isDevModeActive(profile?.username) && /* @__PURE__ */ jsxRuntimeExports.jsx(SubmitDialog$3, { score: finalScore, mode: state.isHardMode ? "hard" : "normal", roster: state.roster, onClose: () => setShowSubmitDialog(false), onSuccess: () => setState((prev) => ({ ...prev, leaderboardSubmitted: true })) })
+    showSubmitDialog && !isDevModeActive(profile?.username) && /* @__PURE__ */ jsxRuntimeExports.jsx(SubmitDialog$3, { score: finalScore, mode: state.isHardMode ? "hard" : "normal", roster: state.roster, onClose: () => setShowSubmitDialog(false), onSuccess: () => setState((prev) => ({ ...prev, leaderboardSubmitted: true })) }),
+    pendingChange && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-3xl p-6 max-w-md w-full shadow-2xl relative space-y-4 text-left", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-2xl bg-amber-500/20 text-amber-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldAlert, { className: "w-6 h-6" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-xl font-bold text-foreground", children: "Abandon Current Draft?" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground leading-relaxed", children: "You are currently in the middle of a draft round. Changing difficulty settings or toggling Blind Mode will abandon your current progress and start a brand new round." }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-end gap-3 pt-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => setPendingChange(null),
+            className: "px-4 py-2.5 rounded-xl border border-border bg-card text-foreground font-bold text-sm hover:bg-muted transition-colors cursor-pointer",
+            children: "Cancel"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: confirmPendingChange,
+            className: "px-4 py-2.5 rounded-xl bg-red-500 text-white font-bold text-sm hover:bg-red-600 transition-colors shadow-md cursor-pointer",
+            children: "Start New Round"
+          }
+        )
+      ] })
+    ] }) })
   ] });
 }
 const CATEGORY_ICONS$4 = {
