@@ -9982,11 +9982,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Puerto Rico spanning diverse natural regions."
+        "description": "9,104 km² — Caribbean island territory"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Puerto Rico; active workforce and vibrant culture."
+        "description": "3.2 million people; US Caribbean island territory"
       },
       "history": {
         "score": 6,
@@ -10010,7 +10010,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 9104
   },
   {
     "name": "Zimbabwe",
@@ -10306,11 +10306,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Mali spanning diverse natural regions."
+        "description": "1,240,192 km² — large landlocked Saharan state"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Mali; active workforce and vibrant culture."
+        "description": "22.6 million people; West African nation"
       },
       "history": {
         "score": 6,
@@ -10334,7 +10334,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 1240192
   },
   {
     "name": "Mauritania",
@@ -10468,11 +10468,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Benin spanning diverse natural regions."
+        "description": "112,622 km² — West African coastal territory"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Benin; active workforce and vibrant culture."
+        "description": "13.4 million people; West African coastal state"
       },
       "history": {
         "score": 6,
@@ -10496,7 +10496,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 112622
   },
   {
     "name": "Niger",
@@ -10549,11 +10549,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Niger spanning diverse natural regions."
+        "description": "1,267,000 km² — vast landlocked Sahelian country"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Niger; active workforce and vibrant culture."
+        "description": "25.3 million people; Sahelo-Saharan nation"
       },
       "history": {
         "score": 6,
@@ -10577,7 +10577,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 1267000
   },
   {
     "name": "Cameroon",
@@ -10630,11 +10630,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Cameroon spanning diverse natural regions."
+        "description": "475,442 km² — Central African coastal nation"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Cameroon; active workforce and vibrant culture."
+        "description": "27.9 million people; Central African nation"
       },
       "history": {
         "score": 6,
@@ -10658,7 +10658,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 475442
   },
   {
     "name": "Togo",
@@ -10711,11 +10711,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Togo spanning diverse natural regions."
+        "description": "56,785 km² — narrow West African country"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Togo; active workforce and vibrant culture."
+        "description": "8.8 million people; West African nation"
       },
       "history": {
         "score": 6,
@@ -10739,7 +10739,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 56785
   },
   {
     "name": "Guinea",
@@ -10792,11 +10792,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Guinea spanning diverse natural regions."
+        "description": "245,857 km² — West African nation"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Guinea; active workforce and vibrant culture."
+        "description": "13.9 million people; West African coastal nation"
       },
       "history": {
         "score": 6,
@@ -10820,7 +10820,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 245857
   },
   {
     "name": "Guinea-Bissau",
@@ -11116,11 +11116,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Burkina Faso spanning diverse natural regions."
+        "description": "274,200 km² — landlocked West African state"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Burkina Faso; active workforce and vibrant culture."
+        "description": "22.7 million people; landlocked Sahelian nation"
       },
       "history": {
         "score": 6,
@@ -11144,7 +11144,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 274200
   },
   {
     "name": "Central African Republic",
@@ -11278,11 +11278,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Congo spanning diverse natural regions."
+        "description": "342,000 km² — Central African forest nation"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Congo; active workforce and vibrant culture."
+        "description": "5.9 million people; Central African nation"
       },
       "history": {
         "score": 6,
@@ -11306,7 +11306,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 342000
   },
   {
     "name": "Gabon",
@@ -11845,11 +11845,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Angola spanning diverse natural regions."
+        "description": "1,246,700 km² — large Atlantic coastal nation"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Angola; active workforce and vibrant culture."
+        "description": "35.6 million people; Southern African nation"
       },
       "history": {
         "score": 6,
@@ -11873,7 +11873,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 1246700
   },
   {
     "name": "Burundi",
@@ -12088,11 +12088,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Palestine spanning diverse natural regions."
+        "description": "6,020 km² — West Bank and Gaza Strip"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Palestine; active workforce and vibrant culture."
+        "description": "5.3 million people; Levant territory"
       },
       "history": {
         "score": 6,
@@ -12116,7 +12116,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 6020
   },
   {
     "name": "Gambia",
@@ -12250,11 +12250,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Iraq spanning diverse natural regions."
+        "description": "438,317 km² — Mesopotamian territory"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Iraq; active workforce and vibrant culture."
+        "description": "43.5 million people; Middle Eastern nation"
       },
       "history": {
         "score": 6,
@@ -12278,7 +12278,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 438317
   },
   {
     "name": "Vanuatu",
@@ -12331,11 +12331,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Vanuatu spanning diverse natural regions."
+        "description": "12,189 km² — Pacific island chain"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Vanuatu; active workforce and vibrant culture."
+        "description": "320,000 people; South Pacific archipelago"
       },
       "history": {
         "score": 6,
@@ -12359,7 +12359,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 12189
   },
   {
     "name": "Cambodia",
@@ -12574,11 +12574,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Myanmar spanning diverse natural regions."
+        "description": "676,578 km² — largest country in Mainland Southeast Asia"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Myanmar; active workforce and vibrant culture."
+        "description": "54.2 million people; demographic center for Myanmar"
       },
       "history": {
         "score": 6,
@@ -12602,7 +12602,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 676578
   },
   {
     "name": "North Korea",
@@ -12979,11 +12979,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Afghanistan spanning diverse natural regions."
+        "description": "652,864 km² — mountainous landlocked state"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Afghanistan; active workforce and vibrant culture."
+        "description": "41.1 million people; South-Central Asian nation"
       },
       "history": {
         "score": 6,
@@ -13007,7 +13007,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 652864
   },
   {
     "name": "Tajikistan",
@@ -13303,11 +13303,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Syria spanning diverse natural regions."
+        "description": "185,180 km² — Eastern Mediterranean state"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Syria; active workforce and vibrant culture."
+        "description": "22.1 million people; Levant nation"
       },
       "history": {
         "score": 6,
@@ -13331,7 +13331,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 185180
   },
   {
     "name": "Moldova",
@@ -13634,11 +13634,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of New Caledonia spanning diverse natural regions."
+        "description": "18,575 km² — South Pacific island group"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for New Caledonia; active workforce and vibrant culture."
+        "description": "270,000 people; Pacific territory"
       },
       "history": {
         "score": 6,
@@ -13662,7 +13662,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 18575
   },
   {
     "name": "Solomon Islands",
@@ -13715,11 +13715,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Solomon Islands spanning diverse natural regions."
+        "description": "28,896 km² — Melanesian archipelago"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Solomon Islands; active workforce and vibrant culture."
+        "description": "720,000 people; Pacific island nation"
       },
       "history": {
         "score": 6,
@@ -13743,7 +13743,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 28896
   },
   {
     "name": "Brunei",
@@ -13958,11 +13958,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Yemen spanning diverse natural regions."
+        "description": "527,968 km² — Southern Arabian Peninsula state"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Yemen; active workforce and vibrant culture."
+        "description": "33.7 million people; Arabian Peninsula nation"
       },
       "history": {
         "score": 6,
@@ -13986,7 +13986,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 527968
   },
   {
     "name": "N. Cyprus",
@@ -14035,11 +14035,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of N. Cyprus spanning diverse natural regions."
+        "description": "3,355 km² — Northern Mediterranean island territory"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for N. Cyprus; active workforce and vibrant culture."
+        "description": "380,000 people; Mediterranean territory"
       },
       "history": {
         "score": 6,
@@ -14063,7 +14063,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 3355
   },
   {
     "name": "Libya",
@@ -14116,11 +14116,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Libya spanning diverse natural regions."
+        "description": "1,759,540 km² — vast North African country"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Libya; active workforce and vibrant culture."
+        "description": "6.8 million people; North African nation"
       },
       "history": {
         "score": 6,
@@ -14144,7 +14144,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 1759540
   },
   {
     "name": "Ethiopia",
@@ -14355,11 +14355,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Somaliland spanning diverse natural regions."
+        "description": "176,120 km² — Horn of Africa coastal territory"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Somaliland; active workforce and vibrant culture."
+        "description": "5.7 million people; Horn of Africa territory"
       },
       "history": {
         "score": 6,
@@ -14383,7 +14383,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 176120
   },
   {
     "name": "Bosnia and Herzegovina",
@@ -14675,11 +14675,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of Kosovo spanning diverse natural regions."
+        "description": "10,887 km² — Balkan territory"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for Kosovo; active workforce and vibrant culture."
+        "description": "1.8 million people; Balkan nation"
       },
       "history": {
         "score": 6,
@@ -14703,7 +14703,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 10887
   },
   {
     "name": "Trinidad and Tobago",
@@ -14837,11 +14837,11 @@
       },
       "size": {
         "score": 4,
-        "description": "50,000 km²; geographic area of South Sudan spanning diverse natural regions."
+        "description": "619,745 km² — East-Central African country"
       },
       "population": {
         "score": 4,
-        "description": "5.0 million people; demographic center for South Sudan; active workforce and vibrant culture."
+        "description": "11.1 million people; East-Central African nation"
       },
       "history": {
         "score": 6,
@@ -14865,6 +14865,6 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 619745
   }
 ]
