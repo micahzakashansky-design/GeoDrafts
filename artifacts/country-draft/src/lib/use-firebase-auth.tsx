@@ -1,6 +1,4 @@
-import { useState, useEffect, useCallback, createContext, useContext } from "react";
-
-const AuthContext = createContext<FirebaseAuthState | null>(null);
+import React, { useState, useEffect, useCallback, useMemo, createContext, useContext } from "react";
 import {
   onAuthStateChanged,
   signInWithPopup,
@@ -25,15 +23,23 @@ export type FirebaseAuthState = {
   refreshProfile: () => Promise<void>;
 };
 
+const AuthContext = createContext<FirebaseAuthState | null>(null);
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchProfile = useCallback(async (user: User) => {
-    const p = await getUserProfile(user.uid);
-    setProfile(p);
-    return p;
+    try {
+      const p = await getUserProfile(user.uid);
+      setProfile(p);
+      return p;
+    } catch (error) {
+      console.error("[AuthProvider] Error fetching profile:", error);
+      setProfile(null);
+      return null;
+    }
   }, []);
 
   useEffect(() => {
@@ -56,10 +62,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithEmail = useCallback(
     async (email: string, password: string, create = false) => {
+      const sanitizedEmail = email.trim();
       if (create) {
-        await createUserWithEmailAndPassword(auth, email, password);
+        await createUserWithEmailAndPassword(auth, sanitizedEmail, password);
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        await signInWithEmailAndPassword(auth, sanitizedEmail, password);
       }
     },
     []
@@ -74,17 +81,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (firebaseUser) await fetchProfile(firebaseUser);
   }, [firebaseUser, fetchProfile]);
 
-  const value = {
-    firebaseUser,
-    profile,
-    isLoading,
-    isAuthenticated: !!firebaseUser && !!profile,
-    needsUsername: !!firebaseUser && !profile && !isLoading,
-    signInWithGoogle,
-    signInWithEmail,
-    logout,
-    refreshProfile,
-  };
+  const value = useMemo(
+    () => ({
+      firebaseUser,
+      profile,
+      isLoading,
+      isAuthenticated: !!firebaseUser && !!profile,
+      needsUsername: !!firebaseUser && !profile && !isLoading,
+      signInWithGoogle,
+      signInWithEmail,
+      logout,
+      refreshProfile,
+    }),
+    [
+      firebaseUser,
+      profile,
+      isLoading,
+      signInWithGoogle,
+      signInWithEmail,
+      logout,
+      refreshProfile,
+    ]
+  );
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

@@ -3,17 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://esm.sh; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' https://*.firebaseio.com https://*.googleapis.com wss://*.firebaseio.com https://identitytoolkit.googleapis.com; frame-src 'self' https://*.firebaseapp.com;" />
     <title>GeoDrafts</title>
     <!-- Preload heavy resources -->
     <script type="module" src="https://esm.sh/es-module-shims@1.10.1/dist/es-module-shims.js"></script>
-    <meta name="description" content="Hello text string my old friend. I've come to talk with you again..." />
+    <meta name="description" content="GeoDrafts is a nation-building draft game where players build their ideal nation by drafting countries." />
     <meta name="robots" content="index, follow" />
     <meta property="og:title" content="GeoDrafts - Geography Games" />
-    <meta property="og:description" content="Hello text string my old friend. I've come to talk with you again..." />
+    <meta property="og:description" content="Build your ideal nation by drafting random countries and scoring points based on real-world statistics." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="GeoDrafts - Geography Games" />
-    <meta name="twitter:description" content="Hello text string my old friend. I've come to talk with you again..." />
+    <meta name="twitter:description" content="Build your ideal nation by drafting random countries and scoring points based on real-world statistics." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preload" href="/features.json" as="fetch" crossorigin="anonymous">
     <link rel="preconnect" href="https://fonts.googleapis.com">

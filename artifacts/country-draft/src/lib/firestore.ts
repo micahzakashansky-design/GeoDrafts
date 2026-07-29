@@ -1,233 +1,248 @@
-import { where,
-  collection, doc, getDoc, setDoc, addDoc, updateDoc,
-  query, orderBy, limit, getDocs, serverTimestamp,
-  onSnapshot, type Timestamp, deleteDoc, arrayUnion
+import {
+  where,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  addDoc,
+  updateDoc,
+  query,
+  orderBy,
+  limit,
+  getDocs,
+  serverTimestamp,
+  onSnapshot,
+  deleteDoc,
+  arrayUnion,
+  documentId,
 } from "firebase/firestore";
 import { firestore } from "./firebase";
+import {
+  UserProfileSchema,
+  LeaderboardEntrySchema,
+  RoomSchema,
+  RoomPlayerSchema,
+  GameEndStatsSchema,
+  PersonalRecordSchema,
+  UsernameInputSchema,
+  sanitizeString,
+  type UserProfile,
+  type LeaderboardEntry,
+  type Room,
+  type RoomPlayer,
+  type RoomMode,
+  type GameEndStats,
+  type PersonalRecord,
+} from "./schemas";
 
-export type UserProfile = {
-  uid: string;
-  username: string;
-  createdAt: Timestamp | null;
-  bestScore: number;
-  totalGames: number;
-  unlockedAchievements?: string[];
-  firstTryGuesses?: number;
-  fastDrafts?: number;
-  uniqueCountriesUsed?: string[];
-  dailyStreak?: number;
-  lastDailyDate?: string;
-  bestDoubleScore?: number;
-};
+export type { UserProfile, LeaderboardEntry, Room, RoomPlayer, RoomMode, GameEndStats, RoomStatus } from "./schemas";
 
-export type LeaderboardEntry = {
-  id: string;
-  uid: string;
-  username: string;
-  score: number;
-  mode: string;
-  roster: Record<string, string>;
-  guesses?: string[];
-  mysteryCountry?: string;
-  createdAt: Timestamp | null;
-  date: string;
-};
-
-export type RoomStatus = "waiting" | "playing" | "finished";
-export type RoomMode = "sabotage" | "party" | "associations_race" | "double_draft";
-
-export type Room = {
-  code: string;
-  mode: RoomMode;
-  difficulty: "easy" | "hard";
-  hostId: string;
-  status: RoomStatus;
-  currentRound: number;
-  poolSeed: number;
-  createdAt: Timestamp | null;
-  associationsSettings?: any;
-};
-
-export type RoomPlayer = {
-  uid: string;
-  username: string;
-  score: number;
-  roster: Record<string, string>;
-  finishedRound: boolean;
-  sabotageChoice: string | null;
-  sabotageOptions: string[] | null;
-  completionTime?: number;
-};
+/**
+ * Custom error class for Firestore service errors
+ */
+export class FirestoreServiceError extends Error {
+  constructor(
+    message: string,
+    public readonly code: string = "unknown-error"
+  ) {
+    super(message);
+    this.name = "FirestoreServiceError";
+  }
+}
 
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
-  const snap = await getDoc(doc(firestore, "users", uid));
-  if (!snap.exists()) return null;
-  return { uid, ...snap.data() } as UserProfile;
+  if (!uid || typeof uid !== "string") return null;
+  try {
+    const snap = await getDoc(doc(firestore, "users", uid));
+    if (!snap.exists()) return null;
+    const parseResult = UserProfileSchema.safeParse({ uid, ...snap.data() });
+    return parseResult.success ? parseResult.data : ({ uid, ...snap.data() } as UserProfile);
+  } catch (error) {
+    console.error(`[getUserProfile] Failed to fetch profile for ${uid}:`, error);
+    throw new FirestoreServiceError("Failed to load user profile", "fetch-profile-failed");
+  }
 }
 
 export async function updateUsername(uid: string, username: string): Promise<void> {
-  await updateDoc(doc(firestore, "users", uid), { 
-    username,
-    usernameLower: username.toLowerCase()
-  });
+  if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
+  const validatedUsername = UsernameInputSchema.parse(username);
+  try {
+    await updateDoc(doc(firestore, "users", uid), {
+      username: validatedUsername,
+      usernameLower: validatedUsername.toLowerCase(),
+    });
+  } catch (error) {
+    console.error(`[updateUsername] Failed for user ${uid}:`, error);
+    throw new FirestoreServiceError("Failed to update username", "update-username-failed");
+  }
 }
 
 export async function unlockAchievements(uid: string, achievements: string[]): Promise<void> {
-  const validAchievements = achievements.filter(Boolean);
+  if (!uid) return;
+  const validAchievements = achievements
+    .filter((a): a is string => typeof a === "string" && a.trim().length > 0)
+    .map((a) => sanitizeString(a, 50));
   if (validAchievements.length === 0) return;
-  await updateDoc(doc(firestore, "users", uid), {
-    unlockedAchievements: arrayUnion(...validAchievements)
-  });
+
+  try {
+    await updateDoc(doc(firestore, "users", uid), {
+      unlockedAchievements: arrayUnion(...validAchievements),
+    });
+  } catch (error) {
+    console.error(`[unlockAchievements] Error unlocking achievements for ${uid}:`, error);
+  }
 }
 
 export async function checkUsernameExists(username: string): Promise<boolean> {
-  const usernameLower = username.toLowerCase();
-  
-  // Check against the lowercase field
-  const qLower = query(collection(firestore, "users"), where("usernameLower", "==", usernameLower), limit(1));
-  const snapLower = await getDocs(qLower);
-  if (!snapLower.empty) return true;
+  if (!username || typeof username !== "string") return false;
+  const sanitized = sanitizeString(username, 30);
+  const usernameLower = sanitized.toLowerCase();
 
-  // Fallback for older profiles that might not have usernameLower
-  const qExact = query(collection(firestore, "users"), where("username", "==", username), limit(1));
-  const snapExact = await getDocs(qExact);
-  return !snapExact.empty;
+  try {
+    const qLower = query(
+      collection(firestore, "users"),
+      where("usernameLower", "==", usernameLower),
+      limit(1)
+    );
+    const snapLower = await getDocs(qLower);
+    if (!snapLower.empty) return true;
+
+    const qExact = query(
+      collection(firestore, "users"),
+      where("username", "==", sanitized),
+      limit(1)
+    );
+    const snapExact = await getDocs(qExact);
+    return !snapExact.empty;
+  } catch (error) {
+    console.error("[checkUsernameExists] Query failed:", error);
+    return false;
+  }
 }
 
 export async function createUserProfile(uid: string, username: string): Promise<UserProfile> {
-  const profile = {
-    username,
-    usernameLower: username.toLowerCase(),
+  if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
+  const validatedUsername = UsernameInputSchema.parse(username);
+
+  const profileData = {
+    username: validatedUsername,
+    usernameLower: validatedUsername.toLowerCase(),
     createdAt: serverTimestamp(),
     bestScore: 0,
     totalGames: 0,
   };
-  await setDoc(doc(firestore, "users", uid), profile);
-  return { uid, ...profile, createdAt: null } as any;
+
+  try {
+    await setDoc(doc(firestore, "users", uid), profileData);
+    return {
+      uid,
+      username: validatedUsername,
+      usernameLower: validatedUsername.toLowerCase(),
+      createdAt: null,
+      bestScore: 0,
+      totalGames: 0,
+      unlockedAchievements: [],
+      firstTryGuesses: 0,
+      fastDrafts: 0,
+      uniqueCountriesUsed: [],
+      dailyStreak: 0,
+    };
+  } catch (error) {
+    console.error(`[createUserProfile] Failed to create profile for ${uid}:`, error);
+    throw new FirestoreServiceError("Failed to create user profile", "create-profile-failed");
+  }
 }
 
-
-export type GameEndStats = {
-  score?: number;
-  mode: string;
-  roster?: Record<string, string>;
-  totalTimeMs?: number;
-  firstTryGuess?: boolean;
-  achievementsToUnlock?: string[];
-  isDaily?: boolean;
-};
-
-export async function processGameEndStats(uid: string, stats: GameEndStats): Promise<void> {
-  const profile = await getUserProfile(uid);
-  if (!profile) return;
-
-  const updates: Partial<UserProfile> = {
-    totalGames: (profile.totalGames || 0) + 1,
-  };
-
-  const newUnlocked = new Set<string>(profile.unlockedAchievements || []);
-  if (stats.achievementsToUnlock) {
-    stats.achievementsToUnlock.forEach(a => newUnlocked.add(a));
-  }
-
-  // Best Score (Normal Mode)
-  if (stats.mode === "normal" && stats.score !== undefined) {
-    updates.bestScore = Math.max(profile.bestScore || 0, stats.score);
-    if (updates.bestScore >= 165) newUnlocked.add("Superpower");
-    if (updates.bestScore >= 175) newUnlocked.add("God Tier");
-  }
-
-  // Best Score (Double Mode)
-  if (stats.mode === "double" && stats.score !== undefined) {
-    updates.bestDoubleScore = Math.max(profile.bestDoubleScore || 0, stats.score);
-    if (updates.bestDoubleScore >= 165) newUnlocked.add("Double Threat");
-  }
-
-  // First Try Guesses
-  if (stats.firstTryGuess) {
-    updates.firstTryGuesses = (profile.firstTryGuesses || 0) + 1;
-    if (updates.firstTryGuesses >= 10) newUnlocked.add("Geography Genius");
-    if (updates.firstTryGuesses >= 50) newUnlocked.add("Flawless Guesser");
-  }
-
-  // Fast Drafts
-  if (stats.totalTimeMs && stats.totalTimeMs < 120000) {
-    updates.fastDrafts = (profile.fastDrafts || 0) + 1;
-    newUnlocked.add("Speed Demon");
-    if (updates.fastDrafts >= 10) newUnlocked.add("Quick Thinker");
-  }
-  if (stats.totalTimeMs && stats.totalTimeMs < 60000) {
-    newUnlocked.add("Lightning Fast");
-  }
-
-  // Unique Countries
-  if (stats.roster) {
-    const existingCountries = new Set(profile.uniqueCountriesUsed || []);
-    Object.values(stats.roster).forEach(c => existingCountries.add(c));
-    updates.uniqueCountriesUsed = Array.from(existingCountries);
-    if (updates.uniqueCountriesUsed.length >= 50) newUnlocked.add("World Traveler");
-    if (updates.uniqueCountriesUsed.length >= 100) newUnlocked.add("Globetrotter");
-    if (updates.uniqueCountriesUsed.length >= 150) newUnlocked.add("Mr. Worldwide");
-  }
-
-  // Daily Streak
-  if (stats.isDaily) {
-    const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-    const lastDate = profile.lastDailyDate;
-    if (lastDate !== today) {
-      if (!lastDate) {
-        updates.dailyStreak = 1;
-      } else {
-        const lastDateObj = new Date(lastDate);
-        const todayObj = new Date(today);
-        const diffTime = Math.abs(todayObj.getTime() - lastDateObj.getTime());
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays === 1) {
-          updates.dailyStreak = (profile.dailyStreak || 0) + 1;
-        } else {
-          updates.dailyStreak = 1;
-        }
-      }
-      updates.lastDailyDate = today;
-      if (updates.dailyStreak >= 7) newUnlocked.add("Daily Streak");
-      if (updates.dailyStreak >= 30) newUnlocked.add("Dedicated Player");
-    }
-  }
-
-  // Games Played
-  if (updates.totalGames! >= 100) {
-    newUnlocked.add("Draft Master");
-  }
-  if (updates.totalGames! >= 500) {
-    newUnlocked.add("Veteran Drafter");
-  }
-  if (updates.totalGames! >= 1000) {
-    newUnlocked.add("Addict");
-  }
-
-  const finalUnlocked = Array.from(newUnlocked);
+export async function processGameEndStats(uid: string, rawStats: GameEndStats): Promise<void> {
+  if (!uid) return;
+  const stats = GameEndStatsSchema.parse(rawStats);
   
-  await setDoc(
-    doc(firestore, "users", uid),
-    {
-      ...updates,
-      unlockedAchievements: finalUnlocked
-    },
-    { merge: true }
-  );
-}
+  try {
+    const profile = await getUserProfile(uid);
+    if (!profile) return;
 
-async function updateUserStats(uid: string, score: number): Promise<void> {
-  const existing = await getUserProfile(uid);
-  if (!existing) return;
-  await setDoc(
-    doc(firestore, "users", uid),
-    {
-      bestScore: Math.max(existing.bestScore, score),
-      totalGames: (existing.totalGames || 0) + 1,
-    },
-    { merge: true }
-  );
+    const updates: Partial<UserProfile> = {
+      totalGames: (profile.totalGames || 0) + 1,
+    };
+
+    const newUnlocked = new Set<string>(profile.unlockedAchievements || []);
+    if (stats.achievementsToUnlock) {
+      stats.achievementsToUnlock.forEach((a) => newUnlocked.add(sanitizeString(a, 50)));
+    }
+
+    if (stats.mode === "normal" && stats.score !== undefined) {
+      updates.bestScore = Math.max(profile.bestScore || 0, stats.score);
+      if (updates.bestScore >= 165) newUnlocked.add("Superpower");
+      if (updates.bestScore >= 175) newUnlocked.add("God Tier");
+    }
+
+    if (stats.mode === "double" && stats.score !== undefined) {
+      updates.bestDoubleScore = Math.max(profile.bestDoubleScore || 0, stats.score);
+      if (updates.bestDoubleScore >= 165) newUnlocked.add("Double Threat");
+    }
+
+    if (stats.firstTryGuess) {
+      updates.firstTryGuesses = (profile.firstTryGuesses || 0) + 1;
+      if (updates.firstTryGuesses >= 10) newUnlocked.add("Geography Genius");
+      if (updates.firstTryGuesses >= 50) newUnlocked.add("Flawless Guesser");
+    }
+
+    if (stats.totalTimeMs && stats.totalTimeMs < 120000) {
+      updates.fastDrafts = (profile.fastDrafts || 0) + 1;
+      newUnlocked.add("Speed Demon");
+      if (updates.fastDrafts >= 10) newUnlocked.add("Quick Thinker");
+    }
+    if (stats.totalTimeMs && stats.totalTimeMs < 60000) {
+      newUnlocked.add("Lightning Fast");
+    }
+
+    if (stats.roster) {
+      const existingCountries = new Set(profile.uniqueCountriesUsed || []);
+      Object.values(stats.roster).forEach((c) => existingCountries.add(sanitizeString(c, 50)));
+      updates.uniqueCountriesUsed = Array.from(existingCountries);
+      if (updates.uniqueCountriesUsed.length >= 50) newUnlocked.add("World Traveler");
+      if (updates.uniqueCountriesUsed.length >= 100) newUnlocked.add("Globetrotter");
+      if (updates.uniqueCountriesUsed.length >= 150) newUnlocked.add("Mr. Worldwide");
+    }
+
+    if (stats.isDaily) {
+      const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
+      const lastDate = profile.lastDailyDate;
+      if (lastDate !== today) {
+        if (!lastDate) {
+          updates.dailyStreak = 1;
+        } else {
+          const lastDateObj = new Date(lastDate);
+          const todayObj = new Date(today);
+          const diffTime = Math.abs(todayObj.getTime() - lastDateObj.getTime());
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          if (diffDays === 1) {
+            updates.dailyStreak = (profile.dailyStreak || 0) + 1;
+          } else {
+            updates.dailyStreak = 1;
+          }
+        }
+        updates.lastDailyDate = today;
+        if (updates.dailyStreak >= 7) newUnlocked.add("Daily Streak");
+        if (updates.dailyStreak >= 30) newUnlocked.add("Dedicated Player");
+      }
+    }
+
+    if ((updates.totalGames ?? profile.totalGames ?? 0) >= 100) newUnlocked.add("Draft Master");
+    if ((updates.totalGames ?? profile.totalGames ?? 0) >= 500) newUnlocked.add("Veteran Drafter");
+    if ((updates.totalGames ?? profile.totalGames ?? 0) >= 1000) newUnlocked.add("Addict");
+
+    await setDoc(
+      doc(firestore, "users", uid),
+      {
+        ...updates,
+        unlockedAchievements: Array.from(newUnlocked),
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.error(`[processGameEndStats] Error processing stats for ${uid}:`, error);
+  }
 }
 
 export async function saveScore(
@@ -239,120 +254,202 @@ export async function saveScore(
   guesses?: string[],
   mysteryCountry?: string
 ): Promise<string> {
+  if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
+  const sanitizedUsername = sanitizeString(username, 30);
+  const sanitizedMode = sanitizeString(mode, 30);
+  const sanitizedRoster: Record<string, string> = {};
+  for (const [k, v] of Object.entries(roster)) {
+    sanitizedRoster[sanitizeString(k, 50)] = sanitizeString(v, 50);
+  }
+
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
 
-  if (mode === "daily") {
-    const dailyDocId = `daily_${uid}_${today}`;
-    const existing = await getDoc(doc(firestore, "leaderboard", dailyDocId));
-    if (existing.exists()) {
-      throw Object.assign(new Error("Daily score already submitted for today"), {
-        code: "already-submitted",
+  try {
+    if (sanitizedMode === "daily") {
+      const dailyDocId = `daily_${uid}_${today}`;
+      const existing = await getDoc(doc(firestore, "leaderboard", dailyDocId));
+      if (existing.exists()) {
+        throw new FirestoreServiceError("Daily score already submitted for today", "already-submitted");
+      }
+      await setDoc(doc(firestore, "leaderboard", dailyDocId), {
+        uid,
+        username: sanitizedUsername,
+        score,
+        mode: sanitizedMode,
+        roster: sanitizedRoster,
+        ...(guesses && { guesses: guesses.map((g) => sanitizeString(g, 50)) }),
+        ...(mysteryCountry && { mysteryCountry: sanitizeString(mysteryCountry, 50) }),
+        createdAt: serverTimestamp(),
+        date: today,
       });
+      return dailyDocId;
     }
-    await setDoc(doc(firestore, "leaderboard", dailyDocId), {
-      uid, username, score, mode, roster,
-      ...(guesses && { guesses }),
-      ...(mysteryCountry && { mysteryCountry }),
+
+    const docRef = await addDoc(collection(firestore, "leaderboard"), {
+      uid,
+      username: sanitizedUsername,
+      score,
+      mode: sanitizedMode,
+      roster: sanitizedRoster,
+      ...(guesses && { guesses: guesses.map((g) => sanitizeString(g, 50)) }),
+      ...(mysteryCountry && { mysteryCountry: sanitizeString(mysteryCountry, 50) }),
       createdAt: serverTimestamp(),
       date: today,
     });
-    return dailyDocId;
+    return docRef.id;
+  } catch (error) {
+    if (error instanceof FirestoreServiceError) throw error;
+    console.error("[saveScore] Error saving score:", error);
+    throw new FirestoreServiceError("Failed to save leaderboard score", "save-score-failed");
   }
-
-  const docRef = await addDoc(collection(firestore, "leaderboard"), {
-    uid, username, score, mode, roster,
-    ...(guesses && { guesses }),
-    ...(mysteryCountry && { mysteryCountry }),
-    createdAt: serverTimestamp(),
-    date: today,
-  });
-  return docRef.id;
 }
 
-export async function saveCloudPersonalScore(uid: string, mode: string, entryData: any): Promise<void> {
-  await addDoc(collection(firestore, "personal_records"), {
-    uid,
-    mode,
-    ...entryData,
-    createdAt: serverTimestamp(),
-  });
+export async function saveCloudPersonalScore(
+  uid: string,
+  mode: string,
+  entryData: Record<string, unknown>
+): Promise<void> {
+  if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
+  try {
+    await addDoc(collection(firestore, "personal_records"), {
+      uid,
+      mode: sanitizeString(mode, 30),
+      ...entryData,
+      createdAt: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error("[saveCloudPersonalScore] Error:", error);
+    throw new FirestoreServiceError("Failed to save personal score", "save-personal-score-failed");
+  }
 }
 
-export async function getCloudPersonalScores(uid: string, mode: string): Promise<any[]> {
+export async function getCloudPersonalScores(uid: string, mode: string): Promise<PersonalRecord[]> {
+  if (!uid) return [];
   const isAsc = mode === "guess";
-  const q = query(
-    collection(firestore, "personal_records"),
-    where("uid", "==", uid),
-    where("mode", "==", mode),
-    orderBy("score", isAsc ? "asc" : "desc")
-  );
-  
-  const snap = await getDocs(q);
-  return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  try {
+    const q = query(
+      collection(firestore, "personal_records"),
+      where("uid", "==", uid),
+      where("mode", "==", mode),
+      orderBy("score", isAsc ? "asc" : "desc")
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => {
+      const data = d.data();
+      return PersonalRecordSchema.parse({ id: d.id, ...data });
+    });
+  } catch (error) {
+    console.error("[getCloudPersonalScores] Error:", error);
+    return [];
+  }
 }
 
 export async function deleteCloudPersonalScore(id: string): Promise<void> {
-  await deleteDoc(doc(firestore, "personal_records", id));
+  if (!id) return;
+  try {
+    await deleteDoc(doc(firestore, "personal_records", id));
+  } catch (error) {
+    console.error("[deleteCloudPersonalScore] Error:", error);
+  }
 }
 
 export async function deleteGlobalScore(id: string): Promise<void> {
-  await deleteDoc(doc(firestore, "leaderboard", id));
+  if (!id) return;
+  try {
+    await deleteDoc(doc(firestore, "leaderboard", id));
+  } catch (error) {
+    console.error("[deleteGlobalScore] Error:", error);
+  }
 }
 
+/**
+ * Retrieves top leaderboard scores.
+ * OPTIMIZATION: Batches user queries into chunked 'in' queries to eliminate the N+1 problem.
+ */
 export async function getTopScores(modeFilter?: string, topN = 10): Promise<LeaderboardEntry[]> {
   const isAsc = modeFilter === "guess";
-  
-  let q;
-  if (modeFilter && modeFilter !== "all") {
-    q = query(
-      collection(firestore, "leaderboard"), 
-      where("mode", "==", modeFilter), 
-      orderBy("score", isAsc ? "asc" : "desc"), 
-      limit(topN)
-    );
-  } else {
-    q = query(
-      collection(firestore, "leaderboard"), 
-      orderBy("score", isAsc ? "asc" : "desc"), 
-      limit(topN)
-    );
-  }
-  
-  const snap = await getDocs(q);
-  const entries = snap.docs.map(d => ({ id: d.id, ...d.data() } as LeaderboardEntry));
-  
-  const uniqueUids = [...new Set(entries.map(e => e.uid))];
-  const userDocs = await Promise.all(uniqueUids.map(uid => getDoc(doc(firestore, "users", uid))));
-  const usernameMap: Record<string, string> = {};
-  userDocs.forEach(d => {
-    if (d.exists() && d.data().username) {
-      usernameMap[d.id] = d.data().username;
-    }
-  });
 
-  return entries.map(e => ({
-    ...e,
-    username: usernameMap[e.uid] || e.username
-  }));
+  try {
+    let q;
+    if (modeFilter && modeFilter !== "all") {
+      q = query(
+        collection(firestore, "leaderboard"),
+        where("mode", "==", modeFilter),
+        orderBy("score", isAsc ? "asc" : "desc"),
+        limit(topN)
+      );
+    } else {
+      q = query(
+        collection(firestore, "leaderboard"),
+        orderBy("score", isAsc ? "asc" : "desc"),
+        limit(topN)
+      );
+    }
+
+    const snap = await getDocs(q);
+    const entries = snap.docs.map((d) => ({ id: d.id, ...d.data() } as LeaderboardEntry));
+
+    const uniqueUids = [...new Set(entries.map((e) => e.uid))].filter(Boolean);
+    const usernameMap: Record<string, string> = {};
+
+    // Batching user lookups in chunks of 10 to avoid N+1 individual queries
+    const chunkSize = 10;
+    for (let i = 0; i < uniqueUids.length; i += chunkSize) {
+      const chunk = uniqueUids.slice(i, i + chunkSize);
+      const usersQuery = query(collection(firestore, "users"), where(documentId(), "in", chunk));
+      const usersSnap = await getDocs(usersQuery);
+      usersSnap.docs.forEach((d) => {
+        const data = d.data();
+        if (data && typeof data.username === "string") {
+          usernameMap[d.id] = data.username;
+        }
+      });
+    }
+
+    return entries.map((e) => ({
+      ...e,
+      username: usernameMap[e.uid] || e.username,
+    }));
+  } catch (error) {
+    console.error("[getTopScores] Error fetching leaderboard:", error);
+    return [];
+  }
 }
 
 export async function checkDailySubmitted(uid: string): Promise<boolean> {
+  if (!uid) return false;
   const today = new Date().toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-  const snap = await getDoc(doc(firestore, "leaderboard", `daily_${uid}_${today}`));
-  return snap.exists();
+  try {
+    const snap = await getDoc(doc(firestore, "leaderboard", `daily_${uid}_${today}`));
+    return snap.exists();
+  } catch (error) {
+    console.error("[checkDailySubmitted] Error checking daily submission:", error);
+    return false;
+  }
 }
 
-export async function saveDailyState(uid: string, date: string, state: any): Promise<void> {
-  await setDoc(doc(firestore, "daily_states", `${uid}_${date}`), {
-    state,
-    updatedAt: serverTimestamp(),
-  });
+export async function saveDailyState(uid: string, date: string, state: Record<string, unknown>): Promise<void> {
+  if (!uid || !date) return;
+  try {
+    await setDoc(doc(firestore, "daily_states", `${uid}_${date}`), {
+      state,
+      updatedAt: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error("[saveDailyState] Error saving state:", error);
+  }
 }
 
-export async function getDailyState(uid: string, date: string): Promise<any | null> {
-  const snap = await getDoc(doc(firestore, "daily_states", `${uid}_${date}`));
-  if (!snap.exists()) return null;
-  return snap.data().state;
+export async function getDailyState(uid: string, date: string): Promise<Record<string, unknown> | null> {
+  if (!uid || !date) return null;
+  try {
+    const snap = await getDoc(doc(firestore, "daily_states", `${uid}_${date}`));
+    if (!snap.exists()) return null;
+    return (snap.data().state as Record<string, unknown>) ?? null;
+  } catch (error) {
+    console.error("[getDailyState] Error fetching state:", error);
+    return null;
+  }
 }
 
 // --- Multiplayer Room Logic ---
@@ -362,83 +459,152 @@ export async function createRoom(
   hostUsername: string,
   mode: RoomMode,
   difficulty: "easy" | "hard",
-  associationsSettings?: any
+  associationsSettings?: Record<string, unknown>
 ): Promise<string> {
+  if (!hostUid) throw new FirestoreServiceError("Host UID required", "invalid-host");
+
+  const sanitizedUsername = sanitizeString(hostUsername, 30);
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-  const room: Room = {
+
+  const roomData = {
     code,
     mode,
     difficulty,
     hostId: hostUid,
-    status: "waiting",
+    status: "waiting" as const,
     currentRound: 0,
     poolSeed: Math.floor(Math.random() * 1000000),
-    createdAt: null,
-    associationsSettings: associationsSettings || null,
+    associationsSettings: associationsSettings ?? null,
   };
 
-  const roomRef = doc(firestore, "rooms", code);
-  await setDoc(roomRef, { ...room, createdAt: serverTimestamp() });
+  const parsedRoom = RoomSchema.parse({ ...roomData, createdAt: null });
 
-  const playerRef = doc(firestore, "rooms", code, "players", hostUid);
-  const player: RoomPlayer = {
-    uid: hostUid,
-    username: hostUsername,
-    score: 0,
-    roster: {},
-    finishedRound: false,
-    sabotageChoice: null,
-    sabotageOptions: null,
-  };
-  await setDoc(playerRef, player);
+  try {
+    const roomRef = doc(firestore, "rooms", code);
+    await setDoc(roomRef, { ...parsedRoom, createdAt: serverTimestamp() });
 
-  return code;
+    const playerRef = doc(firestore, "rooms", code, "players", hostUid);
+    const player: RoomPlayer = {
+      uid: hostUid,
+      username: sanitizedUsername,
+      score: 0,
+      roster: {},
+      finishedRound: false,
+      sabotageChoice: null,
+      sabotageOptions: null,
+    };
+    await setDoc(playerRef, RoomPlayerSchema.parse(player));
+
+    return code;
+  } catch (error) {
+    console.error("[createRoom] Error creating room:", error);
+    throw new FirestoreServiceError("Failed to create multiplayer room", "create-room-failed");
+  }
 }
 
 export async function joinRoom(code: string, uid: string, username: string): Promise<Room> {
-  const roomRef = doc(firestore, "rooms", code);
-  const roomSnap = await getDoc(roomRef);
-  if (!roomSnap.exists()) throw new Error("Room not found");
-  const room = roomSnap.data() as Room;
-  if (room.status !== "waiting") throw new Error("Room already in progress");
+  if (!code || !uid) throw new FirestoreServiceError("Invalid room code or user ID", "invalid-args");
 
-  // Get current players to check limit
-  const playersSnap = await getDocs(collection(firestore, "rooms", code, "players"));
-  if (room.mode === "sabotage" && playersSnap.size >= 2) throw new Error("Room is full (2 player limit)");
+  const sanitizedCode = sanitizeString(code, 6).toUpperCase();
+  const sanitizedUsername = sanitizeString(username, 30);
 
-  const playerRef = doc(firestore, "rooms", code, "players", uid);
-  const player: RoomPlayer = {
-    uid,
-    username,
-    score: 0,
-    roster: {},
-    finishedRound: false,
-    sabotageChoice: null,
-    sabotageOptions: null,
-  };
-  await setDoc(playerRef, player);
-  return room;
+  try {
+    const roomRef = doc(firestore, "rooms", sanitizedCode);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) throw new FirestoreServiceError("Room not found", "room-not-found");
+
+    const room = RoomSchema.parse({ ...roomSnap.data(), code: sanitizedCode });
+    if (room.status !== "waiting") throw new FirestoreServiceError("Room already in progress", "room-in-progress");
+
+    const playersSnap = await getDocs(collection(firestore, "rooms", sanitizedCode, "players"));
+    if (room.mode === "sabotage" && playersSnap.size >= 2) {
+      throw new FirestoreServiceError("Room is full (2 player limit)", "room-full");
+    }
+
+    const playerRef = doc(firestore, "rooms", sanitizedCode, "players", uid);
+    const player: RoomPlayer = {
+      uid,
+      username: sanitizedUsername,
+      score: 0,
+      roster: {},
+      finishedRound: false,
+      sabotageChoice: null,
+      sabotageOptions: null,
+    };
+    await setDoc(playerRef, RoomPlayerSchema.parse(player));
+    return room;
+  } catch (error) {
+    if (error instanceof FirestoreServiceError) throw error;
+    console.error("[joinRoom] Error joining room:", error);
+    throw new FirestoreServiceError("Failed to join room", "join-room-failed");
+  }
 }
 
 export async function updateRoom(code: string, updates: Partial<Room>): Promise<void> {
-  const roomRef = doc(firestore, "rooms", code);
-  await updateDoc(roomRef, updates);
+  if (!code) return;
+  try {
+    const roomRef = doc(firestore, "rooms", code);
+    await updateDoc(roomRef, updates);
+  } catch (error) {
+    console.error(`[updateRoom] Failed to update room ${code}:`, error);
+  }
 }
 
 export async function updatePlayer(code: string, uid: string, updates: Partial<RoomPlayer>): Promise<void> {
-  const playerRef = doc(firestore, "rooms", code, "players", uid);
-  await updateDoc(playerRef, updates);
+  if (!code || !uid) return;
+  try {
+    const playerRef = doc(firestore, "rooms", code, "players", uid);
+    await updateDoc(playerRef, updates);
+  } catch (error) {
+    console.error(`[updatePlayer] Failed to update player ${uid} in room ${code}:`, error);
+  }
 }
 
-export function listenToRoom(code: string, onUpdate: (room: Room) => void) {
-  return onSnapshot(doc(firestore, "rooms", code), (snap) => {
-    if (snap.exists()) onUpdate({ ...snap.data() } as Room);
-  });
+export function listenToRoom(
+  code: string,
+  onUpdate: (room: Room) => void,
+  onError?: (error: Error) => void
+) {
+  return onSnapshot(
+    doc(firestore, "rooms", code),
+    (snap) => {
+      if (snap.exists()) {
+        try {
+          const parsed = RoomSchema.parse({ ...snap.data(), code });
+          onUpdate(parsed);
+        } catch (e) {
+          onUpdate({ ...snap.data(), code } as Room);
+        }
+      }
+    },
+    (err) => {
+      console.error(`[listenToRoom] Listener error for room ${code}:`, err);
+      onError?.(err);
+    }
+  );
 }
 
-export function listenToPlayers(code: string, onUpdate: (players: RoomPlayer[]) => void) {
-  return onSnapshot(collection(firestore, "rooms", code, "players"), (snap) => {
-    const players = snap.docs.map(d => d.data() as RoomPlayer);
-    onUpdate(players);
-  });
+export function listenToPlayers(
+  code: string,
+  onUpdate: (players: RoomPlayer[]) => void,
+  onError?: (error: Error) => void
+) {
+  return onSnapshot(
+    collection(firestore, "rooms", code, "players"),
+    (snap) => {
+      const players = snap.docs.map((d) => {
+        const data = d.data();
+        try {
+          return RoomPlayerSchema.parse(data);
+        } catch {
+          return data as RoomPlayer;
+        }
+      });
+      onUpdate(players);
+    },
+    (err) => {
+      console.error(`[listenToPlayers] Listener error for room ${code}:`, err);
+      onError?.(err);
+    }
+  );
 }
