@@ -193,7 +193,7 @@ export default function TasksGame() {
           <div className="w-full md:w-80 border-b md:border-b-0 md:border-r border-border bg-card/30 shrink-0 flex flex-col">
             <div className="p-4 border-b border-border/50 bg-muted/20">
               {/* Task Banner Card */}
-              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border border-primary/20 space-y-1">
+              <div className="p-3.5 rounded-2xl bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border border-primary/20 space-y-1.5">
                 <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-primary">
                   <span className="flex items-center gap-1"><Target className="w-3 h-3" /> Active Objective</span>
                   {currentTask.challenge.type === "timer" && (
@@ -205,6 +205,11 @@ export default function TasksGame() {
                 <p className="text-xs font-black text-foreground leading-snug">
                   "{currentTask.fullSentence}"
                 </p>
+                {currentTask.goal.explanation && (
+                  <p className="text-[11px] font-medium text-muted-foreground bg-card/60 p-2 rounded-xl border border-border/40 leading-tight">
+                    <span className="font-bold text-primary">Requirements:</span> {currentTask.goal.explanation}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -248,6 +253,18 @@ export default function TasksGame() {
                       <Target className="w-4 h-4" /> Goal Target Country: <strong className="text-foreground">{currentTask.goal.targetCountry.flag} {currentTask.goal.targetCountry.name}</strong>
                     </span>
                     <span className="text-[11px] opacity-80">Match category stats for max score</span>
+                  </div>
+                )}
+
+                {/* Archetype Requirement Bar */}
+                {currentTask.goal.type === "archetype" && currentTask.goal.explanation && (
+                  <div className="px-6 py-2.5 bg-purple-500/10 border-b border-purple-500/20 flex flex-wrap items-center justify-between text-xs font-medium text-purple-300 gap-2">
+                    <span className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-purple-400" /> Target Archetype: <strong className="text-foreground font-bold">{currentTask.goal.targetArchetype}</strong>
+                    </span>
+                    <span className="text-xs bg-purple-500/20 border border-purple-500/30 px-2.5 py-0.5 rounded-lg text-purple-200 font-semibold">
+                      💡 Criteria: {currentTask.goal.explanation}
+                    </span>
                   </div>
                 )}
 

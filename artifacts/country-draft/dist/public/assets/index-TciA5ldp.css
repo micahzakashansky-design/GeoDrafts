@@ -136,6 +136,7 @@
     --color-indigo-400: oklch(67.3% .182 276.935);
     --color-indigo-500: oklch(58.5% .233 277.117);
     --color-indigo-600: oklch(51.1% .262 276.966);
+    --color-purple-200: oklch(90.2% .063 306.703);
     --color-purple-300: oklch(82.7% .119 306.383);
     --color-purple-400: oklch(71.4% .203 305.504);
     --color-purple-500: oklch(62.7% .265 303.9);
@@ -5351,6 +5352,10 @@
     .text-primary\/70 {
       color: color-mix(in oklab, hsl(var(--primary)) 70%, transparent);
     }
+  }
+
+  .text-purple-200 {
+    color: var(--color-purple-200);
   }
 
   .text-purple-300 {

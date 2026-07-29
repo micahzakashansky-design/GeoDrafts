@@ -181,12 +181,17 @@ export function TaskStartModal({ onStartGame, onBackToMenu }: TaskStartModalProp
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full my-4 p-5 rounded-2xl bg-gradient-to-r from-primary/15 via-purple-500/15 to-primary/15 border border-primary/30 text-center shadow-lg"
+            className="w-full my-4 p-5 rounded-2xl bg-gradient-to-r from-primary/15 via-purple-500/15 to-primary/15 border border-primary/30 text-center shadow-lg flex flex-col items-center space-y-2"
           >
-            <div className="text-xs uppercase font-bold tracking-widest text-primary mb-1">Your Objective</div>
+            <div className="text-xs uppercase font-bold tracking-widest text-primary">Your Objective</div>
             <p className="text-lg md:text-xl font-black text-foreground leading-snug">
               "{currentTask.fullSentence}"
             </p>
+            {currentTask.goal.explanation && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card/80 border border-primary/30 text-xs font-medium text-foreground/90 shadow-sm mt-1">
+                <span className="font-bold text-primary">💡 Requirements:</span> {currentTask.goal.explanation}
+              </div>
+            )}
           </motion.div>
         )}
 

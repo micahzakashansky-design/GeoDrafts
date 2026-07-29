@@ -10,6 +10,7 @@ export type TaskGoal = {
   template: string;
   targetCountry?: Country;
   targetArchetype?: string;
+  explanation?: string;
 };
 
 export type TaskChallenge = {
@@ -43,6 +44,24 @@ export const ARCHETYPES = [
   "Knowledge Hub",
   "Wealthy City-State"
 ];
+
+export const ARCHETYPE_EXPLANATIONS: Record<string, string> = {
+  "Spartan Society": "High Military (≥9), low Healthcare (≤5) & Education (≤5)",
+  "Military Superstate": "High Military (≥8), Economy (≥8), & Technology (≥8)",
+  "Techno-Utopia": "High Economy (≥8), Technology (≥8), & Education (≥8)",
+  "Nordic Model": "High Healthcare (≥8), Education (≥8), & Government (≥8)",
+  "Cultural Hegemon": "High Tourism (≥8), Economy (≥8), & Education (≥8)",
+  "Industrial Juggernaut": "High Natural Resources (≥8), Economy (≥8), & Industry (≥8)",
+  "Fortress State": "High Military (≥8) & Location (≥8), low Tourism (≤4)",
+  "Cyberocracy": "High Technology (≥9) & Government (≥9)",
+  "Eco-Paradise": "High Climate (≥9) & Healthcare (≥8), low Industry (≤4)",
+  "Trade Empire": "High Economy (≥8), Location (≥8), & Government (≥8)",
+  "Global Medic": "High Healthcare (≥8), Education (≥8), & Technology (≥8)",
+  "Knowledge Hub": "High Education (≥9) & Technology (≥9)",
+  "Resource Curse": "High Natural Resources (≥9), low Government (≤4) & Economy (≤5)",
+  "Wealthy City-State": "Small Size (≤50,000 km²), Low Population (≤15M), High Economy (≥7)",
+  "Balanced Republic": "Default balanced distribution across stats"
+};
 
 export function getContinentForCountry(country: Country): string {
   if (country.region === "Africa") return "Africa";
@@ -126,13 +145,15 @@ export function generateRandomTask(customPool?: Country[]): Task {
     goal = {
       type: "worst",
       title: "Worst Country Possible",
-      template: "Make the worst country possible"
+      template: "Make the worst country possible",
+      explanation: "Score 50 points or lower for a 100/100 score."
     };
   } else if (goalType === "best") {
     goal = {
       type: "best",
       title: "Best Country Possible",
-      template: "Make the best country possible"
+      template: "Make the best country possible",
+      explanation: "Score 175 points or higher for a 100/100 score."
     };
   } else if (goalType === "match") {
     // Pick target country from usablePool
@@ -141,16 +162,19 @@ export function generateRandomTask(customPool?: Country[]): Task {
       type: "match",
       title: `Match ${targetCountry.name}`,
       template: `Make a country most similar to ${targetCountry.name}`,
-      targetCountry
+      targetCountry,
+      explanation: `Match category stats as closely as possible to ${targetCountry.name}.`
     };
   } else {
     const targetArchetype = ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
     const prefix = /^[AEIOU]/i.test(targetArchetype) ? "an" : "a";
+    const explanation = ARCHETYPE_EXPLANATIONS[targetArchetype] || "";
     goal = {
       type: "archetype",
       title: `Achieve ${targetArchetype}`,
       template: `Make ${prefix} ${targetArchetype}`,
-      targetArchetype
+      targetArchetype,
+      explanation
     };
   }
 
@@ -237,10 +261,12 @@ export function calculateTaskGrade(
     const achievedArchetype = getCountryArchetype(roster);
     const isSuccess = achievedArchetype.toLowerCase() === task.goal.targetArchetype.toLowerCase();
     grade = isSuccess ? 100 : 0;
+    const reqExp = ARCHETYPE_EXPLANATIONS[task.goal.targetArchetype] || "";
+    const achExp = ARCHETYPE_EXPLANATIONS[achievedArchetype] || "";
     summary = `Achieved: ${achievedArchetype} (Target: ${task.goal.targetArchetype})`;
     details = isSuccess
-      ? `Success! You successfully created a ${task.goal.targetArchetype}.`
-      : `Failed. You created a ${achievedArchetype} instead of a ${task.goal.targetArchetype}.`;
+      ? `Success! You created a ${task.goal.targetArchetype} (${reqExp}).`
+      : `Failed. You created a ${achievedArchetype} (${achExp}) instead of a ${task.goal.targetArchetype} (${reqExp}).`;
   }
 
   let letterGrade: "S" | "A" | "B" | "C" | "D" | "F" = "F";

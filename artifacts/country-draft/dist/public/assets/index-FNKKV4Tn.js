@@ -75789,6 +75789,23 @@ const ARCHETYPES = [
   "Knowledge Hub",
   "Wealthy City-State"
 ];
+const ARCHETYPE_EXPLANATIONS = {
+  "Spartan Society": "High Military (≥9), low Healthcare (≤5) & Education (≤5)",
+  "Military Superstate": "High Military (≥8), Economy (≥8), & Technology (≥8)",
+  "Techno-Utopia": "High Economy (≥8), Technology (≥8), & Education (≥8)",
+  "Nordic Model": "High Healthcare (≥8), Education (≥8), & Government (≥8)",
+  "Cultural Hegemon": "High Tourism (≥8), Economy (≥8), & Education (≥8)",
+  "Industrial Juggernaut": "High Natural Resources (≥8), Economy (≥8), & Industry (≥8)",
+  "Fortress State": "High Military (≥8) & Location (≥8), low Tourism (≤4)",
+  "Cyberocracy": "High Technology (≥9) & Government (≥9)",
+  "Eco-Paradise": "High Climate (≥9) & Healthcare (≥8), low Industry (≤4)",
+  "Trade Empire": "High Economy (≥8), Location (≥8), & Government (≥8)",
+  "Global Medic": "High Healthcare (≥8), Education (≥8), & Technology (≥8)",
+  "Knowledge Hub": "High Education (≥9) & Technology (≥9)",
+  "Resource Curse": "High Natural Resources (≥9), low Government (≤4) & Economy (≤5)",
+  "Wealthy City-State": "Small Size (≤50,000 km²), Low Population (≤15M), High Economy (≥7)",
+  "Balanced Republic": "Default balanced distribution across stats"
+};
 function getContinentForCountry(country) {
   if (country.region === "Africa") return "Africa";
   if (country.region === "Oceania") return "Asia-Pacific";
@@ -75860,13 +75877,15 @@ function generateRandomTask(customPool) {
     goal = {
       type: "worst",
       title: "Worst Country Possible",
-      template: "Make the worst country possible"
+      template: "Make the worst country possible",
+      explanation: "Score 50 points or lower for a 100/100 score."
     };
   } else if (goalType === "best") {
     goal = {
       type: "best",
       title: "Best Country Possible",
-      template: "Make the best country possible"
+      template: "Make the best country possible",
+      explanation: "Score 175 points or higher for a 100/100 score."
     };
   } else if (goalType === "match") {
     const targetCountry = usablePool[Math.floor(Math.random() * usablePool.length)] || basePool[0];
@@ -75874,16 +75893,19 @@ function generateRandomTask(customPool) {
       type: "match",
       title: `Match ${targetCountry.name}`,
       template: `Make a country most similar to ${targetCountry.name}`,
-      targetCountry
+      targetCountry,
+      explanation: `Match category stats as closely as possible to ${targetCountry.name}.`
     };
   } else {
     const targetArchetype = ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
     const prefix = /^[AEIOU]/i.test(targetArchetype) ? "an" : "a";
+    const explanation = ARCHETYPE_EXPLANATIONS[targetArchetype] || "";
     goal = {
       type: "archetype",
       title: `Achieve ${targetArchetype}`,
       template: `Make ${prefix} ${targetArchetype}`,
-      targetArchetype
+      targetArchetype,
+      explanation
     };
   }
   const fullSentence = `${goal.template} ${challenge.template}`;
@@ -75940,8 +75962,10 @@ function calculateTaskGrade(task, roster, totalScore) {
     const achievedArchetype = getCountryArchetype(roster);
     const isSuccess = achievedArchetype.toLowerCase() === task.goal.targetArchetype.toLowerCase();
     grade = isSuccess ? 100 : 0;
+    const reqExp = ARCHETYPE_EXPLANATIONS[task.goal.targetArchetype] || "";
+    const achExp = ARCHETYPE_EXPLANATIONS[achievedArchetype] || "";
     summary = `Achieved: ${achievedArchetype} (Target: ${task.goal.targetArchetype})`;
-    details = isSuccess ? `Success! You successfully created a ${task.goal.targetArchetype}.` : `Failed. You created a ${achievedArchetype} instead of a ${task.goal.targetArchetype}.`;
+    details = isSuccess ? `Success! You created a ${task.goal.targetArchetype} (${reqExp}).` : `Failed. You created a ${achievedArchetype} (${achExp}) instead of a ${task.goal.targetArchetype} (${reqExp}).`;
   }
   let letterGrade = "F";
   if (grade === 100) letterGrade = "S";
@@ -76079,13 +76103,18 @@ function TaskStartModal({ onStartGame, onBackToMenu }) {
           {
             initial: { scale: 0.9, opacity: 0 },
             animate: { scale: 1, opacity: 1 },
-            className: "w-full my-4 p-5 rounded-2xl bg-gradient-to-r from-primary/15 via-purple-500/15 to-primary/15 border border-primary/30 text-center shadow-lg",
+            className: "w-full my-4 p-5 rounded-2xl bg-gradient-to-r from-primary/15 via-purple-500/15 to-primary/15 border border-primary/30 text-center shadow-lg flex flex-col items-center space-y-2",
             children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs uppercase font-bold tracking-widest text-primary mb-1", children: "Your Objective" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs uppercase font-bold tracking-widest text-primary", children: "Your Objective" }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-lg md:text-xl font-black text-foreground leading-snug", children: [
                 '"',
                 currentTask.fullSentence,
                 '"'
+              ] }),
+              currentTask.goal.explanation && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-card/80 border border-primary/30 text-xs font-medium text-foreground/90 shadow-sm mt-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-primary", children: "💡 Requirements:" }),
+                " ",
+                currentTask.goal.explanation
               ] })
             ]
           }
@@ -76388,7 +76417,7 @@ function TasksGame() {
     ),
     currentTask && !showStartModal && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 flex flex-col md:flex-row overflow-hidden relative", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full md:w-80 border-b md:border-b-0 md:border-r border-border bg-card/30 shrink-0 flex flex-col", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4 border-b border-border/50 bg-muted/20", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3.5 rounded-2xl bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border border-primary/20 space-y-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4 border-b border-border/50 bg-muted/20", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3.5 rounded-2xl bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border border-primary/20 space-y-1.5", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-primary", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-3 h-3" }),
@@ -76405,6 +76434,11 @@ function TasksGame() {
             '"',
             currentTask.fullSentence,
             '"'
+          ] }),
+          currentTask.goal.explanation && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[11px] font-medium text-muted-foreground bg-card/60 p-2 rounded-xl border border-border/40 leading-tight", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-primary", children: "Requirements:" }),
+            " ",
+            currentTask.goal.explanation
           ] })
         ] }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4 flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -76446,6 +76480,17 @@ function TasksGame() {
             ] })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] opacity-80", children: "Match category stats for max score" })
+        ] }),
+        currentTask.goal.type === "archetype" && currentTask.goal.explanation && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-2.5 bg-purple-500/10 border-b border-purple-500/20 flex flex-wrap items-center justify-between text-xs font-medium text-purple-300 gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-4 h-4 text-purple-400" }),
+            " Target Archetype: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground font-bold", children: currentTask.goal.targetArchetype })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs bg-purple-500/20 border border-purple-500/30 px-2.5 py-0.5 rounded-lg text-purple-200 font-semibold", children: [
+            "💡 Criteria: ",
+            currentTask.goal.explanation
+          ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           TaskCountryCard,
