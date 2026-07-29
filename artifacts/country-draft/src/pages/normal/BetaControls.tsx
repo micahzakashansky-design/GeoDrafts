@@ -52,22 +52,47 @@ export function BetaControls({
   onBlindModeChange: (val: boolean) => void;
 }) {
   const [localValue, setLocalValue] = React.useState<number>(difficultyIndex);
+  const [rawPos, setRawPos] = React.useState<number>(difficultyIndex);
   const isDraggingRef = React.useRef(false);
+  const currentStepRef = React.useRef<number>(difficultyIndex);
 
   React.useEffect(() => {
     if (!isDraggingRef.current) {
       setLocalValue(difficultyIndex);
+      setRawPos(difficultyIndex);
+      currentStepRef.current = difficultyIndex;
     }
   }, [difficultyIndex]);
 
-  const currentConfig = BETA_DIFFICULTY_CONFIG[localValue] || BETA_DIFFICULTY_CONFIG[3];
+  // Hysteresis Buffer Zone algorithm (requires passing past dead-band buffer before step switches)
+  const updateHysteresis = (continuousVal: number) => {
+    setRawPos(continuousVal);
+    const curr = currentStepRef.current;
+    let nextStep = curr;
 
-  const handleCommit = (val: number) => {
-    isDraggingRef.current = false;
-    if (val !== difficultyIndex) {
-      onDifficultyChange(val);
+    // Buffer zone threshold (requires +0.65 / -0.65 hysteresis margin to switch step)
+    if (continuousVal > curr + 0.65 && curr < 3) {
+      nextStep = Math.min(3, Math.floor(continuousVal + 0.35));
+    } else if (continuousVal < curr - 0.65 && curr > 0) {
+      nextStep = Math.max(0, Math.ceil(continuousVal - 0.35));
+    }
+
+    if (nextStep !== curr) {
+      currentStepRef.current = nextStep;
+      setLocalValue(nextStep);
     }
   };
+
+  const handleCommit = () => {
+    isDraggingRef.current = false;
+    const finalStep = currentStepRef.current;
+    setRawPos(finalStep);
+    if (finalStep !== difficultyIndex) {
+      onDifficultyChange(finalStep);
+    }
+  };
+
+  const currentConfig = BETA_DIFFICULTY_CONFIG[localValue] || BETA_DIFFICULTY_CONFIG[3];
 
   return (
     <div className="flex items-center gap-3 flex-wrap">
@@ -84,26 +109,26 @@ export function BetaControls({
           {currentConfig.name} ({currentConfig.poolSize})
         </span>
 
-        {/* Range Slider with Drag Lock */}
+        {/* Continuous Range Slider with Hysteresis Buffer Zone */}
         <input
           type="range"
           min="0"
           max="3"
-          step="1"
-          value={localValue}
+          step="0.01"
+          value={rawPos}
           onPointerDown={() => { isDraggingRef.current = true; }}
           onMouseDown={() => { isDraggingRef.current = true; }}
           onTouchStart={() => { isDraggingRef.current = true; }}
           onChange={(e) => {
-            const val = parseInt(e.target.value, 10);
-            setLocalValue(val);
+            const val = parseFloat(e.target.value);
+            updateHysteresis(val);
           }}
-          onPointerUp={() => handleCommit(localValue)}
-          onMouseUp={() => handleCommit(localValue)}
-          onTouchEnd={() => handleCommit(localValue)}
+          onPointerUp={handleCommit}
+          onMouseUp={handleCommit}
+          onTouchEnd={handleCommit}
           onKeyUp={(e) => {
             if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-              handleCommit(localValue);
+              handleCommit();
             }
           }}
           style={{ accentColor: currentConfig.accent }}
@@ -118,8 +143,12 @@ export function BetaControls({
               <button
                 key={cfg.name}
                 onClick={() => {
+                  currentStepRef.current = idx;
                   setLocalValue(idx);
-                  handleCommit(idx);
+                  setRawPos(idx);
+                  if (idx !== difficultyIndex) {
+                    onDifficultyChange(idx);
+                  }
                 }}
                 className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full transition-all cursor-pointer border ${
                   isActive

@@ -59309,19 +59309,39 @@ function BetaControls({
   onBlindModeChange
 }) {
   const [localValue, setLocalValue] = React.useState(difficultyIndex);
+  const [rawPos, setRawPos] = React.useState(difficultyIndex);
   const isDraggingRef = React.useRef(false);
+  const currentStepRef = React.useRef(difficultyIndex);
   React.useEffect(() => {
     if (!isDraggingRef.current) {
       setLocalValue(difficultyIndex);
+      setRawPos(difficultyIndex);
+      currentStepRef.current = difficultyIndex;
     }
   }, [difficultyIndex]);
-  const currentConfig = BETA_DIFFICULTY_CONFIG[localValue] || BETA_DIFFICULTY_CONFIG[3];
-  const handleCommit = (val) => {
-    isDraggingRef.current = false;
-    if (val !== difficultyIndex) {
-      onDifficultyChange(val);
+  const updateHysteresis = (continuousVal) => {
+    setRawPos(continuousVal);
+    const curr = currentStepRef.current;
+    let nextStep = curr;
+    if (continuousVal > curr + 0.65 && curr < 3) {
+      nextStep = Math.min(3, Math.floor(continuousVal + 0.35));
+    } else if (continuousVal < curr - 0.65 && curr > 0) {
+      nextStep = Math.max(0, Math.ceil(continuousVal - 0.35));
+    }
+    if (nextStep !== curr) {
+      currentStepRef.current = nextStep;
+      setLocalValue(nextStep);
     }
   };
+  const handleCommit = () => {
+    isDraggingRef.current = false;
+    const finalStep = currentStepRef.current;
+    setRawPos(finalStep);
+    if (finalStep !== difficultyIndex) {
+      onDifficultyChange(finalStep);
+    }
+  };
+  const currentConfig = BETA_DIFFICULTY_CONFIG[localValue] || BETA_DIFFICULTY_CONFIG[3];
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 flex-wrap", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-card border border-border shadow-sm", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-bold text-muted-foreground uppercase tracking-wider hidden sm:inline", children: "Difficulty:" }),
@@ -59343,8 +59363,8 @@ function BetaControls({
           type: "range",
           min: "0",
           max: "3",
-          step: "1",
-          value: localValue,
+          step: "0.01",
+          value: rawPos,
           onPointerDown: () => {
             isDraggingRef.current = true;
           },
@@ -59355,15 +59375,15 @@ function BetaControls({
             isDraggingRef.current = true;
           },
           onChange: (e) => {
-            const val = parseInt(e.target.value, 10);
-            setLocalValue(val);
+            const val = parseFloat(e.target.value);
+            updateHysteresis(val);
           },
-          onPointerUp: () => handleCommit(localValue),
-          onMouseUp: () => handleCommit(localValue),
-          onTouchEnd: () => handleCommit(localValue),
+          onPointerUp: handleCommit,
+          onMouseUp: handleCommit,
+          onTouchEnd: handleCommit,
           onKeyUp: (e) => {
             if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-              handleCommit(localValue);
+              handleCommit();
             }
           },
           style: { accentColor: currentConfig.accent },
@@ -59376,8 +59396,12 @@ function BetaControls({
           "button",
           {
             onClick: () => {
+              currentStepRef.current = idx;
               setLocalValue(idx);
-              handleCommit(idx);
+              setRawPos(idx);
+              if (idx !== difficultyIndex) {
+                onDifficultyChange(idx);
+              }
             },
             className: `text-[10px] font-extrabold px-2 py-0.5 rounded-full transition-all cursor-pointer border ${isActive ? `${cfg.badgeBg} ${cfg.color} ${cfg.border}` : "text-muted-foreground/60 border-transparent hover:text-foreground hover:bg-muted/40"}`,
             children: cfg.name
