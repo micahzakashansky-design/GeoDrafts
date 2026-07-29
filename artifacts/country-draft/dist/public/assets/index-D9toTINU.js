@@ -16693,11 +16693,11 @@ const createLucideIcon = (iconName, iconNode) => {
   Component2.displayName = toPascalCase(iconName);
   return Component2;
 };
-const __iconNode$1h = [
+const __iconNode$1n = [
   ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ];
-const X$1 = createLucideIcon("x", __iconNode$1h);
+const X$1 = createLucideIcon("x", __iconNode$1n);
 const concatArrays = (array1, array2) => {
   const combinedArray = new Array(array1.length + array2.length);
   for (let i = 0; i < array1.length; i++) {
@@ -48133,12 +48133,12 @@ const CardFooter = reactExports.forwardRef(({ className, ...props }, ref) => /* 
   }
 ));
 CardFooter.displayName = "CardFooter";
-const __iconNode$1g = [
+const __iconNode$1m = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$1g);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$1m);
 function NotFound() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen w-full flex items-center justify-center bg-gray-50", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "w-full max-w-md mx-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex mb-4 gap-2", children: [
@@ -48503,37 +48503,37 @@ function getDensityBreakdown(roster) {
     factors
   };
 }
-const __iconNode$1f = [
+const __iconNode$1l = [
   ["path", { d: "M12 22V8", key: "qkxhtm" }],
   ["path", { d: "M5 12H2a10 10 0 0 0 20 0h-3", key: "1hv3nh" }],
   ["circle", { cx: "12", cy: "5", r: "3", key: "rqqgnr" }]
 ];
-const Anchor = createLucideIcon("anchor", __iconNode$1f);
-const __iconNode$1e = [
+const Anchor = createLucideIcon("anchor", __iconNode$1l);
+const __iconNode$1k = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$1e);
-const __iconNode$1d = [
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$1k);
+const __iconNode$1j = [
   ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
   ["path", { d: "M4 7h16", key: "6tx8e3" }],
   ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
   ["path", { d: "M20 17H4", key: "h6l3hr" }]
 ];
-const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$1d);
-const __iconNode$1c = [
+const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$1j);
+const __iconNode$1i = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1c);
-const __iconNode$1b = [
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1i);
+const __iconNode$1h = [
   ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
   ["path", { d: "M17 20V4", key: "1ejh1v" }],
   ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
   ["path", { d: "M7 4v16", key: "1glfcx" }]
 ];
-const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$1b);
-const __iconNode$1a = [
+const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$1h);
+const __iconNode$1g = [
   [
     "path",
     {
@@ -48543,8 +48543,8 @@ const __iconNode$1a = [
   ],
   ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
 ];
-const Award = createLucideIcon("award", __iconNode$1a);
-const __iconNode$19 = [
+const Award = createLucideIcon("award", __iconNode$1g);
+const __iconNode$1f = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -48554,8 +48554,8 @@ const __iconNode$19 = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$19);
-const __iconNode$18 = [
+const BookOpen = createLucideIcon("book-open", __iconNode$1f);
+const __iconNode$1e = [
   ["path", { d: "M12 18V5", key: "adv99a" }],
   ["path", { d: "M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4", key: "1e3is1" }],
   ["path", { d: "M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5", key: "1gqd8o" }],
@@ -48565,13 +48565,13 @@ const __iconNode$18 = [
   ["path", { d: "M6 18a4 4 0 0 1-2-7.464", key: "k1g0md" }],
   ["path", { d: "M6.003 5.125a4 4 0 0 0-2.526 5.77", key: "q97ue3" }]
 ];
-const Brain = createLucideIcon("brain", __iconNode$18);
-const __iconNode$17 = [
+const Brain = createLucideIcon("brain", __iconNode$1e);
+const __iconNode$1d = [
   ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
   ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
 ];
-const Briefcase = createLucideIcon("briefcase", __iconNode$17);
-const __iconNode$16 = [
+const Briefcase = createLucideIcon("briefcase", __iconNode$1d);
+const __iconNode$1c = [
   ["path", { d: "M12 20v-9", key: "1qisl0" }],
   ["path", { d: "M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z", key: "uouzyp" }],
   ["path", { d: "M14.12 3.88 16 2", key: "qol33r" }],
@@ -48584,8 +48584,8 @@ const __iconNode$16 = [
   ["path", { d: "m8 2 1.88 1.88", key: "fmnt4t" }],
   ["path", { d: "M9 7.13V6a3 3 0 1 1 6 0v1.13", key: "1vgav8" }]
 ];
-const Bug = createLucideIcon("bug", __iconNode$16);
-const __iconNode$15 = [
+const Bug = createLucideIcon("bug", __iconNode$1c);
+const __iconNode$1b = [
   ["path", { d: "M12 10h.01", key: "1nrarc" }],
   ["path", { d: "M12 14h.01", key: "1etili" }],
   ["path", { d: "M12 6h.01", key: "1vi96p" }],
@@ -48598,8 +48598,8 @@ const __iconNode$15 = [
   ["path", { d: "M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", key: "cabbwy" }],
   ["rect", { x: "4", y: "2", width: "16", height: "20", rx: "2", key: "1uxh74" }]
 ];
-const Building = createLucideIcon("building", __iconNode$15);
-const __iconNode$14 = [
+const Building = createLucideIcon("building", __iconNode$1b);
+const __iconNode$1a = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -48611,8 +48611,8 @@ const __iconNode$14 = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$14);
-const __iconNode$13 = [
+const Calculator = createLucideIcon("calculator", __iconNode$1a);
+const __iconNode$19 = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -48624,52 +48624,57 @@ const __iconNode$13 = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$13);
-const __iconNode$12 = [
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$19);
+const __iconNode$18 = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$12);
-const __iconNode$11 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$11);
-const __iconNode$10 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$10);
-const __iconNode$$ = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$$);
-const __iconNode$_ = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$_);
-const __iconNode$Z = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$Z);
-const __iconNode$Y = [
+const Calendar = createLucideIcon("calendar", __iconNode$18);
+const __iconNode$17 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$17);
+const __iconNode$16 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$16);
+const __iconNode$15 = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$15);
+const __iconNode$14 = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$14);
+const __iconNode$13 = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$13);
+const __iconNode$12 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$Y);
-const __iconNode$X = [
+const CircleCheck = createLucideIcon("circle-check", __iconNode$12);
+const __iconNode$11 = [
   ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
   ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$X);
-const __iconNode$W = [
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$11);
+const __iconNode$10 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$W);
-const __iconNode$V = [
+const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$10);
+const __iconNode$$ = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
   ["path", { d: "m9 9 6 6", key: "z0biqf" }]
 ];
-const CircleX = createLucideIcon("circle-x", __iconNode$V);
-const __iconNode$U = [
+const CircleX = createLucideIcon("circle-x", __iconNode$$);
+const __iconNode$_ = [
+  ["path", { d: "M12 6v6l4 2", key: "mmk7yg" }],
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
+];
+const Clock = createLucideIcon("clock", __iconNode$_);
+const __iconNode$Z = [
   ["path", { d: "M20 4v7a4 4 0 0 1-4 4H4", key: "6o5b7l" }],
   ["path", { d: "m9 10-5 5 5 5", key: "1kshq7" }]
 ];
-const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$U);
-const __iconNode$T = [
+const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$Z);
+const __iconNode$Y = [
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M17 20v2", key: "1rnc9c" }],
@@ -48685,8 +48690,8 @@ const __iconNode$T = [
   ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
   ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
 ];
-const Cpu = createLucideIcon("cpu", __iconNode$T);
-const __iconNode$S = [
+const Cpu = createLucideIcon("cpu", __iconNode$Y);
+const __iconNode$X = [
   [
     "path",
     {
@@ -48696,14 +48701,26 @@ const __iconNode$S = [
   ],
   ["path", { d: "M5 21h14", key: "11awu3" }]
 ];
-const Crown = createLucideIcon("crown", __iconNode$S);
-const __iconNode$R = [
+const Crown = createLucideIcon("crown", __iconNode$X);
+const __iconNode$W = [
+  ["rect", { width: "12", height: "12", x: "2", y: "10", rx: "2", ry: "2", key: "6agr2n" }],
+  [
+    "path",
+    { d: "m17.92 14 3.5-3.5a2.24 2.24 0 0 0 0-3l-5-4.92a2.24 2.24 0 0 0-3 0L10 6", key: "1o487t" }
+  ],
+  ["path", { d: "M6 18h.01", key: "uhywen" }],
+  ["path", { d: "M10 14h.01", key: "ssrbsk" }],
+  ["path", { d: "M15 6h.01", key: "cblpky" }],
+  ["path", { d: "M18 9h.01", key: "2061c0" }]
+];
+const Dices = createLucideIcon("dices", __iconNode$W);
+const __iconNode$V = [
   ["path", { d: "M12 15V3", key: "m9g1x1" }],
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
   ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const Download = createLucideIcon("download", __iconNode$R);
-const __iconNode$Q = [
+const Download = createLucideIcon("download", __iconNode$V);
+const __iconNode$U = [
   [
     "path",
     {
@@ -48721,8 +48738,8 @@ const __iconNode$Q = [
   ],
   ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$Q);
-const __iconNode$P = [
+const EyeOff = createLucideIcon("eye-off", __iconNode$U);
+const __iconNode$T = [
   [
     "path",
     {
@@ -48732,8 +48749,8 @@ const __iconNode$P = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$P);
-const __iconNode$O = [
+const Eye = createLucideIcon("eye", __iconNode$T);
+const __iconNode$S = [
   [
     "path",
     { d: "M12 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 12 18z", key: "b19h5q" }
@@ -48743,8 +48760,8 @@ const __iconNode$O = [
     { d: "M2 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 2 18z", key: "h7h5ge" }
   ]
 ];
-const FastForward = createLucideIcon("fast-forward", __iconNode$O);
-const __iconNode$N = [
+const FastForward = createLucideIcon("fast-forward", __iconNode$S);
+const __iconNode$R = [
   [
     "path",
     {
@@ -48753,8 +48770,8 @@ const __iconNode$N = [
     }
   ]
 ];
-const Flag = createLucideIcon("flag", __iconNode$N);
-const __iconNode$M = [
+const Flag = createLucideIcon("flag", __iconNode$R);
+const __iconNode$Q = [
   ["line", { x1: "6", x2: "10", y1: "11", y2: "11", key: "1gktln" }],
   ["line", { x1: "8", x2: "8", y1: "9", y2: "13", key: "qnk9ow" }],
   ["line", { x1: "15", x2: "15.01", y1: "12", y2: "12", key: "krot7o" }],
@@ -48767,14 +48784,14 @@ const __iconNode$M = [
     }
   ]
 ];
-const Gamepad2 = createLucideIcon("gamepad-2", __iconNode$M);
-const __iconNode$L = [
+const Gamepad2 = createLucideIcon("gamepad-2", __iconNode$Q);
+const __iconNode$P = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
   ["path", { d: "M2 12h20", key: "9i4pu4" }]
 ];
-const Globe = createLucideIcon("globe", __iconNode$L);
-const __iconNode$K = [
+const Globe = createLucideIcon("globe", __iconNode$P);
+const __iconNode$O = [
   [
     "path",
     {
@@ -48785,8 +48802,8 @@ const __iconNode$K = [
   ["path", { d: "M22 10v6", key: "1lu8f3" }],
   ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$K);
-const __iconNode$J = [
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$O);
+const __iconNode$N = [
   ["path", { d: "m11 17 2 2a1 1 0 1 0 3-3", key: "efffak" }],
   [
     "path",
@@ -48799,8 +48816,8 @@ const __iconNode$J = [
   ["path", { d: "M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3", key: "1uvwmv" }],
   ["path", { d: "M3 4h8", key: "1ep09j" }]
 ];
-const Handshake = createLucideIcon("handshake", __iconNode$J);
-const __iconNode$I = [
+const Handshake = createLucideIcon("handshake", __iconNode$N);
+const __iconNode$M = [
   [
     "path",
     {
@@ -48809,14 +48826,25 @@ const __iconNode$I = [
     }
   ]
 ];
-const Heart = createLucideIcon("heart", __iconNode$I);
-const __iconNode$H = [
+const Heart = createLucideIcon("heart", __iconNode$M);
+const __iconNode$L = [
+  ["path", { d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8", key: "5wwlr5" }],
+  [
+    "path",
+    {
+      d: "M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+      key: "r6nss1"
+    }
+  ]
+];
+const House = createLucideIcon("house", __iconNode$L);
+const __iconNode$K = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 16v-4", key: "1dtifu" }],
   ["path", { d: "M12 8h.01", key: "e9boi3" }]
 ];
-const Info = createLucideIcon("info", __iconNode$H);
-const __iconNode$G = [
+const Info = createLucideIcon("info", __iconNode$K);
+const __iconNode$J = [
   [
     "path",
     {
@@ -48826,8 +48854,8 @@ const __iconNode$G = [
   ],
   ["path", { d: "M20.054 15.987H3.946", key: "14rxg9" }]
 ];
-const Laptop = createLucideIcon("laptop", __iconNode$G);
-const __iconNode$F = [
+const Laptop = createLucideIcon("laptop", __iconNode$J);
+const __iconNode$I = [
   [
     "path",
     {
@@ -48837,27 +48865,27 @@ const __iconNode$F = [
   ],
   ["path", { d: "M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12", key: "mt58a7" }]
 ];
-const Leaf = createLucideIcon("leaf", __iconNode$F);
-const __iconNode$E = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$E);
-const __iconNode$D = [
+const Leaf = createLucideIcon("leaf", __iconNode$I);
+const __iconNode$H = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$H);
+const __iconNode$G = [
   ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
   ["path", { d: "M15 12H3", key: "6jk70r" }],
   ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
 ];
-const LogIn = createLucideIcon("log-in", __iconNode$D);
-const __iconNode$C = [
+const LogIn = createLucideIcon("log-in", __iconNode$G);
+const __iconNode$F = [
   ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
   ["path", { d: "M21 12H9", key: "dn1m92" }],
   ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
 ];
-const LogOut = createLucideIcon("log-out", __iconNode$C);
-const __iconNode$B = [
+const LogOut = createLucideIcon("log-out", __iconNode$F);
+const __iconNode$E = [
   ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
   ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$B);
-const __iconNode$A = [
+const Lock = createLucideIcon("lock", __iconNode$E);
+const __iconNode$D = [
   [
     "path",
     {
@@ -48867,8 +48895,8 @@ const __iconNode$A = [
   ],
   ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
 ];
-const MapPin = createLucideIcon("map-pin", __iconNode$A);
-const __iconNode$z = [
+const MapPin = createLucideIcon("map-pin", __iconNode$D);
+const __iconNode$C = [
   [
     "path",
     {
@@ -48879,8 +48907,8 @@ const __iconNode$z = [
   ["path", { d: "M15 5.764v15", key: "1pn4in" }],
   ["path", { d: "M9 3.236v15", key: "1uimfh" }]
 ];
-const Map$1 = createLucideIcon("map", __iconNode$z);
-const __iconNode$y = [
+const Map$1 = createLucideIcon("map", __iconNode$C);
+const __iconNode$B = [
   [
     "path",
     {
@@ -48894,8 +48922,8 @@ const __iconNode$y = [
   ["circle", { cx: "12", cy: "17", r: "5", key: "qbz8iq" }],
   ["path", { d: "M12 18v-2h-.5", key: "fawc4q" }]
 ];
-const Medal = createLucideIcon("medal", __iconNode$y);
-const __iconNode$x = [
+const Medal = createLucideIcon("medal", __iconNode$B);
+const __iconNode$A = [
   [
     "path",
     {
@@ -48904,8 +48932,8 @@ const __iconNode$x = [
     }
   ]
 ];
-const MessageSquare = createLucideIcon("message-square", __iconNode$x);
-const __iconNode$w = [
+const MessageSquare = createLucideIcon("message-square", __iconNode$A);
+const __iconNode$z = [
   [
     "path",
     {
@@ -48914,10 +48942,10 @@ const __iconNode$w = [
     }
   ]
 ];
-const Moon = createLucideIcon("moon", __iconNode$w);
-const __iconNode$v = [["path", { d: "m8 3 4 8 5-5 5 15H2L8 3z", key: "otkl63" }]];
-const Mountain = createLucideIcon("mountain", __iconNode$v);
-const __iconNode$u = [
+const Moon = createLucideIcon("moon", __iconNode$z);
+const __iconNode$y = [["path", { d: "m8 3 4 8 5-5 5 15H2L8 3z", key: "otkl63" }]];
+const Mountain = createLucideIcon("mountain", __iconNode$y);
+const __iconNode$x = [
   [
     "path",
     {
@@ -48930,8 +48958,8 @@ const __iconNode$u = [
   ["circle", { cx: "6.5", cy: "12.5", r: ".5", fill: "currentColor", key: "qy21gx" }],
   ["circle", { cx: "8.5", cy: "7.5", r: ".5", fill: "currentColor", key: "fotxhn" }]
 ];
-const Palette = createLucideIcon("palette", __iconNode$u);
-const __iconNode$t = [
+const Palette = createLucideIcon("palette", __iconNode$x);
+const __iconNode$w = [
   ["path", { d: "M5.8 11.3 2 22l10.7-3.79", key: "gwxi1d" }],
   ["path", { d: "M4 3h.01", key: "1vcuye" }],
   ["path", { d: "M22 8h.01", key: "1mrtc2" }],
@@ -48957,8 +48985,8 @@ const __iconNode$t = [
     }
   ]
 ];
-const PartyPopper = createLucideIcon("party-popper", __iconNode$t);
-const __iconNode$s = [
+const PartyPopper = createLucideIcon("party-popper", __iconNode$w);
+const __iconNode$v = [
   [
     "path",
     {
@@ -48967,31 +48995,48 @@ const __iconNode$s = [
     }
   ]
 ];
-const Plane = createLucideIcon("plane", __iconNode$s);
-const __iconNode$r = [
+const Plane = createLucideIcon("plane", __iconNode$v);
+const __iconNode$u = [
+  [
+    "path",
+    {
+      d: "M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z",
+      key: "10ikf1"
+    }
+  ]
+];
+const Play = createLucideIcon("play", __iconNode$u);
+const __iconNode$t = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "M12 5v14", key: "s699le" }]
 ];
-const Plus = createLucideIcon("plus", __iconNode$r);
-const __iconNode$q = [
+const Plus = createLucideIcon("plus", __iconNode$t);
+const __iconNode$s = [
+  ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
+  ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
+  ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
+  ["path", { d: "M8 16H3v5", key: "1cv678" }]
+];
+const RefreshCw = createLucideIcon("refresh-cw", __iconNode$s);
+const __iconNode$r = [
   ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
   ["path", { d: "M3 3v5h5", key: "1xhq8a" }]
 ];
-const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$q);
-const __iconNode$p = [
+const RotateCcw = createLucideIcon("rotate-ccw", __iconNode$r);
+const __iconNode$q = [
   ["path", { d: "m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z", key: "7g6ntu" }],
   ["path", { d: "m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z", key: "ijws7r" }],
   ["path", { d: "M7 21h10", key: "1b0cd5" }],
   ["path", { d: "M12 3v18", key: "108xh3" }],
   ["path", { d: "M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2", key: "3gwbw2" }]
 ];
-const Scale = createLucideIcon("scale", __iconNode$p);
-const __iconNode$o = [
+const Scale = createLucideIcon("scale", __iconNode$q);
+const __iconNode$p = [
   ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
   ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
 ];
-const Search = createLucideIcon("search", __iconNode$o);
-const __iconNode$n = [
+const Search = createLucideIcon("search", __iconNode$p);
+const __iconNode$o = [
   [
     "path",
     {
@@ -49001,15 +49046,15 @@ const __iconNode$n = [
   ],
   ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
 ];
-const Send = createLucideIcon("send", __iconNode$n);
-const __iconNode$m = [
+const Send = createLucideIcon("send", __iconNode$o);
+const __iconNode$n = [
   ["path", { d: "M14 17H5", key: "gfn3mx" }],
   ["path", { d: "M19 7h-9", key: "6i9tg" }],
   ["circle", { cx: "17", cy: "17", r: "3", key: "18b49y" }],
   ["circle", { cx: "7", cy: "7", r: "3", key: "dfmy0x" }]
 ];
-const Settings2 = createLucideIcon("settings-2", __iconNode$m);
-const __iconNode$l = [
+const Settings2 = createLucideIcon("settings-2", __iconNode$n);
+const __iconNode$m = [
   [
     "path",
     {
@@ -49019,8 +49064,8 @@ const __iconNode$l = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Settings = createLucideIcon("settings", __iconNode$l);
-const __iconNode$k = [
+const Settings = createLucideIcon("settings", __iconNode$m);
+const __iconNode$l = [
   [
     "path",
     {
@@ -49031,8 +49076,8 @@ const __iconNode$k = [
   ["path", { d: "M12 8v4", key: "1got3b" }],
   ["path", { d: "M12 16h.01", key: "1drbdi" }]
 ];
-const ShieldAlert = createLucideIcon("shield-alert", __iconNode$k);
-const __iconNode$j = [
+const ShieldAlert = createLucideIcon("shield-alert", __iconNode$l);
+const __iconNode$k = [
   [
     "path",
     {
@@ -49043,8 +49088,8 @@ const __iconNode$j = [
   ["path", { d: "M9 12h6", key: "1c52cq" }],
   ["path", { d: "M12 9v6", key: "199k2o" }]
 ];
-const ShieldPlus = createLucideIcon("shield-plus", __iconNode$j);
-const __iconNode$i = [
+const ShieldPlus = createLucideIcon("shield-plus", __iconNode$k);
+const __iconNode$j = [
   [
     "path",
     {
@@ -49053,16 +49098,16 @@ const __iconNode$i = [
     }
   ]
 ];
-const Shield = createLucideIcon("shield", __iconNode$i);
-const __iconNode$h = [
+const Shield = createLucideIcon("shield", __iconNode$j);
+const __iconNode$i = [
   ["path", { d: "m18 14 4 4-4 4", key: "10pe0f" }],
   ["path", { d: "m18 2 4 4-4 4", key: "pucp1d" }],
   ["path", { d: "M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22", key: "1ailkh" }],
   ["path", { d: "M2 6h1.972a4 4 0 0 1 3.6 2.2", key: "km57vx" }],
   ["path", { d: "M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45", key: "os18l9" }]
 ];
-const Shuffle = createLucideIcon("shuffle", __iconNode$h);
-const __iconNode$g = [
+const Shuffle = createLucideIcon("shuffle", __iconNode$i);
+const __iconNode$h = [
   ["path", { d: "M21 4v16", key: "7j8fe9" }],
   [
     "path",
@@ -49072,8 +49117,8 @@ const __iconNode$g = [
     }
   ]
 ];
-const SkipForward = createLucideIcon("skip-forward", __iconNode$g);
-const __iconNode$f = [
+const SkipForward = createLucideIcon("skip-forward", __iconNode$h);
+const __iconNode$g = [
   ["path", { d: "m12.5 17-.5-1-.5 1h1z", key: "3me087" }],
   [
     "path",
@@ -49085,7 +49130,20 @@ const __iconNode$f = [
   ["circle", { cx: "15", cy: "12", r: "1", key: "1tmaij" }],
   ["circle", { cx: "9", cy: "12", r: "1", key: "1vctgf" }]
 ];
-const Skull = createLucideIcon("skull", __iconNode$f);
+const Skull = createLucideIcon("skull", __iconNode$g);
+const __iconNode$f = [
+  [
+    "path",
+    {
+      d: "M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z",
+      key: "1s2grr"
+    }
+  ],
+  ["path", { d: "M20 2v4", key: "1rf3ol" }],
+  ["path", { d: "M22 4h-4", key: "gwowj6" }],
+  ["circle", { cx: "4", cy: "20", r: "2", key: "6kqj1y" }]
+];
+const Sparkles = createLucideIcon("sparkles", __iconNode$f);
 const __iconNode$e = [
   [
     "path",
@@ -57537,7 +57595,7 @@ const RATINGS = [
   { id: "Failed State", name: "Failed State", color: "text-rose-600", desc: "Severe systemic collapse." },
   { id: "Collapsed State", name: "Collapsed State", color: "text-zinc-500", desc: "Total breakdown of society." }
 ];
-const ARCHETYPES = [
+const ARCHETYPES$1 = [
   { id: "Cultural Hegemon", name: "Cultural Hegemon", color: "text-pink-400", desc: "Global exporter of art and ideas." },
   { id: "Industrial Juggernaut", name: "Industrial Juggernaut", color: "text-orange-500", desc: "The workshop of the world." },
   { id: "Fortress State", name: "Fortress State", color: "text-zinc-400", desc: "Impenetrable and isolated." },
@@ -57982,7 +58040,7 @@ function getRatingData$4(total) {
 }
 function getArchetypeData$4(roster) {
   const name2 = getCountryArchetype(roster);
-  const data = ARCHETYPES.find((a) => a.name === name2);
+  const data = ARCHETYPES$1.find((a) => a.name === name2);
   return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
 function ExpandableDescription$4({ description, expanded, setExpanded, isHovered = false }) {
@@ -59947,7 +60005,7 @@ function getRatingData$3(total) {
 }
 function getArchetypeData$3(roster) {
   const name2 = getCountryArchetype(roster);
-  const data = ARCHETYPES.find((a) => a.name === name2);
+  const data = ARCHETYPES$1.find((a) => a.name === name2);
   return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
 function ExpandableDescription$3({ description, isHovered = false }) {
@@ -61196,7 +61254,7 @@ function getRatingData$2(total) {
 }
 function getArchetypeData$2(roster) {
   const name2 = getCountryArchetype(roster);
-  const data = ARCHETYPES.find((a) => a.name === name2);
+  const data = ARCHETYPES$1.find((a) => a.name === name2);
   return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
 function ExpandableDescription$2({ description, isHovered = false }) {
@@ -62751,7 +62809,7 @@ function getRatingData$1(total) {
 }
 function getArchetypeData$1(roster) {
   const name2 = getCountryArchetype(roster);
-  const data = ARCHETYPES.find((a) => a.name === name2);
+  const data = ARCHETYPES$1.find((a) => a.name === name2);
   return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
 function ExpandableDescription$1({ description, isHovered = false }) {
@@ -64102,7 +64160,7 @@ function getRatingData(total) {
 }
 function getArchetypeData(roster) {
   const name2 = getCountryArchetype(roster);
-  const data = ARCHETYPES.find((a) => a.name === name2);
+  const data = ARCHETYPES$1.find((a) => a.name === name2);
   return { name: data.name, desc: data.desc, icon: getAchievementIcon(data.name) };
 }
 function ExpandableDescription({ description, isHovered = false }) {
@@ -65264,11 +65322,11 @@ function AchievementsCard({ profile }) {
   const [modalType, setModalType] = reactExports.useState(null);
   const unlocked = profile?.unlockedAchievements || [];
   const ratingsUnlocked = RATINGS.filter((r2) => unlocked.includes(r2.name)).length;
-  const archetypesUnlocked = ARCHETYPES.filter((a) => unlocked.includes(a.name)).length;
+  const archetypesUnlocked = ARCHETYPES$1.filter((a) => unlocked.includes(a.name)).length;
   const bonusUnlocked = BONUS_PATHS.filter((b2) => unlocked.includes(b2.name)).length;
   const accountStatsUnlocked = ACCOUNT_STATS.filter((s) => unlocked.includes(s.name)).length;
   const totalRatings = RATINGS.length;
-  const totalArchetypes = ARCHETYPES.length;
+  const totalArchetypes = ARCHETYPES$1.length;
   const totalBonus = BONUS_PATHS.length;
   const totalAccountStats = ACCOUNT_STATS.length;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
@@ -65340,7 +65398,7 @@ function AchievementsCard({ profile }) {
         isOpen: modalType === "archetypes",
         onClose: () => setModalType(null),
         title: "Archetypes",
-        achievements: ARCHETYPES,
+        achievements: ARCHETYPES$1,
         unlockedNames: unlocked
       }
     ),
@@ -65961,6 +66019,20 @@ function Home() {
               " Blind"
             ] })
           ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-1 md:col-span-2 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border-b border-border p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative z-10 flex flex-col md:flex-row items-center md:items-start gap-5 text-center md:text-left", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0 border border-primary/30 text-primary", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-6 h-6" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-wider mb-2", children: "New Game Mode" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-sans text-2xl font-bold mb-1 text-card-foreground", children: "Tasks Mode" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground leading-relaxed max-w-md", children: "Complete randomized draft objectives and unique challenges. Get graded out of 100 on your performance!" })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "relative z-10 w-full md:w-auto flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => startGame("tasks", false), className: "w-full sm:w-auto px-6 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-4 h-4" }),
+            " Play Tasks Mode"
+          ] }) })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 border-b border-border", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => startGame("guess", false), className: "col-span-1 bg-card border-b md:border-b-0 md:border-r border-border p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300", children: [
@@ -75701,6 +75773,765 @@ function ProtectedRoute({ children: children2 }) {
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: children2 });
 }
+const CONTINENTS = ["Africa", "Asia", "Europe", "the Americas"];
+const ARCHETYPES = [
+  "Spartan Society",
+  "Military Superstate",
+  "Techno-Utopia",
+  "Nordic Model",
+  "Cultural Hegemon",
+  "Industrial Juggernaut",
+  "Fortress State",
+  "Cyberocracy",
+  "Eco-Paradise",
+  "Trade Empire",
+  "Global Medic",
+  "Knowledge Hub",
+  "Wealthy City-State"
+];
+function getContinentForCountry(country) {
+  if (country.region === "Africa") return "Africa";
+  if (country.region === "Oceania") return "Asia-Pacific";
+  if (country.region.includes("Europe")) return "Europe";
+  if (country.region.includes("Asia")) return "Asia";
+  if (country.region === "Americas") return "the Americas";
+  return country.region;
+}
+function getCountryTotalScore(country) {
+  let total = 0;
+  if (!country.stats) return 0;
+  Object.values(country.stats).forEach((s) => {
+    if (s && typeof s.score === "number") {
+      total += s.score;
+    }
+  });
+  return total;
+}
+function filterPoolForChallenge(challenge, pool) {
+  if (challenge.type === "continent" && challenge.continent) {
+    const filtered = pool.filter((c) => getContinentForCountry(c) === challenge.continent);
+    return filtered.length >= 15 ? filtered : pool;
+  }
+  if (challenge.type === "lowRanked") {
+    const filtered = pool.filter((c) => getCountryTotalScore(c) < 140);
+    return filtered.length >= 15 ? filtered : pool;
+  }
+  return pool;
+}
+function generateRandomTask(customPool) {
+  const basePool = customPool && customPool.length > 0 ? customPool : COUNTRIES;
+  const challengeTypes = ["continent", "lowRanked", "timer", "blind"];
+  const challengeType = challengeTypes[Math.floor(Math.random() * challengeTypes.length)];
+  let challenge;
+  let usablePool = [...basePool];
+  if (challengeType === "continent") {
+    const continent = CONTINENTS[Math.floor(Math.random() * CONTINENTS.length)];
+    challenge = {
+      type: "continent",
+      title: `${continent} Only`,
+      template: `using countries from ${continent} only.`,
+      continent
+    };
+    usablePool = filterPoolForChallenge(challenge, basePool);
+  } else if (challengeType === "lowRanked") {
+    challenge = {
+      type: "lowRanked",
+      title: "Low-Ranked Only",
+      template: "using low-ranked countries only."
+    };
+    usablePool = filterPoolForChallenge(challenge, basePool);
+  } else if (challengeType === "timer") {
+    challenge = {
+      type: "timer",
+      title: "5s Timer",
+      template: "with 5 seconds per draft."
+    };
+  } else {
+    challenge = {
+      type: "blind",
+      title: "Blind Mode",
+      template: "in blind mode."
+    };
+  }
+  const goalTypes = ["worst", "best", "match", "archetype"];
+  const goalType = goalTypes[Math.floor(Math.random() * goalTypes.length)];
+  let goal;
+  if (goalType === "worst") {
+    goal = {
+      type: "worst",
+      title: "Worst Country Possible",
+      template: "Make the worst country possible"
+    };
+  } else if (goalType === "best") {
+    goal = {
+      type: "best",
+      title: "Best Country Possible",
+      template: "Make the best country possible"
+    };
+  } else if (goalType === "match") {
+    const targetCountry = usablePool[Math.floor(Math.random() * usablePool.length)] || basePool[0];
+    goal = {
+      type: "match",
+      title: `Match ${targetCountry.name}`,
+      template: `Make a country most similar to ${targetCountry.name}`,
+      targetCountry
+    };
+  } else {
+    const targetArchetype = ARCHETYPES[Math.floor(Math.random() * ARCHETYPES.length)];
+    const prefix = /^[AEIOU]/i.test(targetArchetype) ? "an" : "a";
+    goal = {
+      type: "archetype",
+      title: `Achieve ${targetArchetype}`,
+      template: `Make ${prefix} ${targetArchetype}`,
+      targetArchetype
+    };
+  }
+  const fullSentence = `${goal.template} ${challenge.template}`;
+  return {
+    id: `task_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`,
+    goal,
+    challenge,
+    fullSentence
+  };
+}
+function calculateTaskGrade(task, roster, totalScore) {
+  let grade = 0;
+  let summary = "";
+  let details = "";
+  let categoryBreakdown = void 0;
+  if (task.goal.type === "worst") {
+    if (totalScore <= 50) {
+      grade = 100;
+    } else {
+      grade = Math.max(0, Math.round(100 - (totalScore - 50)));
+    }
+    summary = `Final Score: ${totalScore} pts (Target: ≤50 pts)`;
+    details = totalScore <= 50 ? `Outstanding! You built a country with ${totalScore} pts (≤ 50 required for 100/100).` : `Your country achieved ${totalScore} pts. Every point above 50 subtracted 1 point from 100.`;
+  } else if (task.goal.type === "best") {
+    if (totalScore >= 175) {
+      grade = 100;
+    } else {
+      grade = Math.max(0, Math.round(100 - (175 - totalScore)));
+    }
+    summary = `Final Score: ${totalScore} pts (Target: ≥175 pts)`;
+    details = totalScore >= 175 ? `Incredible nation building! Your country scored ${totalScore} pts (≥ 175 required for 100/100).` : `Your country achieved ${totalScore} pts. You were ${175 - totalScore} pts short of 175.`;
+  } else if (task.goal.type === "match" && task.goal.targetCountry) {
+    const target = task.goal.targetCountry;
+    let totalDiff = 0;
+    categoryBreakdown = [];
+    CATEGORIES.forEach((cat) => {
+      const catKey = getCategoryKey(cat);
+      const targetScore = target.stats[catKey]?.score ?? 0;
+      const yourCountry = roster[cat];
+      const yourScore = yourCountry ? yourCountry.stats[catKey]?.score ?? 0 : 0;
+      const diff = Math.abs(yourScore - targetScore);
+      totalDiff += diff;
+      categoryBreakdown.push({
+        category: cat,
+        yourScore,
+        targetScore,
+        diff
+      });
+    });
+    grade = Math.max(0, 100 - totalDiff);
+    summary = `Total Stat Difference: ${totalDiff} pts from ${target.name}`;
+    details = grade === 100 ? `Perfect Match! Your country stats identically match ${target.name}.` : `Your stats differed by a total of ${totalDiff} points across all 15 categories from ${target.name}.`;
+  } else if (task.goal.type === "archetype" && task.goal.targetArchetype) {
+    const achievedArchetype = getCountryArchetype(roster);
+    const isSuccess = achievedArchetype.toLowerCase() === task.goal.targetArchetype.toLowerCase();
+    grade = isSuccess ? 100 : 0;
+    summary = `Achieved: ${achievedArchetype} (Target: ${task.goal.targetArchetype})`;
+    details = isSuccess ? `Success! You successfully created a ${task.goal.targetArchetype}.` : `Failed. You created a ${achievedArchetype} instead of a ${task.goal.targetArchetype}.`;
+  }
+  let letterGrade = "F";
+  if (grade === 100) letterGrade = "S";
+  else if (grade >= 90) letterGrade = "A";
+  else if (grade >= 80) letterGrade = "B";
+  else if (grade >= 70) letterGrade = "C";
+  else if (grade >= 60) letterGrade = "D";
+  return {
+    grade,
+    letterGrade,
+    summary,
+    details,
+    categoryBreakdown
+  };
+}
+const SAMPLE_GOAL_PREVIEWS = [
+  "Make the worst country possible...",
+  "Make the best country possible...",
+  "Make a country most similar to France...",
+  "Make a country most similar to Japan...",
+  "Make a Spartan Society...",
+  "Make a Military Superstate...",
+  "Make a Techno-Utopia...",
+  "Make a Nordic Model..."
+];
+const SAMPLE_CHALLENGE_PREVIEWS = [
+  "...using countries from Europe only.",
+  "...using countries from Asia only.",
+  "...using countries from Africa only.",
+  "...using low-ranked countries only.",
+  "...with 5 seconds per draft.",
+  "...in blind mode."
+];
+function TaskStartModal({ onStartGame, onBackToMenu }) {
+  const [isSpinning, setIsSpinning] = reactExports.useState(false);
+  const [goalText, setGoalText] = reactExports.useState(SAMPLE_GOAL_PREVIEWS[0]);
+  const [challengeText, setChallengeText] = reactExports.useState(SAMPLE_CHALLENGE_PREVIEWS[0]);
+  const [goalLocked, setGoalLocked] = reactExports.useState(false);
+  const [challengeLocked, setChallengeLocked] = reactExports.useState(false);
+  const [currentTask, setCurrentTask] = reactExports.useState(null);
+  const rollTask = () => {
+    setIsSpinning(true);
+    setGoalLocked(false);
+    setChallengeLocked(false);
+    const newTask = generateRandomTask(COUNTRIES);
+    setCurrentTask(newTask);
+    let goalStep = 0;
+    let challengeStep = 0;
+    const goalInterval = setInterval(() => {
+      goalStep = (goalStep + 1) % SAMPLE_GOAL_PREVIEWS.length;
+      setGoalText(SAMPLE_GOAL_PREVIEWS[goalStep]);
+    }, 60);
+    const challengeInterval = setInterval(() => {
+      challengeStep = (challengeStep + 1) % SAMPLE_CHALLENGE_PREVIEWS.length;
+      setChallengeText(SAMPLE_CHALLENGE_PREVIEWS[challengeStep]);
+    }, 65);
+    setTimeout(() => {
+      clearInterval(goalInterval);
+      setGoalText(newTask.goal.template);
+      setGoalLocked(true);
+    }, 1200);
+    setTimeout(() => {
+      clearInterval(challengeInterval);
+      setChallengeText(newTask.challenge.template);
+      setChallengeLocked(true);
+      setIsSpinning(false);
+    }, 2200);
+  };
+  reactExports.useEffect(() => {
+    rollTask();
+  }, []);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    motion.div,
+    {
+      initial: { scale: 0.9, opacity: 0, y: 20 },
+      animate: { scale: 1, opacity: 1, y: 0 },
+      exit: { scale: 0.9, opacity: 0, y: 20 },
+      className: "w-full max-w-2xl bg-card border border-border/80 rounded-3xl shadow-[0_0_80px_rgba(0,0,0,0.4)] p-6 md:p-10 flex flex-col items-center relative overflow-hidden",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute -top-24 -left-24 w-60 h-60 bg-primary/20 rounded-full blur-3xl pointer-events-none" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute -bottom-24 -right-24 w-60 h-60 bg-purple-500/20 rounded-full blur-3xl pointer-events-none" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-6", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 bg-primary/10 border border-primary/20 rounded-2xl text-primary shadow-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-7 h-7" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl font-black font-sans text-foreground tracking-tight", children: "Task Generator" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground font-medium", children: "Random Goal + Challenge Objective" })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full space-y-4 my-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `relative p-5 rounded-2xl border transition-all duration-500 overflow-hidden ${goalLocked ? "bg-primary/10 border-primary/40 shadow-[0_0_30px_rgba(59,130,246,0.15)]" : "bg-muted/40 border-border/60"}`, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5 flex items-center justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-3.5 h-3.5 text-primary" }),
+                " Goal"
+              ] }),
+              goalLocked && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-primary font-black", children: "LOCKED" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-14 flex items-center justify-center text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              motion.span,
+              {
+                initial: { y: 15, opacity: 0 },
+                animate: { y: 0, opacity: 1 },
+                exit: { y: -15, opacity: 0 },
+                transition: { duration: 0.08 },
+                className: `text-xl md:text-2xl font-black tracking-tight ${goalLocked ? "text-foreground drop-shadow" : "text-muted-foreground"}`,
+                children: goalText
+              },
+              goalText
+            ) }) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `relative p-5 rounded-2xl border transition-all duration-500 overflow-hidden ${challengeLocked ? "bg-purple-500/10 border-purple-500/40 shadow-[0_0_30px_rgba(168,85,247,0.15)]" : "bg-muted/40 border-border/60"}`, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-1.5 flex items-center justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Dices, { className: "w-3.5 h-3.5 text-purple-400" }),
+                " Challenge"
+              ] }),
+              challengeLocked && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-purple-400 font-black", children: "LOCKED" })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-14 flex items-center justify-center text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+              motion.span,
+              {
+                initial: { y: 15, opacity: 0 },
+                animate: { y: 0, opacity: 1 },
+                exit: { y: -15, opacity: 0 },
+                transition: { duration: 0.08 },
+                className: `text-xl md:text-2xl font-black tracking-tight ${challengeLocked ? "text-purple-300 drop-shadow" : "text-muted-foreground"}`,
+                children: challengeText
+              },
+              challengeText
+            ) }) })
+          ] })
+        ] }),
+        goalLocked && challengeLocked && currentTask && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          motion.div,
+          {
+            initial: { scale: 0.9, opacity: 0 },
+            animate: { scale: 1, opacity: 1 },
+            className: "w-full my-4 p-5 rounded-2xl bg-gradient-to-r from-primary/15 via-purple-500/15 to-primary/15 border border-primary/30 text-center shadow-lg",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs uppercase font-bold tracking-widest text-primary mb-1", children: "Your Objective" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-lg md:text-xl font-black text-foreground leading-snug", children: [
+                '"',
+                currentTask.fullSentence,
+                '"'
+              ] })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full flex flex-col sm:flex-row gap-3 mt-6", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: onBackToMenu,
+              className: "px-6 py-4 rounded-2xl bg-card border border-border text-muted-foreground hover:text-foreground font-bold transition-all text-center",
+              children: "Back"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: rollTask,
+              disabled: isSpinning,
+              className: "flex-1 px-6 py-4 rounded-2xl bg-muted hover:bg-muted/80 text-foreground font-bold transition-all flex items-center justify-center gap-2 border border-border disabled:opacity-50",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { className: `w-4 h-4 ${isSpinning ? "animate-spin" : ""}` }),
+                "Reroll Task"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: () => currentTask && onStartGame(currentTask),
+              disabled: isSpinning || !currentTask,
+              className: "flex-1 px-8 py-4 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/25 flex items-center justify-center gap-2 disabled:opacity-50",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Play, { className: "w-5 h-5 fill-current" }),
+                "Start Task"
+              ]
+            }
+          )
+        ] })
+      ]
+    }
+  ) });
+}
+function TasksGameOver({
+  task,
+  result,
+  roster,
+  totalScore,
+  bonus,
+  finalScore,
+  onNewTask,
+  rosterRef
+}) {
+  const [, navigate2] = useLocation();
+  const getGradeBadgeColor = (grade) => {
+    if (grade === 100) return "from-emerald-500 to-green-600 text-white border-emerald-400/50 shadow-emerald-500/30";
+    if (grade >= 90) return "from-green-500 to-emerald-600 text-white border-green-400/50 shadow-green-500/30";
+    if (grade >= 80) return "from-blue-500 to-indigo-600 text-white border-blue-400/50 shadow-blue-500/30";
+    if (grade >= 70) return "from-amber-500 to-yellow-600 text-white border-amber-400/50 shadow-amber-500/30";
+    if (grade >= 60) return "from-orange-500 to-amber-600 text-white border-orange-400/50 shadow-orange-500/30";
+    return "from-red-500 to-rose-700 text-white border-red-400/50 shadow-red-500/30";
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto p-4 md:p-8 max-w-4xl mx-auto w-full", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    motion.div,
+    {
+      initial: { scale: 0.95, opacity: 0 },
+      animate: { scale: 1, opacity: 1 },
+      className: "space-y-6",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border/80 rounded-3xl p-6 md:p-8 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 max-w-xl", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-3.5 h-3.5" }),
+              " Task Result"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("h2", { className: "text-2xl md:text-3xl font-black font-sans text-foreground leading-snug", children: [
+              '"',
+              task.fullSentence,
+              '"'
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base text-muted-foreground font-medium", children: result.details }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-bold text-foreground/80 bg-muted/30 px-3 py-2 rounded-xl inline-block border border-border/40", children: result.summary })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-col items-center justify-center shrink-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: `w-32 h-32 rounded-3xl bg-gradient-to-br border shadow-2xl flex flex-col items-center justify-center ${getGradeBadgeColor(result.grade)}`, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-4xl font-black tracking-tighter leading-none", children: result.grade }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold uppercase opacity-90", children: "/ 100" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-lg font-black mt-1 bg-white/20 px-2.5 py-0.5 rounded-full", children: [
+              "Grade ",
+              result.letterGrade
+            ] })
+          ] }) })
+        ] }),
+        result.categoryBreakdown && result.categoryBreakdown.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border/80 rounded-3xl p-6 shadow-xl space-y-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-lg font-bold text-foreground flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-5 h-5 text-yellow-500" }),
+            " Category Match Comparison"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-3", children: result.categoryBreakdown.map((item) => {
+            const isExact = item.diff === 0;
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: `p-3 rounded-2xl border flex items-center justify-between text-xs font-semibold ${isExact ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : item.diff <= 2 ? "bg-blue-500/10 border-blue-500/30 text-blue-400" : "bg-muted/40 border-border/60 text-muted-foreground"}`,
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 truncate", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: CATEGORY_ICONS$5[item.category] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: item.category })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-bold text-right shrink-0", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                      "You: ",
+                      item.yourScore,
+                      " vs Target: ",
+                      item.targetScore
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `text-[10px] ${isExact ? "text-emerald-400" : "text-muted-foreground"}`, children: isExact ? "Exact Match (0 diff)" : `Diff: -${item.diff} pts` })
+                  ] })
+                ]
+              },
+              item.category
+            );
+          }) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row gap-4 justify-center pt-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: () => navigate2("/"),
+              className: "flex-1 py-4 px-6 rounded-2xl bg-card border border-border text-card-foreground hover:bg-muted font-bold transition-all flex items-center justify-center gap-2",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(House, { className: "w-5 h-5" }),
+                " Home"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: () => drawRosterPng$4(roster, finalScore, bonus, false),
+              className: "flex-1 py-4 px-6 rounded-2xl bg-muted hover:bg-muted/80 text-foreground font-bold transition-all flex items-center justify-center gap-2 border border-border",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Download, { className: "w-5 h-5" }),
+                " Download Roster"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              onClick: onNewTask,
+              className: "flex-1 py-4 px-8 rounded-2xl bg-primary text-primary-foreground font-bold text-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/25 flex items-center justify-center gap-2",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { className: "w-5 h-5" }),
+                " Next Task"
+              ]
+            }
+          )
+        ] })
+      ]
+    }
+  ) });
+}
+function TasksGame() {
+  const [, navigate2] = useLocation();
+  const { profile } = useFirebaseAuth();
+  const [showStartModal, setShowStartModal] = reactExports.useState(true);
+  const [currentTask, setCurrentTask] = reactExports.useState(null);
+  const [pool, setPool] = reactExports.useState([]);
+  const [currentCountry, setCurrentCountry] = reactExports.useState(null);
+  const [roster, setRoster] = reactExports.useState({});
+  const [gameOver, setGameOver] = reactExports.useState(false);
+  const [isBlindMode, setIsBlindMode] = reactExports.useState(false);
+  const [taskResult, setTaskResult] = reactExports.useState(null);
+  const [timeLeft, setTimeLeft] = reactExports.useState(5);
+  const timerRef = reactExports.useRef(null);
+  const rosterRef = reactExports.useRef(null);
+  const localSavedRef = reactExports.useRef(false);
+  const handleStartTask = (task) => {
+    setCurrentTask(task);
+    setShowStartModal(false);
+    let newPool = filterPoolForChallenge(task.challenge, COUNTRIES);
+    newPool = shuffleArray$1([...newPool]);
+    const firstCountry = newPool.pop() || null;
+    setPool(newPool);
+    setCurrentCountry(firstCountry);
+    setRoster({});
+    setGameOver(false);
+    setIsBlindMode(task.challenge.type === "blind");
+    setTaskResult(null);
+    localSavedRef.current = false;
+    setTimeLeft(5);
+  };
+  const totalScore = reactExports.useMemo(() => {
+    return CATEGORIES.reduce((sum, cat) => {
+      const country = roster[cat];
+      if (!country) return sum;
+      if (BONUS_CATEGORIES$5.includes(cat)) return sum;
+      const key = getCategoryKey(cat);
+      const score = country.stats[key].score ?? 0;
+      return sum + score;
+    }, 0);
+  }, [roster]);
+  const bonus = reactExports.useMemo(() => computeSizePopBonus(roster), [roster]);
+  const finalScore = totalScore + bonus;
+  const autoAssignFirstAvailable = reactExports.useCallback(() => {
+    const unassigned = CATEGORIES.find((c) => !roster[c]);
+    if (!unassigned || !currentCountry) return;
+    setRoster((prevRoster) => {
+      if (prevRoster[unassigned]) return prevRoster;
+      const newRoster = { ...prevRoster, [unassigned]: currentCountry };
+      const isComplete = CATEGORIES.every((c) => newRoster[c]);
+      setPool((prevPool) => {
+        const nextPool = [...prevPool];
+        const nextCountry = isComplete ? null : nextPool.pop() || null;
+        setCurrentCountry(nextCountry);
+        if (isComplete) setGameOver(true);
+        return nextPool;
+      });
+      return newRoster;
+    });
+    setTimeLeft(5);
+  }, [currentCountry, roster]);
+  reactExports.useEffect(() => {
+    if (!currentTask || currentTask.challenge.type !== "timer" || gameOver || showStartModal || !currentCountry) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 0.15) {
+          autoAssignFirstAvailable();
+          return 5;
+        }
+        return Math.max(0, prev - 0.1);
+      });
+    }, 100);
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [currentTask, gameOver, showStartModal, currentCountry, autoAssignFirstAvailable]);
+  const assignCountry = reactExports.useCallback((category) => {
+    if (roster[category] || !currentCountry) return;
+    const newRoster = { ...roster, [category]: currentCountry };
+    const isComplete = CATEGORIES.every((c) => newRoster[c]);
+    const nextPool = [...pool];
+    const nextCountry = isComplete ? null : nextPool.pop() || null;
+    setRoster(newRoster);
+    setPool(nextPool);
+    setCurrentCountry(nextCountry);
+    setGameOver(isComplete);
+    setTimeLeft(5);
+  }, [currentCountry, roster, pool]);
+  reactExports.useEffect(() => {
+    if (gameOver && currentTask && !localSavedRef.current) {
+      const result = calculateTaskGrade(currentTask, roster, finalScore);
+      setTaskResult(result);
+      savePersonalScore("normal", { score: result.grade, roster: formatRoster(roster) });
+      localSavedRef.current = true;
+    }
+  }, [gameOver, currentTask, roster, finalScore]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-background flex flex-col font-sans", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "border-b border-border/50 bg-card/50 backdrop-blur-md px-4 md:px-6 py-3 flex items-center justify-between sticky top-0 z-40", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => navigate2("/"),
+            className: "p-2 rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground transition-colors flex items-center gap-2 text-sm font-bold",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(House, { className: "w-4 h-4" }),
+              " Home"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Logo, {}),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-4 w-px bg-border hidden sm:block" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "hidden sm:flex items-center gap-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold px-2.5 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary uppercase tracking-wider", children: "Tasks Mode" }) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: () => setShowStartModal(true),
+            className: "px-3.5 py-1.5 rounded-xl bg-muted hover:bg-muted/80 text-foreground text-xs font-bold transition-all flex items-center gap-1.5 border border-border/60",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(RotateCcw, { className: "w-3.5 h-3.5" }),
+              " Roll Task"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsButton, {})
+      ] })
+    ] }),
+    showStartModal && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TaskStartModal,
+      {
+        onStartGame: handleStartTask,
+        onBackToMenu: () => navigate2("/")
+      }
+    ),
+    currentTask && !showStartModal && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 flex flex-col md:flex-row overflow-hidden relative", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "w-full md:w-80 border-b md:border-b-0 md:border-r border-border bg-card/30 shrink-0 flex flex-col", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4 border-b border-border/50 bg-muted/20", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3.5 rounded-2xl bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border border-primary/20 space-y-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-primary", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-3 h-3" }),
+              " Active Objective"
+            ] }),
+            currentTask.challenge.type === "timer" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-amber-400 font-mono font-bold flex items-center gap-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { className: "w-3 h-3 animate-spin" }),
+              " ",
+              timeLeft.toFixed(1),
+              "s"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs font-black text-foreground leading-snug", children: [
+            '"',
+            currentTask.fullSentence,
+            '"'
+          ] })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-4 flex-1 overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          SidebarRoster$4,
+          {
+            roster,
+            isHardMode: isBlindMode
+          }
+        ) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex flex-col overflow-y-auto relative", children: gameOver && taskResult ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TasksGameOver,
+        {
+          task: currentTask,
+          result: taskResult,
+          roster,
+          totalScore,
+          bonus,
+          finalScore,
+          onNewTask: () => setShowStartModal(true),
+          rosterRef
+        }
+      ) : currentCountry ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-full", children: [
+        currentTask.challenge.type === "timer" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full h-1.5 bg-muted overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "div",
+          {
+            className: "h-full bg-amber-400 transition-all duration-100 ease-linear",
+            style: { width: `${timeLeft / 5 * 100}%` }
+          }
+        ) }),
+        currentTask.goal.type === "match" && currentTask.goal.targetCountry && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-6 py-2 bg-blue-500/10 border-b border-blue-500/20 flex items-center justify-between text-xs font-semibold text-blue-400", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Target, { className: "w-4 h-4" }),
+            " Goal Target Country: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { className: "text-foreground", children: [
+              currentTask.goal.targetCountry.flag,
+              " ",
+              currentTask.goal.targetCountry.name
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] opacity-80", children: "Match category stats for max score" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          TaskCountryCard,
+          {
+            country: currentCountry,
+            poolRemaining: pool.length,
+            isHardMode: isBlindMode,
+            roster,
+            onAssign: assignCountry,
+            task: currentTask
+          }
+        )
+      ] }) : null })
+    ] })
+  ] });
+}
+function TaskCountryCard({
+  country,
+  poolRemaining,
+  isHardMode,
+  roster,
+  onAssign,
+  task
+}) {
+  const isComplete = CATEGORIES.every((c) => roster[c]);
+  if (isComplete) return null;
+  const targetCountry = task.goal.type === "match" ? task.goal.targetCountry : null;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col h-full w-full max-w-5xl mx-auto p-4 md:p-8", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-start mb-6 w-full", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-4 md:gap-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-4xl md:text-5xl mt-1 drop-shadow-md", children: country.flag }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-2xl md:text-3xl font-sans font-bold text-foreground tracking-tight", children: country.name }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground mt-0.5", children: [
+            country.capital,
+            " • ",
+            country.region
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3 max-w-2xl text-sm text-foreground/80 leading-relaxed", children: country.knownFor })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-right shrink-0", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs font-bold text-muted-foreground uppercase tracking-widest", children: "Pool Remaining" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-2xl font-black text-foreground font-mono", children: poolRemaining })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 overflow-y-auto p-2 pb-8 -mx-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4", children: CATEGORIES.filter((cat) => !roster[cat]).map((cat) => {
+      const stat = country.stats[getCategoryKey(cat)];
+      const maxScore = CATEGORY_MAX_SCORES$5[cat] ?? 10;
+      const scoreLabel = getScoreLabel$4(stat.score ?? 0, maxScore);
+      const targetScore = targetCountry ? targetCountry.stats[getCategoryKey(cat)]?.score ?? 0 : null;
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => onAssign(cat),
+          className: "group relative p-4 rounded-2xl border border-border bg-card hover:bg-muted/60 hover:border-primary/50 transition-all duration-200 text-left flex flex-col justify-between shadow-sm hover:shadow-md active:scale-[0.98]",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[11px] font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: CATEGORY_ICONS$5[cat] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: cat })
+                ] }),
+                targetScore !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-400 border border-blue-500/30", children: [
+                  "Target: ",
+                  targetScore
+                ] })
+              ] }),
+              !isHardMode ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `text-sm font-bold ${BONUS_CATEGORIES$5.includes(cat) ? "text-foreground" : scoreLabel.color}`, children: BONUS_CATEGORIES$5.includes(cat) ? "Bonus Contributor" : scoreLabel.label }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `text-sm font-bold ${BONUS_CATEGORIES$5.includes(cat) ? "text-foreground" : scoreLabel.color}`, children: !BONUS_CATEGORIES$5.includes(cat) && getPtsDisplay$5(stat.score ?? 0, cat) })
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs font-bold text-muted-foreground italic mb-1", children: "Stat hidden in Blind Mode" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground line-clamp-2 leading-relaxed mt-1", children: stat.description })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 pt-3 border-t border-border/40 flex items-center justify-end text-xs font-bold text-primary group-hover:translate-x-0.5 transition-transform", children: [
+              "Assign to ",
+              cat,
+              " →"
+            ] })
+          ]
+        },
+        cat
+      );
+    }) }) })
+  ] });
+}
 const queryClient = new QueryClient();
 function Router() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(Switch$2, { children: [
@@ -75712,6 +76543,7 @@ function Router() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/beta-normal", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(NormalGame, { isBetaMode: true }) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/double", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleDraftGame, {}) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/guess", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(GuessGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/tasks", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TasksGame, {}) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/daily", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DailyGame, {}) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/party", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(PartyGame, {}) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/sabotage", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SabotageGame, {}) }) }),

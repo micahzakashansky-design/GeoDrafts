@@ -647,7 +647,28 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Row 2: Guess the Country & Associations */}
+                {/* Row 2: Tasks Mode - Special Challenge Mode */}
+                <div className="col-span-1 md:col-span-2 bg-gradient-to-r from-primary/10 via-purple-500/10 to-primary/10 border-b border-border p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+                  <div className="relative z-10 flex flex-col md:flex-row items-center md:items-start gap-5 text-center md:text-left">
+                    <div className="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center shrink-0 border border-primary/30 text-primary">
+                      <Target className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-wider mb-2">
+                        New Game Mode
+                      </div>
+                      <h3 className="font-sans text-2xl font-bold mb-1 text-card-foreground">Tasks Mode</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed max-w-md">Complete randomized draft objectives and unique challenges. Get graded out of 100 on your performance!</p>
+                    </div>
+                  </div>
+                  <div className="relative z-10 w-full md:w-auto flex items-center justify-center">
+                    <button onClick={() => startGame("tasks", false)} className="w-full sm:w-auto px-6 py-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:scale-105 active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+                      <Target className="w-4 h-4" /> Play Tasks Mode
+                    </button>
+                  </div>
+                </div>
+
+                {/* Row 3: Guess the Country & Associations */}
                 <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 border-b border-border">
                   <button onClick={() => startGame("guess", false)} className="col-span-1 bg-card border-b md:border-b-0 md:border-r border-border p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300">
                     <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-5 group-hover:scale-110 transition-transform duration-500">

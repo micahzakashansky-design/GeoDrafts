@@ -1,0 +1,90 @@
+import { describe, it, expect } from "vitest";
+import { generateRandomTask, calculateTaskGrade, type Task, type Country } from "./tasks-logic";
+
+const dummyCountry: Country = {
+  name: "Testland",
+  isoNumeric: "999",
+  aliases: [],
+  capitalAliases: [],
+  flag: "🏳️",
+  flagColors: [],
+  tier: "second",
+  capital: "Test City",
+  region: "Europe",
+  knownFor: "Testing",
+  stats: {
+    military: { score: 10, description: "10/10" },
+    economy: { score: 8, description: "8/10" },
+    culture: { score: 7, description: "7/10" },
+    healthcare: { score: 8, description: "8/10" },
+    internationalRelationships: { score: 8, description: "8/10" },
+    government: { score: 8, description: "8/10" },
+    climate: { score: 7, description: "7/10" },
+    technology: { score: 9, description: "9/10" },
+    size: { score: 5, description: "5/10" },
+    population: { score: 5, description: "5/10" },
+    history: { score: 7, description: "7/10" },
+    tourism: { score: 6, description: "6/10" },
+    education: { score: 9, description: "9/10" },
+    location: { score: 7, description: "7/10" },
+    naturalResources: { score: 6, description: "6/10" }
+  }
+};
+
+describe("tasks-logic", () => {
+  it("generates a random task with valid goal and challenge", () => {
+    const task = generateRandomTask([dummyCountry]);
+    expect(task.id).toBeDefined();
+    expect(task.fullSentence).toContain("Make");
+    expect(task.goal).toBeDefined();
+    expect(task.challenge).toBeDefined();
+  });
+
+  it("scores worst country goal correctly (<=50 is 100/100)", () => {
+    const task: Task = {
+      id: "t1",
+      goal: { type: "worst", title: "Worst Country", template: "Make the worst country possible" },
+      challenge: { type: "blind", title: "Blind Mode", template: "in blind mode." },
+      fullSentence: "Make the worst country possible in blind mode."
+    };
+
+    const res100 = calculateTaskGrade(task, {}, 45);
+    expect(res100.grade).toBe(100);
+
+    const res80 = calculateTaskGrade(task, {}, 70);
+    expect(res80.grade).toBe(80);
+  });
+
+  it("scores best country goal correctly (>=175 is 100/100)", () => {
+    const task: Task = {
+      id: "t2",
+      goal: { type: "best", title: "Best Country", template: "Make the best country possible" },
+      challenge: { type: "blind", title: "Blind Mode", template: "in blind mode." },
+      fullSentence: "Make the best country possible in blind mode."
+    };
+
+    const res100 = calculateTaskGrade(task, {}, 180);
+    expect(res100.grade).toBe(100);
+
+    const res90 = calculateTaskGrade(task, {}, 165);
+    expect(res90.grade).toBe(90);
+  });
+
+  it("scores match country goal correctly", () => {
+    const task: Task = {
+      id: "t3",
+      goal: { type: "match", title: "Match Testland", template: "Make a country most similar to Testland", targetCountry: dummyCountry },
+      challenge: { type: "blind", title: "Blind Mode", template: "in blind mode." },
+      fullSentence: "Make a country most similar to Testland in blind mode."
+    };
+
+    const roster = {
+      Military: dummyCountry,
+      Economy: dummyCountry
+    };
+
+    const res = calculateTaskGrade(task, roster, 100);
+    expect(res.grade).toBeGreaterThanOrEqual(0);
+    expect(res.grade).toBeLessThanOrEqual(100);
+  });
+});

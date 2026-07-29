@@ -28,6 +28,8 @@ const queryClient = new QueryClient();
 
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
+import TasksGame from "@/pages/tasks/TasksGame";
+
 function Router() {
   return (
     <Switch>
@@ -50,6 +52,9 @@ function Router() {
       </Route>
       <Route path="/game/guess">
         <ProtectedRoute><GuessGame /></ProtectedRoute>
+      </Route>
+      <Route path="/game/tasks">
+        <ProtectedRoute><TasksGame /></ProtectedRoute>
       </Route>
       <Route path="/game/daily">
         <ProtectedRoute><DailyGame /></ProtectedRoute>
