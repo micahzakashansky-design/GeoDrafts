@@ -75878,14 +75878,14 @@ function generateRandomTask(customPool) {
       type: "worst",
       title: "Worst Country Possible",
       template: "Make the worst country possible",
-      explanation: "Score 50 points or lower for a 100/100 score."
+      explanation: "Score 60 points or lower for a 100/100 score."
     };
   } else if (goalType === "best") {
     goal = {
       type: "best",
       title: "Best Country Possible",
       template: "Make the best country possible",
-      explanation: "Score 175 points or higher for a 100/100 score."
+      explanation: "Score 170 points or higher for a 100/100 score."
     };
   } else if (goalType === "match") {
     const targetCountry = usablePool[Math.floor(Math.random() * usablePool.length)] || basePool[0];
@@ -75922,21 +75922,21 @@ function calculateTaskGrade(task, roster, totalScore) {
   let details = "";
   let categoryBreakdown = void 0;
   if (task.goal.type === "worst") {
-    if (totalScore <= 50) {
+    if (totalScore <= 60) {
       grade = 100;
     } else {
-      grade = Math.max(0, Math.round(100 - (totalScore - 50)));
+      grade = Math.max(0, Math.round(100 - (totalScore - 60)));
     }
-    summary = `Final Score: ${totalScore} pts (Target: ≤50 pts)`;
-    details = totalScore <= 50 ? `Outstanding! You built a country with ${totalScore} pts (≤ 50 required for 100/100).` : `Your country achieved ${totalScore} pts. Every point above 50 subtracted 1 point from 100.`;
+    summary = `Final Score: ${totalScore} pts (Target: ≤60 pts)`;
+    details = totalScore <= 60 ? `Outstanding! You built a country with ${totalScore} pts (≤ 60 required for 100/100).` : `Your country achieved ${totalScore} pts. Every point above 60 subtracted 1 point from 100.`;
   } else if (task.goal.type === "best") {
-    if (totalScore >= 175) {
+    if (totalScore >= 170) {
       grade = 100;
     } else {
-      grade = Math.max(0, Math.round(100 - (175 - totalScore)));
+      grade = Math.max(0, Math.round(100 - (170 - totalScore)));
     }
-    summary = `Final Score: ${totalScore} pts (Target: ≥175 pts)`;
-    details = totalScore >= 175 ? `Incredible nation building! Your country scored ${totalScore} pts (≥ 175 required for 100/100).` : `Your country achieved ${totalScore} pts. You were ${175 - totalScore} pts short of 175.`;
+    summary = `Final Score: ${totalScore} pts (Target: ≥170 pts)`;
+    details = totalScore >= 170 ? `Incredible nation building! Your country scored ${totalScore} pts (≥ 170 required for 100/100).` : `Your country achieved ${totalScore} pts. You were ${170 - totalScore} pts short of 170.`;
   } else if (task.goal.type === "match" && task.goal.targetCountry) {
     const target = task.goal.targetCountry;
     let totalDiff = 0;

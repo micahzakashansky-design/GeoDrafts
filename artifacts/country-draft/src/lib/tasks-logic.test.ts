@@ -40,7 +40,7 @@ describe("tasks-logic", () => {
     expect(task.challenge).toBeDefined();
   });
 
-  it("scores worst country goal correctly (<=50 is 100/100)", () => {
+  it("scores worst country goal correctly (<=60 is 100/100)", () => {
     const task: Task = {
       id: "t1",
       goal: { type: "worst", title: "Worst Country", template: "Make the worst country possible" },
@@ -48,14 +48,14 @@ describe("tasks-logic", () => {
       fullSentence: "Make the worst country possible in blind mode."
     };
 
-    const res100 = calculateTaskGrade(task, {}, 45);
+    const res100 = calculateTaskGrade(task, {}, 55);
     expect(res100.grade).toBe(100);
 
-    const res80 = calculateTaskGrade(task, {}, 70);
-    expect(res80.grade).toBe(80);
+    const res90 = calculateTaskGrade(task, {}, 70);
+    expect(res90.grade).toBe(90);
   });
 
-  it("scores best country goal correctly (>=175 is 100/100)", () => {
+  it("scores best country goal correctly (>=170 is 100/100)", () => {
     const task: Task = {
       id: "t2",
       goal: { type: "best", title: "Best Country", template: "Make the best country possible" },
@@ -63,11 +63,11 @@ describe("tasks-logic", () => {
       fullSentence: "Make the best country possible in blind mode."
     };
 
-    const res100 = calculateTaskGrade(task, {}, 180);
+    const res100 = calculateTaskGrade(task, {}, 175);
     expect(res100.grade).toBe(100);
 
-    const res90 = calculateTaskGrade(task, {}, 165);
-    expect(res90.grade).toBe(90);
+    const res95 = calculateTaskGrade(task, {}, 165);
+    expect(res95.grade).toBe(95);
   });
 
   it("scores match country goal correctly", () => {
