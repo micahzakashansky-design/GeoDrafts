@@ -52,14 +52,18 @@ export function BetaControls({
   onBlindModeChange: (val: boolean) => void;
 }) {
   const [localValue, setLocalValue] = React.useState<number>(difficultyIndex);
+  const isDraggingRef = React.useRef(false);
 
   React.useEffect(() => {
-    setLocalValue(difficultyIndex);
+    if (!isDraggingRef.current) {
+      setLocalValue(difficultyIndex);
+    }
   }, [difficultyIndex]);
 
   const currentConfig = BETA_DIFFICULTY_CONFIG[localValue] || BETA_DIFFICULTY_CONFIG[3];
 
   const handleCommit = (val: number) => {
+    isDraggingRef.current = false;
     if (val !== difficultyIndex) {
       onDifficultyChange(val);
     }
@@ -67,23 +71,33 @@ export function BetaControls({
 
   return (
     <div className="flex items-center gap-3 flex-wrap">
-      {/* Difficulty Slider */}
+      {/* Difficulty Slider & Pill Group */}
       <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-card border border-border shadow-sm">
-        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">
+        <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider hidden sm:inline">
           Difficulty:
         </span>
+        
+        {/* Active Badge */}
         <span
-          className={`text-[11px] font-extrabold px-2 py-0.5 rounded-full border transition-all ${currentConfig.badgeBg} ${currentConfig.color} ${currentConfig.border}`}
+          className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border transition-all ${currentConfig.badgeBg} ${currentConfig.color} ${currentConfig.border}`}
         >
           {currentConfig.name} ({currentConfig.poolSize})
         </span>
+
+        {/* Range Slider with Drag Lock */}
         <input
           type="range"
           min="0"
           max="3"
           step="1"
           value={localValue}
-          onChange={(e) => setLocalValue(parseInt(e.target.value, 10))}
+          onPointerDown={() => { isDraggingRef.current = true; }}
+          onMouseDown={() => { isDraggingRef.current = true; }}
+          onTouchStart={() => { isDraggingRef.current = true; }}
+          onChange={(e) => {
+            const val = parseInt(e.target.value, 10);
+            setLocalValue(val);
+          }}
           onPointerUp={() => handleCommit(localValue)}
           onMouseUp={() => handleCommit(localValue)}
           onTouchEnd={() => handleCommit(localValue)}
@@ -93,8 +107,31 @@ export function BetaControls({
             }
           }}
           style={{ accentColor: currentConfig.accent }}
-          className="w-24 md:w-32 h-1.5 rounded-lg appearance-none cursor-pointer bg-muted transition-colors"
+          className="w-20 sm:w-28 md:w-32 h-1.5 rounded-lg appearance-none cursor-pointer bg-muted transition-colors touch-none"
         />
+
+        {/* Quick Select Pill Buttons */}
+        <div className="hidden lg:flex items-center gap-1 pl-1 border-l border-border/60">
+          {BETA_DIFFICULTY_CONFIG.map((cfg, idx) => {
+            const isActive = localValue === idx;
+            return (
+              <button
+                key={cfg.name}
+                onClick={() => {
+                  setLocalValue(idx);
+                  handleCommit(idx);
+                }}
+                className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full transition-all cursor-pointer border ${
+                  isActive
+                    ? `${cfg.badgeBg} ${cfg.color} ${cfg.border}`
+                    : "text-muted-foreground/60 border-transparent hover:text-foreground hover:bg-muted/40"
+                }`}
+              >
+                {cfg.name}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Blind Mode Button */}

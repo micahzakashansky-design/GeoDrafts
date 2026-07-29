@@ -48350,35 +48350,131 @@ function getDensityBreakdown(roster) {
   const C2 = roster.Climate?.stats.climate.score ?? 5;
   const R = roster["Natural Resources"]?.stats.naturalResources.score ?? 5;
   const S2 = roster.Size.stats.size.score ?? 5;
-  const numerator = 150 * Math.pow(I, 1.5) * Math.pow(T, 0.75) * Math.pow(E, 0.15);
-  const denominator = Math.pow(C2, 0.05) * Math.pow(R, 0.05) * Math.pow(S2, 0.25);
+  const iTerm = Math.pow(I, 1.5);
+  const tTerm = Math.pow(T, 0.75);
+  const eTerm = Math.pow(E, 0.15);
+  const cTerm = Math.pow(C2, 0.05);
+  const rTerm = Math.pow(R, 0.05);
+  const sTerm = Math.pow(S2, 0.25);
+  const numerator = 150 * iTerm * tTerm * eTerm;
+  const denominator = cTerm * rTerm * sTerm;
   const idealTargetDensity = denominator > 0 ? numerator / denominator : 0;
+  const z2 = (x2 - idealTargetDensity) / 4e3;
+  const bonusPoints = Math.round(25 * Math.exp(-0.5 * Math.pow(z2, 2)));
   const diff = x2 - idealTargetDensity;
   let status = "optimal";
   let analysisText = "";
   if (diff > 500) {
     status = "too_high";
-    analysisText = `Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) is higher than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your population is overcrowded for your current tech & industrial capacity.`;
+    analysisText = `Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) is higher than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your population is overcrowded relative to your current technological infrastructure & industrial capacity.`;
   } else if (diff < -500) {
     status = "too_low";
-    analysisText = `Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) is lower than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your land area is vast, but your high tech & industry levels could support much higher density.`;
+    analysisText = `Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) is lower than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your nation has vast territory, but your high tech & industry levels could support a much denser urban population.`;
   } else {
     status = "optimal";
-    analysisText = `Optimal Synergy! Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) closely matches your ideal target density (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²).`;
+    analysisText = `Optimal Synergy! Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) closely matches your nation's ideal target density capacity (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²).`;
   }
-  const synergyExplanation = `Industry Type (Ind. ${I}/5), Technology (${T}/10), and Economy (${E}/10) increase your target density capacity, while Climate (${C2}/10), Resources (${R}/10), and Size (${S2}/10) moderate land requirements.`;
+  const factors = [
+    {
+      name: "Industry Type",
+      symbol: "I",
+      statValue: `Ind. ${I}/5`,
+      countryName: roster.Economy.name,
+      countryFlag: roster.Economy.flag,
+      impactType: "multiplier",
+      rawTerm: iTerm,
+      formulaTerm: `I^1.5 = ${iTerm.toFixed(2)}`,
+      explanation: `Industry specialization level ${I}/5 multiplies target density capacity by ×${iTerm.toFixed(2)}.`,
+      badgeColor: "text-blue-400 bg-blue-500/10 border-blue-500/30"
+    },
+    {
+      name: "Technology",
+      symbol: "T",
+      statValue: `${T}/10`,
+      countryName: roster.Technology?.name || "Undrafted (Default 5)",
+      countryFlag: roster.Technology?.flag || "⚙️",
+      impactType: "multiplier",
+      rawTerm: tTerm,
+      formulaTerm: `T^0.75 = ${tTerm.toFixed(2)}`,
+      explanation: `Tech rating ${T}/10 provides urban infrastructure & transit support (×${tTerm.toFixed(2)} multiplier).`,
+      badgeColor: "text-purple-400 bg-purple-500/10 border-purple-500/30"
+    },
+    {
+      name: "Economy",
+      symbol: "E",
+      statValue: `${E}/10`,
+      countryName: roster.Economy.name,
+      countryFlag: roster.Economy.flag,
+      impactType: "multiplier",
+      rawTerm: eTerm,
+      formulaTerm: `E^0.15 = ${eTerm.toFixed(2)}`,
+      explanation: `Economy rating ${E}/10 adds financial commercial density support (×${eTerm.toFixed(2)} multiplier).`,
+      badgeColor: "text-emerald-400 bg-emerald-500/10 border-emerald-500/30"
+    },
+    {
+      name: "Size (Territory)",
+      symbol: "S",
+      statValue: `${S2}/10`,
+      countryName: roster.Size.name,
+      countryFlag: roster.Size.flag,
+      impactType: "divisor",
+      rawTerm: sTerm,
+      formulaTerm: `S^0.25 = ${sTerm.toFixed(2)}`,
+      explanation: `Land size rating ${S2}/10 moderates density expectations across territory (÷${sTerm.toFixed(2)} divisor).`,
+      badgeColor: "text-amber-400 bg-amber-500/10 border-amber-500/30"
+    },
+    {
+      name: "Climate",
+      symbol: "C",
+      statValue: `${C2}/10`,
+      countryName: roster.Climate?.name || "Undrafted (Default 5)",
+      countryFlag: roster.Climate?.flag || "🌤️",
+      impactType: "divisor",
+      rawTerm: cTerm,
+      formulaTerm: `C^0.05 = ${cTerm.toFixed(2)}`,
+      explanation: `Climate score ${C2}/10 distributes land habitability across the nation (÷${cTerm.toFixed(2)} divisor).`,
+      badgeColor: "text-sky-400 bg-sky-500/10 border-sky-500/30"
+    },
+    {
+      name: "Natural Resources",
+      symbol: "R",
+      statValue: `${R}/10`,
+      countryName: roster["Natural Resources"]?.name || "Undrafted (Default 5)",
+      countryFlag: roster["Natural Resources"]?.flag || "🛢️",
+      impactType: "divisor",
+      rawTerm: rTerm,
+      formulaTerm: `R^0.05 = ${rTerm.toFixed(2)}`,
+      explanation: `Resource score ${R}/10 spreads out primary industries and agriculture (÷${rTerm.toFixed(2)} divisor).`,
+      badgeColor: "text-orange-400 bg-orange-500/10 border-orange-500/30"
+    }
+  ];
   return {
     actualDensity: Math.round(x2),
     idealTargetDensity: Math.round(idealTargetDensity),
+    popRaw: pop,
+    sizeRaw: size2,
+    popCountryName: roster.Population.name,
+    popCountryFlag: roster.Population.flag,
+    sizeCountryName: roster.Size.name,
+    sizeCountryFlag: roster.Size.flag,
     industryType: I,
     techScore: T,
     econScore: E,
     climateScore: C2,
     resourcesScore: R,
     sizeScore: S2,
+    iTerm,
+    tTerm,
+    eTerm,
+    cTerm,
+    rTerm,
+    sTerm,
+    numerator,
+    denominator,
+    bonusPoints,
     status,
     analysisText,
-    synergyExplanation
+    factors
   };
 }
 const __iconNode$1f = [
@@ -49149,23 +49245,39 @@ function DensityScoreBox({
         cat.id
       );
     }) }),
-    !allThree ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground font-medium text-center mt-2 italic pt-1", children: "Draft Size, Population, and Economy to complete your Population Density Breakdown" }) : breakdown ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 pt-2 border-t border-border/60", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2.5 rounded-xl bg-muted/30 border border-border/50 flex flex-col", children: [
+    !allThree ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground font-medium text-center mt-2 italic pt-1", children: "Draft Size, Population, and Economy to complete your Population Density Breakdown" }) : breakdown ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pt-3 border-t border-border/60", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-3 gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl bg-muted/30 border border-border/50 flex flex-col justify-between", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-muted-foreground uppercase", children: "Actual Density (x)" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-black text-foreground mt-0.5", children: [
-            breakdown.actualDensity.toLocaleString(),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base font-black text-foreground", children: breakdown.actualDensity.toLocaleString() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-muted-foreground block", children: "ppl/km²" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] text-muted-foreground/80 mt-1 italic truncate", children: [
+            breakdown.popCountryFlag,
             " ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-muted-foreground", children: "ppl/km²" })
+            breakdown.sizeCountryFlag,
+            " Pop / Area"
           ] })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2.5 rounded-xl bg-muted/30 border border-border/50 flex flex-col", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-muted-foreground uppercase", children: "Target Density" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-black text-blue-400 mt-0.5", children: [
-            breakdown.idealTargetDensity.toLocaleString(),
-            " ",
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-muted-foreground", children: "ppl/km²" })
-          ] })
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col justify-between", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-blue-400 uppercase", children: "Target Capacity" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base font-black text-blue-400", children: breakdown.idealTargetDensity.toLocaleString() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-blue-400/80 block", children: "ppl/km²" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] text-blue-400/80 mt-1 italic", children: "Formula Target" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-emerald-400 uppercase", children: "Synergy Bonus" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-base font-black text-emerald-400", children: [
+              "+",
+              breakdown.bonusPoints
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-emerald-400/80 block", children: "pts (max 25)" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] text-emerald-400/80 mt-1 italic", children: "Gaussian Fit" })
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl border bg-muted/20 space-y-1.5", children: [
@@ -49185,9 +49297,36 @@ function DensityScoreBox({
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground leading-relaxed", children: breakdown.analysisText })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl border border-blue-500/20 bg-blue-500/5 space-y-1 text-xs", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-blue-400", children: "Synergy Factors:" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground leading-relaxed", children: breakdown.synergyExplanation })
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-xs font-bold text-foreground", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Contributing Stat Factors & Impact:" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-muted-foreground font-normal", children: "Formula Term & Effect" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-2", children: breakdown.factors.map((factor) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "p-3 rounded-xl border border-border/60 bg-card/60 flex flex-col justify-between space-y-1.5 shadow-2xs",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: `text-[10px] font-black px-1.5 py-0.5 rounded border ${factor.badgeColor}`, children: factor.symbol }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-foreground truncate", children: factor.name })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-extrabold text-foreground", children: factor.statValue })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[11px] font-medium text-muted-foreground flex items-center justify-between gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "truncate", children: [
+                  factor.countryFlag,
+                  " ",
+                  factor.countryName
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-[10px] font-bold text-primary shrink-0", children: factor.formulaTerm })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] text-muted-foreground/90 leading-tight border-t border-border/40 pt-1 mt-0.5", children: factor.explanation })
+            ]
+          },
+          factor.symbol
+        )) })
       ] })
     ] }) : null,
     showInfo && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-3xl p-6 max-w-lg w-full shadow-2xl relative space-y-4 text-left", children: [
@@ -49206,7 +49345,9 @@ function DensityScoreBox({
       /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground leading-relaxed", children: [
         "In ",
         /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "BETA 1.0" }),
-        ", your nation earns bonus points based on how closely your actual population density matches your ideal target density capacity!"
+        ", your nation earns up to ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-emerald-400", children: "25 bonus points" }),
+        " based on how closely your actual population density matches your ideal target density capacity!"
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 rounded-xl bg-muted/40 border border-border/50 font-mono text-xs text-foreground space-y-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-blue-400", children: "Equation:" }),
@@ -49242,32 +49383,44 @@ function DensityScoreBox({
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           "• ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "I" }),
-          ": Industry Type (1–5) from Economy"
+          ": Industry Type (1–5) from Economy (Multiplier: I",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "1.5" }),
+          ")"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           "• ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "T" }),
-          ": Technology score"
+          ": Technology score (Multiplier: T",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.75" }),
+          ")"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           "• ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "E" }),
-          ": Economy score"
+          ": Economy score (Multiplier: E",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.15" }),
+          ")"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           "• ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "S" }),
-          ": Size score"
+          ": Size score (Divisor: S",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.25" }),
+          ")"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           "• ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "C" }),
-          ": Climate score"
+          ": Climate score (Divisor: C",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.05" }),
+          ")"
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           "• ",
           /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "R" }),
-          ": Natural Resources score"
+          ": Natural Resources score (Divisor: R",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("sup", { children: "0.05" }),
+          ")"
         ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -59130,22 +59283,26 @@ function BetaControls({
   onBlindModeChange
 }) {
   const [localValue, setLocalValue] = React.useState(difficultyIndex);
+  const isDraggingRef = React.useRef(false);
   React.useEffect(() => {
-    setLocalValue(difficultyIndex);
+    if (!isDraggingRef.current) {
+      setLocalValue(difficultyIndex);
+    }
   }, [difficultyIndex]);
   const currentConfig = BETA_DIFFICULTY_CONFIG[localValue] || BETA_DIFFICULTY_CONFIG[3];
   const handleCommit = (val) => {
+    isDraggingRef.current = false;
     if (val !== difficultyIndex) {
       onDifficultyChange(val);
     }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 flex-wrap", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2.5 px-3 py-1.5 rounded-full bg-card border border-border shadow-sm", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-bold text-muted-foreground uppercase tracking-wider", children: "Difficulty:" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[11px] font-bold text-muted-foreground uppercase tracking-wider hidden sm:inline", children: "Difficulty:" }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "span",
         {
-          className: `text-[11px] font-extrabold px-2 py-0.5 rounded-full border transition-all ${currentConfig.badgeBg} ${currentConfig.color} ${currentConfig.border}`,
+          className: `text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border transition-all ${currentConfig.badgeBg} ${currentConfig.color} ${currentConfig.border}`,
           children: [
             currentConfig.name,
             " (",
@@ -59162,7 +59319,19 @@ function BetaControls({
           max: "3",
           step: "1",
           value: localValue,
-          onChange: (e) => setLocalValue(parseInt(e.target.value, 10)),
+          onPointerDown: () => {
+            isDraggingRef.current = true;
+          },
+          onMouseDown: () => {
+            isDraggingRef.current = true;
+          },
+          onTouchStart: () => {
+            isDraggingRef.current = true;
+          },
+          onChange: (e) => {
+            const val = parseInt(e.target.value, 10);
+            setLocalValue(val);
+          },
           onPointerUp: () => handleCommit(localValue),
           onMouseUp: () => handleCommit(localValue),
           onTouchEnd: () => handleCommit(localValue),
@@ -59172,9 +59341,24 @@ function BetaControls({
             }
           },
           style: { accentColor: currentConfig.accent },
-          className: "w-24 md:w-32 h-1.5 rounded-lg appearance-none cursor-pointer bg-muted transition-colors"
+          className: "w-20 sm:w-28 md:w-32 h-1.5 rounded-lg appearance-none cursor-pointer bg-muted transition-colors touch-none"
         }
-      )
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "hidden lg:flex items-center gap-1 pl-1 border-l border-border/60", children: BETA_DIFFICULTY_CONFIG.map((cfg, idx) => {
+        const isActive = localValue === idx;
+        return /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            onClick: () => {
+              setLocalValue(idx);
+              handleCommit(idx);
+            },
+            className: `text-[10px] font-extrabold px-2 py-0.5 rounded-full transition-all cursor-pointer border ${isActive ? `${cfg.badgeBg} ${cfg.color} ${cfg.border}` : "text-muted-foreground/60 border-transparent hover:text-foreground hover:bg-muted/40"}`,
+            children: cfg.name
+          },
+          cfg.name
+        );
+      }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "button",

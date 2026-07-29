@@ -96,20 +96,44 @@ export function DensityScoreBox({
           Draft Size, Population, and Economy to complete your Population Density Breakdown
         </p>
       ) : breakdown ? (
-        <div className="space-y-3 pt-2 border-t border-border/60">
-          {/* Actual vs Target Density metrics */}
-          <div className="grid grid-cols-2 gap-2">
-            <div className="p-2.5 rounded-xl bg-muted/30 border border-border/50 flex flex-col">
+        <div className="space-y-4 pt-3 border-t border-border/60">
+          {/* Actual vs Target Density & Bonus Metrics */}
+          <div className="grid grid-cols-3 gap-2">
+            <div className="p-3 rounded-xl bg-muted/30 border border-border/50 flex flex-col justify-between">
               <span className="text-[10px] font-bold text-muted-foreground uppercase">Actual Density (x)</span>
-              <span className="text-sm font-black text-foreground mt-0.5">{breakdown.actualDensity.toLocaleString()} <span className="text-[10px] font-normal text-muted-foreground">ppl/km²</span></span>
+              <div className="mt-1">
+                <span className="text-base font-black text-foreground">{breakdown.actualDensity.toLocaleString()}</span>
+                <span className="text-[10px] font-normal text-muted-foreground block">ppl/km²</span>
+              </div>
+              <span className="text-[9px] text-muted-foreground/80 mt-1 italic truncate">
+                {breakdown.popCountryFlag} {breakdown.sizeCountryFlag} Pop / Area
+              </span>
             </div>
-            <div className="p-2.5 rounded-xl bg-muted/30 border border-border/50 flex flex-col">
-              <span className="text-[10px] font-bold text-muted-foreground uppercase">Target Density</span>
-              <span className="text-sm font-black text-blue-400 mt-0.5">{breakdown.idealTargetDensity.toLocaleString()} <span className="text-[10px] font-normal text-muted-foreground">ppl/km²</span></span>
+
+            <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col justify-between">
+              <span className="text-[10px] font-bold text-blue-400 uppercase">Target Capacity</span>
+              <div className="mt-1">
+                <span className="text-base font-black text-blue-400">{breakdown.idealTargetDensity.toLocaleString()}</span>
+                <span className="text-[10px] font-normal text-blue-400/80 block">ppl/km²</span>
+              </div>
+              <span className="text-[9px] text-blue-400/80 mt-1 italic">
+                Formula Target
+              </span>
+            </div>
+
+            <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex flex-col justify-between">
+              <span className="text-[10px] font-bold text-emerald-400 uppercase">Synergy Bonus</span>
+              <div className="mt-1">
+                <span className="text-base font-black text-emerald-400">+{breakdown.bonusPoints}</span>
+                <span className="text-[10px] font-normal text-emerald-400/80 block">pts (max 25)</span>
+              </div>
+              <span className="text-[9px] text-emerald-400/80 mt-1 italic">
+                Gaussian Fit
+              </span>
             </div>
           </div>
 
-          {/* Status Badge & Explanation */}
+          {/* Status Badge & Diagnostic Analysis */}
           <div className="p-3 rounded-xl border bg-muted/20 space-y-1.5">
             <div className="flex items-center gap-1.5">
               {breakdown.status === "too_high" && (
@@ -136,12 +160,40 @@ export function DensityScoreBox({
             </p>
           </div>
 
-          {/* Synergy Factors Explanation */}
-          <div className="p-3 rounded-xl border border-blue-500/20 bg-blue-500/5 space-y-1 text-xs">
-            <div className="font-bold text-blue-400">Synergy Factors:</div>
-            <p className="text-muted-foreground leading-relaxed">
-              {breakdown.synergyExplanation}
-            </p>
+          {/* Detailed Contributing Factors Grid */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-foreground">
+              <span>Contributing Stat Factors & Impact:</span>
+              <span className="text-[10px] text-muted-foreground font-normal">Formula Term & Effect</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {breakdown.factors.map((factor) => (
+                <div
+                  key={factor.symbol}
+                  className="p-3 rounded-xl border border-border/60 bg-card/60 flex flex-col justify-between space-y-1.5 shadow-2xs"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <span className={`text-[10px] font-black px-1.5 py-0.5 rounded border ${factor.badgeColor}`}>
+                        {factor.symbol}
+                      </span>
+                      <span className="text-xs font-bold text-foreground truncate">{factor.name}</span>
+                    </div>
+                    <span className="text-xs font-extrabold text-foreground">{factor.statValue}</span>
+                  </div>
+
+                  <div className="text-[11px] font-medium text-muted-foreground flex items-center justify-between gap-1">
+                    <span className="truncate">{factor.countryFlag} {factor.countryName}</span>
+                    <span className="font-mono text-[10px] font-bold text-primary shrink-0">{factor.formulaTerm}</span>
+                  </div>
+
+                  <p className="text-[10px] text-muted-foreground/90 leading-tight border-t border-border/40 pt-1 mt-0.5">
+                    {factor.explanation}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       ) : null}
@@ -164,7 +216,7 @@ export function DensityScoreBox({
             </div>
 
             <p className="text-sm text-muted-foreground leading-relaxed">
-              In <strong className="text-foreground">BETA 1.0</strong>, your nation earns bonus points based on how closely your actual population density matches your ideal target density capacity!
+              In <strong className="text-foreground">BETA 1.0</strong>, your nation earns up to <strong className="text-emerald-400">25 bonus points</strong> based on how closely your actual population density matches your ideal target density capacity!
             </p>
 
             <div className="p-4 rounded-xl bg-muted/40 border border-border/50 font-mono text-xs text-foreground space-y-2">
@@ -180,12 +232,12 @@ export function DensityScoreBox({
 
             <div className="space-y-1.5 text-xs text-muted-foreground">
               <div className="font-bold text-foreground mb-1">Variable Key:</div>
-              <div>• <strong className="text-foreground">I</strong>: Industry Type (1–5) from Economy</div>
-              <div>• <strong className="text-foreground">T</strong>: Technology score</div>
-              <div>• <strong className="text-foreground">E</strong>: Economy score</div>
-              <div>• <strong className="text-foreground">S</strong>: Size score</div>
-              <div>• <strong className="text-foreground">C</strong>: Climate score</div>
-              <div>• <strong className="text-foreground">R</strong>: Natural Resources score</div>
+              <div>• <strong className="text-foreground">I</strong>: Industry Type (1–5) from Economy (Multiplier: I<sup>1.5</sup>)</div>
+              <div>• <strong className="text-foreground">T</strong>: Technology score (Multiplier: T<sup>0.75</sup>)</div>
+              <div>• <strong className="text-foreground">E</strong>: Economy score (Multiplier: E<sup>0.15</sup>)</div>
+              <div>• <strong className="text-foreground">S</strong>: Size score (Divisor: S<sup>0.25</sup>)</div>
+              <div>• <strong className="text-foreground">C</strong>: Climate score (Divisor: C<sup>0.05</sup>)</div>
+              <div>• <strong className="text-foreground">R</strong>: Natural Resources score (Divisor: R<sup>0.05</sup>)</div>
             </div>
 
             <button
