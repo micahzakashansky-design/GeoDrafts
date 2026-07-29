@@ -14,7 +14,7 @@ import { Logo } from "@/components/Logo";
 import { SettingsButton } from "@/components/SettingsButton";
 import { computeSizePopBonus } from "@/lib/achievements-logic";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
-import { type Task, type TaskResult, generateRandomTask, filterPoolForChallenge, calculateTaskGrade } from "@/lib/tasks-logic";
+import { type Task, type TaskResult, generateRandomTask, filterPoolForChallenge, calculateTaskGrade, getCategoryTargetDisplay } from "@/lib/tasks-logic";
 import { TaskStartModal } from "./TaskStartModal";
 import { TasksGameOver } from "./TasksGameOver";
 import { savePersonalScore, formatRoster } from "@/lib/local-leaderboard";
@@ -353,9 +353,9 @@ function TaskCountryCard({
                     </div>
 
                     {/* Match Target Overlay Badge */}
-                    {targetScore !== null && (
+                    {targetCountry && (
                       <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                        Target: {targetScore}
+                        Target: {getCategoryTargetDisplay(cat, targetCountry)}
                       </span>
                     )}
                   </div>

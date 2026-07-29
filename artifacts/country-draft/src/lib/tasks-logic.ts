@@ -1,8 +1,8 @@
 import { ALL_COUNTRIES, COUNTRIES, CATEGORIES, getCategoryKey, type Category, type Country } from "@/data/countries";
-import { getCountryArchetype } from "./achievements-logic";
+import { getCountryArchetype, getRawPopulation } from "./achievements-logic";
 
 export type GoalType = "worst" | "best" | "match" | "archetype";
-export type ChallengeType = "continent" | "lowRanked" | "timer" | "blind";
+export type ChallengeType = "continent" | "lowRanked" | "highRanked" | "timer" | "blind";
 
 export type TaskGoal = {
   type: GoalType;
@@ -83,13 +83,43 @@ export function getCountryTotalScore(country: Country): number {
   return total;
 }
 
+export function getCategoryTargetDisplay(cat: Category, targetCountry: Country): string {
+  if (cat === "Population") {
+    const desc = targetCountry.stats.population?.description || "";
+    return desc.split(";")[0].trim();
+  }
+  if (cat === "Size") {
+    const desc = targetCountry.stats.size?.description || "";
+    return desc.split(";")[0].split("—")[0].trim();
+  }
+  const catKey = getCategoryKey(cat);
+  return String(targetCountry.stats[catKey]?.score ?? 0);
+}
+
+export function getCategoryYourDisplay(cat: Category, country: Country): string {
+  if (cat === "Population") {
+    const desc = country.stats.population?.description || "";
+    return desc.split(";")[0].trim();
+  }
+  if (cat === "Size") {
+    const desc = country.stats.size?.description || "";
+    return desc.split(";")[0].split("—")[0].trim();
+  }
+  const catKey = getCategoryKey(cat);
+  return String(country.stats[catKey]?.score ?? 0);
+}
+
 export function filterPoolForChallenge(challenge: TaskChallenge, pool: Country[]): Country[] {
   if (challenge.type === "continent" && challenge.continent) {
     const filtered = pool.filter(c => getContinentForCountry(c) === challenge.continent);
     return filtered.length >= 15 ? filtered : pool;
   }
   if (challenge.type === "lowRanked") {
-    const filtered = pool.filter(c => getCountryTotalScore(c) < 140);
+    const filtered = pool.filter(c => c.tier !== "first" && getCountryTotalScore(c) < 140);
+    return filtered.length >= 15 ? filtered : pool;
+  }
+  if (challenge.type === "highRanked") {
+    const filtered = pool.filter(c => c.tier === "first" || getCountryTotalScore(c) >= 120);
     return filtered.length >= 15 ? filtered : pool;
   }
   return pool;
@@ -98,14 +128,18 @@ export function filterPoolForChallenge(challenge: TaskChallenge, pool: Country[]
 export function generateRandomTask(customPool?: Country[]): Task {
   const basePool = customPool && customPool.length > 0 ? customPool : COUNTRIES;
   
-  // Pick random challenge first so we know pool constraints
-  const challengeTypes: ChallengeType[] = ["continent", "lowRanked", "timer", "blind"];
-  const challengeType = challengeTypes[Math.floor(Math.random() * challengeTypes.length)];
+  // Pick random goal first
+  const goalTypes: GoalType[] = ["worst", "best", "match", "archetype"];
+  const goalType = goalTypes[Math.floor(Math.random() * goalTypes.length)];
+
+  // Pick random challenge type
+  const rawChallengeTypes: ("continent" | "rank" | "timer" | "blind")[] = ["continent", "rank", "timer", "blind"];
+  const rawChallengeType = rawChallengeTypes[Math.floor(Math.random() * rawChallengeTypes.length)];
 
   let challenge: TaskChallenge;
   let usablePool = [...basePool];
 
-  if (challengeType === "continent") {
+  if (rawChallengeType === "continent") {
     const continent = CONTINENTS[Math.floor(Math.random() * CONTINENTS.length)];
     challenge = {
       type: "continent",
@@ -114,14 +148,23 @@ export function generateRandomTask(customPool?: Country[]): Task {
       continent
     };
     usablePool = filterPoolForChallenge(challenge, basePool);
-  } else if (challengeType === "lowRanked") {
-    challenge = {
-      type: "lowRanked",
-      title: "Low-Ranked Only",
-      template: "using low-ranked countries only."
-    };
+  } else if (rawChallengeType === "rank") {
+    // IF and ONLY IF task is "worst", replace low-ranked with high-ranked countries
+    if (goalType === "worst") {
+      challenge = {
+        type: "highRanked",
+        title: "High-Ranked Only",
+        template: "using high-ranked countries only."
+      };
+    } else {
+      challenge = {
+        type: "lowRanked",
+        title: "Low-Ranked Only",
+        template: "using low-ranked countries only."
+      };
+    }
     usablePool = filterPoolForChallenge(challenge, basePool);
-  } else if (challengeType === "timer") {
+  } else if (rawChallengeType === "timer") {
     challenge = {
       type: "timer",
       title: "5s Timer",
@@ -134,10 +177,6 @@ export function generateRandomTask(customPool?: Country[]): Task {
       template: "in blind mode."
     };
   }
-
-  // Pick random goal
-  const goalTypes: GoalType[] = ["worst", "best", "match", "archetype"];
-  const goalType = goalTypes[Math.floor(Math.random() * goalTypes.length)];
 
   let goal: TaskGoal;
 
@@ -193,7 +232,7 @@ export type TaskResult = {
   letterGrade: "S" | "A" | "B" | "C" | "D" | "F";
   summary: string;
   details: string;
-  categoryBreakdown?: { category: Category; yourScore: number; targetScore: number; diff: number }[];
+  categoryBreakdown?: { category: Category; yourScore: string; targetScore: string; diff: number }[];
 };
 
 export function calculateTaskGrade(
@@ -204,7 +243,7 @@ export function calculateTaskGrade(
   let grade = 0;
   let summary = "";
   let details = "";
-  let categoryBreakdown: { category: Category; yourScore: number; targetScore: number; diff: number }[] | undefined = undefined;
+  let categoryBreakdown: { category: Category; yourScore: string; targetScore: string; diff: number }[] | undefined = undefined;
 
   if (task.goal.type === "worst") {
     // <= 60 pts is 100/100 score
@@ -236,17 +275,48 @@ export function calculateTaskGrade(
     categoryBreakdown = [];
 
     CATEGORIES.forEach(cat => {
-      const catKey = getCategoryKey(cat);
-      const targetScore = target.stats[catKey]?.score ?? 0;
       const yourCountry = roster[cat];
-      const yourScore = yourCountry ? (yourCountry.stats[catKey]?.score ?? 0) : 0;
-      const diff = Math.abs(yourScore - targetScore);
+      let diff = 0;
+      let yourScoreDisplay = "N/A";
+      let targetScoreDisplay = getCategoryTargetDisplay(cat, target);
+
+      if (cat === "Population") {
+        if (yourCountry) {
+          yourScoreDisplay = getCategoryYourDisplay(cat, yourCountry);
+          const yourPop = getRawPopulation(yourCountry.stats.population?.description || "");
+          const targetPop = getRawPopulation(target.stats.population?.description || "");
+          const ratio = Math.max(yourPop, targetPop) / Math.max(1, Math.min(yourPop, targetPop));
+          if (ratio <= 1.25) diff = 0;
+          else diff = Math.min(10, Math.round(Math.abs(Math.log10(ratio)) * 4));
+        } else {
+          diff = 5;
+        }
+      } else if (cat === "Size") {
+        if (yourCountry) {
+          yourScoreDisplay = getCategoryYourDisplay(cat, yourCountry);
+          const yourSize = yourCountry.area || 100000;
+          const targetSize = target.area || 100000;
+          const ratio = Math.max(yourSize, targetSize) / Math.max(1, Math.min(yourSize, targetSize));
+          if (ratio <= 1.25) diff = 0;
+          else diff = Math.min(10, Math.round(Math.abs(Math.log10(ratio)) * 4));
+        } else {
+          diff = 5;
+        }
+      } else {
+        const catKey = getCategoryKey(cat);
+        const targetScore = target.stats[catKey]?.score ?? 0;
+        const yourScore = yourCountry ? (yourCountry.stats[catKey]?.score ?? 0) : 0;
+        diff = Math.abs(yourScore - targetScore);
+        yourScoreDisplay = String(yourScore);
+        targetScoreDisplay = String(targetScore);
+      }
+
       totalDiff += diff;
 
       categoryBreakdown!.push({
         category: cat,
-        yourScore,
-        targetScore,
+        yourScore: yourScoreDisplay,
+        targetScore: targetScoreDisplay,
         diff
       });
     });

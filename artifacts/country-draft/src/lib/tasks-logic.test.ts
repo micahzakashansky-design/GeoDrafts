@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { generateRandomTask, calculateTaskGrade, type Task, type Country } from "./tasks-logic";
+import { generateRandomTask, calculateTaskGrade, getCategoryTargetDisplay, getCategoryYourDisplay, type Task, type Country } from "./tasks-logic";
 
 const dummyCountry: Country = {
   name: "Testland",
@@ -12,6 +12,7 @@ const dummyCountry: Country = {
   capital: "Test City",
   region: "Europe",
   knownFor: "Testing",
+  area: 500000,
   stats: {
     military: { score: 10, description: "10/10" },
     economy: { score: 8, description: "8/10" },
@@ -21,8 +22,8 @@ const dummyCountry: Country = {
     government: { score: 8, description: "8/10" },
     climate: { score: 7, description: "7/10" },
     technology: { score: 9, description: "9/10" },
-    size: { score: 5, description: "5/10" },
-    population: { score: 5, description: "5/10" },
+    size: { score: 1, description: "500K km² — large territory" },
+    population: { score: 1, description: "65 million; urbanized population" },
     history: { score: 7, description: "7/10" },
     tourism: { score: 6, description: "6/10" },
     education: { score: 9, description: "9/10" },
@@ -38,6 +39,12 @@ describe("tasks-logic", () => {
     expect(task.fullSentence).toContain("Make");
     expect(task.goal).toBeDefined();
     expect(task.challenge).toBeDefined();
+  });
+
+  it("formats target displays for population and size as exact numbers", () => {
+    expect(getCategoryTargetDisplay("Population", dummyCountry)).toBe("65 million");
+    expect(getCategoryTargetDisplay("Size", dummyCountry)).toBe("500K km²");
+    expect(getCategoryTargetDisplay("Military", dummyCountry)).toBe("10");
   });
 
   it("scores worst country goal correctly (<=60 is 100/100)", () => {
@@ -80,11 +87,16 @@ describe("tasks-logic", () => {
 
     const roster = {
       Military: dummyCountry,
-      Economy: dummyCountry
+      Economy: dummyCountry,
+      Population: dummyCountry,
+      Size: dummyCountry
     };
 
     const res = calculateTaskGrade(task, roster, 100);
     expect(res.grade).toBeGreaterThanOrEqual(0);
     expect(res.grade).toBeLessThanOrEqual(100);
+    expect(res.categoryBreakdown).toBeDefined();
+    const popItem = res.categoryBreakdown?.find(c => c.category === "Population");
+    expect(popItem?.targetScore).toBe("65 million");
   });
 });
