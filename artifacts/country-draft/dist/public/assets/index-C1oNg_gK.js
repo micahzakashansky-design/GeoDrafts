@@ -12102,33 +12102,38 @@ function shuffleArray$1(array2) {
   return array2;
 }
 function extractBonusText(desc, cat) {
-  if (!desc) return "";
+  if (!desc) return cat === "Population" ? "1.5M ppl" : "50,000 km²";
   if (cat === "Population") {
-    const match2 = desc.match(/([\d\.,]+)\s*(million|billion|k|m|b)?/i);
+    const match2 = desc.match(/([\d\.,]+)\s*(million|billion|thousand|[kmb])?/i);
     if (match2) {
       let numStr = match2[1].replace(/,/g, "");
       let num = parseFloat(numStr);
       let unit = match2[2] ? match2[2].toLowerCase() : "";
-      if (unit === "billion" || unit === "b") {
-        return `${num}B ppl`;
-      } else if (unit === "million" || unit === "m") {
-        return `${num}M ppl`;
-      } else {
-        if (num >= 1e6) {
-          return `${+(num / 1e6).toFixed(1)}M ppl`;
-        } else if (num >= 1e3) {
-          return `${+(num / 1e3).toFixed(1)}K ppl`;
+      if (!isNaN(num) && num > 0) {
+        if (unit === "billion" || unit === "b") {
+          return `${num}B ppl`;
+        } else if (unit === "million" || unit === "m") {
+          return `${num}M ppl`;
+        } else if (unit === "thousand" || unit === "k") {
+          return `${num}K ppl`;
         } else {
-          return `${num} ppl`;
+          if (num >= 1e6) {
+            return `${+(num / 1e6).toFixed(1)}M ppl`;
+          } else if (num >= 1e3) {
+            return `${+(num / 1e3).toFixed(1)}K ppl`;
+          } else {
+            return `${num} ppl`;
+          }
         }
       }
     }
+    return "1.5M ppl";
   }
-  const match = desc.match(/([\d\.,]+[KMBkmb]?\s*km²)/i);
+  const match = desc.match(/([\d\.,]+[KMBkmb]?\s*(?:sq\s*km|km²|square\s*km|km))/i);
   if (match) {
     return match[1].trim();
   }
-  return "";
+  return "50,000 km²";
 }
 function parse$1(input, loose) {
   if (input instanceof RegExp) return { keys: false, pattern: input };

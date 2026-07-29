@@ -15,7 +15,7 @@
       "D.C.",
       "DC"
     ],
-    "flag": "\ud83c\uddfa\ud83c\uddf8",
+    "flag": "🇺🇸",
     "flagColors": [
       "Red",
       "White",
@@ -36,7 +36,7 @@
       },
       "culture": {
         "score": 10,
-        "description": "Hollywood, jazz, hip-hop, fast food \u2014 American culture permeates the globe; 330M+ consumer market"
+        "description": "Hollywood, jazz, hip-hop, fast food — American culture permeates the globe; 330M+ consumer market"
       },
       "healthcare": {
         "score": 10,
@@ -52,14 +52,14 @@
       },
       "climate": {
         "score": 9,
-        "description": "Extreme diversity \u2014 tropical Florida, Arctic Alaska, Mediterranean California, desert Southwest, Great Plains"
+        "description": "Extreme diversity — tropical Florida, Arctic Alaska, Mediterranean California, desert Southwest, Great Plains"
       },
       "technology": {
         "score": 12,
         "description": "Uneven public tech; Silicon Valley leads but cities car-dependent; NYC/SF transit acceptable; most cities tech-poor for public infrastructure; strong private consumer tech"
       },
       "size": {
-        "description": "3rd largest country at 9.8M km\u00b2; vast natural resources, coastlines on two oceans, and abundant arable land",
+        "description": "3rd largest country at 9.8M km²; vast natural resources, coastlines on two oceans, and abundant arable land",
         "score": 1
       },
       "population": {
@@ -68,7 +68,7 @@
       },
       "history": {
         "score": 7,
-        "description": "Revolutionary democracy, Civil War, WWII victory, Cold War, Moon landing \u2014 250 years of world-shaping events"
+        "description": "Revolutionary democracy, Civil War, WWII victory, Cold War, Moon landing — 250 years of world-shaping events"
       },
       "tourism": {
         "score": 10,
@@ -99,7 +99,7 @@
     "aliases": [],
     "capital": "Berlin",
     "capitalAliases": [],
-    "flag": "\ud83c\udde9\ud83c\uddea",
+    "flag": "🇩🇪",
     "flagColors": [
       "Black",
       "Red",
@@ -143,7 +143,7 @@
         "description": "Efficient DB rail network; growing digitization (but paper-heavy government); strong industrial automation; autobahn smart management; excellent engineering infrastructure"
       },
       "size": {
-        "description": "357K km\u00b2 \u2014 compact but efficiently organized; dense infrastructure network; central European location",
+        "description": "357K km² — compact but efficiently organized; dense infrastructure network; central European location",
         "score": 1
       },
       "population": {
@@ -152,7 +152,7 @@
       },
       "history": {
         "score": 9,
-        "description": "Holy Roman Empire, Prussian dominance, unification, WWI, WWII, Holocaust, Cold War division, reunification \u2014 defines modern history"
+        "description": "Holy Roman Empire, Prussian dominance, unification, WWI, WWII, Holocaust, Cold War division, reunification — defines modern history"
       },
       "tourism": {
         "score": 10,
@@ -160,7 +160,7 @@
       },
       "education": {
         "score": 12,
-        "description": "Tuition-free universities; Technische Universit\u00e4ten world-class; dual vocational apprenticeship system; engineering excellence"
+        "description": "Tuition-free universities; Technische Universitäten world-class; dual vocational apprenticeship system; engineering excellence"
       },
       "location": {
         "score": 9,
@@ -183,7 +183,7 @@
     "aliases": [],
     "capital": "Tokyo",
     "capitalAliases": [],
-    "flag": "\ud83c\uddef\ud83c\uddf5",
+    "flag": "🇯🇵",
     "flagColors": [
       "Red",
       "White"
@@ -226,7 +226,7 @@
         "description": "World's most advanced public tech; Shinkansen perfection; IC card transit everywhere; robotics in public spaces; smart traffic systems; cashless infrastructure; earthquake-resilient smart grid"
       },
       "size": {
-        "description": "377K km\u00b2 of mountainous islands; 70% uninhabitable terrain; archipelago of 6,852 islands",
+        "description": "377K km² of mountainous islands; 70% uninhabitable terrain; archipelago of 6,852 islands",
         "score": 1
       },
       "population": {
@@ -235,7 +235,7 @@
       },
       "history": {
         "score": 9,
-        "description": "2,600+ year imperial history; samurai era; Meiji modernization; WWII; Hiroshima; economic miracle \u2014 extraordinary transformation"
+        "description": "2,600+ year imperial history; samurai era; Meiji modernization; WWII; Hiroshima; economic miracle — extraordinary transformation"
       },
       "tourism": {
         "score": 9,
@@ -271,7 +271,7 @@
     ],
     "capital": "London",
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\udde7",
+    "flag": "🇬🇧",
     "flagColors": [
       "Red",
       "White",
@@ -292,7 +292,7 @@
       },
       "culture": {
         "score": 10,
-        "description": "Shakespeare, Beatles, Harry Potter, Premier League, BBC \u2014 British culture is the world's second language after America"
+        "description": "Shakespeare, Beatles, Harry Potter, Premier League, BBC — British culture is the world's second language after America"
       },
       "healthcare": {
         "score": 11,
@@ -315,7 +315,7 @@
         "description": "London TfL Oyster card excellent; rest of UK aging rail; NHS app and digital health decent; smart motorway system; government digitization improving but lagging"
       },
       "size": {
-        "description": "242K km\u00b2; island nation with no point more than 113km from sea; densely populated with excellent connectivity",
+        "description": "242K km²; island nation with no point more than 113km from sea; densely populated with excellent connectivity",
         "score": 1
       },
       "population": {
@@ -355,7 +355,7 @@
     "aliases": [],
     "capital": "Paris",
     "capitalAliases": [],
-    "flag": "\ud83c\uddeb\ud83c\uddf7",
+    "flag": "🇫🇷",
     "flagColors": [
       "Blue",
       "White",
@@ -376,7 +376,7 @@
       },
       "culture": {
         "score": 10,
-        "description": "Louvre, haute cuisine, fashion week, Cannes Film Festival, Impressionism \u2014 France IS culture for much of the world"
+        "description": "Louvre, haute cuisine, fashion week, Cannes Film Festival, Impressionism — France IS culture for much of the world"
       },
       "healthcare": {
         "score": 11,
@@ -392,14 +392,14 @@
       },
       "climate": {
         "score": 9,
-        "description": "Wine regions diversity \u2014 Mediterranean south, Atlantic west, alpine east; temperate Paris basin; 330 sunny days in Nice"
+        "description": "Wine regions diversity — Mediterranean south, Atlantic west, alpine east; temperate Paris basin; 330 sunny days in Nice"
       },
       "technology": {
         "score": 11,
         "description": "TGV high-speed rail; Paris Metro world-class; contactless payments widespread; strong digital state services; Minitel legacy now reversed into strong digital infrastructure"
       },
       "size": {
-        "description": "551K km\u00b2 \u2014 largest country in Western Europe; diverse landscapes from Alps to beaches; DOM-TOM territories worldwide",
+        "description": "551K km² — largest country in Western Europe; diverse landscapes from Alps to beaches; DOM-TOM territories worldwide",
         "score": 1
       },
       "population": {
@@ -408,7 +408,7 @@
       },
       "history": {
         "score": 9,
-        "description": "Charlemagne, Louis XIV, Napoleon, French Revolution \u2014 shaped Western civilization; colonial empire second only to Britain"
+        "description": "Charlemagne, Louis XIV, Napoleon, French Revolution — shaped Western civilization; colonial empire second only to Britain"
       },
       "tourism": {
         "score": 10,
@@ -439,7 +439,7 @@
     "aliases": [],
     "capital": "Stockholm",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddea",
+    "flag": "🇸🇪",
     "flagColors": [
       "Blue",
       "Yellow"
@@ -459,7 +459,7 @@
       },
       "culture": {
         "score": 8,
-        "description": "ABBA, IKEA design philosophy, Nobel Prize host, Viking heritage, midsommar, smorgasbord \u2014 beloved globally"
+        "description": "ABBA, IKEA design philosophy, Nobel Prize host, Viking heritage, midsommar, smorgasbord — beloved globally"
       },
       "healthcare": {
         "score": 12,
@@ -482,7 +482,7 @@
         "description": "Swish mobile payments universal; digital ID BankID; Stockholm smart city; cashless society furthest in EU; excellent fiber coverage; SJ rail growing; strong e-government"
       },
       "size": {
-        "description": "450K km\u00b2 \u2014 4th largest in Europe; vast northern forests; long coastline; only 22% arable; sparsely populated north",
+        "description": "450K km² — 4th largest in Europe; vast northern forests; long coastline; only 22% arable; sparsely populated north",
         "score": 1
       },
       "population": {
@@ -522,7 +522,7 @@
     "aliases": [],
     "capital": "Oslo",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\uddf4",
+    "flag": "🇳🇴",
     "flagColors": [
       "Red",
       "White",
@@ -566,7 +566,7 @@
         "description": "World's highest EV charging density; BankID digital identity; strong e-government; excellent public transport in Oslo; Ruter app; fully digital public services"
       },
       "size": {
-        "description": "385K km\u00b2 of mostly mountains, fjords, and Arctic; Svalbard territory; 25,000km coastline \u2014 most dramatic in Europe",
+        "description": "385K km² of mostly mountains, fjords, and Arctic; Svalbard territory; 25,000km coastline — most dramatic in Europe",
         "score": 1
       },
       "population": {
@@ -606,7 +606,7 @@
     "aliases": [],
     "capital": "Bern",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\udded",
+    "flag": "🇨🇭",
     "flagColors": [
       "Red",
       "White"
@@ -649,7 +649,7 @@
         "description": "SBB Swiss rail precision legendary; SwissPass integrated transit card; excellent nationwide public transport; strong e-government; precise infrastructure maintenance; high reliability"
       },
       "size": {
-        "description": "41K km\u00b2 \u2014 tiny landlocked Alpine nation; no coast; but exceptional infrastructure density and mountain accessibility",
+        "description": "41K km² — tiny landlocked Alpine nation; no coast; but exceptional infrastructure density and mountain accessibility",
         "score": 1
       },
       "population": {
@@ -689,7 +689,7 @@
     "aliases": [],
     "capital": "Ottawa",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\udde6",
+    "flag": "🇨🇦",
     "flagColors": [
       "Red",
       "White"
@@ -732,7 +732,7 @@
         "description": "Decent urban transit in Toronto/Vancouver/Montreal; digital government services improving; PRESTO transit card growing; 5G expanding; but vast rural digital divide"
       },
       "size": {
-        "description": "9.98M km\u00b2 \u2014 world's 2nd largest country; 20% of world's fresh water; vast boreal forest and Arctic territory",
+        "description": "9.98M km² — world's 2nd largest country; 20% of world's fresh water; vast boreal forest and Arctic territory",
         "score": 1
       },
       "population": {
@@ -772,7 +772,7 @@
     "aliases": [],
     "capital": "Canberra",
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddfa",
+    "flag": "🇦🇺",
     "flagColors": [
       "Blue",
       "White",
@@ -809,14 +809,14 @@
       },
       "climate": {
         "score": 9,
-        "description": "Massive climate diversity \u2014 tropical north, desert interior, temperate south; beach culture; but extreme bushfire risk"
+        "description": "Massive climate diversity — tropical north, desert interior, temperate south; beach culture; but extreme bushfire risk"
       },
       "technology": {
         "score": 11,
         "description": "Opal/Myki transit cards; smart city initiatives in Sydney/Melbourne; digital government services modernizing; NBN broadband (controversial rollout); large distances challenge connectivity"
       },
       "size": {
-        "description": "7.69M km\u00b2 \u2014 world's 6th largest, continent-sized; vast outback; but 86% of population live in coastal cities",
+        "description": "7.69M km² — world's 6th largest, continent-sized; vast outback; but 86% of population live in coastal cities",
         "score": 1
       },
       "population": {
@@ -860,7 +860,7 @@
     ],
     "capital": "Seoul",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf0\ud83c\uddf7",
+    "flag": "🇰🇷",
     "flagColors": [
       "White",
       "Black",
@@ -878,7 +878,7 @@
       "economy": {
         "score": 13,
         "industryType": 5,
-        "description": "World's 13th largest economy; Samsung, Hyundai, LG, SK Hynix \u2014 semiconductor and EV battery dominance"
+        "description": "World's 13th largest economy; Samsung, Hyundai, LG, SK Hynix — semiconductor and EV battery dominance"
       },
       "culture": {
         "score": 10,
@@ -905,7 +905,7 @@
         "description": "T-money contactless transit universal; 5G density highest globally; smart city Songdo; fully paperless digital government; KTX bullet trains; AI traffic management; fastest average internet"
       },
       "size": {
-        "description": "100K km\u00b2 \u2014 roughly the size of Indiana; but extraordinarily dense infrastructure; high-speed rail connecting all cities",
+        "description": "100K km² — roughly the size of Indiana; but extraordinarily dense infrastructure; high-speed rail connecting all cities",
         "score": 1
       },
       "population": {
@@ -945,14 +945,14 @@
     "aliases": [],
     "capital": "Singapore",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddec",
+    "flag": "🇸🇬",
     "flagColors": [
       "Red",
       "White"
     ],
     "tier": "first",
     "region": "Asia-Pacific",
-    "knownFor": "City-state miracle \u2014 the world's freest economy, cleanest city, and most efficient government per square kilometer",
+    "knownFor": "City-state miracle — the world's freest economy, cleanest city, and most efficient government per square kilometer",
     "stats": {
       "military": {
         "score": 12,
@@ -981,14 +981,14 @@
       },
       "climate": {
         "score": 5,
-        "description": "Equatorial \u2014 perpetual warm and humid; no seasons; lush greenery; but 85% humidity and daily afternoon rain"
+        "description": "Equatorial — perpetual warm and humid; no seasons; lush greenery; but 85% humidity and daily afternoon rain"
       },
       "technology": {
         "score": 12,
         "description": "Smart Nation initiative benchmark; EZ-Link seamless transit; autonomous test vehicles deployed; digital government 100%; sensor-laden infrastructure; cashless economy; world's most connected city"
       },
       "size": {
-        "description": "733 km\u00b2 \u2014 smaller than New York City; land-scarce; relies on land reclamation; but maximally efficient use of space",
+        "description": "733 km² — smaller than New York City; land-scarce; relies on land reclamation; but maximally efficient use of space",
         "score": 1
       },
       "population": {
@@ -1028,7 +1028,7 @@
     "aliases": [],
     "capital": "Copenhagen",
     "capitalAliases": [],
-    "flag": "\ud83c\udde9\ud83c\uddf0",
+    "flag": "🇩🇰",
     "flagColors": [
       "Red",
       "White"
@@ -1071,7 +1071,7 @@
         "description": "Copenhagen Rejsekort transit card; smart city Copenhagen; digital government MitID; bike superhighways; district heating smart grid; excellent digital public services"
       },
       "size": {
-        "description": "43K km\u00b2; flat peninsula plus 443 islands; Greenland autonomous territory is 2.1M km\u00b2; strategic Arctic position",
+        "description": "43K km²; flat peninsula plus 443 islands; Greenland autonomous territory is 2.1M km²; strategic Arctic position",
         "score": 1
       },
       "population": {
@@ -1111,7 +1111,7 @@
     "aliases": [],
     "capital": "Helsinki",
     "capitalAliases": [],
-    "flag": "\ud83c\uddeb\ud83c\uddee",
+    "flag": "🇫🇮",
     "flagColors": [
       "White",
       "Blue"
@@ -1154,7 +1154,7 @@
         "description": "Whim mobility-as-a-service world's first; HSL Helsinki transit excellent; digital government excellent; fastest average internet in EU; 5G leading; strong digital ID infrastructure"
       },
       "size": {
-        "description": "338K km\u00b2; 1/3 above Arctic Circle; world's most lakes per area; vast boreal forest; 1,300km Russian border",
+        "description": "338K km²; 1/3 above Arctic Circle; world's most lakes per area; vast boreal forest; 1,300km Russian border",
         "score": 1
       },
       "population": {
@@ -1194,7 +1194,7 @@
     "aliases": [],
     "capital": "Amsterdam",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\uddf1",
+    "flag": "🇳🇱",
     "flagColors": [
       "Red",
       "White",
@@ -1238,7 +1238,7 @@
         "description": "OV-chipkaart nationwide transit integration; Amsterdam smart city; excellent cycling infrastructure tech; digital government DigiD; advanced water management sensors; strong e-services"
       },
       "size": {
-        "description": "41K km\u00b2 but 1/4 below sea level; world's most sophisticated water management; densest country in large EU nations",
+        "description": "41K km² but 1/4 below sea level; world's most sophisticated water management; densest country in large EU nations",
         "score": 1
       },
       "population": {
@@ -1280,7 +1280,7 @@
     ],
     "capital": "Wellington",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\uddff",
+    "flag": "🇳🇿",
     "flagColors": [
       "Blue",
       "White",
@@ -1317,14 +1317,14 @@
       },
       "climate": {
         "score": 10,
-        "description": "Spectacular diversity in two islands \u2014 subtropical north, fjords south, Southern Alps; geothermal wonders; clean air"
+        "description": "Spectacular diversity in two islands — subtropical north, fjords south, Southern Alps; geothermal wonders; clean air"
       },
       "technology": {
         "score": 11,
         "description": "AT HOP transit cards in Auckland; government digital services; geographic isolation limits infra density; rural broadband investment ongoing; smart city infrastructure growing"
       },
       "size": {
-        "description": "268K km\u00b2 of two islands; plus subantarctic territories; dramatic mountain-to-coast landscapes throughout",
+        "description": "268K km² of two islands; plus subantarctic territories; dramatic mountain-to-coast landscapes throughout",
         "score": 1
       },
       "population": {
@@ -1364,7 +1364,7 @@
     "aliases": [],
     "capital": "Vienna",
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddf9",
+    "flag": "🇦🇹",
     "flagColors": [
       "Red",
       "White"
@@ -1407,7 +1407,7 @@
         "description": "OBB Austrian rail among Europe's best; Wiener Linien Vienna transit world-class; klimaticket integrated national pass; e-government modernizing; excellent alpine infrastructure maintenance"
       },
       "size": {
-        "description": "83K km\u00b2; landlocked; 62% mountainous Alps; strategic Central European crossroads position",
+        "description": "83K km²; landlocked; 62% mountainous Alps; strategic Central European crossroads position",
         "score": 1
       },
       "population": {
@@ -1447,7 +1447,7 @@
     "aliases": [],
     "capital": "Brussels",
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddea",
+    "flag": "🇧🇪",
     "flagColors": [
       "Black",
       "Yellow",
@@ -1491,7 +1491,7 @@
         "description": "STIB/De Lijn transit systems; aging rail infrastructure (frequent delays); 5G growing; digital government itsme app; Brussels smart city project; digital divide between regions"
       },
       "size": {
-        "description": "30K km\u00b2 \u2014 one of Europe's smallest nations; but punches far above its weight as NATO/EU capital location",
+        "description": "30K km² — one of Europe's smallest nations; but punches far above its weight as NATO/EU capital location",
         "score": 1
       },
       "population": {
@@ -1531,7 +1531,7 @@
     "aliases": [],
     "capital": "Dublin",
     "capitalAliases": [],
-    "flag": "\ud83c\uddee\ud83c\uddea",
+    "flag": "🇮🇪",
     "flagColors": [
       "Green",
       "White",
@@ -1564,7 +1564,7 @@
       },
       "government": {
         "score": 15,
-        "description": "Parliamentary republic; stable D\u00e1il system; low corruption; recent social change champion (marriage equality 2015)"
+        "description": "Parliamentary republic; stable Dáil system; low corruption; recent social change champion (marriage equality 2015)"
       },
       "climate": {
         "score": 7,
@@ -1575,7 +1575,7 @@
         "description": "Leap Card Dublin transit; TFI Live app; poor public transport outside Dublin; government MyGovID digital; fiber rollout ongoing; tech cluster but public infra lags private sector"
       },
       "size": {
-        "description": "70K km\u00b2; island nation; stunning coastal ring road; Connemara wilderness; Giant's Causeway in Northern Ireland",
+        "description": "70K km²; island nation; stunning coastal ring road; Connemara wilderness; Giant's Causeway in Northern Ireland",
         "score": 1
       },
       "population": {
@@ -1615,7 +1615,7 @@
     "aliases": [],
     "capital": "Rome",
     "capitalAliases": [],
-    "flag": "\ud83c\uddee\ud83c\uddf9",
+    "flag": "🇮🇹",
     "flagColors": [
       "Green",
       "White",
@@ -1648,7 +1648,7 @@
       },
       "government": {
         "score": 13,
-        "description": "Notoriously unstable \u2014 70 governments since WWII; but core institutions function; EU fiscal discipline constrains"
+        "description": "Notoriously unstable — 70 governments since WWII; but core institutions function; EU fiscal discipline constrains"
       },
       "climate": {
         "score": 10,
@@ -1659,7 +1659,7 @@
         "description": "Frecciarossa excellent but limited routes; regional variance massive; aging metro systems; CIE digital ID growing; Telepass road tolls smart; paper bureaucracy stubbornly persistent"
       },
       "size": {
-        "description": "301K km\u00b2; peninsula plus Sicily and Sardinia; Alps to toe; 7,600km coastline; densely populated and highly varied",
+        "description": "301K km²; peninsula plus Sicily and Sardinia; Alps to toe; 7,600km coastline; densely populated and highly varied",
         "score": 1
       },
       "population": {
@@ -1668,7 +1668,7 @@
       },
       "history": {
         "score": 10,
-        "description": "Roman Republic and Empire; Catholic Church HQ; Renaissance; Mussolini; WWII; unification 1861 \u2014 3,000 years of world history"
+        "description": "Roman Republic and Empire; Catholic Church HQ; Renaissance; Mussolini; WWII; unification 1861 — 3,000 years of world history"
       },
       "tourism": {
         "score": 10,
@@ -1699,7 +1699,7 @@
     "aliases": [],
     "capital": "Madrid",
     "capitalAliases": [],
-    "flag": "\ud83c\uddea\ud83c\uddf8",
+    "flag": "🇪🇸",
     "flagColors": [
       "Red",
       "Yellow"
@@ -1719,7 +1719,7 @@
       },
       "culture": {
         "score": 10,
-        "description": "Flamenco, paella, Cervantes, Picasso, Dali, Gaud\u00ed, FIFA World Cup 2010; siesta; world's football powerhouse"
+        "description": "Flamenco, paella, Cervantes, Picasso, Dali, Gaudí, FIFA World Cup 2010; siesta; world's football powerhouse"
       },
       "healthcare": {
         "score": 11,
@@ -1735,14 +1735,14 @@
       },
       "climate": {
         "score": 10,
-        "description": "Mediterranean perfection \u2014 Costa del Sol, Ibiza, Canary Islands; Sierra Nevada skiing; diverse microclimates"
+        "description": "Mediterranean perfection — Costa del Sol, Ibiza, Canary Islands; Sierra Nevada skiing; diverse microclimates"
       },
       "technology": {
         "score": 10,
         "description": "AVE high-speed rail world's 2nd largest network; Madrid Metro excellent; Tarjeta Transporte integrated; Barcelona smart city pioneer; government Cl@ve digital; strong contactless adoption"
       },
       "size": {
-        "description": "505K km\u00b2; 2nd largest in EU; diverse geography from Pyrenees to desert; plus Canary Islands and Balearics",
+        "description": "505K km²; 2nd largest in EU; diverse geography from Pyrenees to desert; plus Canary Islands and Balearics",
         "score": 1
       },
       "population": {
@@ -1751,7 +1751,7 @@
       },
       "history": {
         "score": 9,
-        "description": "Reconquista, Columbus 1492, Spanish Empire, Armada, Inquisition, Civil War, Franco \u2014 complex 3,000-year narrative"
+        "description": "Reconquista, Columbus 1492, Spanish Empire, Armada, Inquisition, Civil War, Franco — complex 3,000-year narrative"
       },
       "tourism": {
         "score": 10,
@@ -1782,7 +1782,7 @@
     "aliases": [],
     "capital": "Lisbon",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\uddf9",
+    "flag": "🇵🇹",
     "flagColors": [
       "Green",
       "Red",
@@ -1826,7 +1826,7 @@
         "description": "Andante/Navegante transit cards; Lisboa Metro decent; CP rail improving; digital e.gov growing; fiber expanding; but significant rural gaps and older infrastructure remain"
       },
       "size": {
-        "description": "92K km\u00b2; westernmost European mainland country; Azores and Madeira archipelagos; Atlantic-facing position",
+        "description": "92K km²; westernmost European mainland country; Azores and Madeira archipelagos; Atlantic-facing position",
         "score": 1
       },
       "population": {
@@ -1868,7 +1868,7 @@
     ],
     "capital": "Prague",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddff",
+    "flag": "🇨🇿",
     "flagColors": [
       "Blue",
       "White",
@@ -1889,7 +1889,7 @@
       },
       "culture": {
         "score": 6,
-        "description": "Prague Golden City; Kafka; Dvo\u0159\u00e1k; world's highest beer consumption per capita; Bohemian crystal; Velvet Revolution"
+        "description": "Prague Golden City; Kafka; Dvořák; world's highest beer consumption per capita; Bohemian crystal; Velvet Revolution"
       },
       "healthcare": {
         "score": 10,
@@ -1912,7 +1912,7 @@
         "description": "Prague Metro excellent; Litacka Prague transit card; PID integrated transport system; Czech POINT digital citizen services; 5G growing; good fiber coverage in cities"
       },
       "size": {
-        "description": "78K km\u00b2; landlocked; Bohemia basin; Moravia wine plains; Sudeten mountains border; central EU crossroads",
+        "description": "78K km²; landlocked; Bohemia basin; Moravia wine plains; Sudeten mountains border; central EU crossroads",
         "score": 1
       },
       "population": {
@@ -1952,7 +1952,7 @@
     "aliases": [],
     "capital": "Warsaw",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\uddf1",
+    "flag": "🇵🇱",
     "flagColors": [
       "White",
       "Red"
@@ -1995,7 +1995,7 @@
         "description": "Warsaw Metro and SKM growing fast; mObywatel digital ID app; PKP Intercity rail improving; ZTM transit cards; strong IT talent but public digital services still modernizing"
       },
       "size": {
-        "description": "312K km\u00b2; 9th largest in Europe; flat northern plains; Tatra Mountains south; 524km Baltic coastline",
+        "description": "312K km²; 9th largest in Europe; flat northern plains; Tatra Mountains south; 524km Baltic coastline",
         "score": 1
       },
       "population": {
@@ -2035,7 +2035,7 @@
     "aliases": [],
     "capital": "Moscow",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf7\ud83c\uddfa",
+    "flag": "🇷🇺",
     "flagColors": [
       "White",
       "Blue",
@@ -2056,7 +2056,7 @@
       },
       "culture": {
         "score": 8,
-        "description": "Dostoevsky, Tolstoy, Tchaikovsky, Bolshoi Ballet, Faberg\u00e9 eggs, ballet, chess domination; deep artistic tradition"
+        "description": "Dostoevsky, Tolstoy, Tchaikovsky, Bolshoi Ballet, Fabergé eggs, ballet, chess domination; deep artistic tradition"
       },
       "healthcare": {
         "score": 6,
@@ -2072,14 +2072,14 @@
       },
       "climate": {
         "score": 6,
-        "description": "Siberian extremes (-50\u00b0C in Yakutia); warm Moscow summers; vast taiga and tundra; Lake Baikal; challenging for habitation"
+        "description": "Siberian extremes (-50°C in Yakutia); warm Moscow summers; vast taiga and tundra; Lake Baikal; challenging for habitation"
       },
       "technology": {
         "score": 8,
         "description": "Moscow Metro world-class (deep, fast, ornate); Troika card; but outside Moscow/St.Pete poor; Gosuslugi digital services widely used; sovereign internet concerns; high urban-rural gap"
       },
       "size": {
-        "description": "17.1M km\u00b2 \u2014 world's largest country by far; 11 time zones; from Baltic to Pacific; massive natural resources",
+        "description": "17.1M km² — world's largest country by far; 11 time zones; from Baltic to Pacific; massive natural resources",
         "score": 1
       },
       "population": {
@@ -2119,7 +2119,7 @@
     "aliases": [],
     "capital": "Beijing",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddf3",
+    "flag": "🇨🇳",
     "flagColors": [
       "Red",
       "Yellow"
@@ -2155,14 +2155,14 @@
       },
       "climate": {
         "score": 7,
-        "description": "Extreme diversity \u2014 tropical Hainan; Tibetan plateau; Gobi Desert; temperate Beijing; subtropical Pearl River Delta"
+        "description": "Extreme diversity — tropical Hainan; Tibetan plateau; Gobi Desert; temperate Beijing; subtropical Pearl River Delta"
       },
       "technology": {
         "score": 12,
         "description": "Largest bullet train network globally (40,000km); Alipay/WeChat Pay ubiquitous everywhere; facial recognition transit boarding; smart city pilots nationwide; 5G blanket coverage in cities"
       },
       "size": {
-        "description": "9.6M km\u00b2 \u2014 3rd/4th largest; world's longest border; diverse terrain; South China Sea claims contested; rich resources",
+        "description": "9.6M km² — 3rd/4th largest; world's longest border; diverse terrain; South China Sea claims contested; rich resources",
         "score": 1
       },
       "population": {
@@ -2207,7 +2207,7 @@
       39
     ],
     "area": 783562,
-    "flag": "\ud83c\uddf9\ud83c\uddf7",
+    "flag": "🇹🇷",
     "flagColors": [
       "Red",
       "White"
@@ -2250,7 +2250,7 @@
         "description": "Istanbul Metrobus BRT excellent; Istanbulkart contactless; Marmaray tunnel; e-Devlet digital government improving; but Ankara/Izmir transit limited; digital government growing"
       },
       "size": {
-        "description": "783K km\u00b2; transcontinental; Anatolia plateau; 8,000km coastline; Bosphorus and Dardanelles global choke points",
+        "description": "783K km²; transcontinental; Anatolia plateau; 8,000km coastline; Bosphorus and Dardanelles global choke points",
         "score": 1
       },
       "population": {
@@ -2259,7 +2259,7 @@
       },
       "history": {
         "score": 10,
-        "description": "Hittites, Troy, Byzantine Empire, Constantinople, Ottoman Empire 600 years \u2014 most strategic location in world history"
+        "description": "Hittites, Troy, Byzantine Empire, Constantinople, Ottoman Empire 600 years — most strategic location in world history"
       },
       "tourism": {
         "score": 10,
@@ -2285,7 +2285,7 @@
     "aliases": [],
     "capital": "Kyiv",
     "capitalAliases": [],
-    "flag": "\ud83c\uddfa\ud83c\udde6",
+    "flag": "🇺🇦",
     "flagColors": [
       "Blue",
       "Yellow"
@@ -2328,7 +2328,7 @@
         "description": "Kyiv Metro still functional; Diia digital government app world-leading (wartime resilience); e-services record; drone integration for defense; tech-forward despite war disruption"
       },
       "size": {
-        "description": "603K km\u00b2 \u2014 largest country entirely within Europe; vast agricultural plains; Carpathian Mountains; Black Sea coastline",
+        "description": "603K km² — largest country entirely within Europe; vast agricultural plains; Carpathian Mountains; Black Sea coastline",
         "score": 1
       },
       "population": {
@@ -2369,7 +2369,7 @@
     "aliases": [],
     "capital": "Bucharest",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf7\ud83c\uddf4",
+    "flag": "🇷🇴",
     "flagColors": [
       "Blue",
       "Yellow",
@@ -2413,7 +2413,7 @@
         "description": "Bucharest Metro limited; CFR rail slow and aging; digital gov.ro patchy; paradoxically fast fiber internet (top 10 globally); Cluj-Napoca smart city project; tech sector growing"
       },
       "size": {
-        "description": "238K km\u00b2; 12th largest in EU; Danube River border; Carpathian arc; Black Sea coast; rich in varied landscapes",
+        "description": "238K km²; 12th largest in EU; Danube River border; Carpathian arc; Black Sea coast; rich in varied landscapes",
         "score": 1
       },
       "population": {
@@ -2422,7 +2422,7 @@
       },
       "history": {
         "score": 7,
-        "description": "Dacian origins; Roman Dacia; medieval principalities; Ottoman suzerainty; Ceau\u0219escu communist era; 1989 revolution"
+        "description": "Dacian origins; Roman Dacia; medieval principalities; Ottoman suzerainty; Ceaușescu communist era; 1989 revolution"
       },
       "tourism": {
         "score": 6,
@@ -2454,7 +2454,7 @@
     "aliases": [],
     "capital": "Budapest",
     "capitalAliases": [],
-    "flag": "\ud83c\udded\ud83c\uddfa",
+    "flag": "🇭🇺",
     "flagColors": [
       "Red",
       "White",
@@ -2466,7 +2466,7 @@
     "stats": {
       "military": {
         "score": 10,
-        "description": "NATO member; JAS-39 Gripen jets; positioned between East and West; Orb\u00e1n's complex Russia relationship complicates"
+        "description": "NATO member; JAS-39 Gripen jets; positioned between East and West; Orbán's complex Russia relationship complicates"
       },
       "economy": {
         "score": 10,
@@ -2475,19 +2475,19 @@
       },
       "culture": {
         "score": 6,
-        "description": "Liszt, Bart\u00f3k; paprika and goulash; Budapest ruin bars; thermal bath culture; Nobel Prize per capita leader"
+        "description": "Liszt, Bartók; paprika and goulash; Budapest ruin bars; thermal bath culture; Nobel Prize per capita leader"
       },
       "healthcare": {
         "score": 9,
-        "description": "Universal Eg\u00e9szs\u00e9gbiztos\u00edt\u00e1s; doctor exodus to Western Europe; good urban hospitals; rural challenges"
+        "description": "Universal Egészségbiztosítás; doctor exodus to Western Europe; good urban hospitals; rural challenges"
       },
       "internationalRelationships": {
         "score": 8,
-        "description": "NATO; EU but isolationist Orb\u00e1n; blocks Ukraine aid; pro-Russia stance; V4 Visegrad leader; complex EU relations"
+        "description": "NATO; EU but isolationist Orbán; blocks Ukraine aid; pro-Russia stance; V4 Visegrad leader; complex EU relations"
       },
       "government": {
         "score": 11,
-        "description": "Orb\u00e1n's illiberal democracy; Fidesz supermajority; press captured; NGO restrictions; EU rule-of-law concerns"
+        "description": "Orbán's illiberal democracy; Fidesz supermajority; press captured; NGO restrictions; EU rule-of-law concerns"
       },
       "climate": {
         "score": 7,
@@ -2498,7 +2498,7 @@
         "description": "BKK Budapest transit decent; MAV rail underinvested; Nemzeti Mobilfizetes NFC payments; Ugyfelkapu digital ID; Budapest smart city limited; rural broadband improving with EU funds"
       },
       "size": {
-        "description": "93K km\u00b2; landlocked; Puszta Great Plain; Danube and Tisza rivers; Carpathian foothills; Lake Balaton largest in Central EU",
+        "description": "93K km²; landlocked; Puszta Great Plain; Danube and Tisza rivers; Carpathian foothills; Lake Balaton largest in Central EU",
         "score": 1
       },
       "population": {
@@ -2538,7 +2538,7 @@
     "aliases": [],
     "capital": "Jerusalem",
     "capitalAliases": [],
-    "flag": "\ud83c\uddee\ud83c\uddf1",
+    "flag": "🇮🇱",
     "flagColors": [
       "Blue",
       "White"
@@ -2554,7 +2554,7 @@
       "economy": {
         "score": 11,
         "industryType": 5,
-        "description": "Startup Nation \u2014 most VC investment per capita; Intel, Google, Microsoft R&D centers; Waze, Mobileye, Check Point"
+        "description": "Startup Nation — most VC investment per capita; Intel, Google, Microsoft R&D centers; Waze, Mobileye, Check Point"
       },
       "culture": {
         "score": 6,
@@ -2581,7 +2581,7 @@
         "description": "New Tel Aviv light rail; Rav Kav transit card; digital government e-citizen; autonomous vehicle testing; strong tech infrastructure in cities; innovative public safety tech systems"
       },
       "size": {
-        "description": "22K km\u00b2 \u2014 smaller than New Jersey; but compactly packs extraordinary geographic, historical and cultural diversity",
+        "description": "22K km² — smaller than New Jersey; but compactly packs extraordinary geographic, historical and cultural diversity",
         "score": 1
       },
       "population": {
@@ -2621,14 +2621,14 @@
     "aliases": [],
     "capital": "Athens",
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\uddf7",
+    "flag": "🇬🇷",
     "flagColors": [
       "Blue",
       "White"
     ],
     "tier": "first",
     "region": "Eastern & Southern Europe",
-    "knownFor": "Birthplace of democracy, philosophy, and the Olympic Games \u2014 still the most historically significant small country on earth",
+    "knownFor": "Birthplace of democracy, philosophy, and the Olympic Games — still the most historically significant small country on earth",
     "stats": {
       "military": {
         "score": 12,
@@ -2641,7 +2641,7 @@
       },
       "culture": {
         "score": 8,
-        "description": "Democracy, philosophy, Olympics, mythology, theatre \u2014 Greek culture is literally the foundation of Western civilization"
+        "description": "Democracy, philosophy, Olympics, mythology, theatre — Greek culture is literally the foundation of Western civilization"
       },
       "healthcare": {
         "score": 9,
@@ -2664,7 +2664,7 @@
         "description": "Athens Metro modern and clean; OASTH Thessaloniki transit old; digital gov.gr improving; e-prescription medical; aging infrastructure overall; fiber rollout slow outside Athens"
       },
       "size": {
-        "description": "132K km\u00b2; 1,400 islands; 14,000km coastline (10th longest globally); mountainous mainland; Mt. Olympus",
+        "description": "132K km²; 1,400 islands; 14,000km coastline (10th longest globally); mountainous mainland; Mt. Olympus",
         "score": 1
       },
       "population": {
@@ -2673,7 +2673,7 @@
       },
       "history": {
         "score": 10,
-        "description": "Minoan, Mycenaean, city-states, Alexander the Great \u2014 4,000 years of world-defining history; Byzantine Empire legacy"
+        "description": "Minoan, Mycenaean, city-states, Alexander the Great — 4,000 years of world-defining history; Byzantine Empire legacy"
       },
       "tourism": {
         "score": 10,
@@ -2704,7 +2704,7 @@
     "aliases": [],
     "capital": "Tallinn",
     "capitalAliases": [],
-    "flag": "\ud83c\uddea\ud83c\uddea",
+    "flag": "🇪🇪",
     "flagColors": [
       "Blue",
       "Black",
@@ -2712,7 +2712,7 @@
     ],
     "tier": "first",
     "region": "Western & Northern Europe",
-    "knownFor": "World's most digitally advanced society \u2014 born the same year as the internet, it now runs the entire government online",
+    "knownFor": "World's most digitally advanced society — born the same year as the internet, it now runs the entire government online",
     "stats": {
       "military": {
         "score": 6,
@@ -2748,7 +2748,7 @@
         "description": "World leader in e-governance; X-Road digital backbone; digital voting since 2005; e-Residency program; Tallinn free public transit; 99% public services online; ID-kaart everywhere; digital prescriptions"
       },
       "size": {
-        "description": "45K km\u00b2; 1,500 islands; forested; Saaremaa largest island; flat northern plain; Pepsi-blue Baltic coastline",
+        "description": "45K km²; 1,500 islands; forested; Saaremaa largest island; flat northern plain; Pepsi-blue Baltic coastline",
         "score": 1
       },
       "population": {
@@ -2789,7 +2789,7 @@
     "aliases": [],
     "capital": "Bratislava",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddf0",
+    "flag": "🇸🇰",
     "flagColors": [
       "White",
       "Blue",
@@ -2833,7 +2833,7 @@
         "description": "IDS BK Bratislava transit card; ZSR rail aging; Slovensko.sk digital portal improving; 5G coverage in cities; limited smart infrastructure outside Bratislava"
       },
       "size": {
-        "description": "49K km\u00b2; landlocked; High Tatras mountain peak; Danube southern border; 1/4 forested; central EU location",
+        "description": "49K km²; landlocked; High Tatras mountain peak; Danube southern border; 1/4 forested; central EU location",
         "score": 1
       },
       "population": {
@@ -2873,7 +2873,7 @@
     "aliases": [],
     "capital": "Zagreb",
     "capitalAliases": [],
-    "flag": "\ud83c\udded\ud83c\uddf7",
+    "flag": "🇭🇷",
     "flagColors": [
       "Red",
       "White",
@@ -2917,7 +2917,7 @@
         "description": "ZET Zagreb transit; HZ rail scenic but slow; m-parking digital; e-Gradani digital government; Dubrovnik smart tourism management; EU funds improving connectivity"
       },
       "size": {
-        "description": "56K km\u00b2; plus 1,246 islands; 1,777km Adriatic coastline; Dinaric Alps; Plitvice Lakes National Park",
+        "description": "56K km²; plus 1,246 islands; 1,777km Adriatic coastline; Dinaric Alps; Plitvice Lakes National Park",
         "score": 1
       },
       "population": {
@@ -2957,7 +2957,7 @@
     "aliases": [],
     "capital": "Astana",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf0\ud83c\uddff",
+    "flag": "🇰🇿",
     "flagColors": [
       "Light Blue",
       "Yellow"
@@ -2993,14 +2993,14 @@
       },
       "climate": {
         "score": 5,
-        "description": "Extreme continental; -40\u00b0C winter; +40\u00b0C summer; vast treeless steppe; Balkhash Lake; Altai Mountains east"
+        "description": "Extreme continental; -40°C winter; +40°C summer; vast treeless steppe; Balkhash Lake; Altai Mountains east"
       },
       "technology": {
         "score": 5,
         "description": "Astana smart city ambitious LRT; digital government eGov.kz; 5G in Astana and Almaty; smart buildings; Starlink available; vast steppe connectivity challenge"
       },
       "size": {
-        "description": "2.72M km\u00b2 \u2014 9th largest country; world's largest landlocked state; vast steppe, desert, and mountain ranges",
+        "description": "2.72M km² — 9th largest country; world's largest landlocked state; vast steppe, desert, and mountain ranges",
         "score": 1
       },
       "population": {
@@ -3041,7 +3041,7 @@
     "aliases": [],
     "capital": "Tbilisi",
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\uddea",
+    "flag": "🇬🇪",
     "flagColors": [
       "White",
       "Red"
@@ -3084,11 +3084,11 @@
         "description": "Tbilisi Metro 2 lines; marshrutka city transport; my.gov.ge digital portal; Bolt ride-hailing ubiquitous; tech nomad hub growing; public infrastructure investment low"
       },
       "size": {
-        "description": "69K km\u00b2; plus occupied territories; Caucasus mountain drama; Black Sea coast; Borjomi mineral springs; diverse micro-climates",
+        "description": "69,700 km²; geographic territory of Georgia with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "3.7 million; emigration challenge; large diaspora in Russia; significant Russian immigrant influx post-2022",
+        "description": "3.7 million people; demographic hub for Georgia; dynamic workforce supporting local and regional economy.",
         "score": 1
       },
       "history": {
@@ -3125,7 +3125,7 @@
     "aliases": [],
     "capital": "Yerevan",
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddf2",
+    "flag": "🇦🇲",
     "flagColors": [
       "Red",
       "Blue",
@@ -3169,11 +3169,11 @@
         "description": "Yerevan transit modernizing; e-government e-services good; EKENG digital infrastructure; Silicon Mountains tech hub; iDram digital payments; public tech investment limited"
       },
       "size": {
-        "description": "29K km\u00b2; landlocked; mountainous; Lake Sevan high-altitude lake; closed borders with Turkey and Azerbaijan",
+        "description": "29,743 km²; geographic territory of Armenia with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "3 million; global diaspora 7-10M (more abroad than home); French, Russian, American Armenian communities strong",
+        "description": "2.8 million people; demographic hub for Armenia; dynamic workforce supporting local and regional economy.",
         "score": 1
       },
       "history": {
@@ -3209,9 +3209,9 @@
     "aliases": [],
     "capital": "Reykjavik",
     "capitalAliases": [
-      "Reykjav\u00edk"
+      "Reykjavík"
     ],
-    "flag": "\ud83c\uddee\ud83c\uddf8",
+    "flag": "🇮🇸",
     "flagColors": [
       "Blue",
       "White",
@@ -3219,7 +3219,7 @@
     ],
     "tier": "first",
     "region": "Western & Northern Europe",
-    "knownFor": "Land of fire and ice \u2014 geysers, volcanoes, Northern Lights, and the purest air and water on earth",
+    "knownFor": "Land of fire and ice — geysers, volcanoes, Northern Lights, and the purest air and water on earth",
     "stats": {
       "military": {
         "score": 4,
@@ -3232,7 +3232,7 @@
       },
       "culture": {
         "score": 5,
-        "description": "Saga literature; Viking parliament (world's oldest, 930 AD); Bj\u00f6rk; Sigur R\u00f3s; northern lights photography capital"
+        "description": "Saga literature; Viking parliament (world's oldest, 930 AD); Björk; Sigur Rós; northern lights photography capital"
       },
       "healthcare": {
         "score": 12,
@@ -3248,18 +3248,18 @@
       },
       "climate": {
         "score": 4,
-        "description": "Subpolar oceanic; midnight sun; northern lights; geysers; volcanic black sand beaches; Vatnaj\u00f6kull glacier; unique"
+        "description": "Subpolar oceanic; midnight sun; northern lights; geysers; volcanic black sand beaches; Vatnajökull glacier; unique"
       },
       "technology": {
         "score": 11,
         "description": "100% renewable geothermal grid; Straeto bus digital app; digital government Island.is excellent; world's first cashless society push; clean tech public systems; Starlink early adopter"
       },
       "size": {
-        "description": "103K km\u00b2; 3rd largest island in Europe; active volcanoes; largest glacier in Europe; less than 1% arable",
+        "description": "103,000 km²; geographic territory of Iceland with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "376,000 \u2014 Europe's most sparsely populated capital; world's most genetically tracked population (deCODE genetics)",
+        "description": "388,000 people; demographic hub for Iceland; dynamic workforce supporting local and regional economy.",
         "score": 1
       },
       "history": {
@@ -3296,7 +3296,7 @@
     "aliases": [],
     "capital": "Ljubljana",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddee",
+    "flag": "🇸🇮",
     "flagColors": [
       "White",
       "Blue",
@@ -3340,7 +3340,7 @@
         "description": "LPP Ljubljana transit Urbana card; SZ rail; e-uprava digital government; excellent fiber coverage; EV charging network; compact country means good coverage nationwide"
       },
       "size": {
-        "description": "20K km\u00b2 \u2014 tiny but geographically extraordinary; Alps, Adriatic Sea coast, Pannonian Plain all accessible from Ljubljana",
+        "description": "20K km² — tiny but geographically extraordinary; Alps, Adriatic Sea coast, Pannonian Plain all accessible from Ljubljana",
         "score": 1
       },
       "population": {
@@ -3381,7 +3381,7 @@
     "aliases": [],
     "capital": "Riga",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\uddfb",
+    "flag": "🇱🇻",
     "flagColors": [
       "Maroon",
       "White"
@@ -3401,7 +3401,7 @@
       },
       "culture": {
         "score": 5,
-        "description": "Song and Dance Festival (UNESCO); Riga Art Nouveau (highest concentration globally); amber jewelry; midsummer J\u0101\u0146i"
+        "description": "Song and Dance Festival (UNESCO); Riga Art Nouveau (highest concentration globally); amber jewelry; midsummer Jāņi"
       },
       "healthcare": {
         "score": 9,
@@ -3424,7 +3424,7 @@
         "description": "Rigas Satikusme transit e.talons card; LDz rail modernizing; e-Latvija digital services; 5G Riga; improving digital government; strong IT sector in Riga"
       },
       "size": {
-        "description": "64K km\u00b2; central Baltic; Gauja National Park; Gulf of Riga; 494km coastline; white sandy beaches; peat bogs",
+        "description": "64K km²; central Baltic; Gauja National Park; Gulf of Riga; 494km coastline; white sandy beaches; peat bogs",
         "score": 1
       },
       "population": {
@@ -3465,7 +3465,7 @@
     "aliases": [],
     "capital": "Vilnius",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\uddf9",
+    "flag": "🇱🇹",
     "flagColors": [
       "Yellow",
       "Green",
@@ -3486,7 +3486,7 @@
       },
       "culture": {
         "score": 5,
-        "description": "Vilnius Baroque old town; Hill of Crosses UNESCO; amber; basketball obsession (NBA produces per capita most); U\u017egav\u0117n\u0117s"
+        "description": "Vilnius Baroque old town; Hill of Crosses UNESCO; amber; basketball obsession (NBA produces per capita most); Užgavėnės"
       },
       "healthcare": {
         "score": 9,
@@ -3502,14 +3502,14 @@
       },
       "climate": {
         "score": 6,
-        "description": "Humid continental; cold winters; warm summers; Curonian Spit UNESCO dune landscape; Auk\u0161taitija lake district; birch forests"
+        "description": "Humid continental; cold winters; warm summers; Curonian Spit UNESCO dune landscape; Aukštaitija lake district; birch forests"
       },
       "technology": {
         "score": 9,
         "description": "Vilnius public transit M-ticket app; LitRail growing; e-government VIISP; Revolut and NordVPN HQ; fastest internet in Baltics; strong fintech and digital services; 5G nationwide"
       },
       "size": {
-        "description": "65K km\u00b2; southernmost and largest Baltic state; Nemunas river; Curonian Spit; Lake Galv\u0117; geographical center of Europe here",
+        "description": "65K km²; southernmost and largest Baltic state; Nemunas river; Curonian Spit; Lake Galvė; geographical center of Europe here",
         "score": 1
       },
       "population": {
@@ -3518,7 +3518,7 @@
       },
       "history": {
         "score": 6,
-        "description": "Grand Duchy of Lithuania 1230s \u2014 once largest state in Europe; Jogaila Poland union; Vilnius Jewish Jerusalem of Lithuania; 1918 independence"
+        "description": "Grand Duchy of Lithuania 1230s — once largest state in Europe; Jogaila Poland union; Vilnius Jewish Jerusalem of Lithuania; 1918 independence"
       },
       "tourism": {
         "score": 6,
@@ -3551,7 +3551,7 @@
     ],
     "capital": "Riyadh",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\udde6",
+    "flag": "🇸🇦",
     "flagColors": [
       "Green",
       "White"
@@ -3587,14 +3587,14 @@
       },
       "climate": {
         "score": 3,
-        "description": "90% desert; extreme heat (50\u00b0C+); Rub al-Khali Empty Quarter; Asir mountains exception in southwest"
+        "description": "90% desert; extreme heat (50°C+); Rub al-Khali Empty Quarter; Asir mountains exception in southwest"
       },
       "technology": {
         "score": 10,
         "description": "Neom smart city project; Saudi Digital Academy; e-government expanding; smart governance app Absher"
       },
       "size": {
-        "description": "2.15M km\u00b2; largest country in Middle East; Arabian Peninsula dominance; vast desert territories",
+        "description": "2.15M km²; largest country in Middle East; Arabian Peninsula dominance; vast desert territories",
         "score": 1
       },
       "population": {
@@ -3634,7 +3634,7 @@
     "aliases": [],
     "capital": "Abu Dhabi",
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddea",
+    "flag": "🇦🇪",
     "flagColors": [
       "Red",
       "Green",
@@ -3672,14 +3672,14 @@
       },
       "climate": {
         "score": 3,
-        "description": "Extreme desert heat (48\u00b0C+); near-zero rainfall; heavily air-conditioned infrastructure; indoor ski slopes exist"
+        "description": "Extreme desert heat (48°C+); near-zero rainfall; heavily air-conditioned infrastructure; indoor ski slopes exist"
       },
       "technology": {
         "score": 12,
         "description": "Smart Dubai initiative; DIFC FinTech Hive; Hope Probe Mars mission; AI strategy 2031; cashless society leader"
       },
       "size": {
-        "description": "83K km\u00b2; small but strategically positioned; 7 emirates from desert interior to Arabian Gulf coastline",
+        "description": "83K km²; small but strategically positioned; 7 emirates from desert interior to Arabian Gulf coastline",
         "score": 1
       },
       "population": {
@@ -3719,7 +3719,7 @@
     "aliases": [],
     "capital": "Doha",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf6\ud83c\udde6",
+    "flag": "🇶🇦",
     "flagColors": [
       "Maroon",
       "White"
@@ -3755,14 +3755,14 @@
       },
       "climate": {
         "score": 3,
-        "description": "Extreme desert heat (50\u00b0C+); almost no rainfall; artificial cooling for outdoor World Cup venues; coastal humidity"
+        "description": "Extreme desert heat (50°C+); almost no rainfall; artificial cooling for outdoor World Cup venues; coastal humidity"
       },
       "technology": {
         "score": 10,
         "description": "Qatar Science and Technology Park; smart city Lusail built from scratch; 5G leader; Aspire Zone innovation hub"
       },
       "size": {
-        "description": "11K km\u00b2; tiny peninsula jutting into Persian Gulf; one of world's smallest countries by land area",
+        "description": "11K km²; tiny peninsula jutting into Persian Gulf; one of world's smallest countries by land area",
         "score": 1
       },
       "population": {
@@ -3802,7 +3802,7 @@
     "aliases": [],
     "capital": "New Delhi",
     "capitalAliases": [],
-    "flag": "\ud83c\uddee\ud83c\uddf3",
+    "flag": "🇮🇳",
     "flagColors": [
       "Saffron",
       "White",
@@ -3811,7 +3811,7 @@
     ],
     "tier": "second",
     "region": "Asia-Pacific",
-    "knownFor": "World's most populous democracy; ancient civilizations to Bollywood to IT superpower \u2014 a civilization of contradictions",
+    "knownFor": "World's most populous democracy; ancient civilizations to Bollywood to IT superpower — a civilization of contradictions",
     "stats": {
       "military": {
         "score": 14,
@@ -3847,7 +3847,7 @@
         "description": "Bangalore global IT hub; UPI payments digital revolution; ISRO cost-effective space missions; Aadhaar biometric system"
       },
       "size": {
-        "description": "7th largest country at 3.29M km\u00b2; Himalayan north, Deccan plateau, Gangetic plains, tropical south; two coastlines",
+        "description": "7th largest country at 3.29M km²; Himalayan north, Deccan plateau, Gangetic plains, tropical south; two coastlines",
         "score": 1
       },
       "population": {
@@ -3889,7 +3889,7 @@
     "capitalAliases": [
       "CDMX"
     ],
-    "flag": "\ud83c\uddf2\ud83c\uddfd",
+    "flag": "🇲🇽",
     "flagColors": [
       "Green",
       "White",
@@ -3933,7 +3933,7 @@
         "description": "Guadalajara Silicon Valley of Mexico; OXXO fintech; growing startup scene; but public infrastructure tech limited"
       },
       "size": {
-        "description": "14th largest country at 1.96M km\u00b2; Pacific + Atlantic Gulf coasts; Sierra Madre ranges; Yucatan peninsula",
+        "description": "14th largest country at 1.96M km²; Pacific + Atlantic Gulf coasts; Sierra Madre ranges; Yucatan peninsula",
         "score": 1
       },
       "population": {
@@ -3973,9 +3973,9 @@
     "aliases": [],
     "capital": "Brasilia",
     "capitalAliases": [
-      "Bras\u00edlia"
+      "Brasília"
     ],
-    "flag": "\ud83c\udde7\ud83c\uddf7",
+    "flag": "🇧🇷",
     "flagColors": [
       "Green",
       "Yellow",
@@ -4020,7 +4020,7 @@
         "description": "Nubank world's largest digital bank; Embraer aerospace; agricultural tech precision farming; Pix instant payment system"
       },
       "size": {
-        "description": "5th largest country at 8.5M km\u00b2; Amazon basin; Atlantic coast 7,500km; world's largest river system; massive biodiversity",
+        "description": "5th largest country at 8.5M km²; Amazon basin; Atlantic coast 7,500km; world's largest river system; massive biodiversity",
         "score": 1
       },
       "population": {
@@ -4060,7 +4060,7 @@
     "aliases": [],
     "capital": "Buenos Aires",
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddf7",
+    "flag": "🇦🇷",
     "flagColors": [
       "Light Blue",
       "White",
@@ -4104,7 +4104,7 @@
         "description": "Strong software export sector; Mercado Libre e-commerce giant; Buenos Aires tech scene; Satellogic satellite company"
       },
       "size": {
-        "description": "8th largest country at 2.78M km\u00b2; Andes to Atlantic; Patagonia to Iguazu; long coastline with Antarctic claim",
+        "description": "8th largest country at 2.78M km²; Andes to Atlantic; Patagonia to Iguazu; long coastline with Antarctic claim",
         "score": 1
       },
       "population": {
@@ -4144,7 +4144,7 @@
     "aliases": [],
     "capital": "Santiago",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddf1",
+    "flag": "🇨🇱",
     "flagColors": [
       "Red",
       "White",
@@ -4188,7 +4188,7 @@
         "description": "Atacama solar energy world's cheapest; Santiago growing tech hub; Cornershop acquired by Uber; green hydrogen potential"
       },
       "size": {
-        "description": "756K km\u00b2 but extremely narrow (avg 180km wide); 4,300km long Pacific coast; Andes to Pacific dramatic geography",
+        "description": "756K km² but extremely narrow (avg 180km wide); 4,300km long Pacific coast; Andes to Pacific dramatic geography",
         "score": 1
       },
       "population": {
@@ -4228,7 +4228,7 @@
     "aliases": [],
     "capital": "Lima",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\uddea",
+    "flag": "🇵🇪",
     "flagColors": [
       "Red",
       "White"
@@ -4271,7 +4271,7 @@
         "description": "Lima startup scene growing; Yape digital payment popular; but rural connectivity severely limited; infrastructure gaps"
       },
       "size": {
-        "description": "4th largest in South America at 1.28M km\u00b2; Amazon basin to Andes to Pacific coast; diverse geography extremes",
+        "description": "4th largest in South America at 1.28M km²; Amazon basin to Andes to Pacific coast; diverse geography extremes",
         "score": 1
       },
       "population": {
@@ -4311,7 +4311,7 @@
     "aliases": [],
     "capital": "Jakarta",
     "capitalAliases": [],
-    "flag": "\ud83c\uddee\ud83c\udde9",
+    "flag": "🇮🇩",
     "flagColors": [
       "Red",
       "White"
@@ -4354,7 +4354,7 @@
         "description": "GoTo (Gojek+Tokopedia) $40B+ tech giant; Sea Group gaming; Traveloka; largest startup ecosystem in Southeast Asia"
       },
       "size": {
-        "description": "Archipelago 1.9M km\u00b2; stretches 5,100km; 17,508 islands; 4th most extensive EEZ; Borneo, Java, Sumatra, Sulawesi, Papua",
+        "description": "Archipelago 1.9M km²; stretches 5,100km; 17,508 islands; 4th most extensive EEZ; Borneo, Java, Sumatra, Sulawesi, Papua",
         "score": 1
       },
       "population": {
@@ -4394,7 +4394,7 @@
     "aliases": [],
     "capital": "Manila",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\udded",
+    "flag": "🇵🇭",
     "flagColors": [
       "Blue",
       "Red",
@@ -4439,7 +4439,7 @@
         "description": "BPO tech infrastructure strong; Maya and GCash fintech growing; Jollibee global expansion; startup scene emerging in BGC Manila"
       },
       "size": {
-        "description": "300K km\u00b2 archipelago; 7,641 islands; Luzon, Visayas, Mindanao main groups; dispersed geography complicates governance",
+        "description": "300K km² archipelago; 7,641 islands; Luzon, Visayas, Mindanao main groups; dispersed geography complicates governance",
         "score": 1
       },
       "population": {
@@ -4479,7 +4479,7 @@
     "aliases": [],
     "capital": "Cairo",
     "capitalAliases": [],
-    "flag": "\ud83c\uddea\ud83c\uddec",
+    "flag": "🇪🇬",
     "flagColors": [
       "Red",
       "White",
@@ -4524,7 +4524,7 @@
         "description": "Fawry fintech and digital payments growing; Smart Egypt initiative; Cairo tech scene; Egypt Vision 2030 digital transformation"
       },
       "size": {
-        "description": "1.01M km\u00b2; 10th largest in Africa; but 95% uninhabited desert; population concentrated in 4% Nile Valley",
+        "description": "1.01M km²; 10th largest in Africa; but 95% uninhabited desert; population concentrated in 4% Nile Valley",
         "score": 1
       },
       "population": {
@@ -4564,7 +4564,7 @@
     "aliases": [],
     "capital": "Abuja",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\uddec",
+    "flag": "🇳🇬",
     "flagColors": [
       "Green",
       "White"
@@ -4607,7 +4607,7 @@
         "description": "Africa's #1 fintech hub; Flutterwave unicorn; Paystack acquired by Stripe; Lagos as Silicon Lagoon; 10M+ developers by 2030 goal"
       },
       "size": {
-        "description": "923K km\u00b2; size of Texas and California combined; Niger Delta oil-rich; Lake Chad basin; diverse terrain",
+        "description": "923K km²; size of Texas and California combined; Niger Delta oil-rich; Lake Chad basin; diverse terrain",
         "score": 1
       },
       "population": {
@@ -4649,7 +4649,7 @@
     ],
     "capital": "Pretoria",
     "capitalAliases": [],
-    "flag": "\ud83c\uddff\ud83c\udde6",
+    "flag": "🇿🇦",
     "flagColors": [
       "Red",
       "Blue",
@@ -4696,7 +4696,7 @@
         "description": "Naspers and Prosus global media venture capital; Cape Town startup scene; African fintech pioneer; load-shedding energy crisis"
       },
       "size": {
-        "description": "1.22M km\u00b2; southern Africa; borders Atlantic and Indian Oceans; Lesotho landlocked inside; Drakensberg to Karoo diversity",
+        "description": "1.22M km²; southern Africa; borders Atlantic and Indian Oceans; Lesotho landlocked inside; Drakensberg to Karoo diversity",
         "score": 1
       },
       "population": {
@@ -4736,7 +4736,7 @@
     "aliases": [],
     "capital": "Taipei",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\uddfc",
+    "flag": "🇹🇼",
     "flagColors": [
       "Red",
       "Blue",
@@ -4800,7 +4800,7 @@
         "description": "Rich cultural traditions in Taiwan; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "36K km\u00b2; mountainous island nation off the coast of China",
+        "description": "36K km²; mountainous island nation off the coast of China",
         "score": 1
       },
       "population": {
@@ -4821,7 +4821,7 @@
     "aliases": [],
     "capital": "Kuala Lumpur",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddfe",
+    "flag": "🇲🇾",
     "flagColors": [
       "Yellow",
       "Blue",
@@ -4886,7 +4886,7 @@
         "description": "Rich cultural traditions in Malaysia; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "330K km\u00b2; divided into Peninsular Malaysia and East Malaysia on Borneo",
+        "description": "330K km²; divided into Peninsular Malaysia and East Malaysia on Borneo",
         "score": 1
       },
       "population": {
@@ -4907,7 +4907,7 @@
     "aliases": [],
     "capital": "Bangkok",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\udded",
+    "flag": "🇹🇭",
     "flagColors": [
       "Red",
       "White",
@@ -4971,7 +4971,7 @@
         "description": "Rich cultural traditions in Thailand; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "513K km\u00b2; central plains, mountains in the north, and southern peninsula",
+        "description": "513K km²; central plains, mountains in the north, and southern peninsula",
         "score": 1
       },
       "population": {
@@ -4989,9 +4989,9 @@
     "name": "Colombia",
     "isoNumeric": "170",
     "aliases": [],
-    "capital": "Bogot\u00e1",
+    "capital": "Bogotá",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddf4",
+    "flag": "🇨🇴",
     "flagColors": [
       "Yellow",
       "Blue",
@@ -5012,7 +5012,7 @@
       },
       "government": {
         "score": 11,
-        "description": "Stable constitutional governance in Colombia in Bogot\u00e1; established public administration, judicial independence, and civil institutions."
+        "description": "Stable constitutional governance in Colombia in Bogotá; established public administration, judicial independence, and civil institutions."
       },
       "internationalRelationships": {
         "score": 7,
@@ -5024,7 +5024,7 @@
       },
       "education": {
         "score": 6,
-        "description": "National university and school network in Colombia in Bogot\u00e1; advancing primary literacy and specialized vocational programs."
+        "description": "National university and school network in Colombia in Bogotá; advancing primary literacy and specialized vocational programs."
       },
       "naturalResources": {
         "score": 10,
@@ -5032,7 +5032,7 @@
       },
       "healthcare": {
         "score": 7,
-        "description": "Public healthcare infrastructure in Colombia in Bogot\u00e1; regional hospitals, preventative health campaigns, and medical clinics."
+        "description": "Public healthcare infrastructure in Colombia in Bogotá; regional hospitals, preventative health campaigns, and medical clinics."
       },
       "location": {
         "score": 7,
@@ -5055,7 +5055,7 @@
         "description": "Rich cultural traditions in Colombia; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "1.14M km\u00b2; spans Andes mountains, Amazon rainforest, and two coastlines",
+        "description": "1.14M km²; spans Andes mountains, Amazon rainforest, and two coastlines",
         "score": 1
       },
       "population": {
@@ -5076,7 +5076,7 @@
     "aliases": [],
     "capital": "Hanoi",
     "capitalAliases": [],
-    "flag": "\ud83c\uddfb\ud83c\uddf3",
+    "flag": "🇻🇳",
     "flagColors": [
       "Red",
       "Yellow"
@@ -5139,7 +5139,7 @@
         "description": "Rich cultural traditions in Vietnam; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "331K km\u00b2; long, narrow country with extensive coastline along the South China Sea",
+        "description": "331K km²; long, narrow country with extensive coastline along the South China Sea",
         "score": 1
       },
       "population": {
@@ -5160,7 +5160,7 @@
     "aliases": [],
     "capital": "Montevideo",
     "capitalAliases": [],
-    "flag": "\ud83c\uddfa\ud83c\uddfe",
+    "flag": "🇺🇾",
     "flagColors": [
       "Blue",
       "White",
@@ -5224,11 +5224,11 @@
         "description": "Rich cultural traditions in Uruguay; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "176K km\u00b2; rolling plains and coastal regions",
+        "description": "176,215 km²; geographic territory of Uruguay with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "3.4 million; highly urbanized population with strong European heritage",
+        "description": "3.4 million people; demographic hub for Uruguay; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -5236,7 +5236,7 @@
       -56,
       -33
     ],
-    "area": 181034
+    "area": 176215
   },
   {
     "name": "Morocco",
@@ -5244,7 +5244,7 @@
     "aliases": [],
     "capital": "Rabat",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\udde6",
+    "flag": "🇲🇦",
     "flagColors": [
       "Red",
       "Green"
@@ -5307,7 +5307,7 @@
         "description": "Rich cultural traditions in Morocco; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "446K km\u00b2; spans Atlas Mountains to the Atlantic and Mediterranean coasts",
+        "description": "446K km²; spans Atlas Mountains to the Atlantic and Mediterranean coasts",
         "score": 1
       },
       "population": {
@@ -5326,9 +5326,9 @@
     "excludeFromDraft": true,
     "isoNumeric": "188",
     "aliases": [],
-    "capital": "San Jos\u00e9",
+    "capital": "San José",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddf7",
+    "flag": "🇨🇷",
     "flagColors": [
       "Blue",
       "White",
@@ -5349,7 +5349,7 @@
       },
       "government": {
         "score": 14,
-        "description": "Stable constitutional governance in Costa Rica in San Jos\u00e9; established public administration, judicial independence, and civil institutions."
+        "description": "Stable constitutional governance in Costa Rica in San José; established public administration, judicial independence, and civil institutions."
       },
       "internationalRelationships": {
         "score": 6,
@@ -5361,7 +5361,7 @@
       },
       "education": {
         "score": 8,
-        "description": "National university and school network in Costa Rica in San Jos\u00e9; advancing primary literacy and specialized vocational programs."
+        "description": "National university and school network in Costa Rica in San José; advancing primary literacy and specialized vocational programs."
       },
       "naturalResources": {
         "score": 2,
@@ -5369,7 +5369,7 @@
       },
       "healthcare": {
         "score": 8,
-        "description": "Public healthcare infrastructure in Costa Rica in San Jos\u00e9; regional hospitals, preventative health campaigns, and medical clinics."
+        "description": "Public healthcare infrastructure in Costa Rica in San José; regional hospitals, preventative health campaigns, and medical clinics."
       },
       "location": {
         "score": 5,
@@ -5392,11 +5392,11 @@
         "description": "Rich cultural traditions in Costa Rica; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "51K km\u00b2; rugged, volcanic geography covered by dense rainforests",
+        "description": "51,100 km²; geographic territory of Costa Rica with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "5.2 million; high standard of living and long life expectancy",
+        "description": "5.2 million people; demographic hub for Costa Rica; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -5413,7 +5413,7 @@
     "aliases": [],
     "capital": "Nicosia",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddfe",
+    "flag": "🇨🇾",
     "flagColors": [
       "White",
       "Orange",
@@ -5477,11 +5477,11 @@
         "description": "Rich cultural traditions in Cyprus; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "9K km\u00b2; strategic island in the eastern Mediterranean",
+        "description": "9,251 km²; geographic territory of Cyprus with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "1.2 million; divided island with significant tourism and shipping industries",
+        "description": "1.2 million people; demographic hub for Cyprus; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -5500,7 +5500,7 @@
     "capitalAliases": [
       "Kuwait"
     ],
-    "flag": "\ud83c\uddf0\ud83c\uddfc",
+    "flag": "🇰🇼",
     "flagColors": [
       "Green",
       "White",
@@ -5565,7 +5565,7 @@
         "description": "Rich cultural traditions in Kuwait; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "17K km\u00b2; small desert nation at the tip of the Persian Gulf",
+        "description": "17K km²; small desert nation at the tip of the Persian Gulf",
         "score": 1
       },
       "population": {
@@ -5586,7 +5586,7 @@
     "aliases": [],
     "capital": "Muscat",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf4\ud83c\uddf2",
+    "flag": "🇴🇲",
     "flagColors": [
       "Red",
       "White",
@@ -5650,7 +5650,7 @@
         "description": "Rich cultural traditions in Oman; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "309K km\u00b2; diverse landscape of deserts, mountains, and long coastlines",
+        "description": "309K km²; diverse landscape of deserts, mountains, and long coastlines",
         "score": 1
       },
       "population": {
@@ -5671,7 +5671,7 @@
     "aliases": [],
     "capital": "Sofia",
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddec",
+    "flag": "🇧🇬",
     "flagColors": [
       "White",
       "Green",
@@ -5735,7 +5735,7 @@
         "description": "Rich cultural traditions in Bulgaria; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "110K km\u00b2; Balkan mountains and fertile plains",
+        "description": "110K km²; Balkan mountains and fertile plains",
         "score": 1
       },
       "population": {
@@ -5756,7 +5756,7 @@
     "aliases": [],
     "capital": "Belgrade",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf7\ud83c\uddf8",
+    "flag": "🇷🇸",
     "flagColors": [
       "Red",
       "Blue",
@@ -5820,7 +5820,7 @@
         "description": "Rich cultural traditions in Serbia; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "88K km\u00b2; landlocked with significant rivers including the Danube",
+        "description": "88K km²; landlocked with significant rivers including the Danube",
         "score": 1
       },
       "population": {
@@ -5840,7 +5840,7 @@
     "aliases": [],
     "capital": "Tehran",
     "capitalAliases": [],
-    "flag": "\ud83c\uddee\ud83c\uddf7",
+    "flag": "🇮🇷",
     "flagColors": [
       "Green",
       "White",
@@ -5904,7 +5904,7 @@
         "description": "Rich cultural traditions in Iran; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "1.64M km\u00b2; highly mountainous terrain and extensive central deserts",
+        "description": "1.64M km²; highly mountainous terrain and extensive central deserts",
         "score": 1
       },
       "population": {
@@ -5927,7 +5927,7 @@
     "capitalAliases": [
       "Panama"
     ],
-    "flag": "\ud83c\uddf5\ud83c\udde6",
+    "flag": "🇵🇦",
     "flagColors": [
       "Blue",
       "White",
@@ -5991,11 +5991,11 @@
         "description": "Rich cultural traditions in Panama; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "75K km\u00b2; narrow isthmus with tropical rainforests",
+        "description": "75,417 km²; geographic territory of Panama with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "4.4 million; global logistics hub with a booming capital skyline",
+        "description": "4.4 million people; demographic hub for Panama; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -6012,7 +6012,7 @@
     "aliases": [],
     "capital": "Amman",
     "capitalAliases": [],
-    "flag": "\ud83c\uddef\ud83c\uddf4",
+    "flag": "🇯🇴",
     "flagColors": [
       "Black",
       "White",
@@ -6077,7 +6077,7 @@
         "description": "Rich cultural traditions in Jordan; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "89K km\u00b2; mostly arid desert with strategic access to the Red Sea",
+        "description": "89K km²; mostly arid desert with strategic access to the Red Sea",
         "score": 1
       },
       "population": {
@@ -6098,7 +6098,7 @@
     "aliases": [],
     "capital": "Nairobi",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf0\ud83c\uddea",
+    "flag": "🇰🇪",
     "flagColors": [
       "Black",
       "Red",
@@ -6163,7 +6163,7 @@
         "description": "Rich cultural traditions in Kenya; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "580K km\u00b2; encompasses savannah, lakelands, and the Great Rift Valley",
+        "description": "580K km²; encompasses savannah, lakelands, and the Great Rift Valley",
         "score": 1
       },
       "population": {
@@ -6184,7 +6184,7 @@
     "aliases": [],
     "capital": "Manama",
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\udded",
+    "flag": "🇧🇭",
     "flagColors": [
       "Red",
       "White"
@@ -6247,7 +6247,7 @@
         "description": "Rich cultural traditions in Bahrain; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "780 km\u00b2; small archipelago in the Persian Gulf",
+        "description": "780 km²; small archipelago in the Persian Gulf",
         "score": 1
       },
       "population": {
@@ -6267,7 +6267,7 @@
     "aliases": [],
     "capital": "Islamabad",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\uddf0",
+    "flag": "🇵🇰",
     "flagColors": [
       "Green",
       "White"
@@ -6330,7 +6330,7 @@
         "description": "Rich cultural traditions in Pakistan; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "881K km\u00b2; diverse terrain from Arabian Sea coast to the Himalayas",
+        "description": "881K km²; diverse terrain from Arabian Sea coast to the Himalayas",
         "score": 1
       },
       "population": {
@@ -6351,7 +6351,7 @@
     "aliases": [],
     "capital": "Tunis",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\uddf3",
+    "flag": "🇹🇳",
     "flagColors": [
       "Red",
       "White"
@@ -6414,7 +6414,7 @@
         "description": "Rich cultural traditions in Tunisia; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "163K km\u00b2; northernmost country in Africa with access to the Sahara",
+        "description": "163K km²; northernmost country in Africa with access to the Sahara",
         "score": 1
       },
       "population": {
@@ -6434,7 +6434,7 @@
     "aliases": [],
     "capital": "Quito",
     "capitalAliases": [],
-    "flag": "\ud83c\uddea\ud83c\udde8",
+    "flag": "🇪🇨",
     "flagColors": [
       "Yellow",
       "Blue",
@@ -6442,7 +6442,7 @@
     ],
     "tier": "fourth",
     "region": "Americas",
-    "knownFor": "The Gal\u00e1pagos Islands and the equator",
+    "knownFor": "The Galápagos Islands and the equator",
     "stats": {
       "military": {
         "score": 9,
@@ -6451,7 +6451,7 @@
       "economy": {
         "score": 9,
         "industryType": 2,
-        "description": "Robust market economy for Ecuador (The Gal\u00e1pagos Islands and the equator); strong manufacturing, services, agricultural exports, and regional trade links."
+        "description": "Robust market economy for Ecuador (The Galápagos Islands and the equator); strong manufacturing, services, agricultural exports, and regional trade links."
       },
       "government": {
         "score": 10,
@@ -6498,11 +6498,11 @@
         "description": "Rich cultural traditions in Ecuador; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "283K km\u00b2; features the Andes, Amazon basin, and Pacific coast",
+        "description": "283,561 km²; geographic territory of Ecuador with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "18.1 million; rich indigenous culture and heavy reliance on oil exports",
+        "description": "18.0 million people; demographic hub for Ecuador; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -6510,7 +6510,7 @@
       -77.5,
       -2
     ],
-    "area": 276841
+    "area": 283561
   },
   {
     "name": "Dominican Republic",
@@ -6521,7 +6521,7 @@
     ],
     "capital": "Santo Domingo",
     "capitalAliases": [],
-    "flag": "\ud83c\udde9\ud83c\uddf4",
+    "flag": "🇩🇴",
     "flagColors": [
       "Blue",
       "White",
@@ -6585,11 +6585,11 @@
         "description": "Rich cultural traditions in Dominican Republic; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "48K km\u00b2; shares the island of Hispaniola with Haiti",
+        "description": "48,671 km²; geographic territory of Dominican Republic with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "11.3 million; rapidly growing economy driven by tourism and agriculture",
+        "description": "11.2 million people; demographic hub for Dominican Republic; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -6606,7 +6606,7 @@
     "aliases": [],
     "capital": "Kingston",
     "capitalAliases": [],
-    "flag": "\ud83c\uddef\ud83c\uddf2",
+    "flag": "🇯🇲",
     "flagColors": [
       "Green",
       "Yellow",
@@ -6670,11 +6670,11 @@
         "description": "Rich cultural traditions in Jamaica; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "10K km\u00b2; mountainous island nation known for its lush topography",
+        "description": "10,991 km²; geographic territory of Jamaica with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "2.8 million; significant global cultural influence despite small size",
+        "description": "2.8 million people; demographic hub for Jamaica; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -6691,7 +6691,7 @@
     "aliases": [],
     "capital": "Colombo",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\uddf0",
+    "flag": "🇱🇰",
     "flagColors": [
       "Yellow",
       "Maroon",
@@ -6756,7 +6756,7 @@
         "description": "Rich cultural traditions in Sri Lanka; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "65K km\u00b2; island nation south of India with diverse ecosystems",
+        "description": "65K km²; island nation south of India with diverse ecosystems",
         "score": 1
       },
       "population": {
@@ -6777,7 +6777,7 @@
     "aliases": [],
     "capital": "Beirut",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\udde7",
+    "flag": "🇱🇧",
     "flagColors": [
       "Red",
       "White",
@@ -6841,7 +6841,7 @@
         "description": "Rich cultural traditions in Lebanon; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "10K km\u00b2; small, mountainous nation on the eastern Mediterranean",
+        "description": "10K km²; small, mountainous nation on the eastern Mediterranean",
         "score": 1
       },
       "population": {
@@ -6861,7 +6861,7 @@
     "aliases": [],
     "capital": "Algiers",
     "capitalAliases": [],
-    "flag": "\ud83c\udde9\ud83c\uddff",
+    "flag": "🇩🇿",
     "flagColors": [
       "Green",
       "White",
@@ -6925,7 +6925,7 @@
         "description": "Rich cultural traditions in Algeria; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "2.38M km\u00b2; dominated by the Sahara Desert with a fertile northern coast",
+        "description": "2.38M km²; dominated by the Sahara Desert with a fertile northern coast",
         "score": 1
       },
       "population": {
@@ -6946,7 +6946,7 @@
     "aliases": [],
     "capital": "Valletta",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddf9",
+    "flag": "🇲🇹",
     "flagColors": [
       "White",
       "Red"
@@ -7009,11 +7009,11 @@
         "description": "Rich cultural traditions in Malta; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "316 km\u00b2; highly dense archipelago south of Italy",
+        "description": "316 km²; geographic territory of Malta with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "530,000; booming tech, gaming, and tourism industries",
+        "description": "530,000 people; demographic hub for Malta; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -7030,7 +7030,7 @@
     "aliases": [],
     "capital": "Port Louis",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddfa",
+    "flag": "🇲🇺",
     "flagColors": [
       "Red",
       "Blue",
@@ -7095,7 +7095,7 @@
         "description": "Rich cultural traditions in Mauritius; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "2K km\u00b2; volcanic island nation in the Indian Ocean",
+        "description": "2K km²; volcanic island nation in the Indian Ocean",
         "score": 1
       },
       "population": {
@@ -7116,7 +7116,7 @@
     "aliases": [],
     "capital": "Dhaka",
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\udde9",
+    "flag": "🇧🇩",
     "flagColors": [
       "Green",
       "Red"
@@ -7179,7 +7179,7 @@
         "description": "Rich cultural traditions in Bangladesh; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "148K km\u00b2; low-lying riverine country highly vulnerable to climate change",
+        "description": "148K km²; low-lying riverine country highly vulnerable to climate change",
         "score": 1
       },
       "population": {
@@ -7200,7 +7200,7 @@
     "aliases": [],
     "capital": "Accra",
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\udded",
+    "flag": "🇬🇭",
     "flagColors": [
       "Red",
       "Yellow",
@@ -7265,7 +7265,7 @@
         "description": "Rich cultural traditions in Ghana; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "238K km\u00b2; spans coastal plains to northern savannas",
+        "description": "238K km²; spans coastal plains to northern savannas",
         "score": 1
       },
       "population": {
@@ -7286,7 +7286,7 @@
     "aliases": [],
     "capital": "Dakar",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddf3",
+    "flag": "🇸🇳",
     "flagColors": [
       "Green",
       "Yellow",
@@ -7350,7 +7350,7 @@
         "description": "Rich cultural traditions in Senegal; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "196K km\u00b2; features Sahel landscapes and Atlantic coastline",
+        "description": "196K km²; features Sahel landscapes and Atlantic coastline",
         "score": 1
       },
       "population": {
@@ -7371,7 +7371,7 @@
     "aliases": [],
     "capital": "Dodoma",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\uddff",
+    "flag": "🇹🇿",
     "flagColors": [
       "Green",
       "Yellow",
@@ -7436,7 +7436,7 @@
         "description": "Rich cultural traditions in Tanzania; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "947K km\u00b2; incredible wildlife reserves and the island of Zanzibar",
+        "description": "947K km²; incredible wildlife reserves and the island of Zanzibar",
         "score": 1
       },
       "population": {
@@ -7457,7 +7457,7 @@
     "aliases": [],
     "capital": "Sucre",
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddf4",
+    "flag": "🇧🇴",
     "flagColors": [
       "Red",
       "Yellow",
@@ -7521,11 +7521,11 @@
         "description": "Rich cultural traditions in Bolivia; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "1.09M km\u00b2; landlocked nation spanning high Andes to Amazon basin",
+        "description": "1,098,581 km²; geographic territory of Bolivia with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "12.2 million; largest proportion of indigenous peoples in South America",
+        "description": "12.2 million people; demographic hub for Bolivia; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -7542,7 +7542,7 @@
     "aliases": [],
     "capital": "Havana",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddfa",
+    "flag": "🇨🇺",
     "flagColors": [
       "Blue",
       "White",
@@ -7606,7 +7606,7 @@
         "description": "Rich cultural traditions in Cuba; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "109K km\u00b2; largest island in the Caribbean",
+        "description": "109K km²; largest island in the Caribbean",
         "score": 1
       },
       "population": {
@@ -7627,7 +7627,7 @@
     "aliases": [],
     "capital": "San Salvador",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddfb",
+    "flag": "🇸🇻",
     "flagColors": [
       "Blue",
       "White"
@@ -7690,11 +7690,11 @@
         "description": "Rich cultural traditions in El Salvador; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "21K km\u00b2; smallest and most densely populated country in Central America",
+        "description": "21,041 km²; geographic territory of El Salvador with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "6.3 million; large diaspora contributing heavily via remittances",
+        "description": "6.3 million people; demographic hub for El Salvador; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -7713,7 +7713,7 @@
     "capitalAliases": [
       "Guatemala"
     ],
-    "flag": "\ud83c\uddec\ud83c\uddf9",
+    "flag": "🇬🇹",
     "flagColors": [
       "Blue",
       "White"
@@ -7776,11 +7776,11 @@
         "description": "Rich cultural traditions in Guatemala; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "108K km\u00b2; rugged, forested terrain and ancient ruins",
+        "description": "108,889 km²; geographic territory of Guatemala with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "17.1 million; largest economy in Central America with rich indigenous heritage",
+        "description": "18.0 million people; demographic hub for Guatemala; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -7797,14 +7797,14 @@
     "aliases": [],
     "capital": "Tegucigalpa",
     "capitalAliases": [],
-    "flag": "\ud83c\udded\ud83c\uddf3",
+    "flag": "🇭🇳",
     "flagColors": [
       "Blue",
       "White"
     ],
     "tier": "fourth",
     "region": "Americas",
-    "knownFor": "Ancient Mayan ruins at Cop\u00e1n",
+    "knownFor": "Ancient Mayan ruins at Copán",
     "stats": {
       "military": {
         "score": 7,
@@ -7860,11 +7860,11 @@
         "description": "Rich cultural traditions in Honduras; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "112K km\u00b2; mountainous terrain with Caribbean and Pacific coastlines",
+        "description": "112,492 km²; geographic territory of Honduras with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "10.4 million; economy heavily dependent on agriculture and remittances",
+        "description": "10.4 million people; demographic hub for Honduras; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -7879,9 +7879,9 @@
     "excludeFromDraft": true,
     "isoNumeric": "600",
     "aliases": [],
-    "capital": "Asunci\u00f3n",
+    "capital": "Asunción",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\uddfe",
+    "flag": "🇵🇾",
     "flagColors": [
       "Red",
       "White",
@@ -7889,7 +7889,7 @@
     ],
     "tier": "fourth",
     "region": "Americas",
-    "knownFor": "Guaran\u00ed culture and vast hydroelectric power",
+    "knownFor": "Guaraní culture and vast hydroelectric power",
     "stats": {
       "military": {
         "score": 8,
@@ -7902,7 +7902,7 @@
       },
       "government": {
         "score": 9,
-        "description": "Unitary state structure of Paraguay in Asunci\u00f3n; active parliamentary/presidential assemblies and municipal administration."
+        "description": "Unitary state structure of Paraguay in Asunción; active parliamentary/presidential assemblies and municipal administration."
       },
       "internationalRelationships": {
         "score": 3,
@@ -7945,11 +7945,11 @@
         "description": "Rich cultural traditions in Paraguay; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "406K km\u00b2; landlocked nation divided by the Paraguay River",
+        "description": "406,752 km²; geographic territory of Paraguay with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "6.8 million; major exporter of soybeans and beef",
+        "description": "6.8 million people; demographic hub for Paraguay; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -7966,7 +7966,7 @@
     "aliases": [],
     "capital": "Kampala",
     "capitalAliases": [],
-    "flag": "\ud83c\uddfa\ud83c\uddec",
+    "flag": "🇺🇬",
     "flagColors": [
       "Black",
       "Yellow",
@@ -8030,7 +8030,7 @@
         "description": "Rich cultural traditions in Uganda; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "241K km\u00b2; landlocked but water-rich 'Pearl of Africa'",
+        "description": "241K km²; landlocked but water-rich 'Pearl of Africa'",
         "score": 1
       },
       "population": {
@@ -8054,7 +8054,7 @@
     ],
     "capital": "Yamoussoukro",
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddee",
+    "flag": "🇨🇮",
     "flagColors": [
       "Orange",
       "White",
@@ -8118,7 +8118,7 @@
         "description": "Rich cultural traditions in Ivory Coast; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "322K km\u00b2; lush tropical coastlines and interior savannas",
+        "description": "322K km²; lush tropical coastlines and interior savannas",
         "score": 1
       },
       "population": {
@@ -8139,7 +8139,7 @@
     "aliases": [],
     "capital": "Minsk",
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddfe",
+    "flag": "🇧🇾",
     "flagColors": [
       "Red",
       "Green",
@@ -8203,7 +8203,7 @@
         "description": "Rich cultural traditions in Belarus; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "207K km\u00b2; flat, landlocked country with extensive forests and lakes",
+        "description": "207K km²; flat, landlocked country with extensive forests and lakes",
         "score": 1
       },
       "population": {
@@ -8224,7 +8224,7 @@
     "aliases": [],
     "capital": "Baku",
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddff",
+    "flag": "🇦🇿",
     "flagColors": [
       "Blue",
       "Red",
@@ -8288,11 +8288,11 @@
         "description": "Rich cultural traditions in Azerbaijan; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "86K km\u00b2; situated at the crossroads of Eastern Europe and Western Asia",
+        "description": "86,600 km²; geographic territory of Azerbaijan with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "10.1 million; rapidly modernizing capital fueled by energy exports",
+        "description": "10.1 million people; demographic hub for Azerbaijan; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -8309,7 +8309,7 @@
     "aliases": [],
     "capital": "Kigali",
     "capitalAliases": [],
-    "flag": "\ud83c\uddf7\ud83c\uddfc",
+    "flag": "🇷🇼",
     "flagColors": [
       "Blue",
       "Yellow",
@@ -8373,11 +8373,11 @@
         "description": "Rich cultural traditions in Rwanda; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "26K km\u00b2; highly elevated, dense, and green geography",
+        "description": "26,338 km²; geographic territory of Rwanda with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "13.2 million; remarkable post-conflict economic and social recovery",
+        "description": "13.7 million people; demographic hub for Rwanda; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -8394,7 +8394,7 @@
     "aliases": [],
     "capital": "Tashkent",
     "capitalAliases": [],
-    "flag": "\ud83c\uddfa\ud83c\uddff",
+    "flag": "🇺🇿",
     "flagColors": [
       "Blue",
       "White",
@@ -8459,11 +8459,11 @@
         "description": "Rich cultural traditions in Uzbekistan; distinctive regional music, artisanal crafts, traditional cuisine, and community festivals."
       },
       "size": {
-        "description": "448K km\u00b2; doubly landlocked country with vast deserts and historic cities",
+        "description": "447,400 km²; geographic territory of Uzbekistan with diverse terrain and natural landscape.",
         "score": 1
       },
       "population": {
-        "description": "36.2 million; largest population in Central Asia undergoing rapid modernization",
+        "description": "36.0 million people; demographic hub for Uzbekistan; dynamic workforce supporting local and regional economy.",
         "score": 1
       }
     },
@@ -8482,7 +8482,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddeb\ud83c\uddef",
+    "flag": "🇫🇯",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Suva",
@@ -8524,7 +8524,7 @@
       },
       "size": {
         "score": 3,
-        "description": "18,274 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "18,274 km² land area; diverse terrain and natural landscape"
       },
       "population": {
         "score": 3,
@@ -8563,10 +8563,10 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddea\ud83c\udded",
+    "flag": "🇪🇭",
     "flagColors": [],
     "tier": "fourth",
-    "capital": "El Aai\u00fan",
+    "capital": "El Aaiún",
     "region": "Africa",
     "knownFor": "Western Sahara is a Africa nation known for its cultural heritage, unique geography, and local traditions.",
     "stats": {
@@ -8593,7 +8593,7 @@
       },
       "government": {
         "score": 5,
-        "description": "Administrative framework in Western Sahara in El Aai\u00fan; ongoing institutional modernization and governance capacity building."
+        "description": "Administrative framework in Western Sahara in El Aaiún; ongoing institutional modernization and governance capacity building."
       },
       "climate": {
         "score": 6,
@@ -8605,11 +8605,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Western Sahara; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "266,000 km²; geographic territory of Western Sahara with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Western Sahara centered around El Aai\u00fan; dynamic population structure supporting workforce and local markets."
+        "description": "600,000 people; demographic hub for Western Sahara; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -8633,7 +8633,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 266000
   },
   {
     "name": "Papua New Guinea",
@@ -8644,7 +8644,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\uddec",
+    "flag": "🇵🇬",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Port Moresby",
@@ -8686,11 +8686,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Papua New Guinea; encompassing varied landscapes, river systems, and topographical regions across Oceania."
+        "description": "462,840 km²; geographic territory of Papua New Guinea with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Papua New Guinea centered around Port Moresby; dynamic population structure supporting workforce and local markets."
+        "description": "10.1 million people; demographic hub for Papua New Guinea; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -8714,7 +8714,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 462840
   },
   {
     "name": "DR Congo",
@@ -8725,7 +8725,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\udde9",
+    "flag": "🇨🇩",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Kinshasa",
@@ -8767,7 +8767,7 @@
       },
       "size": {
         "score": 10,
-        "description": "2,344,858 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "2,344,858 km² land area; diverse terrain and natural landscape"
       },
       "population": {
         "score": 8,
@@ -8806,7 +8806,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddf4",
+    "flag": "🇸🇴",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Mogadishu",
@@ -8848,7 +8848,7 @@
       },
       "size": {
         "score": 7,
-        "description": "637,657 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "637,657 km² land area; diverse terrain and natural landscape"
       },
       "population": {
         "score": 5,
@@ -8887,7 +8887,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\udde9",
+    "flag": "🇸🇩",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Khartoum",
@@ -8929,7 +8929,7 @@
       },
       "size": {
         "score": 9,
-        "description": "1,861,484 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "1,861,484 km² land area; diverse terrain and natural landscape"
       },
       "population": {
         "score": 7,
@@ -8968,7 +8968,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\udde9",
+    "flag": "🇹🇩",
     "flagColors": [],
     "tier": "fourth",
     "capital": "N'Djamena",
@@ -9010,11 +9010,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Chad; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "1,284,000 km²; geographic territory of Chad with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Chad centered around N'Djamena; dynamic population structure supporting workforce and local markets."
+        "description": "17.7 million people; demographic hub for Chad; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9038,7 +9038,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 1284000
   },
   {
     "name": "Haiti",
@@ -9049,7 +9049,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udded\ud83c\uddf9",
+    "flag": "🇭🇹",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Port-au-Prince",
@@ -9091,11 +9091,11 @@
       },
       "size": {
         "score": 3,
-        "description": "27,750 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "27,750 km²; geographic territory of Haiti with diverse terrain and natural landscape."
       },
       "population": {
         "score": 5,
-        "description": "11.7 million people; Caribbean nation with rich revolutionary history and vibrant art"
+        "description": "11.5 million people; demographic hub for Haiti; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 8,
@@ -9130,7 +9130,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddf8",
+    "flag": "🇧🇸",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Nassau",
@@ -9172,11 +9172,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Bahamas; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "13,878 km²; geographic territory of Bahamas with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Bahamas centered around Nassau; dynamic population structure supporting workforce and local markets."
+        "description": "410,000 people; demographic hub for Bahamas; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9200,7 +9200,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 13878
   },
   {
     "name": "Falkland Islands",
@@ -9211,7 +9211,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddeb\ud83c\uddf0",
+    "flag": "🇫🇰",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Stanley",
@@ -9253,11 +9253,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Falkland Islands; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "12,173 km²; geographic territory of Falkland Islands with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Falkland Islands centered around Stanley; dynamic population structure supporting workforce and local markets."
+        "description": "3,500 people; demographic hub for Falkland Islands; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9281,7 +9281,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 12173
   },
   {
     "name": "Greenland",
@@ -9292,7 +9292,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\uddf1",
+    "flag": "🇬🇱",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Nuuk",
@@ -9334,7 +9334,7 @@
       },
       "size": {
         "score": 10,
-        "description": "2,166,086 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "2,166,086 km² land area; diverse terrain and natural landscape"
       },
       "population": {
         "score": 1,
@@ -9373,7 +9373,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\uddf1",
+    "flag": "🇹🇱",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Dili",
@@ -9415,11 +9415,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Timor-Leste; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "14,874 km²; geographic territory of Timor-Leste with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Timor-Leste centered around Dili; dynamic population structure supporting workforce and local markets."
+        "description": "1.3 million people; demographic hub for Timor-Leste; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9443,7 +9443,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 14874
   },
   {
     "name": "Lesotho",
@@ -9454,7 +9454,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\uddf8",
+    "flag": "🇱🇸",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Maseru",
@@ -9496,11 +9496,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Lesotho; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "30,355 km²; geographic territory of Lesotho with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Lesotho centered around Maseru; dynamic population structure supporting workforce and local markets."
+        "description": "2.3 million people; demographic hub for Lesotho; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9524,7 +9524,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 30355
   },
   {
     "name": "Nicaragua",
@@ -9535,7 +9535,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\uddee",
+    "flag": "🇳🇮",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Managua",
@@ -9577,11 +9577,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Nicaragua; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "130,373 km²; geographic territory of Nicaragua with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Nicaragua centered around Managua; dynamic population structure supporting workforce and local markets."
+        "description": "6.9 million people; demographic hub for Nicaragua; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9605,7 +9605,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 130373
   },
   {
     "name": "Belize",
@@ -9616,7 +9616,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddff",
+    "flag": "🇧🇿",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Belmopan",
@@ -9658,11 +9658,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Belize; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "22,966 km²; geographic territory of Belize with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Belize centered around Belmopan; dynamic population structure supporting workforce and local markets."
+        "description": "405,000 people; demographic hub for Belize; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9686,7 +9686,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 22966
   },
   {
     "name": "Venezuela",
@@ -9697,7 +9697,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddfb\ud83c\uddea",
+    "flag": "🇻🇪",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Caracas",
@@ -9739,11 +9739,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Venezuela; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "916,445 km²; geographic territory of Venezuela with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Venezuela centered around Caracas; dynamic population structure supporting workforce and local markets."
+        "description": "28.8 million people; demographic hub for Venezuela; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9767,7 +9767,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 916445
   },
   {
     "name": "Guyana",
@@ -9778,7 +9778,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\uddfe",
+    "flag": "🇬🇾",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Georgetown",
@@ -9820,11 +9820,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Guyana; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "214,969 km²; geographic territory of Guyana with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Guyana centered around Georgetown; dynamic population structure supporting workforce and local markets."
+        "description": "808,000 people; demographic hub for Guyana; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9848,7 +9848,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 214969
   },
   {
     "name": "Suriname",
@@ -9859,7 +9859,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddf7",
+    "flag": "🇸🇷",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Paramaribo",
@@ -9901,11 +9901,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Suriname; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "163,820 km²; geographic territory of Suriname with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Suriname centered around Paramaribo; dynamic population structure supporting workforce and local markets."
+        "description": "618,000 people; demographic hub for Suriname; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -9929,7 +9929,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 163820
   },
   {
     "name": "Puerto Rico",
@@ -9940,7 +9940,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\uddf7",
+    "flag": "🇵🇷",
     "flagColors": [],
     "tier": "fourth",
     "capital": "San Juan",
@@ -9982,11 +9982,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Puerto Rico; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "50,000 km²; geographic area of Puerto Rico spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Puerto Rico centered around San Juan; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Puerto Rico; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -10021,7 +10021,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddff\ud83c\uddfc",
+    "flag": "🇿🇼",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Harare",
@@ -10063,11 +10063,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Zimbabwe; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "390,757 km²; geographic territory of Zimbabwe with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Zimbabwe centered around Harare; dynamic population structure supporting workforce and local markets."
+        "description": "16.3 million people; demographic hub for Zimbabwe; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -10091,7 +10091,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 390757
   },
   {
     "name": "Botswana",
@@ -10102,7 +10102,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddfc",
+    "flag": "🇧🇼",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Gaborone",
@@ -10144,11 +10144,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Botswana; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "581,730 km²; geographic territory of Botswana with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Botswana centered around Gaborone; dynamic population structure supporting workforce and local markets."
+        "description": "2.6 million people; demographic hub for Botswana; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -10172,7 +10172,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 581730
   },
   {
     "name": "Namibia",
@@ -10183,7 +10183,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\udde6",
+    "flag": "🇳🇦",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Windhoek",
@@ -10225,11 +10225,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Namibia; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "825,615 km²; geographic territory of Namibia with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Namibia centered around Windhoek; dynamic population structure supporting workforce and local markets."
+        "description": "2.6 million people; demographic hub for Namibia; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -10253,7 +10253,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 825615
   },
   {
     "name": "Mali",
@@ -10264,7 +10264,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddf1",
+    "flag": "🇲🇱",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Bamako",
@@ -10306,11 +10306,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Mali; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Mali spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Mali centered around Bamako; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Mali; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -10345,7 +10345,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddf7",
+    "flag": "🇲🇷",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Nouakchott",
@@ -10387,11 +10387,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Mauritania; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "1,030,000 km²; geographic territory of Mauritania with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Mauritania centered around Nouakchott; dynamic population structure supporting workforce and local markets."
+        "description": "4.7 million people; demographic hub for Mauritania; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -10415,7 +10415,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 1030000
   },
   {
     "name": "Benin",
@@ -10426,7 +10426,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddef",
+    "flag": "🇧🇯",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Porto-Novo",
@@ -10468,11 +10468,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Benin; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Benin spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Benin centered around Porto-Novo; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Benin; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -10507,7 +10507,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\uddea",
+    "flag": "🇳🇪",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Niamey",
@@ -10549,11 +10549,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Niger; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Niger spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Niger centered around Niamey; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Niger; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -10588,10 +10588,10 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddf2",
+    "flag": "🇨🇲",
     "flagColors": [],
     "tier": "fourth",
-    "capital": "Yaound\u00e9",
+    "capital": "Yaoundé",
     "region": "Africa",
     "knownFor": "Cameroon is a Africa nation known for its cultural heritage, unique geography, and local traditions.",
     "stats": {
@@ -10618,7 +10618,7 @@
       },
       "government": {
         "score": 5,
-        "description": "Administrative framework in Cameroon in Yaound\u00e9; ongoing institutional modernization and governance capacity building."
+        "description": "Administrative framework in Cameroon in Yaoundé; ongoing institutional modernization and governance capacity building."
       },
       "climate": {
         "score": 6,
@@ -10630,11 +10630,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Cameroon; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Cameroon spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Cameroon centered around Yaound\u00e9; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Cameroon; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -10669,10 +10669,10 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\uddec",
+    "flag": "🇹🇬",
     "flagColors": [],
     "tier": "fourth",
-    "capital": "Lom\u00e9",
+    "capital": "Lomé",
     "region": "Africa",
     "knownFor": "Togo is a Africa nation known for its cultural heritage, unique geography, and local traditions.",
     "stats": {
@@ -10699,7 +10699,7 @@
       },
       "government": {
         "score": 5,
-        "description": "Administrative framework in Togo in Lom\u00e9; ongoing institutional modernization and governance capacity building."
+        "description": "Administrative framework in Togo in Lomé; ongoing institutional modernization and governance capacity building."
       },
       "climate": {
         "score": 6,
@@ -10711,11 +10711,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Togo; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Togo spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Togo centered around Lom\u00e9; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Togo; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -10750,7 +10750,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\uddf3",
+    "flag": "🇬🇳",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Conakry",
@@ -10792,11 +10792,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Guinea; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Guinea spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Guinea centered around Conakry; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Guinea; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -10831,7 +10831,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\uddfc",
+    "flag": "🇬🇼",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Bissau",
@@ -10873,11 +10873,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Guinea-Bissau; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "36,125 km²; geographic territory of Guinea-Bissau with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Guinea-Bissau centered around Bissau; dynamic population structure supporting workforce and local markets."
+        "description": "2.1 million people; demographic hub for Guinea-Bissau; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -10901,7 +10901,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 36125
   },
   {
     "name": "Liberia",
@@ -10912,7 +10912,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\uddf7",
+    "flag": "🇱🇷",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Monrovia",
@@ -10954,11 +10954,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Liberia; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "111,369 km²; geographic territory of Liberia with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Liberia centered around Monrovia; dynamic population structure supporting workforce and local markets."
+        "description": "5.3 million people; demographic hub for Liberia; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -10982,7 +10982,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 111369
   },
   {
     "name": "Sierra Leone",
@@ -10993,7 +10993,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddf1",
+    "flag": "🇸🇱",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Freetown",
@@ -11035,11 +11035,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Sierra Leone; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "71,740 km²; geographic territory of Sierra Leone with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Sierra Leone centered around Freetown; dynamic population structure supporting workforce and local markets."
+        "description": "8.6 million people; demographic hub for Sierra Leone; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11063,7 +11063,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 71740
   },
   {
     "name": "Burkina Faso",
@@ -11074,7 +11074,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddeb",
+    "flag": "🇧🇫",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Ouagadougou",
@@ -11116,11 +11116,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Burkina Faso; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Burkina Faso spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Burkina Faso centered around Ouagadougou; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Burkina Faso; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -11155,7 +11155,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddeb",
+    "flag": "🇨🇫",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Bangui",
@@ -11197,11 +11197,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Central African Republic; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "622,984 km²; geographic territory of Central African Republic with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Central African Republic centered around Bangui; dynamic population structure supporting workforce and local markets."
+        "description": "5.5 million people; demographic hub for Central African Republic; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11225,7 +11225,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 622984
   },
   {
     "name": "Congo",
@@ -11236,7 +11236,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddec",
+    "flag": "🇨🇬",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Brazzaville",
@@ -11278,11 +11278,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Congo; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Congo spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Congo centered around Brazzaville; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Congo; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -11317,7 +11317,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\udde6",
+    "flag": "🇬🇦",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Libreville",
@@ -11359,11 +11359,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Gabon; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "267,667 km²; geographic territory of Gabon with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Gabon centered around Libreville; dynamic population structure supporting workforce and local markets."
+        "description": "2.3 million people; demographic hub for Gabon; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11387,7 +11387,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 267667
   },
   {
     "name": "Equatorial Guinea",
@@ -11398,7 +11398,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\uddf6",
+    "flag": "🇬🇶",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Malabo",
@@ -11440,11 +11440,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Equatorial Guinea; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "28,051 km²; geographic territory of Equatorial Guinea with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Equatorial Guinea centered around Malabo; dynamic population structure supporting workforce and local markets."
+        "description": "1.6 million people; demographic hub for Equatorial Guinea; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11468,7 +11468,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 28051
   },
   {
     "name": "Zambia",
@@ -11479,7 +11479,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddff\ud83c\uddf2",
+    "flag": "🇿🇲",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Lusaka",
@@ -11521,11 +11521,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Zambia; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "752,612 km²; geographic territory of Zambia with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Zambia centered around Lusaka; dynamic population structure supporting workforce and local markets."
+        "description": "20.0 million people; demographic hub for Zambia; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11549,7 +11549,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 752612
   },
   {
     "name": "Malawi",
@@ -11560,7 +11560,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddfc",
+    "flag": "🇲🇼",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Lilongwe",
@@ -11602,11 +11602,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Malawi; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "118,484 km²; geographic territory of Malawi with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Malawi centered around Lilongwe; dynamic population structure supporting workforce and local markets."
+        "description": "20.4 million people; demographic hub for Malawi; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11630,7 +11630,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 118484
   },
   {
     "name": "Mozambique",
@@ -11641,7 +11641,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddff",
+    "flag": "🇲🇿",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Maputo",
@@ -11683,11 +11683,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Mozambique; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "801,590 km²; geographic territory of Mozambique with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Mozambique centered around Maputo; dynamic population structure supporting workforce and local markets."
+        "description": "32.9 million people; demographic hub for Mozambique; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11711,7 +11711,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 801590
   },
   {
     "name": "Eswatini",
@@ -11722,7 +11722,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddff",
+    "flag": "🇸🇿",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Lobamba",
@@ -11764,11 +11764,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Eswatini; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "17,364 km²; geographic territory of Eswatini with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Eswatini centered around Lobamba; dynamic population structure supporting workforce and local markets."
+        "description": "1.2 million people; demographic hub for Eswatini; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11792,7 +11792,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 17364
   },
   {
     "name": "Angola",
@@ -11803,7 +11803,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddf4",
+    "flag": "🇦🇴",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Luanda",
@@ -11845,11 +11845,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Angola; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Angola spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Angola centered around Luanda; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Angola; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -11884,7 +11884,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddee",
+    "flag": "🇧🇮",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Gitega",
@@ -11926,11 +11926,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Burundi; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "27,834 km²; geographic territory of Burundi with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Burundi centered around Gitega; dynamic population structure supporting workforce and local markets."
+        "description": "12.8 million people; demographic hub for Burundi; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -11954,7 +11954,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 27834
   },
   {
     "name": "Madagascar",
@@ -11965,7 +11965,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddec",
+    "flag": "🇲🇬",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Antananarivo",
@@ -12007,11 +12007,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Madagascar; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "587,041 km²; geographic territory of Madagascar with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Madagascar centered around Antananarivo; dynamic population structure supporting workforce and local markets."
+        "description": "29.6 million people; demographic hub for Madagascar; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -12035,7 +12035,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 587041
   },
   {
     "name": "Palestine",
@@ -12046,7 +12046,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf5\ud83c\uddf8",
+    "flag": "🇵🇸",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Ramallah",
@@ -12088,11 +12088,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Palestine; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "50,000 km²; geographic area of Palestine spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Palestine centered around Ramallah; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Palestine; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -12127,7 +12127,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddec\ud83c\uddf2",
+    "flag": "🇬🇲",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Banjul",
@@ -12169,11 +12169,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Gambia; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "10,689 km²; geographic territory of Gambia with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Gambia centered around Banjul; dynamic population structure supporting workforce and local markets."
+        "description": "2.7 million people; demographic hub for Gambia; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -12197,7 +12197,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 10689
   },
   {
     "name": "Iraq",
@@ -12208,7 +12208,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddee\ud83c\uddf6",
+    "flag": "🇮🇶",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Baghdad",
@@ -12250,11 +12250,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Iraq; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "50,000 km²; geographic area of Iraq spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Iraq centered around Baghdad; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Iraq; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -12289,7 +12289,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddfb\ud83c\uddfa",
+    "flag": "🇻🇺",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Port Vila",
@@ -12331,11 +12331,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Vanuatu; encompassing varied landscapes, river systems, and topographical regions across Oceania."
+        "description": "50,000 km²; geographic area of Vanuatu spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Vanuatu centered around Port Vila; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Vanuatu; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -12370,7 +12370,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf0\ud83c\udded",
+    "flag": "🇰🇭",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Phnom Penh",
@@ -12412,11 +12412,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Cambodia; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "181,035 km²; geographic territory of Cambodia with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Cambodia centered around Phnom Penh; dynamic population structure supporting workforce and local markets."
+        "description": "16.8 million people; demographic hub for Cambodia; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -12440,7 +12440,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 181035
   },
   {
     "name": "Laos",
@@ -12451,7 +12451,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\udde6",
+    "flag": "🇱🇦",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Vientiane",
@@ -12493,11 +12493,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Laos; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "236,800 km²; geographic territory of Laos with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Laos centered around Vientiane; dynamic population structure supporting workforce and local markets."
+        "description": "7.5 million people; demographic hub for Laos; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -12521,7 +12521,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 236800
   },
   {
     "name": "Myanmar",
@@ -12532,7 +12532,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddf2",
+    "flag": "🇲🇲",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Naypyidaw",
@@ -12574,11 +12574,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Myanmar; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "50,000 km²; geographic area of Myanmar spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Myanmar centered around Naypyidaw; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Myanmar; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -12613,7 +12613,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf0\ud83c\uddf5",
+    "flag": "🇰🇵",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Pyongyang",
@@ -12655,7 +12655,7 @@
       },
       "size": {
         "score": 5,
-        "description": "120,538 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "120,538 km² land area; diverse terrain and natural landscape"
       },
       "population": {
         "score": 5,
@@ -12694,7 +12694,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddf3",
+    "flag": "🇲🇳",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Ulan Bator",
@@ -12736,11 +12736,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Mongolia; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "1,564,116 km²; geographic territory of Mongolia with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Mongolia centered around Ulan Bator; dynamic population structure supporting workforce and local markets."
+        "description": "3.4 million people; demographic hub for Mongolia; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -12764,7 +12764,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 1564116
   },
   {
     "name": "Bhutan",
@@ -12775,7 +12775,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddf9",
+    "flag": "🇧🇹",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Thimphu",
@@ -12817,11 +12817,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Bhutan; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "38,394 km²; geographic territory of Bhutan with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Bhutan centered around Thimphu; dynamic population structure supporting workforce and local markets."
+        "description": "780,000 people; demographic hub for Bhutan; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -12845,7 +12845,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 38394
   },
   {
     "name": "Nepal",
@@ -12856,7 +12856,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\uddf5",
+    "flag": "🇳🇵",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Kathmandu",
@@ -12898,11 +12898,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Nepal; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "147,181 km²; geographic territory of Nepal with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Nepal centered around Kathmandu; dynamic population structure supporting workforce and local markets."
+        "description": "30.5 million people; demographic hub for Nepal; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -12926,7 +12926,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 147181
   },
   {
     "name": "Afghanistan",
@@ -12937,7 +12937,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddeb",
+    "flag": "🇦🇫",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Kabul",
@@ -12979,11 +12979,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Afghanistan; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "50,000 km²; geographic area of Afghanistan spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Afghanistan centered around Kabul; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Afghanistan; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -13018,7 +13018,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\uddef",
+    "flag": "🇹🇯",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Dushanbe",
@@ -13060,11 +13060,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Tajikistan; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "143,100 km²; geographic territory of Tajikistan with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Tajikistan centered around Dushanbe; dynamic population structure supporting workforce and local markets."
+        "description": "10.0 million people; demographic hub for Tajikistan; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -13088,7 +13088,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 143100
   },
   {
     "name": "Kyrgyzstan",
@@ -13099,7 +13099,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf0\ud83c\uddec",
+    "flag": "🇰🇬",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Bishkek",
@@ -13141,11 +13141,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Kyrgyzstan; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "199,951 km²; geographic territory of Kyrgyzstan with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Kyrgyzstan centered around Bishkek; dynamic population structure supporting workforce and local markets."
+        "description": "6.7 million people; demographic hub for Kyrgyzstan; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -13169,7 +13169,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 199951
   },
   {
     "name": "Turkmenistan",
@@ -13180,7 +13180,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\uddf2",
+    "flag": "🇹🇲",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Ashgabat",
@@ -13222,11 +13222,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Turkmenistan; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "488,100 km²; geographic territory of Turkmenistan with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Turkmenistan centered around Ashgabat; dynamic population structure supporting workforce and local markets."
+        "description": "6.4 million people; demographic hub for Turkmenistan; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -13250,7 +13250,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 488100
   },
   {
     "name": "Syria",
@@ -13261,7 +13261,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddfe",
+    "flag": "🇸🇾",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Damascus",
@@ -13303,11 +13303,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Syria; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "50,000 km²; geographic area of Syria spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Syria centered around Damascus; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Syria; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -13346,14 +13346,14 @@
     "capitalAliases": [
       "Chisinau"
     ],
-    "flag": "\ud83c\uddf2\ud83c\udde9",
+    "flag": "🇲🇩",
     "flagColors": [
       "Blue",
       "Yellow",
       "Red"
     ],
     "tier": "fourth",
-    "capital": "Chi\u0219in\u0103u",
+    "capital": "Chișinău",
     "region": "Europe",
     "knownFor": "Famous for Cricova wine cellars, Orheiul Vechi monastery, fertile rolling hills, and rich winemaking heritage",
     "area": 33846,
@@ -13365,7 +13365,7 @@
       "economy": {
         "score": 5,
         "industryType": 2,
-        "description": "$16B GDP; major agricultural & wine exporter (Cricova & Mile\u0219tii Mici); growing IT sector"
+        "description": "$16B GDP; major agricultural & wine exporter (Cricova & Mileștii Mici); growing IT sector"
       },
       "culture": {
         "score": 6,
@@ -13373,7 +13373,7 @@
       },
       "healthcare": {
         "score": 5,
-        "description": "Universal public health system; Chi\u0219in\u0103u medical hub; ongoing modernizing infrastructure"
+        "description": "Universal public health system; Chișinău medical hub; ongoing modernizing infrastructure"
       },
       "internationalRelationships": {
         "score": 6,
@@ -13393,11 +13393,11 @@
       },
       "size": {
         "score": 4,
-        "description": "33,846 km\u00b2 land area; compact Eastern European nation between Prut and Dniester rivers"
+        "description": "33,846 km²; geographic territory of Moldova with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "2.5 million people; multiethnic nation with strong European and diaspora ties"
+        "description": "2.5 million people; demographic hub for Moldova; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -13409,7 +13409,7 @@
       },
       "education": {
         "score": 6,
-        "description": "99%+ literacy rate; Moldova State University & Technical University in Chi\u0219in\u0103u"
+        "description": "99%+ literacy rate; Moldova State University & Technical University in Chișinău"
       },
       "location": {
         "score": 5,
@@ -13430,7 +13430,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde6\ud83c\uddf1",
+    "flag": "🇦🇱",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Tirana",
@@ -13472,11 +13472,11 @@
       },
       "size": {
         "score": 3,
-        "description": "28,748 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "28,748 km²; geographic territory of Albania with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "2.7 million people; Mediterranean Balkan nation with Adriatic beaches and ancient castles"
+        "description": "2.7 million people; demographic hub for Albania; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 7,
@@ -13511,7 +13511,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\uddfa",
+    "flag": "🇱🇺",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Luxembourg",
@@ -13553,11 +13553,11 @@
       },
       "size": {
         "score": 2,
-        "description": "2,586 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "2,586 km²; geographic territory of Luxembourg with diverse terrain and natural landscape."
       },
       "population": {
         "score": 3,
-        "description": "660,000 people; highest GDP per capita in the world; major European financial and diplomatic hub"
+        "description": "660,000 people; demographic hub for Luxembourg; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 8,
@@ -13592,10 +13592,10 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf3\ud83c\udde8",
+    "flag": "🇳🇨",
     "flagColors": [],
     "tier": "fourth",
-    "capital": "Noum\u00e9a",
+    "capital": "Nouméa",
     "region": "Oceania",
     "knownFor": "New Caledonia is a Oceania nation known for its cultural heritage, unique geography, and local traditions.",
     "stats": {
@@ -13622,7 +13622,7 @@
       },
       "government": {
         "score": 5,
-        "description": "Administrative framework in New Caledonia in Noum\u00e9a; ongoing institutional modernization and governance capacity building."
+        "description": "Administrative framework in New Caledonia in Nouméa; ongoing institutional modernization and governance capacity building."
       },
       "climate": {
         "score": 6,
@@ -13634,11 +13634,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of New Caledonia; encompassing varied landscapes, river systems, and topographical regions across Oceania."
+        "description": "50,000 km²; geographic area of New Caledonia spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for New Caledonia centered around Noum\u00e9a; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for New Caledonia; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -13673,7 +13673,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\udde7",
+    "flag": "🇸🇧",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Honiara",
@@ -13715,11 +13715,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Solomon Islands; encompassing varied landscapes, river systems, and topographical regions across Oceania."
+        "description": "50,000 km²; geographic area of Solomon Islands spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Solomon Islands centered around Honiara; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Solomon Islands; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -13754,7 +13754,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\uddf3",
+    "flag": "🇧🇳",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Bandar Seri Begawan",
@@ -13796,11 +13796,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Brunei; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "5,765 km²; geographic territory of Brunei with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Brunei centered around Bandar Seri Begawan; dynamic population structure supporting workforce and local markets."
+        "description": "450,000 people; demographic hub for Brunei; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -13824,7 +13824,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 5765
   },
   {
     "name": "Eritrea",
@@ -13835,7 +13835,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddea\ud83c\uddf7",
+    "flag": "🇪🇷",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Asmara",
@@ -13877,11 +13877,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Eritrea; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "117,600 km²; geographic territory of Eritrea with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Eritrea centered around Asmara; dynamic population structure supporting workforce and local markets."
+        "description": "3.6 million people; demographic hub for Eritrea; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -13905,7 +13905,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 117600
   },
   {
     "name": "Yemen",
@@ -13916,7 +13916,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddfe\ud83c\uddea",
+    "flag": "🇾🇪",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Sana'a",
@@ -13958,11 +13958,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Yemen; encompassing varied landscapes, river systems, and topographical regions across Asia."
+        "description": "50,000 km²; geographic area of Yemen spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Yemen centered around Sana'a; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Yemen; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -13993,7 +13993,7 @@
     "isoNumeric": "undefined",
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde8\ud83c\uddfe",
+    "flag": "🇨🇾",
     "flagColors": [],
     "tier": "fourth",
     "capital": "North Nicosia",
@@ -14035,11 +14035,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of N. Cyprus; encompassing varied landscapes, river systems, and topographical regions across Eastern & Southern Europe."
+        "description": "50,000 km²; geographic area of N. Cyprus spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for N. Cyprus centered around North Nicosia; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for N. Cyprus; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -14074,7 +14074,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf1\ud83c\uddfe",
+    "flag": "🇱🇾",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Tripoli",
@@ -14116,11 +14116,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Libya; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Libya spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Libya centered around Tripoli; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Libya; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -14155,7 +14155,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddea\ud83c\uddf9",
+    "flag": "🇪🇹",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Addis Ababa",
@@ -14197,7 +14197,7 @@
       },
       "size": {
         "score": 8,
-        "description": "1,104,300 km\u00b2 land area; diverse terrain and natural landscape"
+        "description": "1,104,300 km² land area; diverse terrain and natural landscape"
       },
       "population": {
         "score": 9,
@@ -14236,7 +14236,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde9\ud83c\uddef",
+    "flag": "🇩🇯",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Djibouti",
@@ -14278,11 +14278,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Djibouti; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "23,200 km²; geographic territory of Djibouti with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Djibouti centered around Djibouti; dynamic population structure supporting workforce and local markets."
+        "description": "1.1 million people; demographic hub for Djibouti; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -14306,14 +14306,14 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 23200
   },
   {
     "name": "Somaliland",
     "isoNumeric": "undefined",
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddf4",
+    "flag": "🇸🇴",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Hargeisa",
@@ -14355,11 +14355,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Somaliland; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of Somaliland spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Somaliland centered around Hargeisa; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Somaliland; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -14394,7 +14394,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\udde7\ud83c\udde6",
+    "flag": "🇧🇦",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Sarajevo",
@@ -14436,11 +14436,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Bosnia and Herzegovina; encompassing varied landscapes, river systems, and topographical regions across Europe."
+        "description": "51,209 km²; geographic territory of Bosnia and Herzegovina with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Bosnia and Herzegovina centered around Sarajevo; dynamic population structure supporting workforce and local markets."
+        "description": "3.2 million people; demographic hub for Bosnia and Herzegovina; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -14464,7 +14464,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 51209
   },
   {
     "name": "North Macedonia",
@@ -14475,7 +14475,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddf0",
+    "flag": "🇲🇰",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Skopje",
@@ -14517,11 +14517,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of North Macedonia; encompassing varied landscapes, river systems, and topographical regions across Europe."
+        "description": "25,713 km²; geographic territory of North Macedonia with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for North Macedonia centered around Skopje; dynamic population structure supporting workforce and local markets."
+        "description": "1.8 million people; demographic hub for North Macedonia; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -14545,7 +14545,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 25713
   },
   {
     "name": "Montenegro",
@@ -14556,7 +14556,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf2\ud83c\uddea",
+    "flag": "🇲🇪",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Podgorica",
@@ -14598,11 +14598,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Montenegro; encompassing varied landscapes, river systems, and topographical regions across Europe."
+        "description": "13,812 km²; geographic territory of Montenegro with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Montenegro centered around Podgorica; dynamic population structure supporting workforce and local markets."
+        "description": "620,000 people; demographic hub for Montenegro; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -14626,14 +14626,14 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 13812
   },
   {
     "name": "Kosovo",
     "isoNumeric": "undefined",
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddfd\ud83c\uddf0",
+    "flag": "🇽🇰",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Pristina",
@@ -14675,11 +14675,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Kosovo; encompassing varied landscapes, river systems, and topographical regions across Eastern & Southern Europe."
+        "description": "50,000 km²; geographic area of Kosovo spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Kosovo centered around Pristina; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for Kosovo; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
@@ -14714,7 +14714,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf9\ud83c\uddf9",
+    "flag": "🇹🇹",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Port of Spain",
@@ -14756,11 +14756,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of Trinidad and Tobago; encompassing varied landscapes, river systems, and topographical regions across Americas."
+        "description": "5,130 km²; geographic territory of Trinidad and Tobago with diverse terrain and natural landscape."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for Trinidad and Tobago centered around Port of Spain; dynamic population structure supporting workforce and local markets."
+        "description": "1.5 million people; demographic hub for Trinidad and Tobago; dynamic workforce supporting local and regional economy."
       },
       "history": {
         "score": 6,
@@ -14784,7 +14784,7 @@
       }
     },
     "excludeFromDraft": false,
-    "area": 50000
+    "area": 5130
   },
   {
     "name": "South Sudan",
@@ -14795,7 +14795,7 @@
     ],
     "aliases": [],
     "capitalAliases": [],
-    "flag": "\ud83c\uddf8\ud83c\uddf8",
+    "flag": "🇸🇸",
     "flagColors": [],
     "tier": "fourth",
     "capital": "Juba",
@@ -14837,11 +14837,11 @@
       },
       "size": {
         "score": 4,
-        "description": "Geographic extent of South Sudan; encompassing varied landscapes, river systems, and topographical regions across Africa."
+        "description": "50,000 km²; geographic area of South Sudan spanning diverse natural regions."
       },
       "population": {
         "score": 4,
-        "description": "Demographic hub for South Sudan centered around Juba; dynamic population structure supporting workforce and local markets."
+        "description": "5.0 million people; demographic center for South Sudan; active workforce and vibrant culture."
       },
       "history": {
         "score": 6,
