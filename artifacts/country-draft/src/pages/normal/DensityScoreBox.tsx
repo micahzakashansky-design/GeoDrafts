@@ -102,7 +102,9 @@ export function DensityScoreBox({
             <div className="p-3 rounded-xl bg-muted/30 border border-border/50 flex flex-col justify-between">
               <span className="text-[10px] font-bold text-muted-foreground uppercase">Actual Density (x)</span>
               <div className="mt-1">
-                <span className="text-base font-black text-foreground">{breakdown.actualDensity.toLocaleString()}</span>
+                <span className="text-base font-black text-foreground">
+                  {breakdown.actualDensity < 1 ? breakdown.actualDensity.toFixed(2) : Math.round(breakdown.actualDensity).toLocaleString()}
+                </span>
                 <span className="text-[10px] font-normal text-muted-foreground block">ppl/km²</span>
               </div>
               <span className="text-[9px] text-muted-foreground/80 mt-1 italic truncate">
@@ -113,7 +115,9 @@ export function DensityScoreBox({
             <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col justify-between">
               <span className="text-[10px] font-bold text-blue-400 uppercase">Target Capacity</span>
               <div className="mt-1">
-                <span className="text-base font-black text-blue-400">{breakdown.idealTargetDensity.toLocaleString()}</span>
+                <span className="text-base font-black text-blue-400">
+                  {breakdown.idealTargetDensity < 1 ? breakdown.idealTargetDensity.toFixed(2) : Math.round(breakdown.idealTargetDensity).toLocaleString()}
+                </span>
                 <span className="text-[10px] font-normal text-blue-400/80 block">ppl/km²</span>
               </div>
               <span className="text-[9px] text-blue-400/80 mt-1 italic">

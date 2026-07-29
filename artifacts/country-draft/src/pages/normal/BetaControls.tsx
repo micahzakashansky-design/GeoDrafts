@@ -3,7 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 
 export const BETA_DIFFICULTY_CONFIG = [
   {
-    name: "Normal",
+    name: "Easy",
     poolSize: 55,
     color: "text-emerald-400",
     border: "border-emerald-500/50",
@@ -21,7 +21,7 @@ export const BETA_DIFFICULTY_CONFIG = [
     accent: "#eab308",
   },
   {
-    name: "Blind",
+    name: "Hard",
     poolSize: 125,
     color: "text-red-500",
     border: "border-red-500/50",

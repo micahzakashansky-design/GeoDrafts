@@ -14,6 +14,24 @@ export function getRawArea(country?: Country): number {
   if (unit === 'b') val *= 1000000000;
   return val || 100000;
 }
+export function getCalculatedSizeScore(country?: Country): number {
+  if (!country) return 5;
+  const score = country.stats?.size?.score;
+  if (typeof score === "number" && score > 1) {
+    return Math.min(10, Math.max(1, score));
+  }
+  const area = getRawArea(country);
+  if (area >= 5000000) return 10; // Russia, Canada, China, USA, Brazil, Australia
+  if (area >= 2000000) return 9;  // India, Argentina, Kazakhstan, Algeria, DRC
+  if (area >= 1000000) return 8;  // Saudi Arabia, Mexico, Indonesia, Iran, Peru
+  if (area >= 500000) return 7;   // Egypt, Tanzania, Nigeria, France, Ukraine, Spain
+  if (area >= 200000) return 6;   // Japan, Germany, Finland, Norway, Poland, UK
+  if (area >= 100000) return 5;   // Greece, Nepal, Portugal, Hungary
+  if (area >= 50000) return 4;    // Switzerland, Netherlands, Denmark, Ireland
+  if (area >= 20000) return 3;    // Israel, Slovenia, El Salvador
+  if (area >= 5000) return 2;     // Cyprus, Brunei, Trinidad & Tobago
+  return 1;                       // Monaco, Singapore, Vatican, Malta
+}
 
 export function computeBetaSizePopBonus(roster: Partial<Record<Category, Country>>): number {
   if (!roster.Size || !roster.Population || !roster.Economy) {
@@ -22,14 +40,14 @@ export function computeBetaSizePopBonus(roster: Partial<Record<Category, Country
 
   const pop = getRawPopulation(roster.Population.stats.population.description);
   const size = getRawArea(roster.Size);
-  const x = pop / size; // actual population density
+  const x = size > 0 ? pop / size : 0; // actual population density
 
   const I = roster.Economy.stats.economy.industryType || 3;
   const T = roster.Technology?.stats.technology.score ?? 5;
   const E = roster.Economy.stats.economy.score ?? 5;
   const C = roster.Climate?.stats.climate.score ?? 5;
   const R = roster["Natural Resources"]?.stats.naturalResources.score ?? 5;
-  const S = roster.Size.stats.size.score ?? 5;
+  const S = getCalculatedSizeScore(roster.Size);
 
   const numerator = 150 * Math.pow(I, 1.5) * Math.pow(T, 0.75) * Math.pow(E, 0.15);
   const denominator = Math.pow(C, 0.05) * Math.pow(R, 0.05) * Math.pow(S, 0.25);
@@ -79,7 +97,7 @@ export function getDensityBreakdown(roster: Partial<Record<Category, Country>>) 
   const E = roster.Economy.stats.economy.score ?? 5;
   const C = roster.Climate?.stats.climate.score ?? 5;
   const R = roster["Natural Resources"]?.stats.naturalResources.score ?? 5;
-  const S = roster.Size.stats.size.score ?? 5;
+  const S = getCalculatedSizeScore(roster.Size);
 
   const iTerm = Math.pow(I, 1.5);
   const tTerm = Math.pow(T, 0.75);
@@ -95,19 +113,22 @@ export function getDensityBreakdown(roster: Partial<Record<Category, Country>>) 
   const z = (x - idealTargetDensity) / 4000;
   const bonusPoints = Math.round(25 * Math.exp(-0.5 * Math.pow(z, 2)));
 
+  const actualFormatted = x < 1 ? x.toFixed(2) : Math.round(x).toLocaleString();
+  const targetFormatted = idealTargetDensity < 1 ? idealTargetDensity.toFixed(2) : Math.round(idealTargetDensity).toLocaleString();
+
   const diff = x - idealTargetDensity;
   let status: "optimal" | "too_high" | "too_low" = "optimal";
   let analysisText = "";
 
   if (diff > 500) {
     status = "too_high";
-    analysisText = `Your actual density (${Math.round(x).toLocaleString()} ppl/km²) is higher than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your population is overcrowded relative to your current technological infrastructure & industrial capacity.`;
+    analysisText = `Your actual density (${actualFormatted} ppl/km²) is higher than your ideal target (${targetFormatted} ppl/km²). Your population is overcrowded relative to your current technological infrastructure & industrial capacity.`;
   } else if (diff < -500) {
     status = "too_low";
-    analysisText = `Your actual density (${Math.round(x).toLocaleString()} ppl/km²) is lower than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your nation has vast territory, but your high tech & industry levels could support a much denser urban population.`;
+    analysisText = `Your actual density (${actualFormatted} ppl/km²) is lower than your ideal target (${targetFormatted} ppl/km²). Your nation has vast territory, but your high tech & industry levels could support a much denser urban population.`;
   } else {
     status = "optimal";
-    analysisText = `Optimal Synergy! Your actual density (${Math.round(x).toLocaleString()} ppl/km²) closely matches your nation's ideal target density capacity (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²).`;
+    analysisText = `Optimal Synergy! Your actual density (${actualFormatted} ppl/km²) closely matches your nation's ideal target density capacity (${targetFormatted} ppl/km²).`;
   }
 
   const factors = [

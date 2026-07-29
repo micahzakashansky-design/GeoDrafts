@@ -48144,14 +48144,15 @@ function NotFound() {
   ] }) }) });
 }
 function getRawPopulation(desc) {
-  const match = desc.match(/^(?:Pre-war\s*)?([\d,.]+)\s*(million|billion|K|M|B)?/i);
+  if (!desc) return 5e6;
+  const match = desc.match(/([\d,.]+)\s*(billion|million|thousand|[kmb])\b/i) || desc.match(/([\d,.]+)/);
   if (!match) return 5e6;
   let val = parseFloat(match[1].replace(/,/g, ""));
   const unit = match[2] ? match[2].toLowerCase() : "";
-  if (unit === "million" || unit === "m") val *= 1e6;
   if (unit === "billion" || unit === "b") val *= 1e9;
-  if (unit === "k") val *= 1e3;
-  return val;
+  else if (unit === "million" || unit === "m") val *= 1e6;
+  else if (unit === "thousand" || unit === "k") val *= 1e3;
+  return val > 0 ? val : 5e6;
 }
 function computeSizePopBonus(roster) {
   if (!roster.Size || !roster.Population) return 0;
@@ -48296,19 +48297,37 @@ function getRawArea(country) {
   if (unit === "b") val *= 1e9;
   return val || 1e5;
 }
+function getCalculatedSizeScore(country) {
+  if (!country) return 5;
+  const score = country.stats?.size?.score;
+  if (typeof score === "number" && score > 1) {
+    return Math.min(10, Math.max(1, score));
+  }
+  const area2 = getRawArea(country);
+  if (area2 >= 5e6) return 10;
+  if (area2 >= 2e6) return 9;
+  if (area2 >= 1e6) return 8;
+  if (area2 >= 5e5) return 7;
+  if (area2 >= 2e5) return 6;
+  if (area2 >= 1e5) return 5;
+  if (area2 >= 5e4) return 4;
+  if (area2 >= 2e4) return 3;
+  if (area2 >= 5e3) return 2;
+  return 1;
+}
 function computeBetaSizePopBonus(roster) {
   if (!roster.Size || !roster.Population || !roster.Economy) {
     return 0;
   }
   const pop = getRawPopulation(roster.Population.stats.population.description);
   const size2 = getRawArea(roster.Size);
-  const x2 = pop / size2;
+  const x2 = size2 > 0 ? pop / size2 : 0;
   const I = roster.Economy.stats.economy.industryType || 3;
   const T = roster.Technology?.stats.technology.score ?? 5;
   const E = roster.Economy.stats.economy.score ?? 5;
   const C2 = roster.Climate?.stats.climate.score ?? 5;
   const R = roster["Natural Resources"]?.stats.naturalResources.score ?? 5;
-  const S2 = roster.Size.stats.size.score ?? 5;
+  const S2 = getCalculatedSizeScore(roster.Size);
   const numerator = 150 * Math.pow(I, 1.5) * Math.pow(T, 0.75) * Math.pow(E, 0.15);
   const denominator = Math.pow(C2, 0.05) * Math.pow(R, 0.05) * Math.pow(S2, 0.25);
   if (denominator === 0) return 0;
@@ -48349,7 +48368,7 @@ function getDensityBreakdown(roster) {
   const E = roster.Economy.stats.economy.score ?? 5;
   const C2 = roster.Climate?.stats.climate.score ?? 5;
   const R = roster["Natural Resources"]?.stats.naturalResources.score ?? 5;
-  const S2 = roster.Size.stats.size.score ?? 5;
+  const S2 = getCalculatedSizeScore(roster.Size);
   const iTerm = Math.pow(I, 1.5);
   const tTerm = Math.pow(T, 0.75);
   const eTerm = Math.pow(E, 0.15);
@@ -48361,18 +48380,20 @@ function getDensityBreakdown(roster) {
   const idealTargetDensity = denominator > 0 ? numerator / denominator : 0;
   const z2 = (x2 - idealTargetDensity) / 4e3;
   const bonusPoints = Math.round(25 * Math.exp(-0.5 * Math.pow(z2, 2)));
+  const actualFormatted = x2 < 1 ? x2.toFixed(2) : Math.round(x2).toLocaleString();
+  const targetFormatted = idealTargetDensity < 1 ? idealTargetDensity.toFixed(2) : Math.round(idealTargetDensity).toLocaleString();
   const diff = x2 - idealTargetDensity;
   let status = "optimal";
   let analysisText = "";
   if (diff > 500) {
     status = "too_high";
-    analysisText = `Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) is higher than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your population is overcrowded relative to your current technological infrastructure & industrial capacity.`;
+    analysisText = `Your actual density (${actualFormatted} ppl/km²) is higher than your ideal target (${targetFormatted} ppl/km²). Your population is overcrowded relative to your current technological infrastructure & industrial capacity.`;
   } else if (diff < -500) {
     status = "too_low";
-    analysisText = `Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) is lower than your ideal target (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²). Your nation has vast territory, but your high tech & industry levels could support a much denser urban population.`;
+    analysisText = `Your actual density (${actualFormatted} ppl/km²) is lower than your ideal target (${targetFormatted} ppl/km²). Your nation has vast territory, but your high tech & industry levels could support a much denser urban population.`;
   } else {
     status = "optimal";
-    analysisText = `Optimal Synergy! Your actual density (${Math.round(x2).toLocaleString()} ppl/km²) closely matches your nation's ideal target density capacity (${Math.round(idealTargetDensity).toLocaleString()} ppl/km²).`;
+    analysisText = `Optimal Synergy! Your actual density (${actualFormatted} ppl/km²) closely matches your nation's ideal target density capacity (${targetFormatted} ppl/km²).`;
   }
   const factors = [
     {
@@ -49250,7 +49271,7 @@ function DensityScoreBox({
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl bg-muted/30 border border-border/50 flex flex-col justify-between", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-muted-foreground uppercase", children: "Actual Density (x)" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base font-black text-foreground", children: breakdown.actualDensity.toLocaleString() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base font-black text-foreground", children: breakdown.actualDensity < 1 ? breakdown.actualDensity.toFixed(2) : Math.round(breakdown.actualDensity).toLocaleString() }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-muted-foreground block", children: "ppl/km²" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-[9px] text-muted-foreground/80 mt-1 italic truncate", children: [
@@ -49263,7 +49284,7 @@ function DensityScoreBox({
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-xl bg-blue-500/10 border border-blue-500/30 flex flex-col justify-between", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-bold text-blue-400 uppercase", children: "Target Capacity" }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-1", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base font-black text-blue-400", children: breakdown.idealTargetDensity.toLocaleString() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-base font-black text-blue-400", children: breakdown.idealTargetDensity < 1 ? breakdown.idealTargetDensity.toFixed(2) : Math.round(breakdown.idealTargetDensity).toLocaleString() }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-normal text-blue-400/80 block", children: "ppl/km²" })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[9px] text-blue-400/80 mt-1 italic", children: "Formula Target" })
@@ -59240,7 +59261,7 @@ function drawDevCountry(pool, roster) {
 }
 const BETA_DIFFICULTY_CONFIG = [
   {
-    name: "Normal",
+    name: "Easy",
     poolSize: 55,
     color: "text-emerald-400",
     border: "border-emerald-500/50",
@@ -59258,7 +59279,7 @@ const BETA_DIFFICULTY_CONFIG = [
     accent: "#eab308"
   },
   {
-    name: "Blind",
+    name: "Hard",
     poolSize: 125,
     color: "text-red-500",
     border: "border-red-500/50",

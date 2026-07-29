@@ -1,14 +1,16 @@
 import { type Category, type Country } from "@/data/countries";
 
 export function getRawPopulation(desc: string): number {
-  const match = desc.match(/^(?:Pre-war\s*)?([\d,.]+)\s*(million|billion|K|M|B)?/i);
+  if (!desc) return 5000000;
+  // Match numbers followed by unit words anywhere in string
+  const match = desc.match(/([\d,.]+)\s*(billion|million|thousand|[kmb])\b/i) || desc.match(/([\d,.]+)/);
   if (!match) return 5000000;
   let val = parseFloat(match[1].replace(/,/g, ''));
   const unit = match[2] ? match[2].toLowerCase() : '';
-  if (unit === 'million' || unit === 'm') val *= 1000000;
   if (unit === 'billion' || unit === 'b') val *= 1000000000;
-  if (unit === 'k') val *= 1000;
-  return val;
+  else if (unit === 'million' || unit === 'm') val *= 1000000;
+  else if (unit === 'thousand' || unit === 'k') val *= 1000;
+  return val > 0 ? val : 5000000;
 }
 
 export function computeSizePopBonus(roster: Partial<Record<Category, Country>>): number {
