@@ -4,14 +4,14 @@ import { useLocation } from "wouter";
 import Loader2 from "lucide-react/dist/esm/icons/loader-2";
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const { firebaseUser, isLoading } = useFirebaseAuth();
+  const { firebaseUser, isLoading, isGuest } = useFirebaseAuth();
   const [, setLocation] = useLocation();
 
   useEffect(() => {
-    if (!isLoading && !firebaseUser) {
+    if (!isLoading && !firebaseUser && !isGuest) {
       setLocation("/");
     }
-  }, [isLoading, firebaseUser, setLocation]);
+  }, [isLoading, firebaseUser, isGuest, setLocation]);
 
   if (isLoading) {
     return (
@@ -21,7 +21,7 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
     );
   }
 
-  if (!firebaseUser) {
+  if (!firebaseUser && !isGuest) {
     return null;
   }
 

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import X from "lucide-react/dist/esm/icons/x";
 import User from "lucide-react/dist/esm/icons/user";
 import LogOut from "lucide-react/dist/esm/icons/log-out";
+import LogIn from "lucide-react/dist/esm/icons/log-in";
 import Check from "lucide-react/dist/esm/icons/check";
 import Loader2 from "lucide-react/dist/esm/icons/loader-2";
 import Moon from "lucide-react/dist/esm/icons/moon";
@@ -14,6 +15,7 @@ import { updateUsername, checkUsernameExists } from "@/lib/firestore";
 import { useToast } from "@/hooks/use-toast";
 import { useTheme } from "@/lib/theme-context";
 import { Switch } from "@/components/ui/switch";
+import { AuthModal } from "./AuthModal";
 import Bug from "lucide-react/dist/esm/icons/bug";
 
 interface Props {
@@ -21,11 +23,12 @@ interface Props {
 }
 
 export function SettingsModal({ onClose }: Props) {
-  const { profile, logout, refreshProfile, firebaseUser } = useFirebaseAuth();
+  const { profile, logout, refreshProfile, firebaseUser, isGuest } = useFirebaseAuth();
   const { toast } = useToast();
   const [newUsername, setNewUsername] = useState(profile?.username || "");
   const [isUpdating, setIsUpdating] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const { theme, setTheme } = useTheme();
   
   const [devModeEnabled, setDevModeEnabled] = useState(() => localStorage.getItem("geoDraftsDevMode") === "true");
@@ -158,7 +161,25 @@ export function SettingsModal({ onClose }: Props) {
             </div>
           </div>
 
-          {firebaseUser && (
+          {(!firebaseUser || firebaseUser.isAnonymous || isGuest) && (
+            <div className="pt-5 border-t border-border space-y-3">
+              <div className="bg-primary/5 border border-primary/20 rounded-2xl p-4 text-center">
+                <p className="text-sm font-bold text-foreground mb-1">Playing as Guest</p>
+                <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
+                  Sign in to save your game stats, streak, and compete on the global leaderboards.
+                </p>
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-primary/20"
+                >
+                  <LogIn className="w-4 h-4" />
+                  Sign In / Create Account
+                </button>
+              </div>
+            </div>
+          )}
+
+          {firebaseUser && !firebaseUser.isAnonymous && (
             <>
               {profile?.username?.toLowerCase().trim() === "devtest" && (
                 <div className="pt-5 border-t border-border flex items-center justify-between">
@@ -198,8 +219,6 @@ export function SettingsModal({ onClose }: Props) {
                 </p>
               </div>
 
-
-
               <div className="pt-5 border-t border-border">
                 <button
                   onClick={handleLogout}
@@ -214,6 +233,8 @@ export function SettingsModal({ onClose }: Props) {
           )}
         </div>
       </motion.div>
+
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
     </>
   );
 }
