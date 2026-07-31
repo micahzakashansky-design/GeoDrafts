@@ -6,12 +6,17 @@ import PartyPopper from "lucide-react/dist/esm/icons/party-popper";
 import ChevronLeft from "lucide-react/dist/esm/icons/chevron-left";
 import ArrowLeftRight from "lucide-react/dist/esm/icons/arrow-left-right";
 import Brain from "lucide-react/dist/esm/icons/brain";
+import Gavel from "lucide-react/dist/esm/icons/gavel";
+import Pencil from "lucide-react/dist/esm/icons/pencil";
+import Check from "lucide-react/dist/esm/icons/check";
+import X from "lucide-react/dist/esm/icons/x";
 import { useFirebaseAuth } from "../lib/use-firebase-auth";
-import { listenToRoom, listenToPlayers, updateRoom, type Room, type RoomPlayer } from "../lib/firestore";
+import { listenToRoom, listenToPlayers, updateRoom, updatePlayer, type Room, type RoomPlayer } from "../lib/firestore";
 import { Logo } from "../components/Logo";
 import { motion, AnimatePresence } from "framer-motion";
 import { SettingsButton } from "@/components/SettingsButton";
 import { AssociationsConfigModal } from "@/components/AssociationsConfigModal";
+import { toast } from "sonner";
 
 export default function Lobby() {
   const [, navigate] = useLocation();
@@ -19,6 +24,9 @@ export default function Lobby() {
 
   const [room, setRoom] = useState<Room | null>(null);
   const [players, setPlayers] = useState<RoomPlayer[]>([]);
+  const [editingNickname, setEditingNickname] = useState(false);
+  const [nicknameInput, setNicknameInput] = useState("");
+  const [isSavingNickname, setIsSavingNickname] = useState(false);
   const roomCode = new URLSearchParams(window.location.search).get("room") || null;
 
   useEffect(() => {
@@ -55,6 +63,8 @@ export default function Lobby() {
   }
 
   const isHost = firebaseUser.uid === room.hostId;
+  const is2PlayerOnlyMode = room.mode === "sabotage" || room.mode === "auction";
+  const isOverPlayerLimit = is2PlayerOnlyMode && players.length > 2;
 
   const handleDifficultyChange = (diff: "easy" | "hard") => {
     if (isHost && room.difficulty !== diff) {
@@ -62,8 +72,11 @@ export default function Lobby() {
     }
   };
 
-  const handleModeChange = (mode: "sabotage" | "party" | "double_draft" | "associations_race") => {
+  const handleModeChange = (mode: "sabotage" | "party" | "double_draft" | "associations_race" | "auction") => {
     if (isHost && room.mode !== mode) {
+      if ((mode === "sabotage" || mode === "auction") && players.length > 2) {
+        return; // Cannot switch to 2-player mode with > 2 players
+      }
       if (mode === "associations_race") {
         // Provide default options if switching to associations race
         updateRoom(room.code, { mode, associationsSettings: { tasks: ["identify_from_flag", "identify_from_map", "click_on_map", "find_flag", "identify_capital", "identify_country_from_capital"], countries: [] } });
@@ -74,8 +87,22 @@ export default function Lobby() {
   };
 
   const handlePlay = () => {
-    if (isHost) {
+    if (isHost && !isOverPlayerLimit && players.length >= 2) {
       updateRoom(room.code, { status: "playing" });
+    }
+  };
+
+  const handleSaveNickname = async () => {
+    if (!roomCode || !firebaseUser || !nicknameInput.trim()) return;
+    setIsSavingNickname(true);
+    try {
+      await updatePlayer(roomCode, firebaseUser.uid, { username: nicknameInput.trim() });
+      setEditingNickname(false);
+      toast.success("Nickname updated");
+    } catch (err) {
+      toast.error("Failed to update nickname");
+    } finally {
+      setIsSavingNickname(false);
     }
   };
 
@@ -123,25 +150,80 @@ export default function Lobby() {
           >
             <h3 className="text-sm font-black text-muted-foreground uppercase tracking-widest">Players ({players.length})</h3>
             <div className="grid gap-3 p-1 bg-foreground/5 rounded-3xl border border-border">
-              {players.map((p, i) => (
-                <motion.div 
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: i * 0.05 }}
-                  key={p.uid} 
-                  className="flex items-center justify-between p-4 rounded-[1.25rem] bg-card border border-border/50"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-2xl bg-foreground/10 flex items-center justify-center text-foreground font-black text-2xl">
-                      {p.username[0].toUpperCase()}
+              {players.map((p, i) => {
+                const isMe = p.uid === firebaseUser.uid;
+                return (
+                  <motion.div 
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: i * 0.05 }}
+                    key={p.uid} 
+                    className="flex items-center justify-between p-4 rounded-[1.25rem] bg-card border border-border/50"
+                  >
+                    <div className="flex items-center gap-4 flex-1">
+                      <div className="w-14 h-14 rounded-2xl bg-foreground/10 flex items-center justify-center text-foreground font-black text-2xl shrink-0">
+                        {(editingNickname && isMe ? (nicknameInput[0] || p.username[0]) : p.username[0]).toUpperCase()}
+                      </div>
+                      
+                      {editingNickname && isMe ? (
+                        <div className="flex items-center gap-2 flex-1 max-w-xs">
+                          <input
+                            type="text"
+                            autoFocus
+                            maxLength={18}
+                            value={nicknameInput}
+                            onChange={(e) => setNicknameInput(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") handleSaveNickname();
+                              if (e.key === "Escape") setEditingNickname(false);
+                            }}
+                            className="bg-background border border-border rounded-xl px-3 py-1 font-bold text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 w-full"
+                            placeholder="New nickname"
+                          />
+                          <button
+                            onClick={handleSaveNickname}
+                            disabled={isSavingNickname || !nicknameInput.trim()}
+                            className="p-2 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity shrink-0"
+                            title="Save Nickname"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => setEditingNickname(false)}
+                            className="p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0"
+                            title="Cancel"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-xl tracking-tight">{p.username}</span>
+                          {isMe && (
+                            <button
+                              onClick={() => {
+                                setNicknameInput(p.username);
+                                setEditingNickname(true);
+                              }}
+                              className="p-1.5 rounded-xl bg-foreground/5 hover:bg-foreground/10 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 text-xs font-semibold"
+                              title="Change nickname in lobby"
+                            >
+                              <Pencil className="w-3.5 h-3.5" />
+                              <span className="hidden sm:inline">Nickname</span>
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
-                    <span className="font-bold text-xl tracking-tight">{p.username}</span>
-                  </div>
-                  {p.uid === room.hostId && (
-                    <span className="text-xs bg-yellow-500 text-black px-4 py-1.5 rounded-full font-black uppercase tracking-widest">Host</span>
-                  )}
-                </motion.div>
-              ))}
+
+                    <div className="flex items-center gap-2">
+                      {p.uid === room.hostId && (
+                        <span className="text-xs bg-yellow-500 text-black px-4 py-1.5 rounded-full font-black uppercase tracking-widest">Host</span>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
@@ -203,24 +285,58 @@ export default function Lobby() {
 
             {/* Game Mode Radio */}
             <div className="space-y-3">
+              {(isHost || room.mode === "auction") && (
+                <motion.button
+                  whileHover={isHost && players.length <= 2 ? { scale: 1.02 } : {}}
+                  whileTap={isHost && players.length <= 2 ? { scale: 0.98 } : {}}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  onClick={() => handleModeChange("auction")}
+                  disabled={!isHost || players.length > 2}
+                  className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
+                    room.mode === "auction"
+                      ? "border-amber-500/50 bg-amber-500/10"
+                      : "border-border bg-background hover:bg-foreground/5"
+                  } ${(!isHost || players.length > 2) && "opacity-50 cursor-not-allowed"}`}
+                >
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "auction" ? "bg-amber-500/20 text-amber-500" : "bg-foreground/10 text-muted-foreground"}`}>
+                    <Gavel className="w-7 h-7" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className={`font-black text-xl tracking-tight ${room.mode === "auction" ? "text-foreground" : "text-foreground/80"}`}>Auction</div>
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400">2 Players Max</span>
+                    </div>
+                    <div className="text-sm font-medium text-muted-foreground mt-1">Bid & outbid for countries</div>
+                  </div>
+                  <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "auction" ? "border-amber-500" : "border-border"} ${!isHost ? "hidden" : ""}`}>
+                    {room.mode === "auction" && (
+                      <motion.div layoutId="mode-dot" className="w-3 h-3 rounded-full bg-amber-500" />
+                    )}
+                  </div>
+                </motion.button>
+              )}
+
               {(isHost || room.mode === "sabotage") && (
                 <motion.button
-                  whileHover={isHost ? { scale: 1.02 } : {}}
-                  whileTap={isHost ? { scale: 0.98 } : {}}
+                  whileHover={isHost && players.length <= 2 ? { scale: 1.02 } : {}}
+                  whileTap={isHost && players.length <= 2 ? { scale: 0.98 } : {}}
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   onClick={() => handleModeChange("sabotage")}
-                  disabled={!isHost}
+                  disabled={!isHost || players.length > 2}
                   className={`w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${
                     room.mode === "sabotage"
                       ? "border-red-500/50 bg-red-500/10"
                       : "border-border bg-background hover:bg-foreground/5"
-                  } ${!isHost && "cursor-default"}`}
+                  } ${(!isHost || players.length > 2) && "opacity-50 cursor-not-allowed"}`}
                 >
                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "bg-red-500/20 text-red-500" : "bg-foreground/10 text-muted-foreground"}`}>
                     <Swords className="w-7 h-7" />
                   </div>
-                  <div>
-                    <div className={`font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-foreground" : "text-foreground/80"}`}>Sabotage</div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <div className={`font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-foreground" : "text-foreground/80"}`}>Sabotage</div>
+                      <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-500/20 text-red-400">2 Players Max</span>
+                    </div>
                     <div className="text-sm font-medium text-muted-foreground mt-1">Pick for your opponent</div>
                   </div>
                   <div className={`ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "border-red-500" : "border-border"} ${!isHost ? "hidden" : ""}`}>
@@ -341,16 +457,23 @@ export default function Lobby() {
 
             {/* Play Button */}
             {isHost ? (
-              <motion.button
-                whileHover={players.length >= 2 ? { scale: 1.02, backgroundColor: "#ffffff" } : {}}
-                whileTap={players.length >= 2 ? { scale: 0.98 } : {}}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                onClick={handlePlay}
-                disabled={players.length < 2}
-                className="w-full py-5 rounded-2xl bg-white/90 text-black font-black text-xl transition-all shadow-[0_0_40px_rgba(255,255,255,0.1)] disabled:opacity-30 disabled:shadow-none uppercase tracking-widest mt-8"
-              >
-                Start Game
-              </motion.button>
+              <div className="space-y-2 mt-8">
+                <motion.button
+                  whileHover={players.length >= 2 && !isOverPlayerLimit ? { scale: 1.02, backgroundColor: "#ffffff" } : {}}
+                  whileTap={players.length >= 2 && !isOverPlayerLimit ? { scale: 0.98 } : {}}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  onClick={handlePlay}
+                  disabled={players.length < 2 || isOverPlayerLimit}
+                  className="w-full py-5 rounded-2xl bg-white/90 text-black font-black text-xl transition-all shadow-[0_0_40px_rgba(255,255,255,0.1)] disabled:opacity-30 disabled:shadow-none uppercase tracking-widest"
+                >
+                  Start Game
+                </motion.button>
+                {isOverPlayerLimit && (
+                  <div className="text-xs text-red-400 font-bold text-center">
+                    {room.mode === "auction" ? "Auction" : "Sabotage"} mode requires 2 players max (current: {players.length}).
+                  </div>
+                )}
+              </div>
             ) : (
               <div className="w-full py-5 rounded-2xl bg-foreground/5 text-muted-foreground font-black text-center uppercase tracking-widest mt-8">
                 Waiting for host...

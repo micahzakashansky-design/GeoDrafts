@@ -22,6 +22,7 @@ import X from "lucide-react/dist/esm/icons/x";
 import Moon from "lucide-react/dist/esm/icons/moon";
 import Sun from "lucide-react/dist/esm/icons/sun";
 import Swords from "lucide-react/dist/esm/icons/swords";
+import Gavel from "lucide-react/dist/esm/icons/gavel";
 import PartyPopper from "lucide-react/dist/esm/icons/party-popper";
 import ArrowLeftRight from "lucide-react/dist/esm/icons/arrow-left-right";
 import Gamepad2 from "lucide-react/dist/esm/icons/gamepad-2";
@@ -361,6 +362,10 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                           <h4 className="font-bold text-amber-400 mb-1 flex items-center gap-2"><Search className="w-4 h-4"/>Guess</h4>
                           <p className="text-sm text-muted-foreground">Test your knowledge! Guess the real-world country based purely on its stats.</p>
                         </div>
+                        <div className="p-4 rounded-xl border border-amber-500/20 bg-amber-500/5">
+                          <h4 className="font-bold text-amber-400 mb-1 flex items-center gap-2"><Gavel className="w-4 h-4"/>Auction</h4>
+                          <p className="text-sm text-muted-foreground">2-Player bidding mode! Bid from your $200 pool, outbid your opponent, or force them to pay.</p>
+                        </div>
                         <div className="p-4 rounded-xl border border-red-500/20 bg-red-500/5">
                           <h4 className="font-bold text-red-400 mb-1 flex items-center gap-2"><Swords className="w-4 h-4"/>Sabotage</h4>
                           <p className="text-sm text-muted-foreground">Draft for your opponent. Give them the absolute worst stats possible.</p>
@@ -541,6 +546,19 @@ export default function Home() {
   }, [firebaseUser, refreshProfile]);
 
   async function handleHost() {
+    if (firebaseUser && profile && !firebaseUser.isAnonymous) {
+      setIsHosting(true);
+      try {
+        const code = await createRoom(firebaseUser.uid, profile.username, "party", "easy");
+        navigate(`/lobby?room=${code}`);
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Failed to create room");
+      } finally {
+        setIsHosting(false);
+      }
+      return;
+    }
+
     setTempUsernameAction("host");
     setShowTempUsernameModal(true);
   }
@@ -551,6 +569,20 @@ export default function Home() {
       toast.error("Room code must be 6 characters");
       return;
     }
+
+    if (firebaseUser && profile && !firebaseUser.isAnonymous) {
+      setIsJoining(true);
+      try {
+        await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username);
+        navigate(`/lobby?room=${joinCode.toUpperCase()}`);
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Failed to join room");
+      } finally {
+        setIsJoining(false);
+      }
+      return;
+    }
+
     setPendingRoomCode(joinCode.toUpperCase());
     setTempUsernameAction("join");
     setShowTempUsernameModal(true);
