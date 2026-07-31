@@ -39,6 +39,7 @@ import { useFirebaseAuth } from "../lib/use-firebase-auth";
 import { isDevModeActive } from "@/lib/dev-logic";
 import { checkDailySubmitted, getDailyState, createRoom, joinRoom, getTopScores } from "../lib/firestore";
 import { UsernamePrompt } from "../components/UsernamePrompt";
+import { TempUsernameModal } from "../components/TempUsernameModal";
 import { SettingsModal } from "../components/SettingsModal";
 import { AuthModal } from "../components/AuthModal";
 import { ContactModal } from "../components/ContactModal";
@@ -148,7 +149,7 @@ function GuidebookModal({ onClose }: { onClose: () => void }) {
                       <div>
                         <h3 className="text-3xl font-black tracking-tight text-foreground mb-4">How to Play</h3>
                         <p className="text-lg text-muted-foreground leading-relaxed">
-                          GeoDraft is a strategic geography game where you build a hypothetical nation by drafting real-world countries into specialized roles.
+                          GeoDrafts is a strategic geography game where you build a hypothetical nation by drafting real-world countries into specialized roles.
                         </p>
                       </div>
 
@@ -440,7 +441,7 @@ function DailyCard() {
   );
 }
 
-function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onShowGuidebook: () => void }) {
+function LoginScreen({ onSignIn, onPlayAsGuest, onShowGuidebook }: { onSignIn: () => void, onPlayAsGuest: () => void, onShowGuidebook: () => void }) {
   const [, setLocation] = useLocation();
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 py-24 max-w-4xl mx-auto w-full text-center">
@@ -456,13 +457,22 @@ function LoginScreen({ onSignIn, onShowGuidebook }: { onSignIn: () => void, onSh
         </div>
 
         <div className="max-w-md mx-auto w-full space-y-4 pt-4">
-          <button
-            onClick={onSignIn}
-            className="w-full flex items-center justify-center gap-3 px-8 py-6 rounded-3xl bg-primary text-primary-foreground font-bold text-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20 group"
-          >
-            <LogIn className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            Sign In
-          </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button
+              onClick={onSignIn}
+              className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-3xl bg-primary text-primary-foreground font-bold text-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20 group"
+            >
+              <LogIn className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              Sign In
+            </button>
+            <button
+              onClick={onPlayAsGuest}
+              className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-3xl bg-card border-2 border-border text-foreground font-bold text-lg hover:bg-muted hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md group"
+            >
+              <Gamepad2 className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
+              Play as Guest
+            </button>
+          </div>
 
           <div className="grid grid-cols-2 gap-4">
             <button onClick={() => setLocation("/leaderboard")} className="flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-card border border-border text-card-foreground hover:bg-muted active:scale-[0.98] transition-all font-bold shadow-sm">
@@ -499,7 +509,11 @@ export default function Home() {
   const [showContactModal, setShowContactModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const { firebaseUser, profile, needsUsername, refreshProfile, isLoading } = useFirebaseAuth();
+  const [showTempUsernameModal, setShowTempUsernameModal] = useState(false);
+  const [tempUsernameAction, setTempUsernameAction] = useState<"host" | "join" | null>(null);
+  const [pendingRoomCode, setPendingRoomCode] = useState("");
+
+  const { firebaseUser, profile, needsUsername, refreshProfile, isLoading, isGuest, startGuestMode, signInGuestAnonymously } = useFirebaseAuth();
 
   const [joinCode, setJoinCode] = useState("");
   const [isJoining, setIsJoining] = useState(false);
@@ -527,39 +541,57 @@ export default function Home() {
   }, [firebaseUser, refreshProfile]);
 
   async function handleHost() {
-    if (!firebaseUser || !profile) {
-      if (!firebaseUser) setShowAuthModal(true);
-      return;
-    }
-    setIsHosting(true);
-    try {
-      const code = await createRoom(firebaseUser.uid, profile.username, "party", "easy");
-      navigate(`/lobby?room=${code}`);
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to create room");
-    } finally {
-      setIsHosting(false);
-    }
+    setTempUsernameAction("host");
+    setShowTempUsernameModal(true);
   }
 
   async function handleJoin(e?: React.FormEvent) {
     if (e) e.preventDefault();
-    if (!firebaseUser || !profile) {
-      if (!firebaseUser) setShowAuthModal(true);
-      return;
-    }
     if (joinCode.length !== 6) {
       toast.error("Room code must be 6 characters");
       return;
     }
-    setIsJoining(true);
-    try {
-      await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username);
-      navigate(`/lobby?room=${joinCode.toUpperCase()}`);
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to join room");
-    } finally {
-      setIsJoining(false);
+    setPendingRoomCode(joinCode.toUpperCase());
+    setTempUsernameAction("join");
+    setShowTempUsernameModal(true);
+  }
+
+  async function handleConfirmTempUsername(tempUsername: string) {
+    setShowTempUsernameModal(false);
+    let currentUid = firebaseUser?.uid;
+    if (!currentUid) {
+      try {
+        const user = await signInGuestAnonymously();
+        currentUid = user.uid;
+      } catch (err) {
+        toast.error("Failed to initialize session");
+        return;
+      }
+    }
+
+    if (tempUsernameAction === "host") {
+      setIsHosting(true);
+      try {
+        const code = await createRoom(currentUid, tempUsername, "party", "easy");
+        navigate(`/lobby?room=${code}`);
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Failed to create room");
+      } finally {
+        setIsHosting(false);
+        setTempUsernameAction(null);
+      }
+    } else if (tempUsernameAction === "join" && pendingRoomCode) {
+      setIsJoining(true);
+      try {
+        await joinRoom(pendingRoomCode, currentUid, tempUsername);
+        navigate(`/lobby?room=${pendingRoomCode}`);
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Failed to join room");
+      } finally {
+        setIsJoining(false);
+        setTempUsernameAction(null);
+        setPendingRoomCode("");
+      }
     }
   }
 
@@ -590,8 +622,8 @@ export default function Home() {
         <SettingsButton />
       </header>
 
-      {!firebaseUser ? (
-        <LoginScreen onSignIn={() => setShowAuthModal(true)} onShowGuidebook={() => setShowGuidebook(true)} />
+      {!firebaseUser && !isGuest ? (
+        <LoginScreen onSignIn={() => setShowAuthModal(true)} onPlayAsGuest={startGuestMode} onShowGuidebook={() => setShowGuidebook(true)} />
       ) : (
         <div className="flex-1 flex flex-col items-center justify-start px-4 md:px-8 py-16 max-w-6xl mx-auto w-full">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 300, damping: 30 }} className="flex flex-col w-full">
@@ -769,6 +801,16 @@ export default function Home() {
         {showGuidebook && <GuidebookModal onClose={() => setShowGuidebook(false)} />}
         {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
         {showAboutModal && <AboutModal onClose={() => setShowAboutModal(false)} />}
+        {showTempUsernameModal && (
+          <TempUsernameModal
+            isOpen={showTempUsernameModal}
+            onClose={() => {
+              setShowTempUsernameModal(false);
+              setTempUsernameAction(null);
+            }}
+            onConfirm={handleConfirmTempUsername}
+          />
+        )}
         {needsUsername && firebaseUser && (
           <UsernamePrompt user={firebaseUser} onComplete={refreshProfile} />
         )}
@@ -777,3 +819,4 @@ export default function Home() {
     </div>
   );
 }
+

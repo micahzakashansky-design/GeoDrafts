@@ -28,6 +28,13 @@ export function loadPersonalLeaderboard(mode: GameMode): PersonalLeaderboardEntr
 }
 
 export function savePersonalScore(mode: GameMode, entryData: Omit<PersonalLeaderboardEntry, "date" | "timestamp">) {
+  if (typeof window !== "undefined" && sessionStorage.getItem("geoDraftsIsGuest") === "true") {
+    return;
+  }
+  if (auth.currentUser?.isAnonymous) {
+    return;
+  }
+
   const board = loadPersonalLeaderboard(mode);
   const entry: PersonalLeaderboardEntry = {
     ...entryData,

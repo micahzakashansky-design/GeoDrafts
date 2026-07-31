@@ -38,7 +38,7 @@ export default function TasksGame() {
   const [timeLeft, setTimeLeft] = useState<number>(5.0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const rosterRef = useRef<HTMLDivElement>(null);
+  const rosterRef = useRef<HTMLDivElement>(null!);
   const localSavedRef = useRef(false);
 
   // Initialize or start task draft

@@ -78,7 +78,7 @@ export async function updateUsername(uid: string, username: string): Promise<voi
 }
 
 export async function unlockAchievements(uid: string, achievements: string[]): Promise<void> {
-  if (!uid) return;
+  if (!uid || (typeof window !== "undefined" && sessionStorage.getItem("geoDraftsIsGuest") === "true")) return;
   const validAchievements = achievements
     .filter((a): a is string => typeof a === "string" && a.trim().length > 0)
     .map((a) => sanitizeString(a, 50));
@@ -429,7 +429,7 @@ export async function checkDailySubmitted(uid: string): Promise<boolean> {
 }
 
 export async function saveDailyState(uid: string, date: string, state: Record<string, unknown>): Promise<void> {
-  if (!uid || !date) return;
+  if (!uid || !date || (typeof window !== "undefined" && sessionStorage.getItem("geoDraftsIsGuest") === "true")) return;
   try {
     await setDoc(doc(firestore, "daily_states", `${uid}_${date}`), {
       state,

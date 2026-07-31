@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo, createContext, useCon
 import {
   onAuthStateChanged,
   signInWithPopup,
+  signInAnonymously,
   signOut,
   GoogleAuthProvider,
   signInWithEmailAndPassword,
@@ -17,6 +18,10 @@ export type FirebaseAuthState = {
   isLoading: boolean;
   isAuthenticated: boolean;
   needsUsername: boolean;
+  isGuest: boolean;
+  startGuestMode: () => void;
+  exitGuestMode: () => void;
+  signInGuestAnonymously: () => Promise<User>;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (email: string, password: string, create?: boolean) => Promise<void>;
   logout: () => Promise<void>;
@@ -29,8 +34,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [firebaseUser, setFirebaseUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isGuest, setIsGuest] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("geoDraftsIsGuest") === "true";
+    }
+    return false;
+  });
 
   const fetchProfile = useCallback(async (user: User) => {
+    if (user.isAnonymous) {
+      setProfile(null);
+      return null;
+    }
     try {
       const p = await getUserProfile(user.uid);
       setProfile(p);
@@ -45,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
       setFirebaseUser(user);
-      if (user) {
+      if (user && !user.isAnonymous) {
         await fetchProfile(user);
       } else {
         setProfile(null);
@@ -55,10 +70,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return unsub;
   }, [fetchProfile]);
 
+  const startGuestMode = useCallback(() => {
+    setIsGuest(true);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("geoDraftsIsGuest", "true");
+    }
+  }, []);
+
+  const exitGuestMode = useCallback(() => {
+    setIsGuest(false);
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("geoDraftsIsGuest");
+    }
+  }, []);
+
+  const signInGuestAnonymously = useCallback(async () => {
+    if (auth.currentUser) {
+      return auth.currentUser;
+    }
+    const cred = await signInAnonymously(auth);
+    return cred.user;
+  }, []);
+
   const signInWithGoogle = useCallback(async () => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
-  }, []);
+    exitGuestMode();
+  }, [exitGuestMode]);
 
   const signInWithEmail = useCallback(
     async (email: string, password: string, create = false) => {
@@ -68,26 +106,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } else {
         await signInWithEmailAndPassword(auth, sanitizedEmail, password);
       }
+      exitGuestMode();
     },
-    []
+    [exitGuestMode]
   );
 
   const logout = useCallback(async () => {
     await signOut(auth);
     setProfile(null);
-  }, []);
+    exitGuestMode();
+  }, [exitGuestMode]);
 
   const refreshProfile = useCallback(async () => {
-    if (firebaseUser) await fetchProfile(firebaseUser);
+    if (firebaseUser && !firebaseUser.isAnonymous) await fetchProfile(firebaseUser);
   }, [firebaseUser, fetchProfile]);
 
+<<<<<<< HEAD
   const value = useMemo(
     () => ({
       firebaseUser,
       profile,
       isLoading,
-      isAuthenticated: !!firebaseUser && !!profile,
-      needsUsername: !!firebaseUser && !profile && !isLoading,
+      isAuthenticated: !!firebaseUser && !firebaseUser.isAnonymous && !!profile,
+      needsUsername: !!firebaseUser && !firebaseUser.isAnonymous && !profile && !isLoading,
+      isGuest,
+      startGuestMode,
+      exitGuestMode,
+      signInGuestAnonymously,
       signInWithGoogle,
       signInWithEmail,
       logout,
@@ -97,13 +142,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       firebaseUser,
       profile,
       isLoading,
+      isGuest,
+      startGuestMode,
+      exitGuestMode,
+      signInGuestAnonymously,
       signInWithGoogle,
       signInWithEmail,
       logout,
       refreshProfile,
     ]
   );
-
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
@@ -114,3 +162,4 @@ export function useFirebaseAuth(): FirebaseAuthState {
   }
   return context;
 }
+
