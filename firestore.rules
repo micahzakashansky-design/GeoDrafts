@@ -1,0 +1,65 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isRegisteredUser() {
+      return isSignedIn() && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    // 1. Users collection: Anyone can read profiles (for username lookup & leaderboards),
+    // but users can ONLY write/update their own profile document.
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if isOwner(userId);
+      allow delete: if isOwner(userId);
+    }
+
+    // 2. Global Leaderboard: Anyone can read scores.
+    // Only registered non-anonymous users can create score entries for themselves.
+    match /leaderboard/{scoreId} {
+      allow read: if true;
+      allow create: if isRegisteredUser() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // 3. Personal Records: Only the owner can read or write their own personal records.
+    match /personal_records/{recordId} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.uid == request.auth.uid;
+    }
+
+    // 4. Daily Game State (document ID format: {uid}_{date}): Only the owner can access.
+    match /daily_states/{stateId} {
+      allow read, write: if isSignedIn() && stateId.startsWith(request.auth.uid + "_");
+    }
+
+    // 5. Multiplayer Rooms & Players
+    match /rooms/{roomCode} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.hostId == request.auth.uid;
+      allow update: if isSignedIn();
+      allow delete: if isSignedIn() && resource.data.hostId == request.auth.uid;
+
+      match /players/{playerId} {
+        allow read: if isSignedIn();
+        allow create, update, delete: if isOwner(playerId);
+      }
+    }
+
+    // Default deny all other paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
