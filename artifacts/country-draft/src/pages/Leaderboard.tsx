@@ -217,7 +217,7 @@ export default function Leaderboard() {
   useEffect(() => {
     if (scopeFilter === "personal") {
       if (firebaseUser) {
-        setPersonalEntries(cloudPersonalEntries as PersonalLeaderboardEntry[]);
+        setPersonalEntries(cloudPersonalEntries as unknown as PersonalLeaderboardEntry[]);
       } else {
         setPersonalEntries(loadPersonalLeaderboard(modeFilter as GameMode));
       }

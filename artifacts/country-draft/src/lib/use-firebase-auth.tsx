@@ -121,7 +121,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (firebaseUser && !firebaseUser.isAnonymous) await fetchProfile(firebaseUser);
   }, [firebaseUser, fetchProfile]);
 
-<<<<<<< HEAD
   const value = useMemo(
     () => ({
       firebaseUser,

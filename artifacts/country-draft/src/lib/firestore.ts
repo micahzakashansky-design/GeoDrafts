@@ -146,6 +146,7 @@ export async function createUserProfile(uid: string, username: string): Promise<
       fastDrafts: 0,
       uniqueCountriesUsed: [],
       dailyStreak: 0,
+      bestDoubleScore: 0,
     };
   } catch (error) {
     console.error(`[createUserProfile] Failed to create profile for ${uid}:`, error);

@@ -327,8 +327,8 @@ export default function Lobby() {
                 >
                   <div className="pt-3 pb-1">
                     <AssociationsConfigModal 
-                      initialTasks={room.associationsSettings?.tasks}
-                      initialCountries={room.associationsSettings?.countries}
+                      initialTasks={room.associationsSettings?.tasks as string[] | undefined}
+                      initialCountries={room.associationsSettings?.countries as string[] | undefined}
                       onSave={(tasks, countries) => {
                         updateRoom(room.code, { associationsSettings: { tasks, countries } });
                       }}
