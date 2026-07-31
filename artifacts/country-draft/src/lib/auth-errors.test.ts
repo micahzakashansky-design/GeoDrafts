@@ -19,7 +19,12 @@ describe("formatAuthError", () => {
 
   it("formats username-not-found error code", () => {
     const err = { code: "auth/username-not-found" };
-    expect(formatAuthError(err)).toBe("No account found with that username. Try signing in with your email address.");
+    expect(formatAuthError(err)).toBe("No account found with that username. Check your spelling or try signing in with your email.");
+  });
+
+  it("formats username-no-email error code", () => {
+    const err = { code: "auth/username-no-email" };
+    expect(formatAuthError(err)).toBe("No email linked to this username yet. Please sign in using your email address once to link it.");
   });
 
   it("formats invalid-email error code", () => {

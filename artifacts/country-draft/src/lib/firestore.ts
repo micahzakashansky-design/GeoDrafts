@@ -120,8 +120,8 @@ export async function checkUsernameExists(username: string): Promise<boolean> {
   }
 }
 
-export async function getEmailFromUsername(username: string): Promise<string | null> {
-  if (!username || typeof username !== "string") return null;
+export async function getEmailFromUsername(username: string): Promise<{ email: string | null; exists: boolean }> {
+  if (!username || typeof username !== "string") return { email: null, exists: false };
   const sanitized = sanitizeString(username, 30);
   const usernameLower = sanitized.toLowerCase();
 
@@ -134,9 +134,10 @@ export async function getEmailFromUsername(username: string): Promise<string | n
     const snapLower = await getDocs(qLower);
     if (!snapLower.empty) {
       const data = snapLower.docs[0].data();
-      if (data && typeof data.email === "string" && data.email.trim()) {
-        return data.email.trim();
-      }
+      return {
+        email: data && typeof data.email === "string" && data.email.trim() ? data.email.trim() : null,
+        exists: true,
+      };
     }
 
     const qExact = query(
@@ -147,15 +148,16 @@ export async function getEmailFromUsername(username: string): Promise<string | n
     const snapExact = await getDocs(qExact);
     if (!snapExact.empty) {
       const data = snapExact.docs[0].data();
-      if (data && typeof data.email === "string" && data.email.trim()) {
-        return data.email.trim();
-      }
+      return {
+        email: data && typeof data.email === "string" && data.email.trim() ? data.email.trim() : null,
+        exists: true,
+      };
     }
 
-    return null;
+    return { email: null, exists: false };
   } catch (error) {
     console.error("[getEmailFromUsername] Query failed:", error);
-    return null;
+    return { email: null, exists: false };
   }
 }
 

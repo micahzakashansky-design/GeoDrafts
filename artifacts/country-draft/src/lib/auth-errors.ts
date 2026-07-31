@@ -6,8 +6,11 @@ export function formatAuthError(error: any): string {
 
   const code = (typeof error === "string" ? error : error?.code ?? error?.message ?? "").toLowerCase();
 
+  if (code.includes("username-no-email")) {
+    return "No email linked to this username yet. Please sign in using your email address once to link it.";
+  }
   if (code.includes("username-not-found")) {
-    return "No account found with that username. Try signing in with your email address.";
+    return "No account found with that username. Check your spelling or try signing in with your email.";
   }
   if (code.includes("user-not-found")) {
     return "No account found with that email or username.";

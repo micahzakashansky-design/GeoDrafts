@@ -7,6 +7,7 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
   type User,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -25,6 +26,7 @@ export type FirebaseAuthState = {
   signInGuestAnonymously: () => Promise<User>;
   signInWithGoogle: () => Promise<void>;
   signInWithEmail: (identifier: string, password: string, create?: boolean) => Promise<void>;
+  resetPassword: (identifier: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 };
@@ -128,13 +130,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await createUserWithEmailAndPassword(auth, emailToUse, password);
       } else {
         if (!sanitized.includes("@")) {
-          const resolvedEmail = await getEmailFromUsername(sanitized);
-          if (!resolvedEmail) {
+          const result = await getEmailFromUsername(sanitized);
+          if (!result.exists) {
             const err = new Error("No account found with that username.");
             (err as any).code = "auth/username-not-found";
             throw err;
           }
-          emailToUse = resolvedEmail;
+          if (!result.email) {
+            const err = new Error("No email linked to that username. Please sign in with your email address once.");
+            (err as any).code = "auth/username-no-email";
+            throw err;
+          }
+          emailToUse = result.email;
         }
         await signInWithEmailAndPassword(auth, emailToUse, password);
       }
@@ -142,6 +149,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     },
     [exitGuestMode]
   );
+
+  const resetPassword = useCallback(async (identifier: string) => {
+    const sanitized = identifier.trim();
+    if (!sanitized) {
+      const err = new Error("Please enter your email or username.");
+      (err as any).code = "auth/invalid-email";
+      throw err;
+    }
+    let emailToUse = sanitized;
+    if (!sanitized.includes("@")) {
+      const result = await getEmailFromUsername(sanitized);
+      if (result.email) {
+        emailToUse = result.email;
+      } else {
+        const err = new Error("Please enter your registered email address.");
+        (err as any).code = "auth/invalid-email";
+        throw err;
+      }
+    }
+    await sendPasswordResetEmail(auth, emailToUse);
+  }, []);
 
   const logout = useCallback(async () => {
     await signOut(auth);
@@ -166,6 +194,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signInGuestAnonymously,
       signInWithGoogle,
       signInWithEmail,
+      resetPassword,
       logout,
       refreshProfile,
     }),
@@ -179,6 +208,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signInGuestAnonymously,
       signInWithGoogle,
       signInWithEmail,
+      resetPassword,
       logout,
       refreshProfile,
     ]
