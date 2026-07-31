@@ -5,6 +5,7 @@ import LogIn from "lucide-react/dist/esm/icons/log-in";
 import Send from "lucide-react/dist/esm/icons/send";
 import X from "lucide-react/dist/esm/icons/x";
 import { useFirebaseAuth } from "@/lib/use-firebase-auth";
+import { formatAuthError } from "@/lib/auth-errors";
 
 export function AuthModal({ onClose, title = "Sign In" }: { onClose: () => void, title?: string }) {
   const { signInWithGoogle, signInWithEmail } = useFirebaseAuth();
@@ -18,25 +19,21 @@ export function AuthModal({ onClose, title = "Sign In" }: { onClose: () => void,
   async function handleGoogleSignIn() {
     setError(null);
     try { await signInWithGoogle(); onClose(); } 
-    catch { setError("Google sign-in failed. Please try again."); }
+    catch (e: any) { setError(formatAuthError(e)); }
   }
 
   async function handleEmailAuth() {
     setError(null);
-    if (!email.trim() || !password) { setError("Enter your email and password."); return; }
+    if (!email.trim() || !password) {
+      setError(isSignUp ? "Enter your email and password." : "Enter your email or username and password.");
+      return;
+    }
     setLoading(true);
     try {
       await signInWithEmail(email.trim(), password, isSignUp);
       onClose();
     } catch (e: any) {
-      const code = e?.code ?? "";
-      setError(
-        code.includes("wrong-password") || code.includes("invalid-credential") ? "Wrong email or password." :
-        code.includes("user-not-found") ? "No account with that email." :
-        code.includes("email-already-in-use") ? "Email already in use — try signing in." :
-        code.includes("weak-password") ? "Password must be at least 6 characters." :
-        "Authentication failed. Please try again."
-      );
+      setError(formatAuthError(e));
     } finally {
       setLoading(false);
     }
@@ -80,14 +77,30 @@ export function AuthModal({ onClose, title = "Sign In" }: { onClose: () => void,
               </div>
               <button onClick={() => { setShowEmail(true); setIsSignUp(false); }} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/5 text-foreground border border-border font-semibold text-sm hover:bg-foreground/10 transition-colors">
                 <LogIn className="w-4 h-4" />
-                Sign in with Email
+                Sign in with Email or Username
               </button>
             </>
           ) : (
             <div className="space-y-2">
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
-              <input type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === "Enter" && handleEmailAuth()} placeholder="Password" className="w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" />
-              {error && <p className="text-xs text-red-400">{error}</p>}
+              <input
+                type="text"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder={isSignUp ? "Email address" : "Email or Username"}
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                className="w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+              />
+              <input
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleEmailAuth()}
+                placeholder="Password"
+                className="w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+              />
+              {error && <p className="text-xs text-red-400 font-medium">{error}</p>}
               <button onClick={handleEmailAuth} disabled={loading} className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50">
                 <Send className="w-4 h-4" />
                 {loading ? "…" : isSignUp ? "Create Account" : "Sign In"}

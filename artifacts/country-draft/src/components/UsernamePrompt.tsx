@@ -37,7 +37,7 @@ export function UsernamePrompt({ user, onComplete }: Props) {
         setError("Username is already taken.");
         return;
       }
-      await createUserProfile(user.uid, trimmed);
+      await createUserProfile(user.uid, trimmed, user.email);
       onComplete();
     } catch {
       setError("Failed to save. Please try again.");

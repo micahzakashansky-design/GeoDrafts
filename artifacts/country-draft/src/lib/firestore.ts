@@ -120,13 +120,57 @@ export async function checkUsernameExists(username: string): Promise<boolean> {
   }
 }
 
-export async function createUserProfile(uid: string, username: string): Promise<UserProfile> {
+export async function getEmailFromUsername(username: string): Promise<string | null> {
+  if (!username || typeof username !== "string") return null;
+  const sanitized = sanitizeString(username, 30);
+  const usernameLower = sanitized.toLowerCase();
+
+  try {
+    const qLower = query(
+      collection(firestore, "users"),
+      where("usernameLower", "==", usernameLower),
+      limit(1)
+    );
+    const snapLower = await getDocs(qLower);
+    if (!snapLower.empty) {
+      const data = snapLower.docs[0].data();
+      if (data && typeof data.email === "string" && data.email.trim()) {
+        return data.email.trim();
+      }
+    }
+
+    const qExact = query(
+      collection(firestore, "users"),
+      where("username", "==", sanitized),
+      limit(1)
+    );
+    const snapExact = await getDocs(qExact);
+    if (!snapExact.empty) {
+      const data = snapExact.docs[0].data();
+      if (data && typeof data.email === "string" && data.email.trim()) {
+        return data.email.trim();
+      }
+    }
+
+    return null;
+  } catch (error) {
+    console.error("[getEmailFromUsername] Query failed:", error);
+    return null;
+  }
+}
+
+export async function createUserProfile(uid: string, username: string, email?: string | null): Promise<UserProfile> {
   if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
   const validatedUsername = UsernameInputSchema.parse(username);
+  const sanitizedEmail = email && typeof email === "string" ? email.trim() : null;
 
   const profileData = {
     username: validatedUsername,
     usernameLower: validatedUsername.toLowerCase(),
+    ...(sanitizedEmail && {
+      email: sanitizedEmail,
+      emailLower: sanitizedEmail.toLowerCase(),
+    }),
     createdAt: serverTimestamp(),
     bestScore: 0,
     totalGames: 0,
@@ -138,6 +182,8 @@ export async function createUserProfile(uid: string, username: string): Promise<
       uid,
       username: validatedUsername,
       usernameLower: validatedUsername.toLowerCase(),
+      email: sanitizedEmail,
+      emailLower: sanitizedEmail ? sanitizedEmail.toLowerCase() : null,
       createdAt: null,
       bestScore: 0,
       totalGames: 0,

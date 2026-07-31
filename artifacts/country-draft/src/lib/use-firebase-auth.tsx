@@ -9,8 +9,9 @@ import {
   createUserWithEmailAndPassword,
   type User,
 } from "firebase/auth";
-import { auth } from "./firebase";
-import { getUserProfile, type UserProfile } from "./firestore";
+import { doc, setDoc } from "firebase/firestore";
+import { auth, firestore } from "./firebase";
+import { getUserProfile, getEmailFromUsername, type UserProfile } from "./firestore";
 
 export type FirebaseAuthState = {
   firebaseUser: User | null;
@@ -23,7 +24,7 @@ export type FirebaseAuthState = {
   exitGuestMode: () => void;
   signInGuestAnonymously: () => Promise<User>;
   signInWithGoogle: () => Promise<void>;
-  signInWithEmail: (email: string, password: string, create?: boolean) => Promise<void>;
+  signInWithEmail: (identifier: string, password: string, create?: boolean) => Promise<void>;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 };
@@ -48,6 +49,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     try {
       const p = await getUserProfile(user.uid);
+      if (p && user.email && (!p.email || p.email !== user.email)) {
+        setDoc(
+          doc(firestore, "users", user.uid),
+          { email: user.email, emailLower: user.email.toLowerCase() },
+          { merge: true }
+        ).catch(() => {});
+        p.email = user.email;
+        p.emailLower = user.email.toLowerCase();
+      }
       setProfile(p);
       return p;
     } catch (error) {
@@ -99,12 +109,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [exitGuestMode]);
 
   const signInWithEmail = useCallback(
-    async (email: string, password: string, create = false) => {
-      const sanitizedEmail = email.trim();
+    async (identifier: string, password: string, create = false) => {
+      const sanitized = identifier.trim();
+      if (!sanitized) {
+        const err = new Error("Please enter your email or username.");
+        (err as any).code = "auth/invalid-email";
+        throw err;
+      }
+
+      let emailToUse = sanitized;
+
       if (create) {
-        await createUserWithEmailAndPassword(auth, sanitizedEmail, password);
+        if (!sanitized.includes("@")) {
+          const err = new Error("Please enter a valid email address to create an account.");
+          (err as any).code = "auth/invalid-email";
+          throw err;
+        }
+        await createUserWithEmailAndPassword(auth, emailToUse, password);
       } else {
-        await signInWithEmailAndPassword(auth, sanitizedEmail, password);
+        if (!sanitized.includes("@")) {
+          const resolvedEmail = await getEmailFromUsername(sanitized);
+          if (!resolvedEmail) {
+            const err = new Error("No account found with that username.");
+            (err as any).code = "auth/username-not-found";
+            throw err;
+          }
+          emailToUse = resolvedEmail;
+        }
+        await signInWithEmailAndPassword(auth, emailToUse, password);
       }
       exitGuestMode();
     },

@@ -31,6 +31,8 @@ export const UserProfileSchema = z.object({
   uid: z.string().min(1),
   username: z.string(),
   usernameLower: z.string().optional(),
+  email: z.string().optional().nullable(),
+  emailLower: z.string().optional().nullable(),
   createdAt: z.any().nullable().optional(),
   bestScore: z.number().default(0),
   totalGames: z.number().default(0),
