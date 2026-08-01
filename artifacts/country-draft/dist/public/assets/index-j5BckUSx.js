@@ -69390,6 +69390,11 @@ function AuctionGame() {
   }, [roomCode]);
   const mpMe = reactExports.useMemo(() => players.find((p) => p.uid === firebaseUser?.uid), [players, firebaseUser]);
   const mpOpponent = reactExports.useMemo(() => players.find((p) => p.uid !== firebaseUser?.uid), [players, firebaseUser]);
+  const hostId = room?.hostId || "";
+  const guestId = reactExports.useMemo(() => {
+    if (!players.length || !hostId) return "";
+    return players.find((p) => p.uid !== hostId)?.uid || "";
+  }, [players, hostId]);
   const myName = profile?.username || firebaseUser?.displayName || "Player 1";
   const myMoney = isMultiplayer ? mpMe?.money ?? 200 : spMyMoney;
   const opponentName = isMultiplayer ? mpOpponent?.username || "Opponent" : "AI Drafter Bot";
@@ -69427,19 +69432,19 @@ function AuctionGame() {
     return fullPool[currentRound % fullPool.length];
   }, [fullPool, lowerRankedPool, currentRound, isBothRostersFull, isMyRosterFull, isOpponentRosterFull, myMoney, opponentMoney]);
   const mpFirstBidderId = reactExports.useMemo(() => {
-    if (!room) return "";
+    if (!room || !hostId) return "";
     if (isOpponentRosterFull && !isMyRosterFull) return firebaseUser?.uid ?? "";
-    if (isMyRosterFull && !isOpponentRosterFull) return mpOpponent?.uid ?? "";
-    return currentRound % 2 === 0 ? room.hostId : mpOpponent?.uid || room.hostId;
-  }, [room, currentRound, isMyRosterFull, isOpponentRosterFull, firebaseUser, mpOpponent]);
+    if (isMyRosterFull && !isOpponentRosterFull) return guestId && firebaseUser?.uid === hostId ? guestId : hostId;
+    return currentRound % 2 === 0 ? hostId : guestId || hostId;
+  }, [room, hostId, guestId, currentRound, isMyRosterFull, isOpponentRosterFull, firebaseUser]);
   const spFirstBidderId = reactExports.useMemo(() => {
     if (isOpponentRosterFull && !isMyRosterFull) return "me";
     if (isMyRosterFull && !isOpponentRosterFull) return "bot";
     return currentRound % 2 === 0 ? "me" : "bot";
   }, [currentRound, isMyRosterFull, isOpponentRosterFull]);
-  const firstBidderId = isMultiplayer ? mpFirstBidderId : spAuctionState.firstBidderId;
-  const amIFirstBidder = isMultiplayer ? firebaseUser?.uid === firstBidderId : firstBidderId === "me";
   const mpAuctionState = room?.auctionState;
+  const firstBidderId = isMultiplayer ? mpAuctionState?.firstBidderId || mpFirstBidderId : spAuctionState.firstBidderId;
+  const amIFirstBidder = isMultiplayer ? firebaseUser?.uid === firstBidderId : firstBidderId === "me";
   const currentStatus = isMultiplayer ? mpAuctionState?.status || "bidding" : spAuctionState.status;
   const firstBid = isMultiplayer ? mpAuctionState?.firstBid ?? null : spAuctionState.firstBid;
   const winnerId = isMultiplayer ? mpAuctionState?.winnerId ?? null : spAuctionState.winnerId;
@@ -69450,6 +69455,12 @@ function AuctionGame() {
     setOutbidInput("");
     setInputError(null);
   }, [currentRound]);
+  reactExports.useEffect(() => {
+    if (!isMultiplayer || !room || room.status !== "playing") return;
+    if (isBothRostersFull && firebaseUser?.uid === room.hostId) {
+      updateRoom(room.code, { status: "finished" });
+    }
+  }, [isMultiplayer, room, isBothRostersFull, firebaseUser]);
   const calculateCountryValue = reactExports.useCallback((country, roster) => {
     let maxVal = 0;
     CATEGORIES.forEach((cat) => {
@@ -69550,12 +69561,14 @@ function AuctionGame() {
   reactExports.useEffect(() => {
     if (!isMultiplayer || !room || !mpMe || !mpOpponent || room.status !== "playing") return;
     if (currentStatus === "responding" && firstBid !== null && firstBid !== void 0 && !winnerId) {
-      const respondingPlayer = players.find((p) => p.uid !== firstBidderId);
+      const respondingPlayerId = players.find((p) => p.uid !== firstBidderId)?.uid;
+      const respondingPlayer = players.find((p) => p.uid === respondingPlayerId);
       if (respondingPlayer && (respondingPlayer.money ?? 200) <= firstBid) {
         if (firebaseUser?.uid === room.hostId) {
           updateRoom(room.code, {
             auctionState: {
               ...mpAuctionState,
+              firstBidderId,
               status: "drafting",
               winnerId: firstBidderId,
               winningBid: firstBid
@@ -69585,6 +69598,7 @@ function AuctionGame() {
     if (isMultiplayer && room) {
       updateRoom(room.code, {
         auctionState: {
+          firstBidderId: firebaseUser?.uid || firstBidderId,
           firstBid: val,
           status: "responding",
           winnerId: null,
@@ -69600,7 +69614,7 @@ function AuctionGame() {
         status: "responding"
       });
     }
-  }, [isMultiplayer, room, currentCountry, bidInput, myMoney]);
+  }, [isMultiplayer, room, currentCountry, bidInput, myMoney, firebaseUser, firstBidderId]);
   const handleOutbid = reactExports.useCallback(() => {
     if (firstBid === null) return;
     const cleanDigits = outbidInput.replace(/\D/g, "");
@@ -69676,12 +69690,12 @@ function AuctionGame() {
         const newRoster = { ...myRoster, [cat]: currentCountry.name };
         updatePlayer(room.code, mpMe.uid, {
           roster: newRoster,
-          money: newMoney,
-          finishedRound: true
+          money: newMoney
         });
-        if (mpOpponent) {
-          updatePlayer(room.code, mpOpponent.uid, { finishedRound: true });
-        }
+        updateRoom(room.code, {
+          currentRound: room.currentRound + 1,
+          auctionState: null
+        });
       } else {
         setSpMyMoney((m) => Math.max(0, m - price));
         setSpMyRoster((prev) => ({ ...prev, [cat]: currentCountry.name }));
@@ -69697,21 +69711,8 @@ function AuctionGame() {
         }, 300);
       }
     },
-    [currentCountry, amIWinner, myRoster, winningBid, isMultiplayer, room, mpMe, myMoney, mpOpponent, spRound]
+    [currentCountry, amIWinner, myRoster, winningBid, isMultiplayer, room, mpMe, myMoney]
   );
-  reactExports.useEffect(() => {
-    if (!isMultiplayer || !room || room.status !== "playing") return;
-    if (mpMe?.finishedRound && mpOpponent?.finishedRound) {
-      if (firebaseUser?.uid === room.hostId) {
-        updatePlayer(room.code, room.hostId, { finishedRound: false });
-        if (mpOpponent) updatePlayer(room.code, mpOpponent.uid, { finishedRound: false });
-        updateRoom(room.code, {
-          currentRound: room.currentRound + 1,
-          auctionState: null
-        });
-      }
-    }
-  }, [isMultiplayer, room, mpMe, mpOpponent, firebaseUser]);
   const calculateScore = reactExports.useCallback((roster) => {
     let base = 0;
     const fullRosterObj = {};
@@ -69909,7 +69910,7 @@ function AuctionGame() {
               ] })
             ] }, cat);
           }) })
-        ] }),
+        ] }, currentCountry.name),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.1 }, className: "bg-card p-8 rounded-[2rem] border border-border shadow-2xl space-y-6", children: [
           !isMyRosterFull && !isOpponentRosterFull && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
             currentStatus === "bidding" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: amIFirstBidder ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
