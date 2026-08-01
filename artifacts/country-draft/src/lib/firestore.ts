@@ -541,6 +541,7 @@ export async function createRoom(
       finishedRound: false,
       sabotageChoice: null,
       sabotageOptions: null,
+      money: 200,
     };
     await setDoc(playerRef, RoomPlayerSchema.parse(player));
 
@@ -566,7 +567,7 @@ export async function joinRoom(code: string, uid: string, username: string): Pro
     if (room.status !== "waiting") throw new FirestoreServiceError("Room already in progress", "room-in-progress");
 
     const playersSnap = await getDocs(collection(firestore, "rooms", sanitizedCode, "players"));
-    if (room.mode === "sabotage" && playersSnap.size >= 2) {
+    if ((room.mode === "sabotage" || room.mode === "auction") && playersSnap.size >= 2) {
       throw new FirestoreServiceError("Room is full (2 player limit)", "room-full");
     }
 
@@ -579,6 +580,7 @@ export async function joinRoom(code: string, uid: string, username: string): Pro
       finishedRound: false,
       sabotageChoice: null,
       sabotageOptions: null,
+      money: 200,
     };
     await setDoc(playerRef, RoomPlayerSchema.parse(player));
     return room;

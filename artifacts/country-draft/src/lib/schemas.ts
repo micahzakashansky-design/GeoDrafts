@@ -73,6 +73,7 @@ export const RoomModeSchema = z.enum([
   "party",
   "associations_race",
   "double_draft",
+  "auction",
 ]);
 
 export type RoomMode = z.infer<typeof RoomModeSchema>;
@@ -97,6 +98,7 @@ export const RoomSchema = z.object({
   poolSeed: z.number(),
   createdAt: z.any().nullable().optional(),
   associationsSettings: z.record(z.string(), z.unknown()).nullable().optional(),
+  auctionState: z.record(z.string(), z.unknown()).nullable().optional(),
 });
 
 export type Room = z.infer<typeof RoomSchema>;
@@ -110,9 +112,12 @@ export const RoomPlayerSchema = z.object({
   score: z.number(),
   roster: z.record(z.string(), z.string()),
   finishedRound: z.boolean(),
-  sabotageChoice: z.string().nullable(),
-  sabotageOptions: z.array(z.string()).nullable(),
+  sabotageChoice: z.string().nullable().optional(),
+  sabotageOptions: z.array(z.string()).nullable().optional(),
   completionTime: z.number().optional(),
+  money: z.number().optional(),
+  bid: z.number().nullable().optional(),
+  auctionAction: z.enum(["bid", "outbid", "give"]).nullable().optional(),
 });
 
 export type RoomPlayer = z.infer<typeof RoomPlayerSchema>;

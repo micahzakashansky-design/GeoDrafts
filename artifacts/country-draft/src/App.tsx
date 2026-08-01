@@ -15,6 +15,7 @@ import GuessGame from "@/pages/guess/GuessGame";
 import DailyGame from "@/pages/daily/DailyGame";
 import PartyGame from "@/pages/party/PartyGame";
 import SabotageGame from "@/pages/sabotage/SabotageGame";
+import AuctionGame from "@/pages/auction/AuctionGame";
 import Home from "@/pages/Home";
 import Leaderboard from "@/pages/Leaderboard";
 import About from "@/pages/About";
@@ -38,43 +39,46 @@ function Router() {
       <Route path="/leaderboard" component={Leaderboard} />
       <Route path="/about" component={About} />
       
-      <Route path="/lobby">
+      <Route path="/lobby*">
         <ProtectedRoute><Lobby /></ProtectedRoute>
       </Route>
-      <Route path="/game/normal">
+      <Route path="/game/normal*">
         <ProtectedRoute><NormalGame /></ProtectedRoute>
       </Route>
-      <Route path="/game/beta-normal">
+      <Route path="/game/beta-normal*">
         <ProtectedRoute><NormalGame isBetaMode={true} /></ProtectedRoute>
       </Route>
-      <Route path="/game/double">
+      <Route path="/game/double*">
         <ProtectedRoute><DoubleDraftGame /></ProtectedRoute>
       </Route>
-      <Route path="/game/guess">
+      <Route path="/game/guess*">
         <ProtectedRoute><GuessGame /></ProtectedRoute>
       </Route>
-      <Route path="/game/tasks">
+      <Route path="/game/tasks*">
         <ProtectedRoute><TasksGame /></ProtectedRoute>
       </Route>
-      <Route path="/game/daily">
+      <Route path="/game/daily*">
         <ProtectedRoute><DailyGame /></ProtectedRoute>
       </Route>
-      <Route path="/game/party">
+      <Route path="/game/party*">
         <ProtectedRoute><PartyGame /></ProtectedRoute>
       </Route>
-      <Route path="/game/sabotage">
+      <Route path="/game/sabotage*">
         <ProtectedRoute><SabotageGame /></ProtectedRoute>
       </Route>
-      <Route path="/game/associations/setup">
+      <Route path="/game/auction*">
+        <ProtectedRoute><AuctionGame /></ProtectedRoute>
+      </Route>
+      <Route path="/game/associations/setup*">
         <ProtectedRoute><AssociationsSetup /></ProtectedRoute>
       </Route>
-      <Route path="/game/associations">
+      <Route path="/game/associations*">
         <ProtectedRoute><AssociationsGame /></ProtectedRoute>
       </Route>
-      <Route path="/game/double_draft">
+      <Route path="/game/double_draft*">
         <ProtectedRoute><DoubleDraftMultiplayer /></ProtectedRoute>
       </Route>
-      <Route path="/game/associations_race">
+      <Route path="/game/associations_race*">
         <ProtectedRoute><AssociationsRace /></ProtectedRoute>
       </Route>
       <Route component={NotFound} />

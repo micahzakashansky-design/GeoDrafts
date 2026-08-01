@@ -637,6 +637,7 @@ export default function Home() {
     if (mode === "normal") navigate("/game/normal");
     else if (mode === "double") navigate("/game/double");
     else if (mode === "guess") navigate("/game/guess");
+    else if (mode === "auction") navigate("/game/auction");
     else navigate(`/game/${mode}`);
   }
 
@@ -732,8 +733,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Row 3: Guess the Country & Associations */}
-                <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 border-b border-border">
+                {/* Row 3: Guess, Associations & Auction */}
+                <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 border-b border-border">
                   <button onClick={() => startGame("guess", false)} className="col-span-1 bg-card border-b md:border-b-0 md:border-r border-border p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300">
                     <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-5 group-hover:scale-110 transition-transform duration-500">
                       <Search className="w-6 h-6" />
@@ -742,12 +743,20 @@ export default function Home() {
                     <p className="text-sm text-muted-foreground leading-relaxed">Identify a mystery nation by looking solely at its stats.</p>
                   </button>
 
-                  <button onClick={() => navigate("/game/associations/setup")} className="col-span-1 bg-card p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300">
+                  <button onClick={() => navigate("/game/associations/setup")} className="col-span-1 bg-card border-b md:border-b-0 md:border-r border-border p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300">
                     <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-500 mb-5 group-hover:scale-110 transition-transform duration-500">
                       <Brain className="w-6 h-6" />
                     </div>
                     <h3 className="font-sans text-2xl font-bold mb-2 text-card-foreground">Associations</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">Test your knowledge by mapping flags, capitals, and countries together.</p>
+                  </button>
+
+                  <button onClick={() => startGame("auction", false)} className="col-span-1 bg-card p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300">
+                    <div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-5 group-hover:scale-110 transition-transform duration-500">
+                      <Gavel className="w-6 h-6" />
+                    </div>
+                    <h3 className="font-sans text-2xl font-bold mb-2 text-card-foreground">Auction</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">Bid & outbid from your $200 pool in high-stakes country auctions (Single Player or Multiplayer).</p>
                   </button>
                 </div>
 

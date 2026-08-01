@@ -43,7 +43,14 @@ export default function Lobby() {
   }, [roomCode, navigate]);
 
   useEffect(() => {
+    if (roomCode) {
+      localStorage.setItem("countryDraftRoomCode", roomCode);
+    }
+  }, [roomCode]);
+
+  useEffect(() => {
     if (room && room.status === "playing") {
+      localStorage.setItem("countryDraftRoomCode", room.code);
       navigate(`/game/${room.mode}?room=${room.code}`);
     }
   }, [room, navigate]);

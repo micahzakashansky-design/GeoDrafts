@@ -16693,11 +16693,11 @@ const createLucideIcon = (iconName, iconNode) => {
   Component2.displayName = toPascalCase(iconName);
   return Component2;
 };
-const __iconNode$1n = [
+const __iconNode$1s = [
   ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ];
-const X$1 = createLucideIcon("x", __iconNode$1n);
+const X$1 = createLucideIcon("x", __iconNode$1s);
 const concatArrays = (array1, array2) => {
   const combinedArray = new Array(array1.length + array2.length);
   for (let i = 0; i < array1.length; i++) {
@@ -25556,16 +25556,16 @@ class FirebaseAppImpl {
   }
 }
 const SDK_VERSION = version$2;
-function initializeApp(_options, rawConfig = {}) {
+function initializeApp(_options, rawConfig2 = {}) {
   let options = _options;
-  if (typeof rawConfig !== "object") {
-    const name3 = rawConfig;
-    rawConfig = { name: name3 };
+  if (typeof rawConfig2 !== "object") {
+    const name3 = rawConfig2;
+    rawConfig2 = { name: name3 };
   }
   const config = {
     name: DEFAULT_ENTRY_NAME,
     automaticDataCollectionEnabled: true,
-    ...rawConfig
+    ...rawConfig2
   };
   const name2 = config.name;
   if (typeof name2 !== "string" || !name2) {
@@ -25937,11 +25937,11 @@ function _createError(authOrCode, ...rest) {
   return createErrorInternal(authOrCode, ...rest);
 }
 function _errorWithCustomMessage(auth2, code, message) {
-  const errorMap = {
+  const errorMap2 = {
     ...prodErrorMap(),
     [code]: message
   };
-  const factory = new ErrorFactory("auth", "Firebase", errorMap);
+  const factory = new ErrorFactory("auth", "Firebase", errorMap2);
   return factory.create(code, {
     appName: auth2.name
   });
@@ -26381,7 +26381,7 @@ async function _performApiRequest(auth2, method, path, request, customErrorMap =
 }
 async function _performFetchWithErrorHandling(auth2, customErrorMap, fetchFn) {
   auth2._canInitEmulator = false;
-  const errorMap = { ...SERVER_ERROR_MAP, ...customErrorMap };
+  const errorMap2 = { ...SERVER_ERROR_MAP, ...customErrorMap };
   try {
     const networkTimeout = new NetworkTimeout(auth2);
     const response = await Promise.race([
@@ -26405,7 +26405,7 @@ async function _performFetchWithErrorHandling(auth2, customErrorMap, fetchFn) {
       } else if (serverErrorCode === "USER_DISABLED") {
         throw _makeTaggedError(auth2, "user-disabled", json);
       }
-      const authError = errorMap[serverErrorCode] || serverErrorCode.toLowerCase().replace(/[_\s]+/g, "-");
+      const authError = errorMap2[serverErrorCode] || serverErrorCode.toLowerCase().replace(/[_\s]+/g, "-");
       if (serverErrorMessage) {
         throw _errorWithCustomMessage(auth2, authError, serverErrorMessage);
       } else {
@@ -27857,8 +27857,8 @@ class AuthImpl {
   _getPersistence() {
     return this.assertedPersistence.persistence;
   }
-  _updateErrorMap(errorMap) {
-    this._errorFactory = new ErrorFactory("auth", "Firebase", errorMap());
+  _updateErrorMap(errorMap2) {
+    this._errorFactory = new ErrorFactory("auth", "Firebase", errorMap2());
   }
   onAuthStateChanged(nextOrObserver, error, completed) {
     return this.registerStateListener(this.authStateSubscription, nextOrObserver, error, completed);
@@ -28511,6 +28511,12 @@ async function linkEmailPassword(auth2, request) {
 }
 async function signInWithPassword(auth2, request) {
   return _performSignInRequest(auth2, "POST", "/v1/accounts:signInWithPassword", _addTidIfNecessary(auth2, request));
+}
+async function sendOobCode(auth2, request) {
+  return _performApiRequest(auth2, "POST", "/v1/accounts:sendOobCode", _addTidIfNecessary(auth2, request));
+}
+async function sendPasswordResetEmail$1(auth2, request) {
+  return sendOobCode(auth2, request);
 }
 async function signInWithEmailLink$1(auth2, request) {
   return _performSignInRequest(auth2, "POST", "/v1/accounts:signInWithEmailLink", _addTidIfNecessary(auth2, request));
@@ -29221,6 +29227,27 @@ function providerIdForResponse(response) {
   }
   return null;
 }
+async function signInAnonymously(auth2) {
+  if (_isFirebaseServerApp(auth2.app)) {
+    return Promise.reject(_serverAppCurrentUserOperationNotSupportedError(auth2));
+  }
+  const authInternal = _castAuth(auth2);
+  await authInternal._initializationPromise;
+  if (authInternal.currentUser?.isAnonymous) {
+    return new UserCredentialImpl({
+      user: authInternal.currentUser,
+      providerId: null,
+      operationType: "signIn"
+      /* OperationType.SIGN_IN */
+    });
+  }
+  const response = await signUp(authInternal, {
+    returnSecureToken: true
+  });
+  const userCredential = await UserCredentialImpl._fromIdTokenResponse(authInternal, "signIn", response, true);
+  await authInternal._updateCurrentUser(userCredential.user);
+  return userCredential;
+}
 class MultiFactorError extends FirebaseError {
   constructor(auth2, error, operationType, user) {
     super(error.code, error.message);
@@ -29311,6 +29338,16 @@ async function recachePasswordPolicy(auth2) {
   if (authInternal._getPasswordPolicyInternal()) {
     await authInternal._updatePasswordPolicy();
   }
+}
+async function sendPasswordResetEmail(auth2, email, actionCodeSettings) {
+  const authInternal = _castAuth(auth2);
+  const request = {
+    requestType: "PASSWORD_RESET",
+    email,
+    clientType: "CLIENT_TYPE_WEB"
+    /* RecaptchaClientType.WEB */
+  };
+  await handleRecaptchaFlow(authInternal, request, "getOobCode", sendPasswordResetEmail$1);
 }
 async function createUserWithEmailAndPassword(auth2, email, password) {
   if (_isFirebaseServerApp(auth2.app)) {
@@ -31128,9 +31165,6 @@ registerAuth(
   "Browser"
   /* ClientPlatform.BROWSER */
 );
-var name = "firebase";
-var version = "12.14.0";
-registerVersion(name, version, "app");
 var commonjsGlobal$1 = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
 var Integer;
 var Md5;
@@ -46498,6 +46532,9 @@ class FieldPath {
     return this._internalPath.isEqual(e._internalPath);
   }
 }
+function documentId() {
+  return new FieldPath(F);
+}
 class FieldValue {
   /**
    * @param _methodName - The public API endpoint that returns this class.
@@ -47428,7 +47465,7 @@ function __PRIVATE_validateNewFieldFilter(t, e) {
 }
 function __PRIVATE_applyFirestoreDataConverter(t, e, n) {
   let r2;
-  return r2 = t ? t.toFirestore(e) : e, r2;
+  return r2 = t ? n && (n.merge || n.mergeFields) ? t.toFirestore(e, n) : t.toFirestore(e) : e, r2;
 }
 class __PRIVATE_PersistentLocalCacheImpl {
   constructor(t) {
@@ -47725,7 +47762,7 @@ function getDocs(t) {
 }
 function setDoc(t, e, n) {
   t = __PRIVATE_cast(t, DocumentReference);
-  const r2 = __PRIVATE_cast(t.firestore, Firestore), s = __PRIVATE_applyFirestoreDataConverter(t.converter, e), o = __PRIVATE_newUserDataReader(r2);
+  const r2 = __PRIVATE_cast(t.firestore, Firestore), s = __PRIVATE_applyFirestoreDataConverter(t.converter, e, n), o = __PRIVATE_newUserDataReader(r2);
   return executeWrite(r2, [__PRIVATE_parseSetData(o, "setDoc", t._key, s, null !== t.converter, n).toMutation(t._key, Precondition.none())]);
 }
 function updateDoc(t, e, n, ...r2) {
@@ -47800,7 +47837,3744 @@ function __PRIVATE_convertToDocSnapshot(t, e, n) {
   }), "PUBLIC").setMultipleInstances(true)), registerVersion(Ut, Ht, h), // BUILD_TARGET will be replaced by values like esm, cjs, etc during the compilation
   registerVersion(Ut, Ht, "esm2020");
 })();
-const firebaseConfig = {
+var name = "firebase";
+var version = "12.14.0";
+registerVersion(name, version, "app");
+var util;
+(function(util2) {
+  util2.assertEqual = (_) => {
+  };
+  function assertIs(_arg) {
+  }
+  util2.assertIs = assertIs;
+  function assertNever(_x) {
+    throw new Error();
+  }
+  util2.assertNever = assertNever;
+  util2.arrayToEnum = (items) => {
+    const obj = {};
+    for (const item of items) {
+      obj[item] = item;
+    }
+    return obj;
+  };
+  util2.getValidEnumValues = (obj) => {
+    const validKeys = util2.objectKeys(obj).filter((k2) => typeof obj[obj[k2]] !== "number");
+    const filtered = {};
+    for (const k2 of validKeys) {
+      filtered[k2] = obj[k2];
+    }
+    return util2.objectValues(filtered);
+  };
+  util2.objectValues = (obj) => {
+    return util2.objectKeys(obj).map(function(e) {
+      return obj[e];
+    });
+  };
+  util2.objectKeys = typeof Object.keys === "function" ? (obj) => Object.keys(obj) : (object2) => {
+    const keys = [];
+    for (const key in object2) {
+      if (Object.prototype.hasOwnProperty.call(object2, key)) {
+        keys.push(key);
+      }
+    }
+    return keys;
+  };
+  util2.find = (arr, checker) => {
+    for (const item of arr) {
+      if (checker(item))
+        return item;
+    }
+    return void 0;
+  };
+  util2.isInteger = typeof Number.isInteger === "function" ? (val) => Number.isInteger(val) : (val) => typeof val === "number" && Number.isFinite(val) && Math.floor(val) === val;
+  function joinValues(array2, separator = " | ") {
+    return array2.map((val) => typeof val === "string" ? `'${val}'` : val).join(separator);
+  }
+  util2.joinValues = joinValues;
+  util2.jsonStringifyReplacer = (_, value) => {
+    if (typeof value === "bigint") {
+      return value.toString();
+    }
+    return value;
+  };
+})(util || (util = {}));
+var objectUtil;
+(function(objectUtil2) {
+  objectUtil2.mergeShapes = (first, second) => {
+    return {
+      ...first,
+      ...second
+      // second overwrites first
+    };
+  };
+})(objectUtil || (objectUtil = {}));
+const ZodParsedType = util.arrayToEnum([
+  "string",
+  "nan",
+  "number",
+  "integer",
+  "float",
+  "boolean",
+  "date",
+  "bigint",
+  "symbol",
+  "function",
+  "undefined",
+  "null",
+  "array",
+  "object",
+  "unknown",
+  "promise",
+  "void",
+  "never",
+  "map",
+  "set"
+]);
+const getParsedType = (data) => {
+  const t = typeof data;
+  switch (t) {
+    case "undefined":
+      return ZodParsedType.undefined;
+    case "string":
+      return ZodParsedType.string;
+    case "number":
+      return Number.isNaN(data) ? ZodParsedType.nan : ZodParsedType.number;
+    case "boolean":
+      return ZodParsedType.boolean;
+    case "function":
+      return ZodParsedType.function;
+    case "bigint":
+      return ZodParsedType.bigint;
+    case "symbol":
+      return ZodParsedType.symbol;
+    case "object":
+      if (Array.isArray(data)) {
+        return ZodParsedType.array;
+      }
+      if (data === null) {
+        return ZodParsedType.null;
+      }
+      if (data.then && typeof data.then === "function" && data.catch && typeof data.catch === "function") {
+        return ZodParsedType.promise;
+      }
+      if (typeof Map !== "undefined" && data instanceof Map) {
+        return ZodParsedType.map;
+      }
+      if (typeof Set !== "undefined" && data instanceof Set) {
+        return ZodParsedType.set;
+      }
+      if (typeof Date !== "undefined" && data instanceof Date) {
+        return ZodParsedType.date;
+      }
+      return ZodParsedType.object;
+    default:
+      return ZodParsedType.unknown;
+  }
+};
+const ZodIssueCode = util.arrayToEnum([
+  "invalid_type",
+  "invalid_literal",
+  "custom",
+  "invalid_union",
+  "invalid_union_discriminator",
+  "invalid_enum_value",
+  "unrecognized_keys",
+  "invalid_arguments",
+  "invalid_return_type",
+  "invalid_date",
+  "invalid_string",
+  "too_small",
+  "too_big",
+  "invalid_intersection_types",
+  "not_multiple_of",
+  "not_finite"
+]);
+class ZodError extends Error {
+  get errors() {
+    return this.issues;
+  }
+  constructor(issues) {
+    super();
+    this.issues = [];
+    this.addIssue = (sub) => {
+      this.issues = [...this.issues, sub];
+    };
+    this.addIssues = (subs = []) => {
+      this.issues = [...this.issues, ...subs];
+    };
+    const actualProto = new.target.prototype;
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(this, actualProto);
+    } else {
+      this.__proto__ = actualProto;
+    }
+    this.name = "ZodError";
+    this.issues = issues;
+  }
+  format(_mapper) {
+    const mapper = _mapper || function(issue) {
+      return issue.message;
+    };
+    const fieldErrors = { _errors: [] };
+    const processError = (error) => {
+      for (const issue of error.issues) {
+        if (issue.code === "invalid_union") {
+          issue.unionErrors.map(processError);
+        } else if (issue.code === "invalid_return_type") {
+          processError(issue.returnTypeError);
+        } else if (issue.code === "invalid_arguments") {
+          processError(issue.argumentsError);
+        } else if (issue.path.length === 0) {
+          fieldErrors._errors.push(mapper(issue));
+        } else {
+          let curr = fieldErrors;
+          let i = 0;
+          while (i < issue.path.length) {
+            const el = issue.path[i];
+            const terminal = i === issue.path.length - 1;
+            if (!terminal) {
+              curr[el] = curr[el] || { _errors: [] };
+            } else {
+              curr[el] = curr[el] || { _errors: [] };
+              curr[el]._errors.push(mapper(issue));
+            }
+            curr = curr[el];
+            i++;
+          }
+        }
+      }
+    };
+    processError(this);
+    return fieldErrors;
+  }
+  static assert(value) {
+    if (!(value instanceof ZodError)) {
+      throw new Error(`Not a ZodError: ${value}`);
+    }
+  }
+  toString() {
+    return this.message;
+  }
+  get message() {
+    return JSON.stringify(this.issues, util.jsonStringifyReplacer, 2);
+  }
+  get isEmpty() {
+    return this.issues.length === 0;
+  }
+  flatten(mapper = (issue) => issue.message) {
+    const fieldErrors = {};
+    const formErrors = [];
+    for (const sub of this.issues) {
+      if (sub.path.length > 0) {
+        const firstEl = sub.path[0];
+        fieldErrors[firstEl] = fieldErrors[firstEl] || [];
+        fieldErrors[firstEl].push(mapper(sub));
+      } else {
+        formErrors.push(mapper(sub));
+      }
+    }
+    return { formErrors, fieldErrors };
+  }
+  get formErrors() {
+    return this.flatten();
+  }
+}
+ZodError.create = (issues) => {
+  const error = new ZodError(issues);
+  return error;
+};
+const errorMap = (issue, _ctx) => {
+  let message;
+  switch (issue.code) {
+    case ZodIssueCode.invalid_type:
+      if (issue.received === ZodParsedType.undefined) {
+        message = "Required";
+      } else {
+        message = `Expected ${issue.expected}, received ${issue.received}`;
+      }
+      break;
+    case ZodIssueCode.invalid_literal:
+      message = `Invalid literal value, expected ${JSON.stringify(issue.expected, util.jsonStringifyReplacer)}`;
+      break;
+    case ZodIssueCode.unrecognized_keys:
+      message = `Unrecognized key(s) in object: ${util.joinValues(issue.keys, ", ")}`;
+      break;
+    case ZodIssueCode.invalid_union:
+      message = `Invalid input`;
+      break;
+    case ZodIssueCode.invalid_union_discriminator:
+      message = `Invalid discriminator value. Expected ${util.joinValues(issue.options)}`;
+      break;
+    case ZodIssueCode.invalid_enum_value:
+      message = `Invalid enum value. Expected ${util.joinValues(issue.options)}, received '${issue.received}'`;
+      break;
+    case ZodIssueCode.invalid_arguments:
+      message = `Invalid function arguments`;
+      break;
+    case ZodIssueCode.invalid_return_type:
+      message = `Invalid function return type`;
+      break;
+    case ZodIssueCode.invalid_date:
+      message = `Invalid date`;
+      break;
+    case ZodIssueCode.invalid_string:
+      if (typeof issue.validation === "object") {
+        if ("includes" in issue.validation) {
+          message = `Invalid input: must include "${issue.validation.includes}"`;
+          if (typeof issue.validation.position === "number") {
+            message = `${message} at one or more positions greater than or equal to ${issue.validation.position}`;
+          }
+        } else if ("startsWith" in issue.validation) {
+          message = `Invalid input: must start with "${issue.validation.startsWith}"`;
+        } else if ("endsWith" in issue.validation) {
+          message = `Invalid input: must end with "${issue.validation.endsWith}"`;
+        } else {
+          util.assertNever(issue.validation);
+        }
+      } else if (issue.validation !== "regex") {
+        message = `Invalid ${issue.validation}`;
+      } else {
+        message = "Invalid";
+      }
+      break;
+    case ZodIssueCode.too_small:
+      if (issue.type === "array")
+        message = `Array must contain ${issue.exact ? "exactly" : issue.inclusive ? `at least` : `more than`} ${issue.minimum} element(s)`;
+      else if (issue.type === "string")
+        message = `String must contain ${issue.exact ? "exactly" : issue.inclusive ? `at least` : `over`} ${issue.minimum} character(s)`;
+      else if (issue.type === "number")
+        message = `Number must be ${issue.exact ? `exactly equal to ` : issue.inclusive ? `greater than or equal to ` : `greater than `}${issue.minimum}`;
+      else if (issue.type === "bigint")
+        message = `Number must be ${issue.exact ? `exactly equal to ` : issue.inclusive ? `greater than or equal to ` : `greater than `}${issue.minimum}`;
+      else if (issue.type === "date")
+        message = `Date must be ${issue.exact ? `exactly equal to ` : issue.inclusive ? `greater than or equal to ` : `greater than `}${new Date(Number(issue.minimum))}`;
+      else
+        message = "Invalid input";
+      break;
+    case ZodIssueCode.too_big:
+      if (issue.type === "array")
+        message = `Array must contain ${issue.exact ? `exactly` : issue.inclusive ? `at most` : `less than`} ${issue.maximum} element(s)`;
+      else if (issue.type === "string")
+        message = `String must contain ${issue.exact ? `exactly` : issue.inclusive ? `at most` : `under`} ${issue.maximum} character(s)`;
+      else if (issue.type === "number")
+        message = `Number must be ${issue.exact ? `exactly` : issue.inclusive ? `less than or equal to` : `less than`} ${issue.maximum}`;
+      else if (issue.type === "bigint")
+        message = `BigInt must be ${issue.exact ? `exactly` : issue.inclusive ? `less than or equal to` : `less than`} ${issue.maximum}`;
+      else if (issue.type === "date")
+        message = `Date must be ${issue.exact ? `exactly` : issue.inclusive ? `smaller than or equal to` : `smaller than`} ${new Date(Number(issue.maximum))}`;
+      else
+        message = "Invalid input";
+      break;
+    case ZodIssueCode.custom:
+      message = `Invalid input`;
+      break;
+    case ZodIssueCode.invalid_intersection_types:
+      message = `Intersection results could not be merged`;
+      break;
+    case ZodIssueCode.not_multiple_of:
+      message = `Number must be a multiple of ${issue.multipleOf}`;
+      break;
+    case ZodIssueCode.not_finite:
+      message = "Number must be finite";
+      break;
+    default:
+      message = _ctx.defaultError;
+      util.assertNever(issue);
+  }
+  return { message };
+};
+let overrideErrorMap = errorMap;
+function getErrorMap() {
+  return overrideErrorMap;
+}
+const makeIssue = (params) => {
+  const { data, path, errorMaps, issueData } = params;
+  const fullPath = [...path, ...issueData.path || []];
+  const fullIssue = {
+    ...issueData,
+    path: fullPath
+  };
+  if (issueData.message !== void 0) {
+    return {
+      ...issueData,
+      path: fullPath,
+      message: issueData.message
+    };
+  }
+  let errorMessage = "";
+  const maps = errorMaps.filter((m) => !!m).slice().reverse();
+  for (const map of maps) {
+    errorMessage = map(fullIssue, { data, defaultError: errorMessage }).message;
+  }
+  return {
+    ...issueData,
+    path: fullPath,
+    message: errorMessage
+  };
+};
+function addIssueToContext(ctx, issueData) {
+  const overrideMap = getErrorMap();
+  const issue = makeIssue({
+    issueData,
+    data: ctx.data,
+    path: ctx.path,
+    errorMaps: [
+      ctx.common.contextualErrorMap,
+      // contextual error map is first priority
+      ctx.schemaErrorMap,
+      // then schema-bound map if available
+      overrideMap,
+      // then global override map
+      overrideMap === errorMap ? void 0 : errorMap
+      // then global default map
+    ].filter((x2) => !!x2)
+  });
+  ctx.common.issues.push(issue);
+}
+class ParseStatus {
+  constructor() {
+    this.value = "valid";
+  }
+  dirty() {
+    if (this.value === "valid")
+      this.value = "dirty";
+  }
+  abort() {
+    if (this.value !== "aborted")
+      this.value = "aborted";
+  }
+  static mergeArray(status, results) {
+    const arrayValue = [];
+    for (const s of results) {
+      if (s.status === "aborted")
+        return INVALID;
+      if (s.status === "dirty")
+        status.dirty();
+      arrayValue.push(s.value);
+    }
+    return { status: status.value, value: arrayValue };
+  }
+  static async mergeObjectAsync(status, pairs) {
+    const syncPairs = [];
+    for (const pair of pairs) {
+      const key = await pair.key;
+      const value = await pair.value;
+      syncPairs.push({
+        key,
+        value
+      });
+    }
+    return ParseStatus.mergeObjectSync(status, syncPairs);
+  }
+  static mergeObjectSync(status, pairs) {
+    const finalObject = {};
+    for (const pair of pairs) {
+      const { key, value } = pair;
+      if (key.status === "aborted")
+        return INVALID;
+      if (value.status === "aborted")
+        return INVALID;
+      if (key.status === "dirty")
+        status.dirty();
+      if (value.status === "dirty")
+        status.dirty();
+      if (key.value !== "__proto__" && (typeof value.value !== "undefined" || pair.alwaysSet)) {
+        finalObject[key.value] = value.value;
+      }
+    }
+    return { status: status.value, value: finalObject };
+  }
+}
+const INVALID = Object.freeze({
+  status: "aborted"
+});
+const DIRTY = (value) => ({ status: "dirty", value });
+const OK = (value) => ({ status: "valid", value });
+const isAborted = (x2) => x2.status === "aborted";
+const isDirty = (x2) => x2.status === "dirty";
+const isValid = (x2) => x2.status === "valid";
+const isAsync = (x2) => typeof Promise !== "undefined" && x2 instanceof Promise;
+var errorUtil;
+(function(errorUtil2) {
+  errorUtil2.errToObj = (message) => typeof message === "string" ? { message } : message || {};
+  errorUtil2.toString = (message) => typeof message === "string" ? message : message?.message;
+})(errorUtil || (errorUtil = {}));
+class ParseInputLazyPath {
+  constructor(parent, value, path, key) {
+    this._cachedPath = [];
+    this.parent = parent;
+    this.data = value;
+    this._path = path;
+    this._key = key;
+  }
+  get path() {
+    if (!this._cachedPath.length) {
+      if (Array.isArray(this._key)) {
+        this._cachedPath.push(...this._path, ...this._key);
+      } else {
+        this._cachedPath.push(...this._path, this._key);
+      }
+    }
+    return this._cachedPath;
+  }
+}
+const handleResult = (ctx, result) => {
+  if (isValid(result)) {
+    return { success: true, data: result.value };
+  } else {
+    if (!ctx.common.issues.length) {
+      throw new Error("Validation failed but no issues detected.");
+    }
+    return {
+      success: false,
+      get error() {
+        if (this._error)
+          return this._error;
+        const error = new ZodError(ctx.common.issues);
+        this._error = error;
+        return this._error;
+      }
+    };
+  }
+};
+function processCreateParams(params) {
+  if (!params)
+    return {};
+  const { errorMap: errorMap2, invalid_type_error, required_error, description } = params;
+  if (errorMap2 && (invalid_type_error || required_error)) {
+    throw new Error(`Can't use "invalid_type_error" or "required_error" in conjunction with custom error map.`);
+  }
+  if (errorMap2)
+    return { errorMap: errorMap2, description };
+  const customMap = (iss, ctx) => {
+    const { message } = params;
+    if (iss.code === "invalid_enum_value") {
+      return { message: message ?? ctx.defaultError };
+    }
+    if (typeof ctx.data === "undefined") {
+      return { message: message ?? required_error ?? ctx.defaultError };
+    }
+    if (iss.code !== "invalid_type")
+      return { message: ctx.defaultError };
+    return { message: message ?? invalid_type_error ?? ctx.defaultError };
+  };
+  return { errorMap: customMap, description };
+}
+class ZodType {
+  get description() {
+    return this._def.description;
+  }
+  _getType(input) {
+    return getParsedType(input.data);
+  }
+  _getOrReturnCtx(input, ctx) {
+    return ctx || {
+      common: input.parent.common,
+      data: input.data,
+      parsedType: getParsedType(input.data),
+      schemaErrorMap: this._def.errorMap,
+      path: input.path,
+      parent: input.parent
+    };
+  }
+  _processInputParams(input) {
+    return {
+      status: new ParseStatus(),
+      ctx: {
+        common: input.parent.common,
+        data: input.data,
+        parsedType: getParsedType(input.data),
+        schemaErrorMap: this._def.errorMap,
+        path: input.path,
+        parent: input.parent
+      }
+    };
+  }
+  _parseSync(input) {
+    const result = this._parse(input);
+    if (isAsync(result)) {
+      throw new Error("Synchronous parse encountered promise.");
+    }
+    return result;
+  }
+  _parseAsync(input) {
+    const result = this._parse(input);
+    return Promise.resolve(result);
+  }
+  parse(data, params) {
+    const result = this.safeParse(data, params);
+    if (result.success)
+      return result.data;
+    throw result.error;
+  }
+  safeParse(data, params) {
+    const ctx = {
+      common: {
+        issues: [],
+        async: params?.async ?? false,
+        contextualErrorMap: params?.errorMap
+      },
+      path: params?.path || [],
+      schemaErrorMap: this._def.errorMap,
+      parent: null,
+      data,
+      parsedType: getParsedType(data)
+    };
+    const result = this._parseSync({ data, path: ctx.path, parent: ctx });
+    return handleResult(ctx, result);
+  }
+  "~validate"(data) {
+    const ctx = {
+      common: {
+        issues: [],
+        async: !!this["~standard"].async
+      },
+      path: [],
+      schemaErrorMap: this._def.errorMap,
+      parent: null,
+      data,
+      parsedType: getParsedType(data)
+    };
+    if (!this["~standard"].async) {
+      try {
+        const result = this._parseSync({ data, path: [], parent: ctx });
+        return isValid(result) ? {
+          value: result.value
+        } : {
+          issues: ctx.common.issues
+        };
+      } catch (err) {
+        if (err?.message?.toLowerCase()?.includes("encountered")) {
+          this["~standard"].async = true;
+        }
+        ctx.common = {
+          issues: [],
+          async: true
+        };
+      }
+    }
+    return this._parseAsync({ data, path: [], parent: ctx }).then((result) => isValid(result) ? {
+      value: result.value
+    } : {
+      issues: ctx.common.issues
+    });
+  }
+  async parseAsync(data, params) {
+    const result = await this.safeParseAsync(data, params);
+    if (result.success)
+      return result.data;
+    throw result.error;
+  }
+  async safeParseAsync(data, params) {
+    const ctx = {
+      common: {
+        issues: [],
+        contextualErrorMap: params?.errorMap,
+        async: true
+      },
+      path: params?.path || [],
+      schemaErrorMap: this._def.errorMap,
+      parent: null,
+      data,
+      parsedType: getParsedType(data)
+    };
+    const maybeAsyncResult = this._parse({ data, path: ctx.path, parent: ctx });
+    const result = await (isAsync(maybeAsyncResult) ? maybeAsyncResult : Promise.resolve(maybeAsyncResult));
+    return handleResult(ctx, result);
+  }
+  refine(check, message) {
+    const getIssueProperties = (val) => {
+      if (typeof message === "string" || typeof message === "undefined") {
+        return { message };
+      } else if (typeof message === "function") {
+        return message(val);
+      } else {
+        return message;
+      }
+    };
+    return this._refinement((val, ctx) => {
+      const result = check(val);
+      const setError = () => ctx.addIssue({
+        code: ZodIssueCode.custom,
+        ...getIssueProperties(val)
+      });
+      if (typeof Promise !== "undefined" && result instanceof Promise) {
+        return result.then((data) => {
+          if (!data) {
+            setError();
+            return false;
+          } else {
+            return true;
+          }
+        });
+      }
+      if (!result) {
+        setError();
+        return false;
+      } else {
+        return true;
+      }
+    });
+  }
+  refinement(check, refinementData) {
+    return this._refinement((val, ctx) => {
+      if (!check(val)) {
+        ctx.addIssue(typeof refinementData === "function" ? refinementData(val, ctx) : refinementData);
+        return false;
+      } else {
+        return true;
+      }
+    });
+  }
+  _refinement(refinement) {
+    return new ZodEffects({
+      schema: this,
+      typeName: ZodFirstPartyTypeKind.ZodEffects,
+      effect: { type: "refinement", refinement }
+    });
+  }
+  superRefine(refinement) {
+    return this._refinement(refinement);
+  }
+  constructor(def) {
+    this.spa = this.safeParseAsync;
+    this._def = def;
+    this.parse = this.parse.bind(this);
+    this.safeParse = this.safeParse.bind(this);
+    this.parseAsync = this.parseAsync.bind(this);
+    this.safeParseAsync = this.safeParseAsync.bind(this);
+    this.spa = this.spa.bind(this);
+    this.refine = this.refine.bind(this);
+    this.refinement = this.refinement.bind(this);
+    this.superRefine = this.superRefine.bind(this);
+    this.optional = this.optional.bind(this);
+    this.nullable = this.nullable.bind(this);
+    this.nullish = this.nullish.bind(this);
+    this.array = this.array.bind(this);
+    this.promise = this.promise.bind(this);
+    this.or = this.or.bind(this);
+    this.and = this.and.bind(this);
+    this.transform = this.transform.bind(this);
+    this.brand = this.brand.bind(this);
+    this.default = this.default.bind(this);
+    this.catch = this.catch.bind(this);
+    this.describe = this.describe.bind(this);
+    this.pipe = this.pipe.bind(this);
+    this.readonly = this.readonly.bind(this);
+    this.isNullable = this.isNullable.bind(this);
+    this.isOptional = this.isOptional.bind(this);
+    this["~standard"] = {
+      version: 1,
+      vendor: "zod",
+      validate: (data) => this["~validate"](data)
+    };
+  }
+  optional() {
+    return ZodOptional.create(this, this._def);
+  }
+  nullable() {
+    return ZodNullable.create(this, this._def);
+  }
+  nullish() {
+    return this.nullable().optional();
+  }
+  array() {
+    return ZodArray.create(this);
+  }
+  promise() {
+    return ZodPromise.create(this, this._def);
+  }
+  or(option) {
+    return ZodUnion.create([this, option], this._def);
+  }
+  and(incoming) {
+    return ZodIntersection.create(this, incoming, this._def);
+  }
+  transform(transform2) {
+    return new ZodEffects({
+      ...processCreateParams(this._def),
+      schema: this,
+      typeName: ZodFirstPartyTypeKind.ZodEffects,
+      effect: { type: "transform", transform: transform2 }
+    });
+  }
+  default(def) {
+    const defaultValueFunc = typeof def === "function" ? def : () => def;
+    return new ZodDefault({
+      ...processCreateParams(this._def),
+      innerType: this,
+      defaultValue: defaultValueFunc,
+      typeName: ZodFirstPartyTypeKind.ZodDefault
+    });
+  }
+  brand() {
+    return new ZodBranded({
+      typeName: ZodFirstPartyTypeKind.ZodBranded,
+      type: this,
+      ...processCreateParams(this._def)
+    });
+  }
+  catch(def) {
+    const catchValueFunc = typeof def === "function" ? def : () => def;
+    return new ZodCatch({
+      ...processCreateParams(this._def),
+      innerType: this,
+      catchValue: catchValueFunc,
+      typeName: ZodFirstPartyTypeKind.ZodCatch
+    });
+  }
+  describe(description) {
+    const This = this.constructor;
+    return new This({
+      ...this._def,
+      description
+    });
+  }
+  pipe(target) {
+    return ZodPipeline.create(this, target);
+  }
+  readonly() {
+    return ZodReadonly.create(this);
+  }
+  isOptional() {
+    return this.safeParse(void 0).success;
+  }
+  isNullable() {
+    return this.safeParse(null).success;
+  }
+}
+const cuidRegex = /^c[^\s-]{8,}$/i;
+const cuid2Regex = /^[0-9a-z]+$/;
+const ulidRegex = /^[0-9A-HJKMNP-TV-Z]{26}$/i;
+const uuidRegex = /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/i;
+const nanoidRegex = /^[a-z0-9_-]{21}$/i;
+const jwtRegex = /^[A-Za-z0-9-_]+\.[A-Za-z0-9-_]+\.[A-Za-z0-9-_]*$/;
+const durationRegex = /^[-+]?P(?!$)(?:(?:[-+]?\d+Y)|(?:[-+]?\d+[.,]\d+Y$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:(?:[-+]?\d+W)|(?:[-+]?\d+[.,]\d+W$))?(?:(?:[-+]?\d+D)|(?:[-+]?\d+[.,]\d+D$))?(?:T(?=[\d+-])(?:(?:[-+]?\d+H)|(?:[-+]?\d+[.,]\d+H$))?(?:(?:[-+]?\d+M)|(?:[-+]?\d+[.,]\d+M$))?(?:[-+]?\d+(?:[.,]\d+)?S)?)??$/;
+const emailRegex = /^(?!\.)(?!.*\.\.)([A-Z0-9_'+\-\.]*)[A-Z0-9_+-]@([A-Z0-9][A-Z0-9\-]*\.)+[A-Z]{2,}$/i;
+const _emojiRegex = `^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`;
+let emojiRegex;
+const ipv4Regex = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/;
+const ipv4CidrRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/(3[0-2]|[12]?[0-9])$/;
+const ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+const ipv6CidrRegex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))\/(12[0-8]|1[01][0-9]|[1-9]?[0-9])$/;
+const base64Regex = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+const base64urlRegex = /^([0-9a-zA-Z-_]{4})*(([0-9a-zA-Z-_]{2}(==)?)|([0-9a-zA-Z-_]{3}(=)?))?$/;
+const dateRegexSource = `((\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-((0[13578]|1[02])-(0[1-9]|[12]\\d|3[01])|(0[469]|11)-(0[1-9]|[12]\\d|30)|(02)-(0[1-9]|1\\d|2[0-8])))`;
+const dateRegex = new RegExp(`^${dateRegexSource}$`);
+function timeRegexSource(args) {
+  let secondsRegexSource = `[0-5]\\d`;
+  if (args.precision) {
+    secondsRegexSource = `${secondsRegexSource}\\.\\d{${args.precision}}`;
+  } else if (args.precision == null) {
+    secondsRegexSource = `${secondsRegexSource}(\\.\\d+)?`;
+  }
+  const secondsQuantifier = args.precision ? "+" : "?";
+  return `([01]\\d|2[0-3]):[0-5]\\d(:${secondsRegexSource})${secondsQuantifier}`;
+}
+function timeRegex(args) {
+  return new RegExp(`^${timeRegexSource(args)}$`);
+}
+function datetimeRegex(args) {
+  let regex = `${dateRegexSource}T${timeRegexSource(args)}`;
+  const opts = [];
+  opts.push(args.local ? `Z?` : `Z`);
+  if (args.offset)
+    opts.push(`([+-]\\d{2}:?\\d{2})`);
+  regex = `${regex}(${opts.join("|")})`;
+  return new RegExp(`^${regex}$`);
+}
+function isValidIP(ip, version2) {
+  if ((version2 === "v4" || !version2) && ipv4Regex.test(ip)) {
+    return true;
+  }
+  if ((version2 === "v6" || !version2) && ipv6Regex.test(ip)) {
+    return true;
+  }
+  return false;
+}
+function isValidJWT(jwt, alg) {
+  if (!jwtRegex.test(jwt))
+    return false;
+  try {
+    const [header] = jwt.split(".");
+    if (!header)
+      return false;
+    const base642 = header.replace(/-/g, "+").replace(/_/g, "/").padEnd(header.length + (4 - header.length % 4) % 4, "=");
+    const decoded = JSON.parse(atob(base642));
+    if (typeof decoded !== "object" || decoded === null)
+      return false;
+    if ("typ" in decoded && decoded?.typ !== "JWT")
+      return false;
+    if (!decoded.alg)
+      return false;
+    if (alg && decoded.alg !== alg)
+      return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+function isValidCidr(ip, version2) {
+  if ((version2 === "v4" || !version2) && ipv4CidrRegex.test(ip)) {
+    return true;
+  }
+  if ((version2 === "v6" || !version2) && ipv6CidrRegex.test(ip)) {
+    return true;
+  }
+  return false;
+}
+class ZodString extends ZodType {
+  _parse(input) {
+    if (this._def.coerce) {
+      input.data = String(input.data);
+    }
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.string) {
+      const ctx2 = this._getOrReturnCtx(input);
+      addIssueToContext(ctx2, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.string,
+        received: ctx2.parsedType
+      });
+      return INVALID;
+    }
+    const status = new ParseStatus();
+    let ctx = void 0;
+    for (const check of this._def.checks) {
+      if (check.kind === "min") {
+        if (input.data.length < check.value) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.too_small,
+            minimum: check.value,
+            type: "string",
+            inclusive: true,
+            exact: false,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "max") {
+        if (input.data.length > check.value) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.too_big,
+            maximum: check.value,
+            type: "string",
+            inclusive: true,
+            exact: false,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "length") {
+        const tooBig = input.data.length > check.value;
+        const tooSmall = input.data.length < check.value;
+        if (tooBig || tooSmall) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          if (tooBig) {
+            addIssueToContext(ctx, {
+              code: ZodIssueCode.too_big,
+              maximum: check.value,
+              type: "string",
+              inclusive: true,
+              exact: true,
+              message: check.message
+            });
+          } else if (tooSmall) {
+            addIssueToContext(ctx, {
+              code: ZodIssueCode.too_small,
+              minimum: check.value,
+              type: "string",
+              inclusive: true,
+              exact: true,
+              message: check.message
+            });
+          }
+          status.dirty();
+        }
+      } else if (check.kind === "email") {
+        if (!emailRegex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "email",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "emoji") {
+        if (!emojiRegex) {
+          emojiRegex = new RegExp(_emojiRegex, "u");
+        }
+        if (!emojiRegex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "emoji",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "uuid") {
+        if (!uuidRegex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "uuid",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "nanoid") {
+        if (!nanoidRegex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "nanoid",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "cuid") {
+        if (!cuidRegex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "cuid",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "cuid2") {
+        if (!cuid2Regex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "cuid2",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "ulid") {
+        if (!ulidRegex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "ulid",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "url") {
+        try {
+          new URL(input.data);
+        } catch {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "url",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "regex") {
+        check.regex.lastIndex = 0;
+        const testResult = check.regex.test(input.data);
+        if (!testResult) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "regex",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "trim") {
+        input.data = input.data.trim();
+      } else if (check.kind === "includes") {
+        if (!input.data.includes(check.value, check.position)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.invalid_string,
+            validation: { includes: check.value, position: check.position },
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "toLowerCase") {
+        input.data = input.data.toLowerCase();
+      } else if (check.kind === "toUpperCase") {
+        input.data = input.data.toUpperCase();
+      } else if (check.kind === "startsWith") {
+        if (!input.data.startsWith(check.value)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.invalid_string,
+            validation: { startsWith: check.value },
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "endsWith") {
+        if (!input.data.endsWith(check.value)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.invalid_string,
+            validation: { endsWith: check.value },
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "datetime") {
+        const regex = datetimeRegex(check);
+        if (!regex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.invalid_string,
+            validation: "datetime",
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "date") {
+        const regex = dateRegex;
+        if (!regex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.invalid_string,
+            validation: "date",
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "time") {
+        const regex = timeRegex(check);
+        if (!regex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.invalid_string,
+            validation: "time",
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "duration") {
+        if (!durationRegex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "duration",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "ip") {
+        if (!isValidIP(input.data, check.version)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "ip",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "jwt") {
+        if (!isValidJWT(input.data, check.alg)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "jwt",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "cidr") {
+        if (!isValidCidr(input.data, check.version)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "cidr",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "base64") {
+        if (!base64Regex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "base64",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "base64url") {
+        if (!base64urlRegex.test(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            validation: "base64url",
+            code: ZodIssueCode.invalid_string,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else {
+        util.assertNever(check);
+      }
+    }
+    return { status: status.value, value: input.data };
+  }
+  _regex(regex, validation, message) {
+    return this.refinement((data) => regex.test(data), {
+      validation,
+      code: ZodIssueCode.invalid_string,
+      ...errorUtil.errToObj(message)
+    });
+  }
+  _addCheck(check) {
+    return new ZodString({
+      ...this._def,
+      checks: [...this._def.checks, check]
+    });
+  }
+  email(message) {
+    return this._addCheck({ kind: "email", ...errorUtil.errToObj(message) });
+  }
+  url(message) {
+    return this._addCheck({ kind: "url", ...errorUtil.errToObj(message) });
+  }
+  emoji(message) {
+    return this._addCheck({ kind: "emoji", ...errorUtil.errToObj(message) });
+  }
+  uuid(message) {
+    return this._addCheck({ kind: "uuid", ...errorUtil.errToObj(message) });
+  }
+  nanoid(message) {
+    return this._addCheck({ kind: "nanoid", ...errorUtil.errToObj(message) });
+  }
+  cuid(message) {
+    return this._addCheck({ kind: "cuid", ...errorUtil.errToObj(message) });
+  }
+  cuid2(message) {
+    return this._addCheck({ kind: "cuid2", ...errorUtil.errToObj(message) });
+  }
+  ulid(message) {
+    return this._addCheck({ kind: "ulid", ...errorUtil.errToObj(message) });
+  }
+  base64(message) {
+    return this._addCheck({ kind: "base64", ...errorUtil.errToObj(message) });
+  }
+  base64url(message) {
+    return this._addCheck({
+      kind: "base64url",
+      ...errorUtil.errToObj(message)
+    });
+  }
+  jwt(options) {
+    return this._addCheck({ kind: "jwt", ...errorUtil.errToObj(options) });
+  }
+  ip(options) {
+    return this._addCheck({ kind: "ip", ...errorUtil.errToObj(options) });
+  }
+  cidr(options) {
+    return this._addCheck({ kind: "cidr", ...errorUtil.errToObj(options) });
+  }
+  datetime(options) {
+    if (typeof options === "string") {
+      return this._addCheck({
+        kind: "datetime",
+        precision: null,
+        offset: false,
+        local: false,
+        message: options
+      });
+    }
+    return this._addCheck({
+      kind: "datetime",
+      precision: typeof options?.precision === "undefined" ? null : options?.precision,
+      offset: options?.offset ?? false,
+      local: options?.local ?? false,
+      ...errorUtil.errToObj(options?.message)
+    });
+  }
+  date(message) {
+    return this._addCheck({ kind: "date", message });
+  }
+  time(options) {
+    if (typeof options === "string") {
+      return this._addCheck({
+        kind: "time",
+        precision: null,
+        message: options
+      });
+    }
+    return this._addCheck({
+      kind: "time",
+      precision: typeof options?.precision === "undefined" ? null : options?.precision,
+      ...errorUtil.errToObj(options?.message)
+    });
+  }
+  duration(message) {
+    return this._addCheck({ kind: "duration", ...errorUtil.errToObj(message) });
+  }
+  regex(regex, message) {
+    return this._addCheck({
+      kind: "regex",
+      regex,
+      ...errorUtil.errToObj(message)
+    });
+  }
+  includes(value, options) {
+    return this._addCheck({
+      kind: "includes",
+      value,
+      position: options?.position,
+      ...errorUtil.errToObj(options?.message)
+    });
+  }
+  startsWith(value, message) {
+    return this._addCheck({
+      kind: "startsWith",
+      value,
+      ...errorUtil.errToObj(message)
+    });
+  }
+  endsWith(value, message) {
+    return this._addCheck({
+      kind: "endsWith",
+      value,
+      ...errorUtil.errToObj(message)
+    });
+  }
+  min(minLength, message) {
+    return this._addCheck({
+      kind: "min",
+      value: minLength,
+      ...errorUtil.errToObj(message)
+    });
+  }
+  max(maxLength, message) {
+    return this._addCheck({
+      kind: "max",
+      value: maxLength,
+      ...errorUtil.errToObj(message)
+    });
+  }
+  length(len, message) {
+    return this._addCheck({
+      kind: "length",
+      value: len,
+      ...errorUtil.errToObj(message)
+    });
+  }
+  /**
+   * Equivalent to `.min(1)`
+   */
+  nonempty(message) {
+    return this.min(1, errorUtil.errToObj(message));
+  }
+  trim() {
+    return new ZodString({
+      ...this._def,
+      checks: [...this._def.checks, { kind: "trim" }]
+    });
+  }
+  toLowerCase() {
+    return new ZodString({
+      ...this._def,
+      checks: [...this._def.checks, { kind: "toLowerCase" }]
+    });
+  }
+  toUpperCase() {
+    return new ZodString({
+      ...this._def,
+      checks: [...this._def.checks, { kind: "toUpperCase" }]
+    });
+  }
+  get isDatetime() {
+    return !!this._def.checks.find((ch) => ch.kind === "datetime");
+  }
+  get isDate() {
+    return !!this._def.checks.find((ch) => ch.kind === "date");
+  }
+  get isTime() {
+    return !!this._def.checks.find((ch) => ch.kind === "time");
+  }
+  get isDuration() {
+    return !!this._def.checks.find((ch) => ch.kind === "duration");
+  }
+  get isEmail() {
+    return !!this._def.checks.find((ch) => ch.kind === "email");
+  }
+  get isURL() {
+    return !!this._def.checks.find((ch) => ch.kind === "url");
+  }
+  get isEmoji() {
+    return !!this._def.checks.find((ch) => ch.kind === "emoji");
+  }
+  get isUUID() {
+    return !!this._def.checks.find((ch) => ch.kind === "uuid");
+  }
+  get isNANOID() {
+    return !!this._def.checks.find((ch) => ch.kind === "nanoid");
+  }
+  get isCUID() {
+    return !!this._def.checks.find((ch) => ch.kind === "cuid");
+  }
+  get isCUID2() {
+    return !!this._def.checks.find((ch) => ch.kind === "cuid2");
+  }
+  get isULID() {
+    return !!this._def.checks.find((ch) => ch.kind === "ulid");
+  }
+  get isIP() {
+    return !!this._def.checks.find((ch) => ch.kind === "ip");
+  }
+  get isCIDR() {
+    return !!this._def.checks.find((ch) => ch.kind === "cidr");
+  }
+  get isBase64() {
+    return !!this._def.checks.find((ch) => ch.kind === "base64");
+  }
+  get isBase64url() {
+    return !!this._def.checks.find((ch) => ch.kind === "base64url");
+  }
+  get minLength() {
+    let min2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "min") {
+        if (min2 === null || ch.value > min2)
+          min2 = ch.value;
+      }
+    }
+    return min2;
+  }
+  get maxLength() {
+    let max2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "max") {
+        if (max2 === null || ch.value < max2)
+          max2 = ch.value;
+      }
+    }
+    return max2;
+  }
+}
+ZodString.create = (params) => {
+  return new ZodString({
+    checks: [],
+    typeName: ZodFirstPartyTypeKind.ZodString,
+    coerce: params?.coerce ?? false,
+    ...processCreateParams(params)
+  });
+};
+function floatSafeRemainder(val, step) {
+  const valDecCount = (val.toString().split(".")[1] || "").length;
+  const stepDecCount = (step.toString().split(".")[1] || "").length;
+  const decCount = valDecCount > stepDecCount ? valDecCount : stepDecCount;
+  const valInt = Number.parseInt(val.toFixed(decCount).replace(".", ""));
+  const stepInt = Number.parseInt(step.toFixed(decCount).replace(".", ""));
+  return valInt % stepInt / 10 ** decCount;
+}
+class ZodNumber extends ZodType {
+  constructor() {
+    super(...arguments);
+    this.min = this.gte;
+    this.max = this.lte;
+    this.step = this.multipleOf;
+  }
+  _parse(input) {
+    if (this._def.coerce) {
+      input.data = Number(input.data);
+    }
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.number) {
+      const ctx2 = this._getOrReturnCtx(input);
+      addIssueToContext(ctx2, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.number,
+        received: ctx2.parsedType
+      });
+      return INVALID;
+    }
+    let ctx = void 0;
+    const status = new ParseStatus();
+    for (const check of this._def.checks) {
+      if (check.kind === "int") {
+        if (!util.isInteger(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.invalid_type,
+            expected: "integer",
+            received: "float",
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "min") {
+        const tooSmall = check.inclusive ? input.data < check.value : input.data <= check.value;
+        if (tooSmall) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.too_small,
+            minimum: check.value,
+            type: "number",
+            inclusive: check.inclusive,
+            exact: false,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "max") {
+        const tooBig = check.inclusive ? input.data > check.value : input.data >= check.value;
+        if (tooBig) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.too_big,
+            maximum: check.value,
+            type: "number",
+            inclusive: check.inclusive,
+            exact: false,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "multipleOf") {
+        if (floatSafeRemainder(input.data, check.value) !== 0) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.not_multiple_of,
+            multipleOf: check.value,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "finite") {
+        if (!Number.isFinite(input.data)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.not_finite,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else {
+        util.assertNever(check);
+      }
+    }
+    return { status: status.value, value: input.data };
+  }
+  gte(value, message) {
+    return this.setLimit("min", value, true, errorUtil.toString(message));
+  }
+  gt(value, message) {
+    return this.setLimit("min", value, false, errorUtil.toString(message));
+  }
+  lte(value, message) {
+    return this.setLimit("max", value, true, errorUtil.toString(message));
+  }
+  lt(value, message) {
+    return this.setLimit("max", value, false, errorUtil.toString(message));
+  }
+  setLimit(kind, value, inclusive, message) {
+    return new ZodNumber({
+      ...this._def,
+      checks: [
+        ...this._def.checks,
+        {
+          kind,
+          value,
+          inclusive,
+          message: errorUtil.toString(message)
+        }
+      ]
+    });
+  }
+  _addCheck(check) {
+    return new ZodNumber({
+      ...this._def,
+      checks: [...this._def.checks, check]
+    });
+  }
+  int(message) {
+    return this._addCheck({
+      kind: "int",
+      message: errorUtil.toString(message)
+    });
+  }
+  positive(message) {
+    return this._addCheck({
+      kind: "min",
+      value: 0,
+      inclusive: false,
+      message: errorUtil.toString(message)
+    });
+  }
+  negative(message) {
+    return this._addCheck({
+      kind: "max",
+      value: 0,
+      inclusive: false,
+      message: errorUtil.toString(message)
+    });
+  }
+  nonpositive(message) {
+    return this._addCheck({
+      kind: "max",
+      value: 0,
+      inclusive: true,
+      message: errorUtil.toString(message)
+    });
+  }
+  nonnegative(message) {
+    return this._addCheck({
+      kind: "min",
+      value: 0,
+      inclusive: true,
+      message: errorUtil.toString(message)
+    });
+  }
+  multipleOf(value, message) {
+    return this._addCheck({
+      kind: "multipleOf",
+      value,
+      message: errorUtil.toString(message)
+    });
+  }
+  finite(message) {
+    return this._addCheck({
+      kind: "finite",
+      message: errorUtil.toString(message)
+    });
+  }
+  safe(message) {
+    return this._addCheck({
+      kind: "min",
+      inclusive: true,
+      value: Number.MIN_SAFE_INTEGER,
+      message: errorUtil.toString(message)
+    })._addCheck({
+      kind: "max",
+      inclusive: true,
+      value: Number.MAX_SAFE_INTEGER,
+      message: errorUtil.toString(message)
+    });
+  }
+  get minValue() {
+    let min2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "min") {
+        if (min2 === null || ch.value > min2)
+          min2 = ch.value;
+      }
+    }
+    return min2;
+  }
+  get maxValue() {
+    let max2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "max") {
+        if (max2 === null || ch.value < max2)
+          max2 = ch.value;
+      }
+    }
+    return max2;
+  }
+  get isInt() {
+    return !!this._def.checks.find((ch) => ch.kind === "int" || ch.kind === "multipleOf" && util.isInteger(ch.value));
+  }
+  get isFinite() {
+    let max2 = null;
+    let min2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "finite" || ch.kind === "int" || ch.kind === "multipleOf") {
+        return true;
+      } else if (ch.kind === "min") {
+        if (min2 === null || ch.value > min2)
+          min2 = ch.value;
+      } else if (ch.kind === "max") {
+        if (max2 === null || ch.value < max2)
+          max2 = ch.value;
+      }
+    }
+    return Number.isFinite(min2) && Number.isFinite(max2);
+  }
+}
+ZodNumber.create = (params) => {
+  return new ZodNumber({
+    checks: [],
+    typeName: ZodFirstPartyTypeKind.ZodNumber,
+    coerce: params?.coerce || false,
+    ...processCreateParams(params)
+  });
+};
+class ZodBigInt extends ZodType {
+  constructor() {
+    super(...arguments);
+    this.min = this.gte;
+    this.max = this.lte;
+  }
+  _parse(input) {
+    if (this._def.coerce) {
+      try {
+        input.data = BigInt(input.data);
+      } catch {
+        return this._getInvalidInput(input);
+      }
+    }
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.bigint) {
+      return this._getInvalidInput(input);
+    }
+    let ctx = void 0;
+    const status = new ParseStatus();
+    for (const check of this._def.checks) {
+      if (check.kind === "min") {
+        const tooSmall = check.inclusive ? input.data < check.value : input.data <= check.value;
+        if (tooSmall) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.too_small,
+            type: "bigint",
+            minimum: check.value,
+            inclusive: check.inclusive,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "max") {
+        const tooBig = check.inclusive ? input.data > check.value : input.data >= check.value;
+        if (tooBig) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.too_big,
+            type: "bigint",
+            maximum: check.value,
+            inclusive: check.inclusive,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "multipleOf") {
+        if (input.data % check.value !== BigInt(0)) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.not_multiple_of,
+            multipleOf: check.value,
+            message: check.message
+          });
+          status.dirty();
+        }
+      } else {
+        util.assertNever(check);
+      }
+    }
+    return { status: status.value, value: input.data };
+  }
+  _getInvalidInput(input) {
+    const ctx = this._getOrReturnCtx(input);
+    addIssueToContext(ctx, {
+      code: ZodIssueCode.invalid_type,
+      expected: ZodParsedType.bigint,
+      received: ctx.parsedType
+    });
+    return INVALID;
+  }
+  gte(value, message) {
+    return this.setLimit("min", value, true, errorUtil.toString(message));
+  }
+  gt(value, message) {
+    return this.setLimit("min", value, false, errorUtil.toString(message));
+  }
+  lte(value, message) {
+    return this.setLimit("max", value, true, errorUtil.toString(message));
+  }
+  lt(value, message) {
+    return this.setLimit("max", value, false, errorUtil.toString(message));
+  }
+  setLimit(kind, value, inclusive, message) {
+    return new ZodBigInt({
+      ...this._def,
+      checks: [
+        ...this._def.checks,
+        {
+          kind,
+          value,
+          inclusive,
+          message: errorUtil.toString(message)
+        }
+      ]
+    });
+  }
+  _addCheck(check) {
+    return new ZodBigInt({
+      ...this._def,
+      checks: [...this._def.checks, check]
+    });
+  }
+  positive(message) {
+    return this._addCheck({
+      kind: "min",
+      value: BigInt(0),
+      inclusive: false,
+      message: errorUtil.toString(message)
+    });
+  }
+  negative(message) {
+    return this._addCheck({
+      kind: "max",
+      value: BigInt(0),
+      inclusive: false,
+      message: errorUtil.toString(message)
+    });
+  }
+  nonpositive(message) {
+    return this._addCheck({
+      kind: "max",
+      value: BigInt(0),
+      inclusive: true,
+      message: errorUtil.toString(message)
+    });
+  }
+  nonnegative(message) {
+    return this._addCheck({
+      kind: "min",
+      value: BigInt(0),
+      inclusive: true,
+      message: errorUtil.toString(message)
+    });
+  }
+  multipleOf(value, message) {
+    return this._addCheck({
+      kind: "multipleOf",
+      value,
+      message: errorUtil.toString(message)
+    });
+  }
+  get minValue() {
+    let min2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "min") {
+        if (min2 === null || ch.value > min2)
+          min2 = ch.value;
+      }
+    }
+    return min2;
+  }
+  get maxValue() {
+    let max2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "max") {
+        if (max2 === null || ch.value < max2)
+          max2 = ch.value;
+      }
+    }
+    return max2;
+  }
+}
+ZodBigInt.create = (params) => {
+  return new ZodBigInt({
+    checks: [],
+    typeName: ZodFirstPartyTypeKind.ZodBigInt,
+    coerce: params?.coerce ?? false,
+    ...processCreateParams(params)
+  });
+};
+class ZodBoolean extends ZodType {
+  _parse(input) {
+    if (this._def.coerce) {
+      input.data = Boolean(input.data);
+    }
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.boolean) {
+      const ctx = this._getOrReturnCtx(input);
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.boolean,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    return OK(input.data);
+  }
+}
+ZodBoolean.create = (params) => {
+  return new ZodBoolean({
+    typeName: ZodFirstPartyTypeKind.ZodBoolean,
+    coerce: params?.coerce || false,
+    ...processCreateParams(params)
+  });
+};
+class ZodDate extends ZodType {
+  _parse(input) {
+    if (this._def.coerce) {
+      input.data = new Date(input.data);
+    }
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.date) {
+      const ctx2 = this._getOrReturnCtx(input);
+      addIssueToContext(ctx2, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.date,
+        received: ctx2.parsedType
+      });
+      return INVALID;
+    }
+    if (Number.isNaN(input.data.getTime())) {
+      const ctx2 = this._getOrReturnCtx(input);
+      addIssueToContext(ctx2, {
+        code: ZodIssueCode.invalid_date
+      });
+      return INVALID;
+    }
+    const status = new ParseStatus();
+    let ctx = void 0;
+    for (const check of this._def.checks) {
+      if (check.kind === "min") {
+        if (input.data.getTime() < check.value) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.too_small,
+            message: check.message,
+            inclusive: true,
+            exact: false,
+            minimum: check.value,
+            type: "date"
+          });
+          status.dirty();
+        }
+      } else if (check.kind === "max") {
+        if (input.data.getTime() > check.value) {
+          ctx = this._getOrReturnCtx(input, ctx);
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.too_big,
+            message: check.message,
+            inclusive: true,
+            exact: false,
+            maximum: check.value,
+            type: "date"
+          });
+          status.dirty();
+        }
+      } else {
+        util.assertNever(check);
+      }
+    }
+    return {
+      status: status.value,
+      value: new Date(input.data.getTime())
+    };
+  }
+  _addCheck(check) {
+    return new ZodDate({
+      ...this._def,
+      checks: [...this._def.checks, check]
+    });
+  }
+  min(minDate, message) {
+    return this._addCheck({
+      kind: "min",
+      value: minDate.getTime(),
+      message: errorUtil.toString(message)
+    });
+  }
+  max(maxDate, message) {
+    return this._addCheck({
+      kind: "max",
+      value: maxDate.getTime(),
+      message: errorUtil.toString(message)
+    });
+  }
+  get minDate() {
+    let min2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "min") {
+        if (min2 === null || ch.value > min2)
+          min2 = ch.value;
+      }
+    }
+    return min2 != null ? new Date(min2) : null;
+  }
+  get maxDate() {
+    let max2 = null;
+    for (const ch of this._def.checks) {
+      if (ch.kind === "max") {
+        if (max2 === null || ch.value < max2)
+          max2 = ch.value;
+      }
+    }
+    return max2 != null ? new Date(max2) : null;
+  }
+}
+ZodDate.create = (params) => {
+  return new ZodDate({
+    checks: [],
+    coerce: params?.coerce || false,
+    typeName: ZodFirstPartyTypeKind.ZodDate,
+    ...processCreateParams(params)
+  });
+};
+class ZodSymbol extends ZodType {
+  _parse(input) {
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.symbol) {
+      const ctx = this._getOrReturnCtx(input);
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.symbol,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    return OK(input.data);
+  }
+}
+ZodSymbol.create = (params) => {
+  return new ZodSymbol({
+    typeName: ZodFirstPartyTypeKind.ZodSymbol,
+    ...processCreateParams(params)
+  });
+};
+class ZodUndefined extends ZodType {
+  _parse(input) {
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.undefined) {
+      const ctx = this._getOrReturnCtx(input);
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.undefined,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    return OK(input.data);
+  }
+}
+ZodUndefined.create = (params) => {
+  return new ZodUndefined({
+    typeName: ZodFirstPartyTypeKind.ZodUndefined,
+    ...processCreateParams(params)
+  });
+};
+class ZodNull extends ZodType {
+  _parse(input) {
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.null) {
+      const ctx = this._getOrReturnCtx(input);
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.null,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    return OK(input.data);
+  }
+}
+ZodNull.create = (params) => {
+  return new ZodNull({
+    typeName: ZodFirstPartyTypeKind.ZodNull,
+    ...processCreateParams(params)
+  });
+};
+class ZodAny extends ZodType {
+  constructor() {
+    super(...arguments);
+    this._any = true;
+  }
+  _parse(input) {
+    return OK(input.data);
+  }
+}
+ZodAny.create = (params) => {
+  return new ZodAny({
+    typeName: ZodFirstPartyTypeKind.ZodAny,
+    ...processCreateParams(params)
+  });
+};
+class ZodUnknown extends ZodType {
+  constructor() {
+    super(...arguments);
+    this._unknown = true;
+  }
+  _parse(input) {
+    return OK(input.data);
+  }
+}
+ZodUnknown.create = (params) => {
+  return new ZodUnknown({
+    typeName: ZodFirstPartyTypeKind.ZodUnknown,
+    ...processCreateParams(params)
+  });
+};
+class ZodNever extends ZodType {
+  _parse(input) {
+    const ctx = this._getOrReturnCtx(input);
+    addIssueToContext(ctx, {
+      code: ZodIssueCode.invalid_type,
+      expected: ZodParsedType.never,
+      received: ctx.parsedType
+    });
+    return INVALID;
+  }
+}
+ZodNever.create = (params) => {
+  return new ZodNever({
+    typeName: ZodFirstPartyTypeKind.ZodNever,
+    ...processCreateParams(params)
+  });
+};
+class ZodVoid extends ZodType {
+  _parse(input) {
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.undefined) {
+      const ctx = this._getOrReturnCtx(input);
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.void,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    return OK(input.data);
+  }
+}
+ZodVoid.create = (params) => {
+  return new ZodVoid({
+    typeName: ZodFirstPartyTypeKind.ZodVoid,
+    ...processCreateParams(params)
+  });
+};
+class ZodArray extends ZodType {
+  _parse(input) {
+    const { ctx, status } = this._processInputParams(input);
+    const def = this._def;
+    if (ctx.parsedType !== ZodParsedType.array) {
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.array,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    if (def.exactLength !== null) {
+      const tooBig = ctx.data.length > def.exactLength.value;
+      const tooSmall = ctx.data.length < def.exactLength.value;
+      if (tooBig || tooSmall) {
+        addIssueToContext(ctx, {
+          code: tooBig ? ZodIssueCode.too_big : ZodIssueCode.too_small,
+          minimum: tooSmall ? def.exactLength.value : void 0,
+          maximum: tooBig ? def.exactLength.value : void 0,
+          type: "array",
+          inclusive: true,
+          exact: true,
+          message: def.exactLength.message
+        });
+        status.dirty();
+      }
+    }
+    if (def.minLength !== null) {
+      if (ctx.data.length < def.minLength.value) {
+        addIssueToContext(ctx, {
+          code: ZodIssueCode.too_small,
+          minimum: def.minLength.value,
+          type: "array",
+          inclusive: true,
+          exact: false,
+          message: def.minLength.message
+        });
+        status.dirty();
+      }
+    }
+    if (def.maxLength !== null) {
+      if (ctx.data.length > def.maxLength.value) {
+        addIssueToContext(ctx, {
+          code: ZodIssueCode.too_big,
+          maximum: def.maxLength.value,
+          type: "array",
+          inclusive: true,
+          exact: false,
+          message: def.maxLength.message
+        });
+        status.dirty();
+      }
+    }
+    if (ctx.common.async) {
+      return Promise.all([...ctx.data].map((item, i) => {
+        return def.type._parseAsync(new ParseInputLazyPath(ctx, item, ctx.path, i));
+      })).then((result2) => {
+        return ParseStatus.mergeArray(status, result2);
+      });
+    }
+    const result = [...ctx.data].map((item, i) => {
+      return def.type._parseSync(new ParseInputLazyPath(ctx, item, ctx.path, i));
+    });
+    return ParseStatus.mergeArray(status, result);
+  }
+  get element() {
+    return this._def.type;
+  }
+  min(minLength, message) {
+    return new ZodArray({
+      ...this._def,
+      minLength: { value: minLength, message: errorUtil.toString(message) }
+    });
+  }
+  max(maxLength, message) {
+    return new ZodArray({
+      ...this._def,
+      maxLength: { value: maxLength, message: errorUtil.toString(message) }
+    });
+  }
+  length(len, message) {
+    return new ZodArray({
+      ...this._def,
+      exactLength: { value: len, message: errorUtil.toString(message) }
+    });
+  }
+  nonempty(message) {
+    return this.min(1, message);
+  }
+}
+ZodArray.create = (schema, params) => {
+  return new ZodArray({
+    type: schema,
+    minLength: null,
+    maxLength: null,
+    exactLength: null,
+    typeName: ZodFirstPartyTypeKind.ZodArray,
+    ...processCreateParams(params)
+  });
+};
+function deepPartialify(schema) {
+  if (schema instanceof ZodObject) {
+    const newShape = {};
+    for (const key in schema.shape) {
+      const fieldSchema = schema.shape[key];
+      newShape[key] = ZodOptional.create(deepPartialify(fieldSchema));
+    }
+    return new ZodObject({
+      ...schema._def,
+      shape: () => newShape
+    });
+  } else if (schema instanceof ZodArray) {
+    return new ZodArray({
+      ...schema._def,
+      type: deepPartialify(schema.element)
+    });
+  } else if (schema instanceof ZodOptional) {
+    return ZodOptional.create(deepPartialify(schema.unwrap()));
+  } else if (schema instanceof ZodNullable) {
+    return ZodNullable.create(deepPartialify(schema.unwrap()));
+  } else if (schema instanceof ZodTuple) {
+    return ZodTuple.create(schema.items.map((item) => deepPartialify(item)));
+  } else {
+    return schema;
+  }
+}
+class ZodObject extends ZodType {
+  constructor() {
+    super(...arguments);
+    this._cached = null;
+    this.nonstrict = this.passthrough;
+    this.augment = this.extend;
+  }
+  _getCached() {
+    if (this._cached !== null)
+      return this._cached;
+    const shape = this._def.shape();
+    const keys = util.objectKeys(shape);
+    this._cached = { shape, keys };
+    return this._cached;
+  }
+  _parse(input) {
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.object) {
+      const ctx2 = this._getOrReturnCtx(input);
+      addIssueToContext(ctx2, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.object,
+        received: ctx2.parsedType
+      });
+      return INVALID;
+    }
+    const { status, ctx } = this._processInputParams(input);
+    const { shape, keys: shapeKeys } = this._getCached();
+    const extraKeys = [];
+    if (!(this._def.catchall instanceof ZodNever && this._def.unknownKeys === "strip")) {
+      for (const key in ctx.data) {
+        if (!shapeKeys.includes(key)) {
+          extraKeys.push(key);
+        }
+      }
+    }
+    const pairs = [];
+    for (const key of shapeKeys) {
+      const keyValidator = shape[key];
+      const value = ctx.data[key];
+      pairs.push({
+        key: { status: "valid", value: key },
+        value: keyValidator._parse(new ParseInputLazyPath(ctx, value, ctx.path, key)),
+        alwaysSet: key in ctx.data
+      });
+    }
+    if (this._def.catchall instanceof ZodNever) {
+      const unknownKeys = this._def.unknownKeys;
+      if (unknownKeys === "passthrough") {
+        for (const key of extraKeys) {
+          pairs.push({
+            key: { status: "valid", value: key },
+            value: { status: "valid", value: ctx.data[key] }
+          });
+        }
+      } else if (unknownKeys === "strict") {
+        if (extraKeys.length > 0) {
+          addIssueToContext(ctx, {
+            code: ZodIssueCode.unrecognized_keys,
+            keys: extraKeys
+          });
+          status.dirty();
+        }
+      } else if (unknownKeys === "strip") ;
+      else {
+        throw new Error(`Internal ZodObject error: invalid unknownKeys value.`);
+      }
+    } else {
+      const catchall = this._def.catchall;
+      for (const key of extraKeys) {
+        const value = ctx.data[key];
+        pairs.push({
+          key: { status: "valid", value: key },
+          value: catchall._parse(
+            new ParseInputLazyPath(ctx, value, ctx.path, key)
+            //, ctx.child(key), value, getParsedType(value)
+          ),
+          alwaysSet: key in ctx.data
+        });
+      }
+    }
+    if (ctx.common.async) {
+      return Promise.resolve().then(async () => {
+        const syncPairs = [];
+        for (const pair of pairs) {
+          const key = await pair.key;
+          const value = await pair.value;
+          syncPairs.push({
+            key,
+            value,
+            alwaysSet: pair.alwaysSet
+          });
+        }
+        return syncPairs;
+      }).then((syncPairs) => {
+        return ParseStatus.mergeObjectSync(status, syncPairs);
+      });
+    } else {
+      return ParseStatus.mergeObjectSync(status, pairs);
+    }
+  }
+  get shape() {
+    return this._def.shape();
+  }
+  strict(message) {
+    errorUtil.errToObj;
+    return new ZodObject({
+      ...this._def,
+      unknownKeys: "strict",
+      ...message !== void 0 ? {
+        errorMap: (issue, ctx) => {
+          const defaultError = this._def.errorMap?.(issue, ctx).message ?? ctx.defaultError;
+          if (issue.code === "unrecognized_keys")
+            return {
+              message: errorUtil.errToObj(message).message ?? defaultError
+            };
+          return {
+            message: defaultError
+          };
+        }
+      } : {}
+    });
+  }
+  strip() {
+    return new ZodObject({
+      ...this._def,
+      unknownKeys: "strip"
+    });
+  }
+  passthrough() {
+    return new ZodObject({
+      ...this._def,
+      unknownKeys: "passthrough"
+    });
+  }
+  // const AugmentFactory =
+  //   <Def extends ZodObjectDef>(def: Def) =>
+  //   <Augmentation extends ZodRawShape>(
+  //     augmentation: Augmentation
+  //   ): ZodObject<
+  //     extendShape<ReturnType<Def["shape"]>, Augmentation>,
+  //     Def["unknownKeys"],
+  //     Def["catchall"]
+  //   > => {
+  //     return new ZodObject({
+  //       ...def,
+  //       shape: () => ({
+  //         ...def.shape(),
+  //         ...augmentation,
+  //       }),
+  //     }) as any;
+  //   };
+  extend(augmentation) {
+    return new ZodObject({
+      ...this._def,
+      shape: () => ({
+        ...this._def.shape(),
+        ...augmentation
+      })
+    });
+  }
+  /**
+   * Prior to zod@1.0.12 there was a bug in the
+   * inferred type of merged objects. Please
+   * upgrade if you are experiencing issues.
+   */
+  merge(merging) {
+    const merged = new ZodObject({
+      unknownKeys: merging._def.unknownKeys,
+      catchall: merging._def.catchall,
+      shape: () => ({
+        ...this._def.shape(),
+        ...merging._def.shape()
+      }),
+      typeName: ZodFirstPartyTypeKind.ZodObject
+    });
+    return merged;
+  }
+  // merge<
+  //   Incoming extends AnyZodObject,
+  //   Augmentation extends Incoming["shape"],
+  //   NewOutput extends {
+  //     [k in keyof Augmentation | keyof Output]: k extends keyof Augmentation
+  //       ? Augmentation[k]["_output"]
+  //       : k extends keyof Output
+  //       ? Output[k]
+  //       : never;
+  //   },
+  //   NewInput extends {
+  //     [k in keyof Augmentation | keyof Input]: k extends keyof Augmentation
+  //       ? Augmentation[k]["_input"]
+  //       : k extends keyof Input
+  //       ? Input[k]
+  //       : never;
+  //   }
+  // >(
+  //   merging: Incoming
+  // ): ZodObject<
+  //   extendShape<T, ReturnType<Incoming["_def"]["shape"]>>,
+  //   Incoming["_def"]["unknownKeys"],
+  //   Incoming["_def"]["catchall"],
+  //   NewOutput,
+  //   NewInput
+  // > {
+  //   const merged: any = new ZodObject({
+  //     unknownKeys: merging._def.unknownKeys,
+  //     catchall: merging._def.catchall,
+  //     shape: () =>
+  //       objectUtil.mergeShapes(this._def.shape(), merging._def.shape()),
+  //     typeName: ZodFirstPartyTypeKind.ZodObject,
+  //   }) as any;
+  //   return merged;
+  // }
+  setKey(key, schema) {
+    return this.augment({ [key]: schema });
+  }
+  // merge<Incoming extends AnyZodObject>(
+  //   merging: Incoming
+  // ): //ZodObject<T & Incoming["_shape"], UnknownKeys, Catchall> = (merging) => {
+  // ZodObject<
+  //   extendShape<T, ReturnType<Incoming["_def"]["shape"]>>,
+  //   Incoming["_def"]["unknownKeys"],
+  //   Incoming["_def"]["catchall"]
+  // > {
+  //   // const mergedShape = objectUtil.mergeShapes(
+  //   //   this._def.shape(),
+  //   //   merging._def.shape()
+  //   // );
+  //   const merged: any = new ZodObject({
+  //     unknownKeys: merging._def.unknownKeys,
+  //     catchall: merging._def.catchall,
+  //     shape: () =>
+  //       objectUtil.mergeShapes(this._def.shape(), merging._def.shape()),
+  //     typeName: ZodFirstPartyTypeKind.ZodObject,
+  //   }) as any;
+  //   return merged;
+  // }
+  catchall(index2) {
+    return new ZodObject({
+      ...this._def,
+      catchall: index2
+    });
+  }
+  pick(mask2) {
+    const shape = {};
+    for (const key of util.objectKeys(mask2)) {
+      if (mask2[key] && this.shape[key]) {
+        shape[key] = this.shape[key];
+      }
+    }
+    return new ZodObject({
+      ...this._def,
+      shape: () => shape
+    });
+  }
+  omit(mask2) {
+    const shape = {};
+    for (const key of util.objectKeys(this.shape)) {
+      if (!mask2[key]) {
+        shape[key] = this.shape[key];
+      }
+    }
+    return new ZodObject({
+      ...this._def,
+      shape: () => shape
+    });
+  }
+  /**
+   * @deprecated
+   */
+  deepPartial() {
+    return deepPartialify(this);
+  }
+  partial(mask2) {
+    const newShape = {};
+    for (const key of util.objectKeys(this.shape)) {
+      const fieldSchema = this.shape[key];
+      if (mask2 && !mask2[key]) {
+        newShape[key] = fieldSchema;
+      } else {
+        newShape[key] = fieldSchema.optional();
+      }
+    }
+    return new ZodObject({
+      ...this._def,
+      shape: () => newShape
+    });
+  }
+  required(mask2) {
+    const newShape = {};
+    for (const key of util.objectKeys(this.shape)) {
+      if (mask2 && !mask2[key]) {
+        newShape[key] = this.shape[key];
+      } else {
+        const fieldSchema = this.shape[key];
+        let newField = fieldSchema;
+        while (newField instanceof ZodOptional) {
+          newField = newField._def.innerType;
+        }
+        newShape[key] = newField;
+      }
+    }
+    return new ZodObject({
+      ...this._def,
+      shape: () => newShape
+    });
+  }
+  keyof() {
+    return createZodEnum(util.objectKeys(this.shape));
+  }
+}
+ZodObject.create = (shape, params) => {
+  return new ZodObject({
+    shape: () => shape,
+    unknownKeys: "strip",
+    catchall: ZodNever.create(),
+    typeName: ZodFirstPartyTypeKind.ZodObject,
+    ...processCreateParams(params)
+  });
+};
+ZodObject.strictCreate = (shape, params) => {
+  return new ZodObject({
+    shape: () => shape,
+    unknownKeys: "strict",
+    catchall: ZodNever.create(),
+    typeName: ZodFirstPartyTypeKind.ZodObject,
+    ...processCreateParams(params)
+  });
+};
+ZodObject.lazycreate = (shape, params) => {
+  return new ZodObject({
+    shape,
+    unknownKeys: "strip",
+    catchall: ZodNever.create(),
+    typeName: ZodFirstPartyTypeKind.ZodObject,
+    ...processCreateParams(params)
+  });
+};
+class ZodUnion extends ZodType {
+  _parse(input) {
+    const { ctx } = this._processInputParams(input);
+    const options = this._def.options;
+    function handleResults(results) {
+      for (const result of results) {
+        if (result.result.status === "valid") {
+          return result.result;
+        }
+      }
+      for (const result of results) {
+        if (result.result.status === "dirty") {
+          ctx.common.issues.push(...result.ctx.common.issues);
+          return result.result;
+        }
+      }
+      const unionErrors = results.map((result) => new ZodError(result.ctx.common.issues));
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_union,
+        unionErrors
+      });
+      return INVALID;
+    }
+    if (ctx.common.async) {
+      return Promise.all(options.map(async (option) => {
+        const childCtx = {
+          ...ctx,
+          common: {
+            ...ctx.common,
+            issues: []
+          },
+          parent: null
+        };
+        return {
+          result: await option._parseAsync({
+            data: ctx.data,
+            path: ctx.path,
+            parent: childCtx
+          }),
+          ctx: childCtx
+        };
+      })).then(handleResults);
+    } else {
+      let dirty = void 0;
+      const issues = [];
+      for (const option of options) {
+        const childCtx = {
+          ...ctx,
+          common: {
+            ...ctx.common,
+            issues: []
+          },
+          parent: null
+        };
+        const result = option._parseSync({
+          data: ctx.data,
+          path: ctx.path,
+          parent: childCtx
+        });
+        if (result.status === "valid") {
+          return result;
+        } else if (result.status === "dirty" && !dirty) {
+          dirty = { result, ctx: childCtx };
+        }
+        if (childCtx.common.issues.length) {
+          issues.push(childCtx.common.issues);
+        }
+      }
+      if (dirty) {
+        ctx.common.issues.push(...dirty.ctx.common.issues);
+        return dirty.result;
+      }
+      const unionErrors = issues.map((issues2) => new ZodError(issues2));
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_union,
+        unionErrors
+      });
+      return INVALID;
+    }
+  }
+  get options() {
+    return this._def.options;
+  }
+}
+ZodUnion.create = (types, params) => {
+  return new ZodUnion({
+    options: types,
+    typeName: ZodFirstPartyTypeKind.ZodUnion,
+    ...processCreateParams(params)
+  });
+};
+function mergeValues(a, b2) {
+  const aType = getParsedType(a);
+  const bType = getParsedType(b2);
+  if (a === b2) {
+    return { valid: true, data: a };
+  } else if (aType === ZodParsedType.object && bType === ZodParsedType.object) {
+    const bKeys = util.objectKeys(b2);
+    const sharedKeys = util.objectKeys(a).filter((key) => bKeys.indexOf(key) !== -1);
+    const newObj = { ...a, ...b2 };
+    for (const key of sharedKeys) {
+      const sharedValue = mergeValues(a[key], b2[key]);
+      if (!sharedValue.valid) {
+        return { valid: false };
+      }
+      newObj[key] = sharedValue.data;
+    }
+    return { valid: true, data: newObj };
+  } else if (aType === ZodParsedType.array && bType === ZodParsedType.array) {
+    if (a.length !== b2.length) {
+      return { valid: false };
+    }
+    const newArray = [];
+    for (let index2 = 0; index2 < a.length; index2++) {
+      const itemA = a[index2];
+      const itemB = b2[index2];
+      const sharedValue = mergeValues(itemA, itemB);
+      if (!sharedValue.valid) {
+        return { valid: false };
+      }
+      newArray.push(sharedValue.data);
+    }
+    return { valid: true, data: newArray };
+  } else if (aType === ZodParsedType.date && bType === ZodParsedType.date && +a === +b2) {
+    return { valid: true, data: a };
+  } else {
+    return { valid: false };
+  }
+}
+class ZodIntersection extends ZodType {
+  _parse(input) {
+    const { status, ctx } = this._processInputParams(input);
+    const handleParsed = (parsedLeft, parsedRight) => {
+      if (isAborted(parsedLeft) || isAborted(parsedRight)) {
+        return INVALID;
+      }
+      const merged = mergeValues(parsedLeft.value, parsedRight.value);
+      if (!merged.valid) {
+        addIssueToContext(ctx, {
+          code: ZodIssueCode.invalid_intersection_types
+        });
+        return INVALID;
+      }
+      if (isDirty(parsedLeft) || isDirty(parsedRight)) {
+        status.dirty();
+      }
+      return { status: status.value, value: merged.data };
+    };
+    if (ctx.common.async) {
+      return Promise.all([
+        this._def.left._parseAsync({
+          data: ctx.data,
+          path: ctx.path,
+          parent: ctx
+        }),
+        this._def.right._parseAsync({
+          data: ctx.data,
+          path: ctx.path,
+          parent: ctx
+        })
+      ]).then(([left, right]) => handleParsed(left, right));
+    } else {
+      return handleParsed(this._def.left._parseSync({
+        data: ctx.data,
+        path: ctx.path,
+        parent: ctx
+      }), this._def.right._parseSync({
+        data: ctx.data,
+        path: ctx.path,
+        parent: ctx
+      }));
+    }
+  }
+}
+ZodIntersection.create = (left, right, params) => {
+  return new ZodIntersection({
+    left,
+    right,
+    typeName: ZodFirstPartyTypeKind.ZodIntersection,
+    ...processCreateParams(params)
+  });
+};
+class ZodTuple extends ZodType {
+  _parse(input) {
+    const { status, ctx } = this._processInputParams(input);
+    if (ctx.parsedType !== ZodParsedType.array) {
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.array,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    if (ctx.data.length < this._def.items.length) {
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.too_small,
+        minimum: this._def.items.length,
+        inclusive: true,
+        exact: false,
+        type: "array"
+      });
+      return INVALID;
+    }
+    const rest = this._def.rest;
+    if (!rest && ctx.data.length > this._def.items.length) {
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.too_big,
+        maximum: this._def.items.length,
+        inclusive: true,
+        exact: false,
+        type: "array"
+      });
+      status.dirty();
+    }
+    const items = [...ctx.data].map((item, itemIndex) => {
+      const schema = this._def.items[itemIndex] || this._def.rest;
+      if (!schema)
+        return null;
+      return schema._parse(new ParseInputLazyPath(ctx, item, ctx.path, itemIndex));
+    }).filter((x2) => !!x2);
+    if (ctx.common.async) {
+      return Promise.all(items).then((results) => {
+        return ParseStatus.mergeArray(status, results);
+      });
+    } else {
+      return ParseStatus.mergeArray(status, items);
+    }
+  }
+  get items() {
+    return this._def.items;
+  }
+  rest(rest) {
+    return new ZodTuple({
+      ...this._def,
+      rest
+    });
+  }
+}
+ZodTuple.create = (schemas, params) => {
+  if (!Array.isArray(schemas)) {
+    throw new Error("You must pass an array of schemas to z.tuple([ ... ])");
+  }
+  return new ZodTuple({
+    items: schemas,
+    typeName: ZodFirstPartyTypeKind.ZodTuple,
+    rest: null,
+    ...processCreateParams(params)
+  });
+};
+class ZodRecord extends ZodType {
+  get keySchema() {
+    return this._def.keyType;
+  }
+  get valueSchema() {
+    return this._def.valueType;
+  }
+  _parse(input) {
+    const { status, ctx } = this._processInputParams(input);
+    if (ctx.parsedType !== ZodParsedType.object) {
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.object,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    const pairs = [];
+    const keyType = this._def.keyType;
+    const valueType = this._def.valueType;
+    for (const key in ctx.data) {
+      pairs.push({
+        key: keyType._parse(new ParseInputLazyPath(ctx, key, ctx.path, key)),
+        value: valueType._parse(new ParseInputLazyPath(ctx, ctx.data[key], ctx.path, key)),
+        alwaysSet: key in ctx.data
+      });
+    }
+    if (ctx.common.async) {
+      return ParseStatus.mergeObjectAsync(status, pairs);
+    } else {
+      return ParseStatus.mergeObjectSync(status, pairs);
+    }
+  }
+  get element() {
+    return this._def.valueType;
+  }
+  static create(first, second, third) {
+    if (second instanceof ZodType) {
+      return new ZodRecord({
+        keyType: first,
+        valueType: second,
+        typeName: ZodFirstPartyTypeKind.ZodRecord,
+        ...processCreateParams(third)
+      });
+    }
+    return new ZodRecord({
+      keyType: ZodString.create(),
+      valueType: first,
+      typeName: ZodFirstPartyTypeKind.ZodRecord,
+      ...processCreateParams(second)
+    });
+  }
+}
+class ZodMap extends ZodType {
+  get keySchema() {
+    return this._def.keyType;
+  }
+  get valueSchema() {
+    return this._def.valueType;
+  }
+  _parse(input) {
+    const { status, ctx } = this._processInputParams(input);
+    if (ctx.parsedType !== ZodParsedType.map) {
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.map,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    const keyType = this._def.keyType;
+    const valueType = this._def.valueType;
+    const pairs = [...ctx.data.entries()].map(([key, value], index2) => {
+      return {
+        key: keyType._parse(new ParseInputLazyPath(ctx, key, ctx.path, [index2, "key"])),
+        value: valueType._parse(new ParseInputLazyPath(ctx, value, ctx.path, [index2, "value"]))
+      };
+    });
+    if (ctx.common.async) {
+      const finalMap = /* @__PURE__ */ new Map();
+      return Promise.resolve().then(async () => {
+        for (const pair of pairs) {
+          const key = await pair.key;
+          const value = await pair.value;
+          if (key.status === "aborted" || value.status === "aborted") {
+            return INVALID;
+          }
+          if (key.status === "dirty" || value.status === "dirty") {
+            status.dirty();
+          }
+          finalMap.set(key.value, value.value);
+        }
+        return { status: status.value, value: finalMap };
+      });
+    } else {
+      const finalMap = /* @__PURE__ */ new Map();
+      for (const pair of pairs) {
+        const key = pair.key;
+        const value = pair.value;
+        if (key.status === "aborted" || value.status === "aborted") {
+          return INVALID;
+        }
+        if (key.status === "dirty" || value.status === "dirty") {
+          status.dirty();
+        }
+        finalMap.set(key.value, value.value);
+      }
+      return { status: status.value, value: finalMap };
+    }
+  }
+}
+ZodMap.create = (keyType, valueType, params) => {
+  return new ZodMap({
+    valueType,
+    keyType,
+    typeName: ZodFirstPartyTypeKind.ZodMap,
+    ...processCreateParams(params)
+  });
+};
+class ZodSet extends ZodType {
+  _parse(input) {
+    const { status, ctx } = this._processInputParams(input);
+    if (ctx.parsedType !== ZodParsedType.set) {
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.set,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    const def = this._def;
+    if (def.minSize !== null) {
+      if (ctx.data.size < def.minSize.value) {
+        addIssueToContext(ctx, {
+          code: ZodIssueCode.too_small,
+          minimum: def.minSize.value,
+          type: "set",
+          inclusive: true,
+          exact: false,
+          message: def.minSize.message
+        });
+        status.dirty();
+      }
+    }
+    if (def.maxSize !== null) {
+      if (ctx.data.size > def.maxSize.value) {
+        addIssueToContext(ctx, {
+          code: ZodIssueCode.too_big,
+          maximum: def.maxSize.value,
+          type: "set",
+          inclusive: true,
+          exact: false,
+          message: def.maxSize.message
+        });
+        status.dirty();
+      }
+    }
+    const valueType = this._def.valueType;
+    function finalizeSet(elements2) {
+      const parsedSet = /* @__PURE__ */ new Set();
+      for (const element of elements2) {
+        if (element.status === "aborted")
+          return INVALID;
+        if (element.status === "dirty")
+          status.dirty();
+        parsedSet.add(element.value);
+      }
+      return { status: status.value, value: parsedSet };
+    }
+    const elements = [...ctx.data.values()].map((item, i) => valueType._parse(new ParseInputLazyPath(ctx, item, ctx.path, i)));
+    if (ctx.common.async) {
+      return Promise.all(elements).then((elements2) => finalizeSet(elements2));
+    } else {
+      return finalizeSet(elements);
+    }
+  }
+  min(minSize, message) {
+    return new ZodSet({
+      ...this._def,
+      minSize: { value: minSize, message: errorUtil.toString(message) }
+    });
+  }
+  max(maxSize, message) {
+    return new ZodSet({
+      ...this._def,
+      maxSize: { value: maxSize, message: errorUtil.toString(message) }
+    });
+  }
+  size(size2, message) {
+    return this.min(size2, message).max(size2, message);
+  }
+  nonempty(message) {
+    return this.min(1, message);
+  }
+}
+ZodSet.create = (valueType, params) => {
+  return new ZodSet({
+    valueType,
+    minSize: null,
+    maxSize: null,
+    typeName: ZodFirstPartyTypeKind.ZodSet,
+    ...processCreateParams(params)
+  });
+};
+class ZodLazy extends ZodType {
+  get schema() {
+    return this._def.getter();
+  }
+  _parse(input) {
+    const { ctx } = this._processInputParams(input);
+    const lazySchema = this._def.getter();
+    return lazySchema._parse({ data: ctx.data, path: ctx.path, parent: ctx });
+  }
+}
+ZodLazy.create = (getter, params) => {
+  return new ZodLazy({
+    getter,
+    typeName: ZodFirstPartyTypeKind.ZodLazy,
+    ...processCreateParams(params)
+  });
+};
+class ZodLiteral extends ZodType {
+  _parse(input) {
+    if (input.data !== this._def.value) {
+      const ctx = this._getOrReturnCtx(input);
+      addIssueToContext(ctx, {
+        received: ctx.data,
+        code: ZodIssueCode.invalid_literal,
+        expected: this._def.value
+      });
+      return INVALID;
+    }
+    return { status: "valid", value: input.data };
+  }
+  get value() {
+    return this._def.value;
+  }
+}
+ZodLiteral.create = (value, params) => {
+  return new ZodLiteral({
+    value,
+    typeName: ZodFirstPartyTypeKind.ZodLiteral,
+    ...processCreateParams(params)
+  });
+};
+function createZodEnum(values, params) {
+  return new ZodEnum({
+    values,
+    typeName: ZodFirstPartyTypeKind.ZodEnum,
+    ...processCreateParams(params)
+  });
+}
+class ZodEnum extends ZodType {
+  _parse(input) {
+    if (typeof input.data !== "string") {
+      const ctx = this._getOrReturnCtx(input);
+      const expectedValues = this._def.values;
+      addIssueToContext(ctx, {
+        expected: util.joinValues(expectedValues),
+        received: ctx.parsedType,
+        code: ZodIssueCode.invalid_type
+      });
+      return INVALID;
+    }
+    if (!this._cache) {
+      this._cache = new Set(this._def.values);
+    }
+    if (!this._cache.has(input.data)) {
+      const ctx = this._getOrReturnCtx(input);
+      const expectedValues = this._def.values;
+      addIssueToContext(ctx, {
+        received: ctx.data,
+        code: ZodIssueCode.invalid_enum_value,
+        options: expectedValues
+      });
+      return INVALID;
+    }
+    return OK(input.data);
+  }
+  get options() {
+    return this._def.values;
+  }
+  get enum() {
+    const enumValues = {};
+    for (const val of this._def.values) {
+      enumValues[val] = val;
+    }
+    return enumValues;
+  }
+  get Values() {
+    const enumValues = {};
+    for (const val of this._def.values) {
+      enumValues[val] = val;
+    }
+    return enumValues;
+  }
+  get Enum() {
+    const enumValues = {};
+    for (const val of this._def.values) {
+      enumValues[val] = val;
+    }
+    return enumValues;
+  }
+  extract(values, newDef = this._def) {
+    return ZodEnum.create(values, {
+      ...this._def,
+      ...newDef
+    });
+  }
+  exclude(values, newDef = this._def) {
+    return ZodEnum.create(this.options.filter((opt) => !values.includes(opt)), {
+      ...this._def,
+      ...newDef
+    });
+  }
+}
+ZodEnum.create = createZodEnum;
+class ZodNativeEnum extends ZodType {
+  _parse(input) {
+    const nativeEnumValues = util.getValidEnumValues(this._def.values);
+    const ctx = this._getOrReturnCtx(input);
+    if (ctx.parsedType !== ZodParsedType.string && ctx.parsedType !== ZodParsedType.number) {
+      const expectedValues = util.objectValues(nativeEnumValues);
+      addIssueToContext(ctx, {
+        expected: util.joinValues(expectedValues),
+        received: ctx.parsedType,
+        code: ZodIssueCode.invalid_type
+      });
+      return INVALID;
+    }
+    if (!this._cache) {
+      this._cache = new Set(util.getValidEnumValues(this._def.values));
+    }
+    if (!this._cache.has(input.data)) {
+      const expectedValues = util.objectValues(nativeEnumValues);
+      addIssueToContext(ctx, {
+        received: ctx.data,
+        code: ZodIssueCode.invalid_enum_value,
+        options: expectedValues
+      });
+      return INVALID;
+    }
+    return OK(input.data);
+  }
+  get enum() {
+    return this._def.values;
+  }
+}
+ZodNativeEnum.create = (values, params) => {
+  return new ZodNativeEnum({
+    values,
+    typeName: ZodFirstPartyTypeKind.ZodNativeEnum,
+    ...processCreateParams(params)
+  });
+};
+class ZodPromise extends ZodType {
+  unwrap() {
+    return this._def.type;
+  }
+  _parse(input) {
+    const { ctx } = this._processInputParams(input);
+    if (ctx.parsedType !== ZodParsedType.promise && ctx.common.async === false) {
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.promise,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    const promisified = ctx.parsedType === ZodParsedType.promise ? ctx.data : Promise.resolve(ctx.data);
+    return OK(promisified.then((data) => {
+      return this._def.type.parseAsync(data, {
+        path: ctx.path,
+        errorMap: ctx.common.contextualErrorMap
+      });
+    }));
+  }
+}
+ZodPromise.create = (schema, params) => {
+  return new ZodPromise({
+    type: schema,
+    typeName: ZodFirstPartyTypeKind.ZodPromise,
+    ...processCreateParams(params)
+  });
+};
+class ZodEffects extends ZodType {
+  innerType() {
+    return this._def.schema;
+  }
+  sourceType() {
+    return this._def.schema._def.typeName === ZodFirstPartyTypeKind.ZodEffects ? this._def.schema.sourceType() : this._def.schema;
+  }
+  _parse(input) {
+    const { status, ctx } = this._processInputParams(input);
+    const effect = this._def.effect || null;
+    const checkCtx = {
+      addIssue: (arg) => {
+        addIssueToContext(ctx, arg);
+        if (arg.fatal) {
+          status.abort();
+        } else {
+          status.dirty();
+        }
+      },
+      get path() {
+        return ctx.path;
+      }
+    };
+    checkCtx.addIssue = checkCtx.addIssue.bind(checkCtx);
+    if (effect.type === "preprocess") {
+      const processed = effect.transform(ctx.data, checkCtx);
+      if (ctx.common.async) {
+        return Promise.resolve(processed).then(async (processed2) => {
+          if (status.value === "aborted")
+            return INVALID;
+          const result = await this._def.schema._parseAsync({
+            data: processed2,
+            path: ctx.path,
+            parent: ctx
+          });
+          if (result.status === "aborted")
+            return INVALID;
+          if (result.status === "dirty")
+            return DIRTY(result.value);
+          if (status.value === "dirty")
+            return DIRTY(result.value);
+          return result;
+        });
+      } else {
+        if (status.value === "aborted")
+          return INVALID;
+        const result = this._def.schema._parseSync({
+          data: processed,
+          path: ctx.path,
+          parent: ctx
+        });
+        if (result.status === "aborted")
+          return INVALID;
+        if (result.status === "dirty")
+          return DIRTY(result.value);
+        if (status.value === "dirty")
+          return DIRTY(result.value);
+        return result;
+      }
+    }
+    if (effect.type === "refinement") {
+      const executeRefinement = (acc) => {
+        const result = effect.refinement(acc, checkCtx);
+        if (ctx.common.async) {
+          return Promise.resolve(result);
+        }
+        if (result instanceof Promise) {
+          throw new Error("Async refinement encountered during synchronous parse operation. Use .parseAsync instead.");
+        }
+        return acc;
+      };
+      if (ctx.common.async === false) {
+        const inner = this._def.schema._parseSync({
+          data: ctx.data,
+          path: ctx.path,
+          parent: ctx
+        });
+        if (inner.status === "aborted")
+          return INVALID;
+        if (inner.status === "dirty")
+          status.dirty();
+        executeRefinement(inner.value);
+        return { status: status.value, value: inner.value };
+      } else {
+        return this._def.schema._parseAsync({ data: ctx.data, path: ctx.path, parent: ctx }).then((inner) => {
+          if (inner.status === "aborted")
+            return INVALID;
+          if (inner.status === "dirty")
+            status.dirty();
+          return executeRefinement(inner.value).then(() => {
+            return { status: status.value, value: inner.value };
+          });
+        });
+      }
+    }
+    if (effect.type === "transform") {
+      if (ctx.common.async === false) {
+        const base = this._def.schema._parseSync({
+          data: ctx.data,
+          path: ctx.path,
+          parent: ctx
+        });
+        if (!isValid(base))
+          return INVALID;
+        const result = effect.transform(base.value, checkCtx);
+        if (result instanceof Promise) {
+          throw new Error(`Asynchronous transform encountered during synchronous parse operation. Use .parseAsync instead.`);
+        }
+        return { status: status.value, value: result };
+      } else {
+        return this._def.schema._parseAsync({ data: ctx.data, path: ctx.path, parent: ctx }).then((base) => {
+          if (!isValid(base))
+            return INVALID;
+          return Promise.resolve(effect.transform(base.value, checkCtx)).then((result) => ({
+            status: status.value,
+            value: result
+          }));
+        });
+      }
+    }
+    util.assertNever(effect);
+  }
+}
+ZodEffects.create = (schema, effect, params) => {
+  return new ZodEffects({
+    schema,
+    typeName: ZodFirstPartyTypeKind.ZodEffects,
+    effect,
+    ...processCreateParams(params)
+  });
+};
+ZodEffects.createWithPreprocess = (preprocess, schema, params) => {
+  return new ZodEffects({
+    schema,
+    effect: { type: "preprocess", transform: preprocess },
+    typeName: ZodFirstPartyTypeKind.ZodEffects,
+    ...processCreateParams(params)
+  });
+};
+class ZodOptional extends ZodType {
+  _parse(input) {
+    const parsedType = this._getType(input);
+    if (parsedType === ZodParsedType.undefined) {
+      return OK(void 0);
+    }
+    return this._def.innerType._parse(input);
+  }
+  unwrap() {
+    return this._def.innerType;
+  }
+}
+ZodOptional.create = (type, params) => {
+  return new ZodOptional({
+    innerType: type,
+    typeName: ZodFirstPartyTypeKind.ZodOptional,
+    ...processCreateParams(params)
+  });
+};
+class ZodNullable extends ZodType {
+  _parse(input) {
+    const parsedType = this._getType(input);
+    if (parsedType === ZodParsedType.null) {
+      return OK(null);
+    }
+    return this._def.innerType._parse(input);
+  }
+  unwrap() {
+    return this._def.innerType;
+  }
+}
+ZodNullable.create = (type, params) => {
+  return new ZodNullable({
+    innerType: type,
+    typeName: ZodFirstPartyTypeKind.ZodNullable,
+    ...processCreateParams(params)
+  });
+};
+class ZodDefault extends ZodType {
+  _parse(input) {
+    const { ctx } = this._processInputParams(input);
+    let data = ctx.data;
+    if (ctx.parsedType === ZodParsedType.undefined) {
+      data = this._def.defaultValue();
+    }
+    return this._def.innerType._parse({
+      data,
+      path: ctx.path,
+      parent: ctx
+    });
+  }
+  removeDefault() {
+    return this._def.innerType;
+  }
+}
+ZodDefault.create = (type, params) => {
+  return new ZodDefault({
+    innerType: type,
+    typeName: ZodFirstPartyTypeKind.ZodDefault,
+    defaultValue: typeof params.default === "function" ? params.default : () => params.default,
+    ...processCreateParams(params)
+  });
+};
+class ZodCatch extends ZodType {
+  _parse(input) {
+    const { ctx } = this._processInputParams(input);
+    const newCtx = {
+      ...ctx,
+      common: {
+        ...ctx.common,
+        issues: []
+      }
+    };
+    const result = this._def.innerType._parse({
+      data: newCtx.data,
+      path: newCtx.path,
+      parent: {
+        ...newCtx
+      }
+    });
+    if (isAsync(result)) {
+      return result.then((result2) => {
+        return {
+          status: "valid",
+          value: result2.status === "valid" ? result2.value : this._def.catchValue({
+            get error() {
+              return new ZodError(newCtx.common.issues);
+            },
+            input: newCtx.data
+          })
+        };
+      });
+    } else {
+      return {
+        status: "valid",
+        value: result.status === "valid" ? result.value : this._def.catchValue({
+          get error() {
+            return new ZodError(newCtx.common.issues);
+          },
+          input: newCtx.data
+        })
+      };
+    }
+  }
+  removeCatch() {
+    return this._def.innerType;
+  }
+}
+ZodCatch.create = (type, params) => {
+  return new ZodCatch({
+    innerType: type,
+    typeName: ZodFirstPartyTypeKind.ZodCatch,
+    catchValue: typeof params.catch === "function" ? params.catch : () => params.catch,
+    ...processCreateParams(params)
+  });
+};
+class ZodNaN extends ZodType {
+  _parse(input) {
+    const parsedType = this._getType(input);
+    if (parsedType !== ZodParsedType.nan) {
+      const ctx = this._getOrReturnCtx(input);
+      addIssueToContext(ctx, {
+        code: ZodIssueCode.invalid_type,
+        expected: ZodParsedType.nan,
+        received: ctx.parsedType
+      });
+      return INVALID;
+    }
+    return { status: "valid", value: input.data };
+  }
+}
+ZodNaN.create = (params) => {
+  return new ZodNaN({
+    typeName: ZodFirstPartyTypeKind.ZodNaN,
+    ...processCreateParams(params)
+  });
+};
+class ZodBranded extends ZodType {
+  _parse(input) {
+    const { ctx } = this._processInputParams(input);
+    const data = ctx.data;
+    return this._def.type._parse({
+      data,
+      path: ctx.path,
+      parent: ctx
+    });
+  }
+  unwrap() {
+    return this._def.type;
+  }
+}
+class ZodPipeline extends ZodType {
+  _parse(input) {
+    const { status, ctx } = this._processInputParams(input);
+    if (ctx.common.async) {
+      const handleAsync = async () => {
+        const inResult = await this._def.in._parseAsync({
+          data: ctx.data,
+          path: ctx.path,
+          parent: ctx
+        });
+        if (inResult.status === "aborted")
+          return INVALID;
+        if (inResult.status === "dirty") {
+          status.dirty();
+          return DIRTY(inResult.value);
+        } else {
+          return this._def.out._parseAsync({
+            data: inResult.value,
+            path: ctx.path,
+            parent: ctx
+          });
+        }
+      };
+      return handleAsync();
+    } else {
+      const inResult = this._def.in._parseSync({
+        data: ctx.data,
+        path: ctx.path,
+        parent: ctx
+      });
+      if (inResult.status === "aborted")
+        return INVALID;
+      if (inResult.status === "dirty") {
+        status.dirty();
+        return {
+          status: "dirty",
+          value: inResult.value
+        };
+      } else {
+        return this._def.out._parseSync({
+          data: inResult.value,
+          path: ctx.path,
+          parent: ctx
+        });
+      }
+    }
+  }
+  static create(a, b2) {
+    return new ZodPipeline({
+      in: a,
+      out: b2,
+      typeName: ZodFirstPartyTypeKind.ZodPipeline
+    });
+  }
+}
+class ZodReadonly extends ZodType {
+  _parse(input) {
+    const result = this._def.innerType._parse(input);
+    const freeze = (data) => {
+      if (isValid(data)) {
+        data.value = Object.freeze(data.value);
+      }
+      return data;
+    };
+    return isAsync(result) ? result.then((data) => freeze(data)) : freeze(result);
+  }
+  unwrap() {
+    return this._def.innerType;
+  }
+}
+ZodReadonly.create = (type, params) => {
+  return new ZodReadonly({
+    innerType: type,
+    typeName: ZodFirstPartyTypeKind.ZodReadonly,
+    ...processCreateParams(params)
+  });
+};
+var ZodFirstPartyTypeKind;
+(function(ZodFirstPartyTypeKind2) {
+  ZodFirstPartyTypeKind2["ZodString"] = "ZodString";
+  ZodFirstPartyTypeKind2["ZodNumber"] = "ZodNumber";
+  ZodFirstPartyTypeKind2["ZodNaN"] = "ZodNaN";
+  ZodFirstPartyTypeKind2["ZodBigInt"] = "ZodBigInt";
+  ZodFirstPartyTypeKind2["ZodBoolean"] = "ZodBoolean";
+  ZodFirstPartyTypeKind2["ZodDate"] = "ZodDate";
+  ZodFirstPartyTypeKind2["ZodSymbol"] = "ZodSymbol";
+  ZodFirstPartyTypeKind2["ZodUndefined"] = "ZodUndefined";
+  ZodFirstPartyTypeKind2["ZodNull"] = "ZodNull";
+  ZodFirstPartyTypeKind2["ZodAny"] = "ZodAny";
+  ZodFirstPartyTypeKind2["ZodUnknown"] = "ZodUnknown";
+  ZodFirstPartyTypeKind2["ZodNever"] = "ZodNever";
+  ZodFirstPartyTypeKind2["ZodVoid"] = "ZodVoid";
+  ZodFirstPartyTypeKind2["ZodArray"] = "ZodArray";
+  ZodFirstPartyTypeKind2["ZodObject"] = "ZodObject";
+  ZodFirstPartyTypeKind2["ZodUnion"] = "ZodUnion";
+  ZodFirstPartyTypeKind2["ZodDiscriminatedUnion"] = "ZodDiscriminatedUnion";
+  ZodFirstPartyTypeKind2["ZodIntersection"] = "ZodIntersection";
+  ZodFirstPartyTypeKind2["ZodTuple"] = "ZodTuple";
+  ZodFirstPartyTypeKind2["ZodRecord"] = "ZodRecord";
+  ZodFirstPartyTypeKind2["ZodMap"] = "ZodMap";
+  ZodFirstPartyTypeKind2["ZodSet"] = "ZodSet";
+  ZodFirstPartyTypeKind2["ZodFunction"] = "ZodFunction";
+  ZodFirstPartyTypeKind2["ZodLazy"] = "ZodLazy";
+  ZodFirstPartyTypeKind2["ZodLiteral"] = "ZodLiteral";
+  ZodFirstPartyTypeKind2["ZodEnum"] = "ZodEnum";
+  ZodFirstPartyTypeKind2["ZodEffects"] = "ZodEffects";
+  ZodFirstPartyTypeKind2["ZodNativeEnum"] = "ZodNativeEnum";
+  ZodFirstPartyTypeKind2["ZodOptional"] = "ZodOptional";
+  ZodFirstPartyTypeKind2["ZodNullable"] = "ZodNullable";
+  ZodFirstPartyTypeKind2["ZodDefault"] = "ZodDefault";
+  ZodFirstPartyTypeKind2["ZodCatch"] = "ZodCatch";
+  ZodFirstPartyTypeKind2["ZodPromise"] = "ZodPromise";
+  ZodFirstPartyTypeKind2["ZodBranded"] = "ZodBranded";
+  ZodFirstPartyTypeKind2["ZodPipeline"] = "ZodPipeline";
+  ZodFirstPartyTypeKind2["ZodReadonly"] = "ZodReadonly";
+})(ZodFirstPartyTypeKind || (ZodFirstPartyTypeKind = {}));
+const stringType = ZodString.create;
+const numberType = ZodNumber.create;
+const booleanType = ZodBoolean.create;
+const anyType = ZodAny.create;
+const unknownType = ZodUnknown.create;
+ZodNever.create;
+const arrayType = ZodArray.create;
+const objectType = ZodObject.create;
+ZodUnion.create;
+ZodIntersection.create;
+ZodTuple.create;
+const recordType = ZodRecord.create;
+const enumType = ZodEnum.create;
+ZodPromise.create;
+ZodOptional.create;
+ZodNullable.create;
+function sanitizeString(input, maxLength = 100) {
+  if (typeof input !== "string") return "";
+  return input.replace(/[\x00-\x1F\x7F]/g, "").trim().slice(0, maxLength);
+}
+const UsernameInputSchema = stringType().min(2, "Username must be at least 2 characters").max(30, "Username cannot exceed 30 characters").transform((val) => sanitizeString(val, 30)).refine((val) => /^[a-zA-Z0-9_\-\s]+$/.test(val), {
+  message: "Username can only contain letters, numbers, underscores, hyphens, and spaces"
+});
+const UserProfileSchema = objectType({
+  uid: stringType().min(1),
+  username: stringType(),
+  usernameLower: stringType().optional(),
+  email: stringType().optional().nullable(),
+  emailLower: stringType().optional().nullable(),
+  createdAt: anyType().nullable().optional(),
+  bestScore: numberType().default(0),
+  totalGames: numberType().default(0),
+  unlockedAchievements: arrayType(stringType()).optional().default([]),
+  firstTryGuesses: numberType().optional().default(0),
+  fastDrafts: numberType().optional().default(0),
+  uniqueCountriesUsed: arrayType(stringType()).optional().default([]),
+  dailyStreak: numberType().optional().default(0),
+  lastDailyDate: stringType().optional(),
+  bestDoubleScore: numberType().optional().default(0)
+});
+objectType({
+  id: stringType(),
+  uid: stringType().min(1),
+  username: stringType(),
+  score: numberType(),
+  mode: stringType(),
+  roster: recordType(stringType(), stringType()),
+  guesses: arrayType(stringType()).optional(),
+  mysteryCountry: stringType().optional(),
+  createdAt: anyType().nullable().optional(),
+  date: stringType()
+});
+const RoomModeSchema = enumType([
+  "sabotage",
+  "party",
+  "associations_race",
+  "double_draft",
+  "auction"
+]);
+const RoomStatusSchema = enumType(["waiting", "playing", "finished"]);
+const RoomSchema = objectType({
+  code: stringType().length(6),
+  mode: RoomModeSchema,
+  difficulty: enumType(["easy", "hard"]),
+  hostId: stringType().min(1),
+  status: RoomStatusSchema,
+  currentRound: numberType().min(0),
+  poolSeed: numberType(),
+  createdAt: anyType().nullable().optional(),
+  associationsSettings: recordType(stringType(), unknownType()).nullable().optional(),
+  auctionState: recordType(stringType(), unknownType()).nullable().optional()
+});
+const RoomPlayerSchema = objectType({
+  uid: stringType().min(1),
+  username: stringType(),
+  score: numberType(),
+  roster: recordType(stringType(), stringType()),
+  finishedRound: booleanType(),
+  sabotageChoice: stringType().nullable().optional(),
+  sabotageOptions: arrayType(stringType()).nullable().optional(),
+  completionTime: numberType().optional(),
+  money: numberType().optional(),
+  bid: numberType().nullable().optional(),
+  auctionAction: enumType(["bid", "outbid", "give"]).nullable().optional()
+});
+objectType({
+  score: numberType().optional(),
+  mode: stringType().min(1),
+  roster: recordType(stringType(), stringType()).optional(),
+  totalTimeMs: numberType().positive().optional(),
+  firstTryGuess: booleanType().optional(),
+  achievementsToUnlock: arrayType(stringType()).optional(),
+  isDaily: booleanType().optional()
+});
+const PersonalRecordSchema = objectType({
+  id: stringType().optional(),
+  uid: stringType().min(1),
+  mode: stringType().min(1),
+  score: numberType(),
+  date: stringType().optional(),
+  roster: recordType(stringType(), stringType()).optional(),
+  createdAt: anyType().nullable().optional()
+});
+const FirebaseEnvSchema = objectType({
+  apiKey: stringType().min(1, "VITE_FIREBASE_API_KEY is required"),
+  authDomain: stringType().min(1, "VITE_FIREBASE_AUTH_DOMAIN is required"),
+  projectId: stringType().min(1, "VITE_FIREBASE_PROJECT_ID is required"),
+  storageBucket: stringType().optional(),
+  messagingSenderId: stringType().optional(),
+  appId: stringType().min(1, "VITE_FIREBASE_APP_ID is required"),
+  measurementId: stringType().optional()
+});
+const envResult = FirebaseEnvSchema.safeParse({
+  apiKey: "AIzaSyCtncVULrMBMAJFXKVMAZmiuFnTLNJwgKQ",
+  authDomain: "geodrafts.firebaseapp.com",
+  projectId: "geodrafts",
+  storageBucket: "geodrafts.firebasestorage.app",
+  messagingSenderId: "603087956375",
+  appId: "1:603087956375:web:3856ade90890193e8e7cd2",
+  measurementId: "G-Z5FQW4TSL3"
+});
+if (!envResult.success && false) ;
+const rawConfig = envResult.success ? envResult.data : {
   apiKey: "AIzaSyCtncVULrMBMAJFXKVMAZmiuFnTLNJwgKQ",
   authDomain: "geodrafts.firebaseapp.com",
   projectId: "geodrafts",
@@ -47809,152 +51583,313 @@ const firebaseConfig = {
   appId: "1:603087956375:web:3856ade90890193e8e7cd2",
   measurementId: "G-Z5FQW4TSL3"
 };
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const app = getApps().length === 0 ? initializeApp(rawConfig) : getApps()[0];
 const auth = getAuth(app);
 const firestore = initializeFirestore(app, {
   localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
 });
+class FirestoreServiceError extends Error {
+  constructor(message, code = "unknown-error") {
+    super(message);
+    this.code = code;
+    this.name = "FirestoreServiceError";
+  }
+}
 async function getUserProfile(uid) {
-  const snap = await getDoc(doc(firestore, "users", uid));
-  if (!snap.exists()) return null;
-  return { uid, ...snap.data() };
+  if (!uid || typeof uid !== "string") return null;
+  try {
+    const snap = await getDoc(doc(firestore, "users", uid));
+    if (!snap.exists()) return null;
+    const parseResult = UserProfileSchema.safeParse({ uid, ...snap.data() });
+    return parseResult.success ? parseResult.data : { uid, ...snap.data() };
+  } catch (error) {
+    console.error(`[getUserProfile] Failed to fetch profile for ${uid}:`, error);
+    throw new FirestoreServiceError("Failed to load user profile", "fetch-profile-failed");
+  }
 }
 async function updateUsername(uid, username) {
-  await updateDoc(doc(firestore, "users", uid), {
-    username,
-    usernameLower: username.toLowerCase()
-  });
+  if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
+  const validatedUsername = UsernameInputSchema.parse(username);
+  try {
+    await updateDoc(doc(firestore, "users", uid), {
+      username: validatedUsername,
+      usernameLower: validatedUsername.toLowerCase()
+    });
+  } catch (error) {
+    console.error(`[updateUsername] Failed for user ${uid}:`, error);
+    throw new FirestoreServiceError("Failed to update username", "update-username-failed");
+  }
 }
 async function unlockAchievements(uid, achievements) {
-  const validAchievements = achievements.filter(Boolean);
+  if (!uid || typeof window !== "undefined" && sessionStorage.getItem("geoDraftsIsGuest") === "true") return;
+  const validAchievements = achievements.filter((a) => typeof a === "string" && a.trim().length > 0).map((a) => sanitizeString(a, 50));
   if (validAchievements.length === 0) return;
-  await updateDoc(doc(firestore, "users", uid), {
-    unlockedAchievements: arrayUnion(...validAchievements)
-  });
+  try {
+    await updateDoc(doc(firestore, "users", uid), {
+      unlockedAchievements: arrayUnion(...validAchievements)
+    });
+  } catch (error) {
+    console.error(`[unlockAchievements] Error unlocking achievements for ${uid}:`, error);
+  }
 }
 async function checkUsernameExists(username) {
-  const usernameLower = username.toLowerCase();
-  const qLower = query(collection(firestore, "users"), where("usernameLower", "==", usernameLower), limit(1));
-  const snapLower = await getDocs(qLower);
-  if (!snapLower.empty) return true;
-  const qExact = query(collection(firestore, "users"), where("username", "==", username), limit(1));
-  const snapExact = await getDocs(qExact);
-  return !snapExact.empty;
+  if (!username || typeof username !== "string") return false;
+  const sanitized = sanitizeString(username, 30);
+  const usernameLower = sanitized.toLowerCase();
+  try {
+    const qLower = query(
+      collection(firestore, "users"),
+      where("usernameLower", "==", usernameLower),
+      limit(1)
+    );
+    const snapLower = await getDocs(qLower);
+    if (!snapLower.empty) return true;
+    const qExact = query(
+      collection(firestore, "users"),
+      where("username", "==", sanitized),
+      limit(1)
+    );
+    const snapExact = await getDocs(qExact);
+    return !snapExact.empty;
+  } catch (error) {
+    console.error("[checkUsernameExists] Query failed:", error);
+    return false;
+  }
 }
-async function createUserProfile(uid, username) {
-  const profile = {
-    username,
-    usernameLower: username.toLowerCase(),
+async function getEmailFromUsername(username) {
+  if (!username || typeof username !== "string") return { email: null, exists: false };
+  const sanitized = sanitizeString(username, 30);
+  const usernameLower = sanitized.toLowerCase();
+  try {
+    const qLower = query(
+      collection(firestore, "users"),
+      where("usernameLower", "==", usernameLower),
+      limit(1)
+    );
+    const snapLower = await getDocs(qLower);
+    if (!snapLower.empty) {
+      const data = snapLower.docs[0].data();
+      return {
+        email: data && typeof data.email === "string" && data.email.trim() ? data.email.trim() : null,
+        exists: true
+      };
+    }
+    const qExact = query(
+      collection(firestore, "users"),
+      where("username", "==", sanitized),
+      limit(1)
+    );
+    const snapExact = await getDocs(qExact);
+    if (!snapExact.empty) {
+      const data = snapExact.docs[0].data();
+      return {
+        email: data && typeof data.email === "string" && data.email.trim() ? data.email.trim() : null,
+        exists: true
+      };
+    }
+    return { email: null, exists: false };
+  } catch (error) {
+    console.error("[getEmailFromUsername] Query failed:", error);
+    return { email: null, exists: false };
+  }
+}
+async function createUserProfile(uid, username, email) {
+  if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
+  const validatedUsername = UsernameInputSchema.parse(username);
+  const sanitizedEmail = email && typeof email === "string" ? email.trim() : null;
+  const profileData = {
+    username: validatedUsername,
+    usernameLower: validatedUsername.toLowerCase(),
+    ...sanitizedEmail && {
+      email: sanitizedEmail,
+      emailLower: sanitizedEmail.toLowerCase()
+    },
     createdAt: serverTimestamp(),
     bestScore: 0,
     totalGames: 0
   };
-  await setDoc(doc(firestore, "users", uid), profile);
-  return { uid, ...profile, createdAt: null };
+  try {
+    await setDoc(doc(firestore, "users", uid), profileData);
+    return {
+      uid,
+      username: validatedUsername,
+      usernameLower: validatedUsername.toLowerCase(),
+      email: sanitizedEmail,
+      emailLower: sanitizedEmail ? sanitizedEmail.toLowerCase() : null,
+      createdAt: null,
+      bestScore: 0,
+      totalGames: 0,
+      unlockedAchievements: [],
+      firstTryGuesses: 0,
+      fastDrafts: 0,
+      uniqueCountriesUsed: [],
+      dailyStreak: 0,
+      bestDoubleScore: 0
+    };
+  } catch (error) {
+    console.error(`[createUserProfile] Failed to create profile for ${uid}:`, error);
+    throw new FirestoreServiceError("Failed to create user profile", "create-profile-failed");
+  }
 }
 async function saveScore(uid, username, score, mode, roster, guesses, mysteryCountry) {
+  if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
+  const sanitizedUsername = sanitizeString(username, 30);
+  const sanitizedMode = sanitizeString(mode, 30);
+  const sanitizedRoster = {};
+  for (const [k2, v2] of Object.entries(roster)) {
+    sanitizedRoster[sanitizeString(k2, 50)] = sanitizeString(v2, 50);
+  }
   const today = (/* @__PURE__ */ new Date()).toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-  if (mode === "daily") {
-    const dailyDocId = `daily_${uid}_${today}`;
-    const existing = await getDoc(doc(firestore, "leaderboard", dailyDocId));
-    if (existing.exists()) {
-      throw Object.assign(new Error("Daily score already submitted for today"), {
-        code: "already-submitted"
+  try {
+    if (sanitizedMode === "daily") {
+      const dailyDocId = `daily_${uid}_${today}`;
+      const existing = await getDoc(doc(firestore, "leaderboard", dailyDocId));
+      if (existing.exists()) {
+        throw new FirestoreServiceError("Daily score already submitted for today", "already-submitted");
+      }
+      await setDoc(doc(firestore, "leaderboard", dailyDocId), {
+        uid,
+        username: sanitizedUsername,
+        score,
+        mode: sanitizedMode,
+        roster: sanitizedRoster,
+        ...guesses && { guesses: guesses.map((g) => sanitizeString(g, 50)) },
+        ...mysteryCountry && { mysteryCountry: sanitizeString(mysteryCountry, 50) },
+        createdAt: serverTimestamp(),
+        date: today
       });
+      return dailyDocId;
     }
-    await setDoc(doc(firestore, "leaderboard", dailyDocId), {
+    const docRef = await addDoc(collection(firestore, "leaderboard"), {
       uid,
-      username,
+      username: sanitizedUsername,
       score,
-      mode,
-      roster,
-      ...guesses && { guesses },
-      ...mysteryCountry && { mysteryCountry },
+      mode: sanitizedMode,
+      roster: sanitizedRoster,
+      ...guesses && { guesses: guesses.map((g) => sanitizeString(g, 50)) },
+      ...mysteryCountry && { mysteryCountry: sanitizeString(mysteryCountry, 50) },
       createdAt: serverTimestamp(),
       date: today
     });
-    return dailyDocId;
+    return docRef.id;
+  } catch (error) {
+    if (error instanceof FirestoreServiceError) throw error;
+    console.error("[saveScore] Error saving score:", error);
+    throw new FirestoreServiceError("Failed to save leaderboard score", "save-score-failed");
   }
-  const docRef = await addDoc(collection(firestore, "leaderboard"), {
-    uid,
-    username,
-    score,
-    mode,
-    roster,
-    ...guesses && { guesses },
-    ...mysteryCountry && { mysteryCountry },
-    createdAt: serverTimestamp(),
-    date: today
-  });
-  return docRef.id;
 }
 async function saveCloudPersonalScore(uid, mode, entryData) {
-  await addDoc(collection(firestore, "personal_records"), {
-    uid,
-    mode,
-    ...entryData,
-    createdAt: serverTimestamp()
-  });
+  if (!uid) throw new FirestoreServiceError("User ID is required", "invalid-uid");
+  try {
+    await addDoc(collection(firestore, "personal_records"), {
+      uid,
+      mode: sanitizeString(mode, 30),
+      ...entryData,
+      createdAt: serverTimestamp()
+    });
+  } catch (error) {
+    console.error("[saveCloudPersonalScore] Error:", error);
+    throw new FirestoreServiceError("Failed to save personal score", "save-personal-score-failed");
+  }
 }
 async function getCloudPersonalScores(uid, mode) {
+  if (!uid) return [];
   const isAsc = mode === "guess";
-  const q2 = query(
-    collection(firestore, "personal_records"),
-    where("uid", "==", uid),
-    where("mode", "==", mode),
-    orderBy("score", isAsc ? "asc" : "desc")
-  );
-  const snap = await getDocs(q2);
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  try {
+    const q2 = query(
+      collection(firestore, "personal_records"),
+      where("uid", "==", uid),
+      where("mode", "==", mode),
+      orderBy("score", isAsc ? "asc" : "desc")
+    );
+    const snap = await getDocs(q2);
+    return snap.docs.map((d) => {
+      const data = d.data();
+      return PersonalRecordSchema.parse({ id: d.id, ...data });
+    });
+  } catch (error) {
+    console.error("[getCloudPersonalScores] Error:", error);
+    return [];
+  }
 }
 async function deleteGlobalScore(id2) {
-  await deleteDoc(doc(firestore, "leaderboard", id2));
+  if (!id2) return;
+  try {
+    await deleteDoc(doc(firestore, "leaderboard", id2));
+  } catch (error) {
+    console.error("[deleteGlobalScore] Error:", error);
+  }
 }
 async function getTopScores(modeFilter, topN = 10) {
   const isAsc = modeFilter === "guess";
-  let q2;
-  if (modeFilter && modeFilter !== "all") {
-    q2 = query(
-      collection(firestore, "leaderboard"),
-      where("mode", "==", modeFilter),
-      orderBy("score", isAsc ? "asc" : "desc"),
-      limit(topN)
-    );
-  } else {
-    q2 = query(
-      collection(firestore, "leaderboard"),
-      orderBy("score", isAsc ? "asc" : "desc"),
-      limit(topN)
-    );
-  }
-  const snap = await getDocs(q2);
-  const entries = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
-  const uniqueUids = [...new Set(entries.map((e) => e.uid))];
-  const userDocs = await Promise.all(uniqueUids.map((uid) => getDoc(doc(firestore, "users", uid))));
-  const usernameMap = {};
-  userDocs.forEach((d) => {
-    if (d.exists() && d.data().username) {
-      usernameMap[d.id] = d.data().username;
+  try {
+    let q2;
+    if (modeFilter && modeFilter !== "all") {
+      q2 = query(
+        collection(firestore, "leaderboard"),
+        where("mode", "==", modeFilter),
+        orderBy("score", isAsc ? "asc" : "desc"),
+        limit(topN)
+      );
+    } else {
+      q2 = query(
+        collection(firestore, "leaderboard"),
+        orderBy("score", isAsc ? "asc" : "desc"),
+        limit(topN)
+      );
     }
-  });
-  return entries.map((e) => ({
-    ...e,
-    username: usernameMap[e.uid] || e.username
-  }));
+    const snap = await getDocs(q2);
+    const entries = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    const uniqueUids = [...new Set(entries.map((e) => e.uid))].filter(Boolean);
+    const usernameMap = {};
+    const chunkSize = 10;
+    for (let i = 0; i < uniqueUids.length; i += chunkSize) {
+      const chunk = uniqueUids.slice(i, i + chunkSize);
+      const usersQuery = query(collection(firestore, "users"), where(documentId(), "in", chunk));
+      const usersSnap = await getDocs(usersQuery);
+      usersSnap.docs.forEach((d) => {
+        const data = d.data();
+        if (data && typeof data.username === "string") {
+          usernameMap[d.id] = data.username;
+        }
+      });
+    }
+    return entries.map((e) => ({
+      ...e,
+      username: usernameMap[e.uid] || e.username
+    }));
+  } catch (error) {
+    console.error("[getTopScores] Error fetching leaderboard:", error);
+    return [];
+  }
 }
 async function checkDailySubmitted(uid) {
+  if (!uid) return false;
   const today = (/* @__PURE__ */ new Date()).toLocaleDateString("en-CA", { timeZone: "America/New_York" });
-  const snap = await getDoc(doc(firestore, "leaderboard", `daily_${uid}_${today}`));
-  return snap.exists();
+  try {
+    const snap = await getDoc(doc(firestore, "leaderboard", `daily_${uid}_${today}`));
+    return snap.exists();
+  } catch (error) {
+    console.error("[checkDailySubmitted] Error checking daily submission:", error);
+    return false;
+  }
 }
 async function getDailyState(uid, date) {
-  const snap = await getDoc(doc(firestore, "daily_states", `${uid}_${date}`));
-  if (!snap.exists()) return null;
-  return snap.data().state;
+  if (!uid || !date) return null;
+  try {
+    const snap = await getDoc(doc(firestore, "daily_states", `${uid}_${date}`));
+    if (!snap.exists()) return null;
+    return snap.data().state ?? null;
+  } catch (error) {
+    console.error("[getDailyState] Error fetching state:", error);
+    return null;
+  }
 }
 async function createRoom(hostUid, hostUsername, mode, difficulty, associationsSettings) {
+  if (!hostUid) throw new FirestoreServiceError("Host UID required", "invalid-host");
+  const sanitizedUsername = sanitizeString(hostUsername, 30);
   const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-  const room = {
+  const roomData = {
     code,
     mode,
     difficulty,
@@ -47962,78 +51897,158 @@ async function createRoom(hostUid, hostUsername, mode, difficulty, associationsS
     status: "waiting",
     currentRound: 0,
     poolSeed: Math.floor(Math.random() * 1e6),
-    createdAt: null,
     associationsSettings: null
   };
-  const roomRef = doc(firestore, "rooms", code);
-  await setDoc(roomRef, { ...room, createdAt: serverTimestamp() });
-  const playerRef = doc(firestore, "rooms", code, "players", hostUid);
-  const player = {
-    uid: hostUid,
-    username: hostUsername,
-    score: 0,
-    roster: {},
-    finishedRound: false,
-    sabotageChoice: null,
-    sabotageOptions: null
-  };
-  await setDoc(playerRef, player);
-  return code;
+  const parsedRoom = RoomSchema.parse({ ...roomData, createdAt: null });
+  try {
+    const roomRef = doc(firestore, "rooms", code);
+    await setDoc(roomRef, { ...parsedRoom, createdAt: serverTimestamp() });
+    const playerRef = doc(firestore, "rooms", code, "players", hostUid);
+    const player = {
+      uid: hostUid,
+      username: sanitizedUsername,
+      score: 0,
+      roster: {},
+      finishedRound: false,
+      sabotageChoice: null,
+      sabotageOptions: null,
+      money: 200
+    };
+    await setDoc(playerRef, RoomPlayerSchema.parse(player));
+    return code;
+  } catch (error) {
+    console.error("[createRoom] Error creating room:", error);
+    throw new FirestoreServiceError("Failed to create multiplayer room", "create-room-failed");
+  }
 }
 async function joinRoom(code, uid, username) {
-  const roomRef = doc(firestore, "rooms", code);
-  const roomSnap = await getDoc(roomRef);
-  if (!roomSnap.exists()) throw new Error("Room not found");
-  const room = roomSnap.data();
-  if (room.status !== "waiting") throw new Error("Room already in progress");
-  const playersSnap = await getDocs(collection(firestore, "rooms", code, "players"));
-  if (room.mode === "sabotage" && playersSnap.size >= 2) throw new Error("Room is full (2 player limit)");
-  const playerRef = doc(firestore, "rooms", code, "players", uid);
-  const player = {
-    uid,
-    username,
-    score: 0,
-    roster: {},
-    finishedRound: false,
-    sabotageChoice: null,
-    sabotageOptions: null
-  };
-  await setDoc(playerRef, player);
-  return room;
+  if (!code || !uid) throw new FirestoreServiceError("Invalid room code or user ID", "invalid-args");
+  const sanitizedCode = sanitizeString(code, 6).toUpperCase();
+  const sanitizedUsername = sanitizeString(username, 30);
+  try {
+    const roomRef = doc(firestore, "rooms", sanitizedCode);
+    const roomSnap = await getDoc(roomRef);
+    if (!roomSnap.exists()) throw new FirestoreServiceError("Room not found", "room-not-found");
+    const room = RoomSchema.parse({ ...roomSnap.data(), code: sanitizedCode });
+    if (room.status !== "waiting") throw new FirestoreServiceError("Room already in progress", "room-in-progress");
+    const playersSnap = await getDocs(collection(firestore, "rooms", sanitizedCode, "players"));
+    if ((room.mode === "sabotage" || room.mode === "auction") && playersSnap.size >= 2) {
+      throw new FirestoreServiceError("Room is full (2 player limit)", "room-full");
+    }
+    const playerRef = doc(firestore, "rooms", sanitizedCode, "players", uid);
+    const player = {
+      uid,
+      username: sanitizedUsername,
+      score: 0,
+      roster: {},
+      finishedRound: false,
+      sabotageChoice: null,
+      sabotageOptions: null,
+      money: 200
+    };
+    await setDoc(playerRef, RoomPlayerSchema.parse(player));
+    return room;
+  } catch (error) {
+    if (error instanceof FirestoreServiceError) throw error;
+    console.error("[joinRoom] Error joining room:", error);
+    throw new FirestoreServiceError("Failed to join room", "join-room-failed");
+  }
 }
 async function updateRoom(code, updates) {
-  const roomRef = doc(firestore, "rooms", code);
-  await updateDoc(roomRef, updates);
+  if (!code) return;
+  try {
+    const roomRef = doc(firestore, "rooms", code);
+    await updateDoc(roomRef, updates);
+  } catch (error) {
+    console.error(`[updateRoom] Failed to update room ${code}:`, error);
+  }
 }
 async function updatePlayer(code, uid, updates) {
-  const playerRef = doc(firestore, "rooms", code, "players", uid);
-  await updateDoc(playerRef, updates);
+  if (!code || !uid) return;
+  try {
+    const playerRef = doc(firestore, "rooms", code, "players", uid);
+    await updateDoc(playerRef, updates);
+  } catch (error) {
+    console.error(`[updatePlayer] Failed to update player ${uid} in room ${code}:`, error);
+  }
 }
-function listenToRoom(code, onUpdate) {
-  return onSnapshot(doc(firestore, "rooms", code), (snap) => {
-    if (snap.exists()) onUpdate({ ...snap.data() });
-  });
+function listenToRoom(code, onUpdate, onError) {
+  return onSnapshot(
+    doc(firestore, "rooms", code),
+    (snap) => {
+      if (snap.exists()) {
+        try {
+          const parsed = RoomSchema.parse({ ...snap.data(), code });
+          onUpdate(parsed);
+        } catch (e) {
+          onUpdate({ ...snap.data(), code });
+        }
+      }
+    },
+    (err) => {
+      console.error(`[listenToRoom] Listener error for room ${code}:`, err);
+    }
+  );
 }
-function listenToPlayers(code, onUpdate) {
-  return onSnapshot(collection(firestore, "rooms", code, "players"), (snap) => {
-    const players = snap.docs.map((d) => d.data());
-    onUpdate(players);
-  });
+function listenToPlayers(code, onUpdate, onError) {
+  return onSnapshot(
+    collection(firestore, "rooms", code, "players"),
+    (snap) => {
+      const players = snap.docs.map((d) => {
+        const data = d.data();
+        try {
+          return RoomPlayerSchema.parse(data);
+        } catch {
+          return data;
+        }
+      });
+      onUpdate(players);
+    },
+    (err) => {
+      console.error(`[listenToPlayers] Listener error for room ${code}:`, err);
+    }
+  );
 }
 const AuthContext = reactExports.createContext(null);
 function AuthProvider({ children: children2 }) {
   const [firebaseUser, setFirebaseUser] = reactExports.useState(null);
   const [profile, setProfile] = reactExports.useState(null);
   const [isLoading, setIsLoading] = reactExports.useState(true);
+  const [isGuest, setIsGuest] = reactExports.useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("geoDraftsIsGuest") === "true";
+    }
+    return false;
+  });
   const fetchProfile = reactExports.useCallback(async (user) => {
-    const p = await getUserProfile(user.uid);
-    setProfile(p);
-    return p;
+    if (user.isAnonymous) {
+      setProfile(null);
+      return null;
+    }
+    try {
+      const p = await getUserProfile(user.uid);
+      if (p && user.email && (!p.email || p.email !== user.email)) {
+        setDoc(
+          doc(firestore, "users", user.uid),
+          { email: user.email, emailLower: user.email.toLowerCase() },
+          { merge: true }
+        ).catch(() => {
+        });
+        p.email = user.email;
+        p.emailLower = user.email.toLowerCase();
+      }
+      setProfile(p);
+      return p;
+    } catch (error) {
+      console.error("[AuthProvider] Error fetching profile:", error);
+      setProfile(null);
+      return null;
+    }
   }, []);
   reactExports.useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
       setFirebaseUser(user);
-      if (user) {
+      if (user && !user.isAnonymous) {
         await fetchProfile(user);
       } else {
         setProfile(null);
@@ -48042,38 +52057,127 @@ function AuthProvider({ children: children2 }) {
     });
     return unsub;
   }, [fetchProfile]);
+  const startGuestMode = reactExports.useCallback(() => {
+    setIsGuest(true);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("geoDraftsIsGuest", "true");
+    }
+  }, []);
+  const exitGuestMode = reactExports.useCallback(() => {
+    setIsGuest(false);
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("geoDraftsIsGuest");
+    }
+  }, []);
+  const signInGuestAnonymously = reactExports.useCallback(async () => {
+    if (auth.currentUser) {
+      return auth.currentUser;
+    }
+    const cred = await signInAnonymously(auth);
+    return cred.user;
+  }, []);
   const signInWithGoogle = reactExports.useCallback(async () => {
     const provider = new GoogleAuthProvider();
     await signInWithPopup(auth, provider);
-  }, []);
+    exitGuestMode();
+  }, [exitGuestMode]);
   const signInWithEmail = reactExports.useCallback(
-    async (email, password, create2 = false) => {
-      if (create2) {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
+    async (identifier, password, create2 = false) => {
+      const sanitized = identifier.trim();
+      if (!sanitized) {
+        const err = new Error("Please enter your email or username.");
+        err.code = "auth/invalid-email";
+        throw err;
       }
+      let emailToUse = sanitized;
+      if (create2) {
+        if (!sanitized.includes("@")) {
+          const err = new Error("Please enter a valid email address to create an account.");
+          err.code = "auth/invalid-email";
+          throw err;
+        }
+        await createUserWithEmailAndPassword(auth, emailToUse, password);
+      } else {
+        if (!sanitized.includes("@")) {
+          const result = await getEmailFromUsername(sanitized);
+          if (!result.exists) {
+            const err = new Error("No account found with that username.");
+            err.code = "auth/username-not-found";
+            throw err;
+          }
+          if (!result.email) {
+            const err = new Error("No email linked to that username. Please sign in with your email address once.");
+            err.code = "auth/username-no-email";
+            throw err;
+          }
+          emailToUse = result.email;
+        }
+        await signInWithEmailAndPassword(auth, emailToUse, password);
+      }
+      exitGuestMode();
     },
-    []
+    [exitGuestMode]
   );
+  const resetPassword = reactExports.useCallback(async (identifier) => {
+    const sanitized = identifier.trim();
+    if (!sanitized) {
+      const err = new Error("Please enter your email or username.");
+      err.code = "auth/invalid-email";
+      throw err;
+    }
+    let emailToUse = sanitized;
+    if (!sanitized.includes("@")) {
+      const result = await getEmailFromUsername(sanitized);
+      if (result.email) {
+        emailToUse = result.email;
+      } else {
+        const err = new Error("Please enter your registered email address.");
+        err.code = "auth/invalid-email";
+        throw err;
+      }
+    }
+    await sendPasswordResetEmail(auth, emailToUse);
+  }, []);
   const logout = reactExports.useCallback(async () => {
     await signOut(auth);
     setProfile(null);
-  }, []);
+    exitGuestMode();
+  }, [exitGuestMode]);
   const refreshProfile = reactExports.useCallback(async () => {
-    if (firebaseUser) await fetchProfile(firebaseUser);
+    if (firebaseUser && !firebaseUser.isAnonymous) await fetchProfile(firebaseUser);
   }, [firebaseUser, fetchProfile]);
-  const value = {
-    firebaseUser,
-    profile,
-    isLoading,
-    isAuthenticated: !!firebaseUser && !!profile,
-    needsUsername: !!firebaseUser && !profile && !isLoading,
-    signInWithGoogle,
-    signInWithEmail,
-    logout,
-    refreshProfile
-  };
+  const value = reactExports.useMemo(
+    () => ({
+      firebaseUser,
+      profile,
+      isLoading,
+      isAuthenticated: !!firebaseUser && !firebaseUser.isAnonymous && !!profile,
+      needsUsername: !!firebaseUser && !firebaseUser.isAnonymous && !profile && !isLoading,
+      isGuest,
+      startGuestMode,
+      exitGuestMode,
+      signInGuestAnonymously,
+      signInWithGoogle,
+      signInWithEmail,
+      resetPassword,
+      logout,
+      refreshProfile
+    }),
+    [
+      firebaseUser,
+      profile,
+      isLoading,
+      isGuest,
+      startGuestMode,
+      exitGuestMode,
+      signInGuestAnonymously,
+      signInWithGoogle,
+      signInWithEmail,
+      resetPassword,
+      logout,
+      refreshProfile
+    ]
+  );
   return /* @__PURE__ */ jsxRuntimeExports.jsx(AuthContext.Provider, { value, children: children2 });
 }
 function useFirebaseAuth() {
@@ -48133,12 +52237,12 @@ const CardFooter = reactExports.forwardRef(({ className, ...props }, ref) => /* 
   }
 ));
 CardFooter.displayName = "CardFooter";
-const __iconNode$1m = [
+const __iconNode$1r = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$1m);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$1r);
 function NotFound() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen w-full flex items-center justify-center bg-gray-50", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { className: "w-full max-w-md mx-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex mb-4 gap-2", children: [
@@ -48503,37 +52607,42 @@ function getDensityBreakdown(roster) {
     factors
   };
 }
-const __iconNode$1l = [
+const __iconNode$1q = [
   ["path", { d: "M12 22V8", key: "qkxhtm" }],
   ["path", { d: "M5 12H2a10 10 0 0 0 20 0h-3", key: "1hv3nh" }],
   ["circle", { cx: "12", cy: "5", r: "3", key: "rqqgnr" }]
 ];
-const Anchor = createLucideIcon("anchor", __iconNode$1l);
-const __iconNode$1k = [
+const Anchor = createLucideIcon("anchor", __iconNode$1q);
+const __iconNode$1p = [
   ["path", { d: "M12 5v14", key: "s699le" }],
   ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
 ];
-const ArrowDown = createLucideIcon("arrow-down", __iconNode$1k);
-const __iconNode$1j = [
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$1p);
+const __iconNode$1o = [
   ["path", { d: "M8 3 4 7l4 4", key: "9rb6wj" }],
   ["path", { d: "M4 7h16", key: "6tx8e3" }],
   ["path", { d: "m16 21 4-4-4-4", key: "siv7j2" }],
   ["path", { d: "M20 17H4", key: "h6l3hr" }]
 ];
-const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$1j);
-const __iconNode$1i = [
+const ArrowLeftRight = createLucideIcon("arrow-left-right", __iconNode$1o);
+const __iconNode$1n = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1i);
-const __iconNode$1h = [
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1n);
+const __iconNode$1m = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+];
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$1m);
+const __iconNode$1l = [
   ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
   ["path", { d: "M17 20V4", key: "1ejh1v" }],
   ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
   ["path", { d: "M7 4v16", key: "1glfcx" }]
 ];
-const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$1h);
-const __iconNode$1g = [
+const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$1l);
+const __iconNode$1k = [
   [
     "path",
     {
@@ -48543,8 +52652,8 @@ const __iconNode$1g = [
   ],
   ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
 ];
-const Award = createLucideIcon("award", __iconNode$1g);
-const __iconNode$1f = [
+const Award = createLucideIcon("award", __iconNode$1k);
+const __iconNode$1j = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -48554,8 +52663,17 @@ const __iconNode$1f = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$1f);
-const __iconNode$1e = [
+const BookOpen = createLucideIcon("book-open", __iconNode$1j);
+const __iconNode$1i = [
+  ["path", { d: "M12 8V4H8", key: "hb8ula" }],
+  ["rect", { width: "16", height: "12", x: "4", y: "8", rx: "2", key: "enze0r" }],
+  ["path", { d: "M2 14h2", key: "vft8re" }],
+  ["path", { d: "M20 14h2", key: "4cs60a" }],
+  ["path", { d: "M15 13v2", key: "1xurst" }],
+  ["path", { d: "M9 13v2", key: "rq6x2g" }]
+];
+const Bot = createLucideIcon("bot", __iconNode$1i);
+const __iconNode$1h = [
   ["path", { d: "M12 18V5", key: "adv99a" }],
   ["path", { d: "M15 13a4.17 4.17 0 0 1-3-4 4.17 4.17 0 0 1-3 4", key: "1e3is1" }],
   ["path", { d: "M17.598 6.5A3 3 0 1 0 12 5a3 3 0 1 0-5.598 1.5", key: "1gqd8o" }],
@@ -48565,13 +52683,13 @@ const __iconNode$1e = [
   ["path", { d: "M6 18a4 4 0 0 1-2-7.464", key: "k1g0md" }],
   ["path", { d: "M6.003 5.125a4 4 0 0 0-2.526 5.77", key: "q97ue3" }]
 ];
-const Brain = createLucideIcon("brain", __iconNode$1e);
-const __iconNode$1d = [
+const Brain = createLucideIcon("brain", __iconNode$1h);
+const __iconNode$1g = [
   ["path", { d: "M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16", key: "jecpp" }],
   ["rect", { width: "20", height: "14", x: "2", y: "6", rx: "2", key: "i6l2r4" }]
 ];
-const Briefcase = createLucideIcon("briefcase", __iconNode$1d);
-const __iconNode$1c = [
+const Briefcase = createLucideIcon("briefcase", __iconNode$1g);
+const __iconNode$1f = [
   ["path", { d: "M12 20v-9", key: "1qisl0" }],
   ["path", { d: "M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z", key: "uouzyp" }],
   ["path", { d: "M14.12 3.88 16 2", key: "qol33r" }],
@@ -48584,8 +52702,8 @@ const __iconNode$1c = [
   ["path", { d: "m8 2 1.88 1.88", key: "fmnt4t" }],
   ["path", { d: "M9 7.13V6a3 3 0 1 1 6 0v1.13", key: "1vgav8" }]
 ];
-const Bug = createLucideIcon("bug", __iconNode$1c);
-const __iconNode$1b = [
+const Bug = createLucideIcon("bug", __iconNode$1f);
+const __iconNode$1e = [
   ["path", { d: "M12 10h.01", key: "1nrarc" }],
   ["path", { d: "M12 14h.01", key: "1etili" }],
   ["path", { d: "M12 6h.01", key: "1vi96p" }],
@@ -48598,8 +52716,8 @@ const __iconNode$1b = [
   ["path", { d: "M9 22v-3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3", key: "cabbwy" }],
   ["rect", { x: "4", y: "2", width: "16", height: "20", rx: "2", key: "1uxh74" }]
 ];
-const Building = createLucideIcon("building", __iconNode$1b);
-const __iconNode$1a = [
+const Building = createLucideIcon("building", __iconNode$1e);
+const __iconNode$1d = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -48611,8 +52729,8 @@ const __iconNode$1a = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$1a);
-const __iconNode$19 = [
+const Calculator = createLucideIcon("calculator", __iconNode$1d);
+const __iconNode$1c = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -48624,57 +52742,64 @@ const __iconNode$19 = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$19);
-const __iconNode$18 = [
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$1c);
+const __iconNode$1b = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$18);
-const __iconNode$17 = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$17);
-const __iconNode$16 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$16);
-const __iconNode$15 = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$15);
-const __iconNode$14 = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$14);
-const __iconNode$13 = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$13);
-const __iconNode$12 = [
+const Calendar = createLucideIcon("calendar", __iconNode$1b);
+const __iconNode$1a = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$1a);
+const __iconNode$19 = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$19);
+const __iconNode$18 = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$18);
+const __iconNode$17 = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$17);
+const __iconNode$16 = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$16);
+const __iconNode$15 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$12);
-const __iconNode$11 = [
+const CircleCheck = createLucideIcon("circle-check", __iconNode$15);
+const __iconNode$14 = [
   ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
   ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
 ];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$11);
-const __iconNode$10 = [
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$14);
+const __iconNode$13 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3", key: "1u773s" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$10);
-const __iconNode$$ = [
+const CircleQuestionMark = createLucideIcon("circle-question-mark", __iconNode$13);
+const __iconNode$12 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
   ["path", { d: "m9 9 6 6", key: "z0biqf" }]
 ];
-const CircleX = createLucideIcon("circle-x", __iconNode$$);
-const __iconNode$_ = [
+const CircleX = createLucideIcon("circle-x", __iconNode$12);
+const __iconNode$11 = [
   ["path", { d: "M12 6v6l4 2", key: "mmk7yg" }],
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$_);
-const __iconNode$Z = [
+const Clock = createLucideIcon("clock", __iconNode$11);
+const __iconNode$10 = [
+  ["circle", { cx: "8", cy: "8", r: "6", key: "3yglwk" }],
+  ["path", { d: "M18.09 10.37A6 6 0 1 1 10.34 18", key: "t5s6rm" }],
+  ["path", { d: "M7 6h1v4", key: "1obek4" }],
+  ["path", { d: "m16.71 13.88.7.71-2.82 2.82", key: "1rbuyh" }]
+];
+const Coins = createLucideIcon("coins", __iconNode$10);
+const __iconNode$$ = [
   ["path", { d: "M20 4v7a4 4 0 0 1-4 4H4", key: "6o5b7l" }],
   ["path", { d: "m9 10-5 5 5 5", key: "1kshq7" }]
 ];
-const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$Z);
-const __iconNode$Y = [
+const CornerDownLeft = createLucideIcon("corner-down-left", __iconNode$$);
+const __iconNode$_ = [
   ["path", { d: "M12 20v2", key: "1lh1kg" }],
   ["path", { d: "M12 2v2", key: "tus03m" }],
   ["path", { d: "M17 20v2", key: "1rnc9c" }],
@@ -48690,8 +52815,8 @@ const __iconNode$Y = [
   ["rect", { x: "4", y: "4", width: "16", height: "16", rx: "2", key: "1vbyd7" }],
   ["rect", { x: "8", y: "8", width: "8", height: "8", rx: "1", key: "z9xiuo" }]
 ];
-const Cpu = createLucideIcon("cpu", __iconNode$Y);
-const __iconNode$X = [
+const Cpu = createLucideIcon("cpu", __iconNode$_);
+const __iconNode$Z = [
   [
     "path",
     {
@@ -48701,8 +52826,8 @@ const __iconNode$X = [
   ],
   ["path", { d: "M5 21h14", key: "11awu3" }]
 ];
-const Crown = createLucideIcon("crown", __iconNode$X);
-const __iconNode$W = [
+const Crown = createLucideIcon("crown", __iconNode$Z);
+const __iconNode$Y = [
   ["rect", { width: "12", height: "12", x: "2", y: "10", rx: "2", ry: "2", key: "6agr2n" }],
   [
     "path",
@@ -48713,14 +52838,14 @@ const __iconNode$W = [
   ["path", { d: "M15 6h.01", key: "cblpky" }],
   ["path", { d: "M18 9h.01", key: "2061c0" }]
 ];
-const Dices = createLucideIcon("dices", __iconNode$W);
-const __iconNode$V = [
+const Dices = createLucideIcon("dices", __iconNode$Y);
+const __iconNode$X = [
   ["path", { d: "M12 15V3", key: "m9g1x1" }],
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
   ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const Download = createLucideIcon("download", __iconNode$V);
-const __iconNode$U = [
+const Download = createLucideIcon("download", __iconNode$X);
+const __iconNode$W = [
   [
     "path",
     {
@@ -48738,8 +52863,8 @@ const __iconNode$U = [
   ],
   ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$U);
-const __iconNode$T = [
+const EyeOff = createLucideIcon("eye-off", __iconNode$W);
+const __iconNode$V = [
   [
     "path",
     {
@@ -48749,8 +52874,8 @@ const __iconNode$T = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$T);
-const __iconNode$S = [
+const Eye = createLucideIcon("eye", __iconNode$V);
+const __iconNode$U = [
   [
     "path",
     { d: "M12 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 12 18z", key: "b19h5q" }
@@ -48760,8 +52885,8 @@ const __iconNode$S = [
     { d: "M2 6a2 2 0 0 1 3.414-1.414l6 6a2 2 0 0 1 0 2.828l-6 6A2 2 0 0 1 2 18z", key: "h7h5ge" }
   ]
 ];
-const FastForward = createLucideIcon("fast-forward", __iconNode$S);
-const __iconNode$R = [
+const FastForward = createLucideIcon("fast-forward", __iconNode$U);
+const __iconNode$T = [
   [
     "path",
     {
@@ -48770,8 +52895,8 @@ const __iconNode$R = [
     }
   ]
 ];
-const Flag = createLucideIcon("flag", __iconNode$R);
-const __iconNode$Q = [
+const Flag = createLucideIcon("flag", __iconNode$T);
+const __iconNode$S = [
   ["line", { x1: "6", x2: "10", y1: "11", y2: "11", key: "1gktln" }],
   ["line", { x1: "8", x2: "8", y1: "9", y2: "13", key: "qnk9ow" }],
   ["line", { x1: "15", x2: "15.01", y1: "12", y2: "12", key: "krot7o" }],
@@ -48784,14 +52909,22 @@ const __iconNode$Q = [
     }
   ]
 ];
-const Gamepad2 = createLucideIcon("gamepad-2", __iconNode$Q);
-const __iconNode$P = [
+const Gamepad2 = createLucideIcon("gamepad-2", __iconNode$S);
+const __iconNode$R = [
+  ["path", { d: "m14 13-8.381 8.38a1 1 0 0 1-3.001-3l8.384-8.381", key: "pgg06f" }],
+  ["path", { d: "m16 16 6-6", key: "vzrcl6" }],
+  ["path", { d: "m21.5 10.5-8-8", key: "a17d9x" }],
+  ["path", { d: "m8 8 6-6", key: "18bi4p" }],
+  ["path", { d: "m8.5 7.5 8 8", key: "1oyaui" }]
+];
+const Gavel = createLucideIcon("gavel", __iconNode$R);
+const __iconNode$Q = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
   ["path", { d: "M2 12h20", key: "9i4pu4" }]
 ];
-const Globe = createLucideIcon("globe", __iconNode$P);
-const __iconNode$O = [
+const Globe = createLucideIcon("globe", __iconNode$Q);
+const __iconNode$P = [
   [
     "path",
     {
@@ -48802,8 +52935,8 @@ const __iconNode$O = [
   ["path", { d: "M22 10v6", key: "1lu8f3" }],
   ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$O);
-const __iconNode$N = [
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$P);
+const __iconNode$O = [
   ["path", { d: "m11 17 2 2a1 1 0 1 0 3-3", key: "efffak" }],
   [
     "path",
@@ -48816,8 +52949,8 @@ const __iconNode$N = [
   ["path", { d: "M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3", key: "1uvwmv" }],
   ["path", { d: "M3 4h8", key: "1ep09j" }]
 ];
-const Handshake = createLucideIcon("handshake", __iconNode$N);
-const __iconNode$M = [
+const Handshake = createLucideIcon("handshake", __iconNode$O);
+const __iconNode$N = [
   [
     "path",
     {
@@ -48826,8 +52959,8 @@ const __iconNode$M = [
     }
   ]
 ];
-const Heart = createLucideIcon("heart", __iconNode$M);
-const __iconNode$L = [
+const Heart = createLucideIcon("heart", __iconNode$N);
+const __iconNode$M = [
   ["path", { d: "M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8", key: "5wwlr5" }],
   [
     "path",
@@ -48837,14 +52970,14 @@ const __iconNode$L = [
     }
   ]
 ];
-const House = createLucideIcon("house", __iconNode$L);
-const __iconNode$K = [
+const House = createLucideIcon("house", __iconNode$M);
+const __iconNode$L = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 16v-4", key: "1dtifu" }],
   ["path", { d: "M12 8h.01", key: "e9boi3" }]
 ];
-const Info = createLucideIcon("info", __iconNode$K);
-const __iconNode$J = [
+const Info = createLucideIcon("info", __iconNode$L);
+const __iconNode$K = [
   [
     "path",
     {
@@ -48854,8 +52987,8 @@ const __iconNode$J = [
   ],
   ["path", { d: "M20.054 15.987H3.946", key: "14rxg9" }]
 ];
-const Laptop = createLucideIcon("laptop", __iconNode$J);
-const __iconNode$I = [
+const Laptop = createLucideIcon("laptop", __iconNode$K);
+const __iconNode$J = [
   [
     "path",
     {
@@ -48865,27 +52998,27 @@ const __iconNode$I = [
   ],
   ["path", { d: "M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12", key: "mt58a7" }]
 ];
-const Leaf = createLucideIcon("leaf", __iconNode$I);
-const __iconNode$H = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$H);
-const __iconNode$G = [
+const Leaf = createLucideIcon("leaf", __iconNode$J);
+const __iconNode$I = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$I);
+const __iconNode$H = [
   ["path", { d: "m10 17 5-5-5-5", key: "1bsop3" }],
   ["path", { d: "M15 12H3", key: "6jk70r" }],
   ["path", { d: "M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4", key: "u53s6r" }]
 ];
-const LogIn = createLucideIcon("log-in", __iconNode$G);
-const __iconNode$F = [
+const LogIn = createLucideIcon("log-in", __iconNode$H);
+const __iconNode$G = [
   ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
   ["path", { d: "M21 12H9", key: "dn1m92" }],
   ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
 ];
-const LogOut = createLucideIcon("log-out", __iconNode$F);
-const __iconNode$E = [
+const LogOut = createLucideIcon("log-out", __iconNode$G);
+const __iconNode$F = [
   ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
   ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
 ];
-const Lock = createLucideIcon("lock", __iconNode$E);
-const __iconNode$D = [
+const Lock = createLucideIcon("lock", __iconNode$F);
+const __iconNode$E = [
   [
     "path",
     {
@@ -48895,8 +53028,8 @@ const __iconNode$D = [
   ],
   ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
 ];
-const MapPin = createLucideIcon("map-pin", __iconNode$D);
-const __iconNode$C = [
+const MapPin = createLucideIcon("map-pin", __iconNode$E);
+const __iconNode$D = [
   [
     "path",
     {
@@ -48907,8 +53040,8 @@ const __iconNode$C = [
   ["path", { d: "M15 5.764v15", key: "1pn4in" }],
   ["path", { d: "M9 3.236v15", key: "1uimfh" }]
 ];
-const Map$1 = createLucideIcon("map", __iconNode$C);
-const __iconNode$B = [
+const Map$1 = createLucideIcon("map", __iconNode$D);
+const __iconNode$C = [
   [
     "path",
     {
@@ -48922,8 +53055,8 @@ const __iconNode$B = [
   ["circle", { cx: "12", cy: "17", r: "5", key: "qbz8iq" }],
   ["path", { d: "M12 18v-2h-.5", key: "fawc4q" }]
 ];
-const Medal = createLucideIcon("medal", __iconNode$B);
-const __iconNode$A = [
+const Medal = createLucideIcon("medal", __iconNode$C);
+const __iconNode$B = [
   [
     "path",
     {
@@ -48932,8 +53065,8 @@ const __iconNode$A = [
     }
   ]
 ];
-const MessageSquare = createLucideIcon("message-square", __iconNode$A);
-const __iconNode$z = [
+const MessageSquare = createLucideIcon("message-square", __iconNode$B);
+const __iconNode$A = [
   [
     "path",
     {
@@ -48942,10 +53075,10 @@ const __iconNode$z = [
     }
   ]
 ];
-const Moon = createLucideIcon("moon", __iconNode$z);
-const __iconNode$y = [["path", { d: "m8 3 4 8 5-5 5 15H2L8 3z", key: "otkl63" }]];
-const Mountain = createLucideIcon("mountain", __iconNode$y);
-const __iconNode$x = [
+const Moon = createLucideIcon("moon", __iconNode$A);
+const __iconNode$z = [["path", { d: "m8 3 4 8 5-5 5 15H2L8 3z", key: "otkl63" }]];
+const Mountain = createLucideIcon("mountain", __iconNode$z);
+const __iconNode$y = [
   [
     "path",
     {
@@ -48958,8 +53091,8 @@ const __iconNode$x = [
   ["circle", { cx: "6.5", cy: "12.5", r: ".5", fill: "currentColor", key: "qy21gx" }],
   ["circle", { cx: "8.5", cy: "7.5", r: ".5", fill: "currentColor", key: "fotxhn" }]
 ];
-const Palette = createLucideIcon("palette", __iconNode$x);
-const __iconNode$w = [
+const Palette = createLucideIcon("palette", __iconNode$y);
+const __iconNode$x = [
   ["path", { d: "M5.8 11.3 2 22l10.7-3.79", key: "gwxi1d" }],
   ["path", { d: "M4 3h.01", key: "1vcuye" }],
   ["path", { d: "M22 8h.01", key: "1mrtc2" }],
@@ -48985,7 +53118,18 @@ const __iconNode$w = [
     }
   ]
 ];
-const PartyPopper = createLucideIcon("party-popper", __iconNode$w);
+const PartyPopper = createLucideIcon("party-popper", __iconNode$x);
+const __iconNode$w = [
+  [
+    "path",
+    {
+      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+      key: "1a8usu"
+    }
+  ],
+  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
+];
+const Pencil = createLucideIcon("pencil", __iconNode$w);
 const __iconNode$v = [
   [
     "path",
@@ -51130,7 +55274,7 @@ function flushKeyframeResolvers() {
   isForced = false;
 }
 class KeyframeResolver {
-  constructor(unresolvedKeyframes, onComplete, name2, motionValue2, element, isAsync = false) {
+  constructor(unresolvedKeyframes, onComplete, name2, motionValue2, element, isAsync2 = false) {
     this.state = "pending";
     this.isAsync = false;
     this.needsMeasurement = false;
@@ -51139,7 +55283,7 @@ class KeyframeResolver {
     this.name = name2;
     this.motionValue = motionValue2;
     this.element = element;
-    this.isAsync = isAsync;
+    this.isAsync = isAsync2;
   }
   scheduleResolve() {
     this.state = "scheduled";
@@ -58615,6 +62759,53 @@ function Logo({ className = "w-5 h-5" }) {
     }
   );
 }
+function formatAuthError(error) {
+  if (!error) return "An unknown error occurred. Please try again.";
+  const code = (typeof error === "string" ? error : error?.code ?? error?.message ?? "").toLowerCase();
+  if (code.includes("username-no-email")) {
+    return "No email linked to this username yet. Please sign in using your email address once to link it.";
+  }
+  if (code.includes("username-not-found")) {
+    return "No account found with that username. Check your spelling or try signing in with your email.";
+  }
+  if (code.includes("user-not-found")) {
+    return "No account found with that email or username.";
+  }
+  if (code.includes("wrong-password") || code.includes("invalid-credential")) {
+    return "Wrong email/username or password. Please check your credentials.";
+  }
+  if (code.includes("invalid-email")) {
+    return "Invalid email address format. If using a username, make sure it matches your registered name.";
+  }
+  if (code.includes("email-already-in-use")) {
+    return "An account with this email already exists. Try signing in instead.";
+  }
+  if (code.includes("weak-password")) {
+    return "Password must be at least 6 characters long.";
+  }
+  if (code.includes("too-many-requests")) {
+    return "Too many failed sign-in attempts. Please wait a moment and try again.";
+  }
+  if (code.includes("user-disabled")) {
+    return "This user account has been disabled. Please contact support.";
+  }
+  if (code.includes("operation-not-allowed")) {
+    return "Email/password sign-in is currently disabled.";
+  }
+  if (code.includes("network-request-failed")) {
+    return "Network error. Please check your internet connection and try again.";
+  }
+  if (code.includes("popup-closed-by-user")) {
+    return "Sign-in popup was closed before completing.";
+  }
+  if (code.includes("popup-blocked")) {
+    return "Sign-in popup was blocked by your browser. Please allow popups for this site.";
+  }
+  if (typeof error?.message === "string" && error.message.length > 0 && error.message.length < 120 && !error.message.toLowerCase().includes("firebase")) {
+    return error.message;
+  }
+  return "Authentication failed. Please check your details and try again.";
+}
 function SubmitDialog$3({ score, mode, roster, onClose, onSuccess }) {
   const [, navigate2] = useLocation();
   const { firebaseUser, profile, isLoading: authLoading, needsUsername, signInWithGoogle, signInWithEmail } = useFirebaseAuth();
@@ -58632,22 +62823,21 @@ function SubmitDialog$3({ score, mode, roster, onClose, onSuccess }) {
     setError(null);
     try {
       await signInWithGoogle();
-    } catch {
-      setError("Google sign-in failed. Please try again.");
+    } catch (e) {
+      setError(formatAuthError(e));
     }
   }
   async function handleEmailAuth() {
     setError(null);
     if (!email.trim() || !password) {
-      setError("Enter your email and password.");
+      setError(isSignUp ? "Enter your email and password." : "Enter your email or username and password.");
       return;
     }
     setLoading(true);
     try {
       await signInWithEmail(email.trim(), password, isSignUp);
     } catch (e) {
-      const code = e?.code ?? "";
-      setError(code.includes("wrong-password") || code.includes("invalid-credential") ? "Wrong email or password." : code.includes("user-not-found") ? "No account with that email." : code.includes("email-already-in-use") ? "Email already in use — try signing in." : code.includes("weak-password") ? "Password must be at least 6 characters." : "Authentication failed. Please try again.");
+      setError(formatAuthError(e));
     } finally {
       setLoading(false);
     }
@@ -58696,7 +62886,7 @@ function SubmitDialog$3({ score, mode, roster, onClose, onSuccess }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-4 h-4" }),
         "View Leaderboard"
       ] })
-    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
+    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser || firebaseUser.isAnonymous || !profile ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-foreground/10 w-fit mx-auto mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-6 h-6 text-muted-foreground" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-foreground", children: "Sign in to submit" }),
@@ -58731,12 +62921,12 @@ function SubmitDialog$3({ score, mode, roster, onClose, onSuccess }) {
           setIsSignUp(false);
         }, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/5 text-foreground border border-border font-semibold text-sm hover:bg-foreground/10 transition-colors", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
-          "Sign in with Email"
+          "Sign in with Email or Username"
         ] })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "email", value: email, onChange: (e) => setEmail(e.target.value), placeholder: "Email", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "text", autoCapitalize: "none", autoCorrect: "off", spellCheck: false, value: email, onChange: (e) => setEmail(e.target.value), placeholder: isSignUp ? "Email address" : "Email or Username", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "password", value: password, onChange: (e) => setPassword(e.target.value), onKeyDown: (e) => e.key === "Enter" && handleEmailAuth(), placeholder: "Password", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400", children: error }),
+        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400 font-medium", children: error }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleEmailAuth, disabled: loading, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }),
           loading ? "…" : isSignUp ? "Create Account" : "Sign In"
@@ -58786,6 +62976,12 @@ function loadPersonalLeaderboard(mode) {
   }
 }
 function savePersonalScore(mode, entryData) {
+  if (typeof window !== "undefined" && sessionStorage.getItem("geoDraftsIsGuest") === "true") {
+    return;
+  }
+  if (auth.currentUser?.isAnonymous) {
+    return;
+  }
   const board = loadPersonalLeaderboard(mode);
   const entry = {
     ...entryData,
@@ -59064,12 +63260,182 @@ const Switch = reactExports.forwardRef(({ className, ...props }, ref) => /* @__P
   }
 ));
 Switch.displayName = Switch$1.displayName;
+function AuthModal({ onClose, title = "Sign In" }) {
+  const { signInWithGoogle, signInWithEmail, resetPassword } = useFirebaseAuth();
+  const [loading, setLoading] = reactExports.useState(false);
+  const [error, setError] = reactExports.useState(null);
+  const [successMsg, setSuccessMsg] = reactExports.useState(null);
+  const [showEmail, setShowEmail] = reactExports.useState(false);
+  const [isSignUp, setIsSignUp] = reactExports.useState(false);
+  const [isReset, setIsReset] = reactExports.useState(false);
+  const [email, setEmail] = reactExports.useState("");
+  const [password, setPassword] = reactExports.useState("");
+  async function handleGoogleSignIn() {
+    setError(null);
+    setSuccessMsg(null);
+    try {
+      await signInWithGoogle();
+      onClose();
+    } catch (e) {
+      setError(formatAuthError(e));
+    }
+  }
+  async function handleEmailAuth() {
+    setError(null);
+    setSuccessMsg(null);
+    if (!email.trim()) {
+      setError(isSignUp ? "Enter your email address." : "Enter your email or username.");
+      return;
+    }
+    if (isReset) {
+      setLoading(true);
+      try {
+        await resetPassword(email.trim());
+        setSuccessMsg("Password reset email sent! Check your inbox.");
+      } catch (e) {
+        setError(formatAuthError(e));
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
+    if (!password) {
+      setError("Enter your password.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await signInWithEmail(email.trim(), password, isSignUp);
+      onClose();
+    } catch (e) {
+      setError(formatAuthError(e));
+    } finally {
+      setLoading(false);
+    }
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, className: "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4", onClick: onClose, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { scale: 0.92, y: 16 }, animate: { scale: 1, y: 0 }, exit: { scale: 0.92, y: 16 }, className: "bg-background border border-border w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden", onClick: (e) => e.stopPropagation(), children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-4 border-b border-border flex items-center justify-between bg-foreground/5", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-4 h-4 text-primary" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg font-bold text-foreground", children: title })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onClose, className: "p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-colors", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { className: "w-4 h-4" }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-foreground/10 w-fit mx-auto mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-6 h-6 text-muted-foreground" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-foreground", children: isReset ? "Reset Password" : isSignUp ? "Create a New Account" : "Sign in to continue" })
+      ] }),
+      !showEmail ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleGoogleSignIn, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/10 text-foreground border border-border font-semibold text-sm hover:bg-foreground/20 transition-colors", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { className: "w-4 h-4", viewBox: "0 0 48 48", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#EA4335", d: "M24 9.5c3.5 0 6.5 1.2 8.9 3.2l6.6-6.6C35.5 2.5 30.1 0 24 0 14.7 0 6.7 5.4 2.7 13.3l7.7 6C12.2 13.3 17.7 9.5 24 9.5z" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#4285F4", d: "M46.1 24.6c0-1.5-.1-3-.4-4.4H24v8.4h12.4c-.5 2.8-2.1 5.2-4.5 6.8l7 5.4c4.1-3.8 6.5-9.4 6.5-16.2z" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#FBBC05", d: "M10.4 28.7A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.7-6A24 24 0 0 0 0 24c0 3.9.9 7.5 2.7 10.7l7.7-6z" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#34A853", d: "M24 48c6.1 0 11.3-2 15-5.5l-7-5.4c-2 1.3-4.5 2.1-8 2.1-6.3 0-11.7-4.3-13.6-10l-7.7 6C6.7 42.6 14.7 48 24 48z" })
+          ] }),
+          "Continue with Google"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-px flex-1 bg-border" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: "or" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-px flex-1 bg-border" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => {
+          setShowEmail(true);
+          setIsSignUp(false);
+          setIsReset(false);
+          setError(null);
+          setSuccessMsg(null);
+        }, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/5 text-foreground border border-border font-semibold text-sm hover:bg-foreground/10 transition-colors", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
+          "Sign in with Email or Username"
+        ] })
+      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex rounded-lg bg-foreground/5 p-1 border border-border text-xs mb-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => {
+                setIsSignUp(false);
+                setIsReset(false);
+                setError(null);
+                setSuccessMsg(null);
+              },
+              className: `flex-1 py-1.5 rounded-md font-semibold transition-colors ${!isSignUp && !isReset ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`,
+              children: "Sign In"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => {
+                setIsSignUp(true);
+                setIsReset(false);
+                setError(null);
+                setSuccessMsg(null);
+              },
+              className: `flex-1 py-1.5 rounded-md font-semibold transition-colors ${isSignUp ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`,
+              children: "Create Account"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            type: "text",
+            value: email,
+            onChange: (e) => setEmail(e.target.value),
+            placeholder: isSignUp ? "Email address" : "Email or Username",
+            autoCapitalize: "none",
+            autoCorrect: "off",
+            spellCheck: false,
+            className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+          }
+        ),
+        !isReset && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            type: "password",
+            value: password,
+            onChange: (e) => setPassword(e.target.value),
+            onKeyDown: (e) => e.key === "Enter" && handleEmailAuth(),
+            placeholder: "Password",
+            className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+          }
+        ),
+        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400 font-medium", children: error }),
+        successMsg && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-emerald-400 font-medium", children: successMsg }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleEmailAuth, disabled: loading, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }),
+          loading ? "…" : isReset ? "Send Reset Email" : isSignUp ? "Create Account" : "Sign In"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-xs pt-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShowEmail(false), className: "text-muted-foreground hover:text-foreground", children: "← Back" }),
+          !isSignUp && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              onClick: () => {
+                setIsReset(!isReset);
+                setError(null);
+                setSuccessMsg(null);
+              },
+              className: "text-muted-foreground hover:text-foreground hover:underline",
+              children: isReset ? "Back to Sign In" : "Forgot Password?"
+            }
+          )
+        ] })
+      ] })
+    ] })
+  ] }) });
+}
 function SettingsModal({ onClose }) {
-  const { profile, logout, refreshProfile, firebaseUser } = useFirebaseAuth();
+  const { profile, logout, refreshProfile, firebaseUser, isGuest } = useFirebaseAuth();
   const { toast: toast2 } = useToast();
   const [newUsername, setNewUsername] = reactExports.useState(profile?.username || "");
   const [isUpdating, setIsUpdating] = reactExports.useState(false);
   const [isLoggingOut, setIsLoggingOut] = reactExports.useState(false);
+  const [showAuthModal, setShowAuthModal] = reactExports.useState(false);
   const { theme, setTheme } = useTheme();
   const [devModeEnabled, setDevModeEnabled] = reactExports.useState(() => localStorage.getItem("geoDraftsDevMode") === "true");
   function toggleDevMode(checked) {
@@ -59192,7 +63558,22 @@ function SettingsModal({ onClose }) {
                 );
               }) })
             ] }),
-            firebaseUser && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            (!firebaseUser || firebaseUser.isAnonymous || isGuest) && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "pt-5 border-t border-border space-y-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-primary/5 border border-primary/20 rounded-2xl p-4 text-center", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-bold text-foreground mb-1", children: "Playing as Guest" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-4 leading-relaxed", children: "Sign in to save your game stats, streak, and compete on the global leaderboards." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  onClick: () => setShowAuthModal(true),
+                  className: "w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-primary/20",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
+                    "Sign In / Create Account"
+                  ]
+                }
+              )
+            ] }) }),
+            firebaseUser && !firebaseUser.isAnonymous && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
               profile?.username?.toLowerCase().trim() === "devtest" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pt-5 border-t border-border flex items-center justify-between", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wider", children: "Developer Mode" }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/20", children: [
@@ -59244,12 +63625,54 @@ function SettingsModal({ onClose }) {
           ] })
         ]
       }
-    )
+    ),
+    showAuthModal && /* @__PURE__ */ jsxRuntimeExports.jsx(AuthModal, { onClose: () => setShowAuthModal(false) })
   ] });
+}
+function useOnlineStatus() {
+  const [isOnline, setIsOnline] = reactExports.useState(() => {
+    if (typeof navigator !== "undefined" && typeof navigator.onLine === "boolean") {
+      return navigator.onLine;
+    }
+    return true;
+  });
+  reactExports.useEffect(() => {
+    function handleOnline() {
+      setIsOnline(true);
+    }
+    function handleOffline() {
+      setIsOnline(false);
+    }
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+  return isOnline;
 }
 function SettingsButton() {
   const [showSettings, setShowSettings] = reactExports.useState(false);
-  const { firebaseUser, profile } = useFirebaseAuth();
+  const [showAuthModal, setShowAuthModal] = reactExports.useState(false);
+  const { firebaseUser, profile, isGuest } = useFirebaseAuth();
+  const isOnline = useOnlineStatus();
+  if (!isOnline) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          onClick: () => setShowAuthModal(true),
+          className: "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-semibold bg-primary text-primary-foreground hover:opacity-90 transition-opacity shadow-sm",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Sign In" })
+          ]
+        }
+      ),
+      showAuthModal && /* @__PURE__ */ jsxRuntimeExports.jsx(AuthModal, { onClose: () => setShowAuthModal(false) })
+    ] });
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "button",
@@ -59258,7 +63681,7 @@ function SettingsButton() {
         className: "flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-semibold bg-card border border-border text-card-foreground hover:bg-muted transition-colors shadow-sm",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Settings, { className: "w-4 h-4 opacity-70" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: firebaseUser ? profile?.username || "Account" : "Settings" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: firebaseUser && profile ? profile.username : isGuest ? "Guest Settings" : "Settings" })
         ]
       }
     ),
@@ -60648,22 +65071,21 @@ function SubmitDialog$2({ score, mode, roster, onClose, onSuccess }) {
     setError(null);
     try {
       await signInWithGoogle();
-    } catch {
-      setError("Google sign-in failed. Please try again.");
+    } catch (e) {
+      setError(formatAuthError(e));
     }
   }
   async function handleEmailAuth() {
     setError(null);
     if (!email.trim() || !password) {
-      setError("Enter your email and password.");
+      setError(isSignUp ? "Enter your email and password." : "Enter your email or username and password.");
       return;
     }
     setLoading(true);
     try {
       await signInWithEmail(email.trim(), password, isSignUp);
     } catch (e) {
-      const code = e?.code ?? "";
-      setError(code.includes("wrong-password") || code.includes("invalid-credential") ? "Wrong email or password." : code.includes("user-not-found") ? "No account with that email." : code.includes("email-already-in-use") ? "Email already in use — try signing in." : code.includes("weak-password") ? "Password must be at least 6 characters." : "Authentication failed. Please try again.");
+      setError(formatAuthError(e));
     } finally {
       setLoading(false);
     }
@@ -60712,7 +65134,7 @@ function SubmitDialog$2({ score, mode, roster, onClose, onSuccess }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-4 h-4" }),
         "View Leaderboard"
       ] })
-    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
+    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser || firebaseUser.isAnonymous || !profile ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-foreground/10 w-fit mx-auto mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-6 h-6 text-muted-foreground" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-foreground", children: "Sign in to submit" }),
@@ -60747,12 +65169,12 @@ function SubmitDialog$2({ score, mode, roster, onClose, onSuccess }) {
           setIsSignUp(false);
         }, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/5 text-foreground border border-border font-semibold text-sm hover:bg-foreground/10 transition-colors", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
-          "Sign in with Email"
+          "Sign in with Email or Username"
         ] })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "email", value: email, onChange: (e) => setEmail(e.target.value), placeholder: "Email", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "text", autoCapitalize: "none", autoCorrect: "off", spellCheck: false, value: email, onChange: (e) => setEmail(e.target.value), placeholder: isSignUp ? "Email address" : "Email or Username", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "password", value: password, onChange: (e) => setPassword(e.target.value), onKeyDown: (e) => e.key === "Enter" && handleEmailAuth(), placeholder: "Password", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400", children: error }),
+        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400 font-medium", children: error }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleEmailAuth, disabled: loading, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }),
           loading ? "…" : isSignUp ? "Create Account" : "Sign In"
@@ -62129,22 +66551,21 @@ function SubmitDialog$1({ score, mode, roster, guesses, mysteryCountry, onClose,
     setError(null);
     try {
       await signInWithGoogle();
-    } catch {
-      setError("Google sign-in failed. Please try again.");
+    } catch (e) {
+      setError(formatAuthError(e));
     }
   }
   async function handleEmailAuth() {
     setError(null);
     if (!email.trim() || !password) {
-      setError("Enter your email and password.");
+      setError(isSignUp ? "Enter your email and password." : "Enter your email or username and password.");
       return;
     }
     setLoading(true);
     try {
       await signInWithEmail(email.trim(), password, isSignUp);
     } catch (e) {
-      const code = e?.code ?? "";
-      setError(code.includes("wrong-password") || code.includes("invalid-credential") ? "Wrong email or password." : code.includes("user-not-found") ? "No account with that email." : code.includes("email-already-in-use") ? "Email already in use — try signing in." : code.includes("weak-password") ? "Password must be at least 6 characters." : "Authentication failed. Please try again.");
+      setError(formatAuthError(e));
     } finally {
       setLoading(false);
     }
@@ -62193,7 +66614,7 @@ function SubmitDialog$1({ score, mode, roster, guesses, mysteryCountry, onClose,
         /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-4 h-4" }),
         "View Leaderboard"
       ] })
-    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
+    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser || firebaseUser.isAnonymous || !profile ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-foreground/10 w-fit mx-auto mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-6 h-6 text-muted-foreground" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-foreground", children: "Sign in to submit" }),
@@ -62228,12 +66649,12 @@ function SubmitDialog$1({ score, mode, roster, guesses, mysteryCountry, onClose,
           setIsSignUp(false);
         }, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/5 text-foreground border border-border font-semibold text-sm hover:bg-foreground/10 transition-colors", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
-          "Sign in with Email"
+          "Sign in with Email or Username"
         ] })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "email", value: email, onChange: (e) => setEmail(e.target.value), placeholder: "Email", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "text", autoCapitalize: "none", autoCorrect: "off", spellCheck: false, value: email, onChange: (e) => setEmail(e.target.value), placeholder: isSignUp ? "Email address" : "Email or Username", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "password", value: password, onChange: (e) => setPassword(e.target.value), onKeyDown: (e) => e.key === "Enter" && handleEmailAuth(), placeholder: "Password", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400", children: error }),
+        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400 font-medium", children: error }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleEmailAuth, disabled: loading, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }),
           loading ? "…" : isSignUp ? "Create Account" : "Sign In"
@@ -63375,22 +67796,21 @@ function SubmitDialog({ score, mode, roster, onClose, onSuccess }) {
     setError(null);
     try {
       await signInWithGoogle();
-    } catch {
-      setError("Google sign-in failed. Please try again.");
+    } catch (e) {
+      setError(formatAuthError(e));
     }
   }
   async function handleEmailAuth() {
     setError(null);
     if (!email.trim() || !password) {
-      setError("Enter your email and password.");
+      setError(isSignUp ? "Enter your email and password." : "Enter your email or username and password.");
       return;
     }
     setLoading(true);
     try {
       await signInWithEmail(email.trim(), password, isSignUp);
     } catch (e) {
-      const code = e?.code ?? "";
-      setError(code.includes("wrong-password") || code.includes("invalid-credential") ? "Wrong email or password." : code.includes("user-not-found") ? "No account with that email." : code.includes("email-already-in-use") ? "Email already in use — try signing in." : code.includes("weak-password") ? "Password must be at least 6 characters." : "Authentication failed. Please try again.");
+      setError(formatAuthError(e));
     } finally {
       setLoading(false);
     }
@@ -63439,7 +67859,7 @@ function SubmitDialog({ score, mode, roster, onClose, onSuccess }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-4 h-4" }),
         "View Leaderboard"
       ] })
-    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
+    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser || firebaseUser.isAnonymous || !profile ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-foreground/10 w-fit mx-auto mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-6 h-6 text-muted-foreground" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-foreground", children: "Sign in to submit" }),
@@ -63474,12 +67894,12 @@ function SubmitDialog({ score, mode, roster, onClose, onSuccess }) {
           setIsSignUp(false);
         }, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/5 text-foreground border border-border font-semibold text-sm hover:bg-foreground/10 transition-colors", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
-          "Sign in with Email"
+          "Sign in with Email or Username"
         ] })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "email", value: email, onChange: (e) => setEmail(e.target.value), placeholder: "Email", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "text", autoCapitalize: "none", autoCorrect: "off", spellCheck: false, value: email, onChange: (e) => setEmail(e.target.value), placeholder: isSignUp ? "Email address" : "Email or Username", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "password", value: password, onChange: (e) => setPassword(e.target.value), onKeyDown: (e) => e.key === "Enter" && handleEmailAuth(), placeholder: "Password", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400", children: error }),
+        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400 font-medium", children: error }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleEmailAuth, disabled: loading, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }),
           loading ? "…" : isSignUp ? "Create Account" : "Sign In"
@@ -64927,6 +69347,874 @@ function SabotageGame() {
     ] })
   ] });
 }
+function AuctionGame() {
+  const [location2, navigate2] = useLocation();
+  const { firebaseUser, profile } = useFirebaseAuth();
+  const roomCode = reactExports.useMemo(() => {
+    const fromSearch = new URLSearchParams(window.location.search).get("room");
+    if (fromSearch) return fromSearch;
+    if (location2.includes("?")) {
+      const q2 = location2.split("?")[1];
+      const fromLoc = new URLSearchParams(q2).get("room");
+      if (fromLoc) return fromLoc;
+    }
+    return localStorage.getItem("countryDraftRoomCode") || null;
+  }, [location2]);
+  const isMultiplayer = Boolean(roomCode);
+  const [room, setRoom] = reactExports.useState(null);
+  const [players, setPlayers] = reactExports.useState([]);
+  const [spRound, setSpRound] = reactExports.useState(0);
+  const [spPool] = reactExports.useState(() => shuffleArray$1([...COUNTRIES]));
+  const [spMyMoney, setSpMyMoney] = reactExports.useState(200);
+  const [spBotMoney, setSpBotMoney] = reactExports.useState(200);
+  const [spMyRoster, setSpMyRoster] = reactExports.useState({});
+  const [spBotRoster, setSpBotRoster] = reactExports.useState({});
+  const [spAuctionState, setSpAuctionState] = reactExports.useState({
+    firstBidderId: "me",
+    firstBid: null,
+    winnerId: null,
+    winningBid: null,
+    status: "bidding"
+  });
+  const [bidInput, setBidInput] = reactExports.useState("");
+  const [outbidInput, setOutbidInput] = reactExports.useState("");
+  const [inputError, setInputError] = reactExports.useState(null);
+  reactExports.useEffect(() => {
+    if (!roomCode) return;
+    const unsubRoom = listenToRoom(roomCode, setRoom);
+    const unsubPlayers = listenToPlayers(roomCode, setPlayers);
+    return () => {
+      unsubRoom();
+      unsubPlayers();
+    };
+  }, [roomCode]);
+  const mpMe = reactExports.useMemo(() => players.find((p) => p.uid === firebaseUser?.uid), [players, firebaseUser]);
+  const mpOpponent = reactExports.useMemo(() => players.find((p) => p.uid !== firebaseUser?.uid), [players, firebaseUser]);
+  const myName = profile?.username || firebaseUser?.displayName || "Player 1";
+  const myMoney = isMultiplayer ? mpMe?.money ?? 200 : spMyMoney;
+  const opponentName = isMultiplayer ? mpOpponent?.username || "Opponent" : "AI Drafter Bot";
+  const opponentMoney = isMultiplayer ? mpOpponent?.money ?? 200 : spBotMoney;
+  const myRoster = isMultiplayer ? mpMe?.roster || {} : spMyRoster;
+  const opponentRoster = isMultiplayer ? mpOpponent?.roster || {} : spBotRoster;
+  const myFilledCount = reactExports.useMemo(() => Object.keys(myRoster).length, [myRoster]);
+  const opponentFilledCount = reactExports.useMemo(() => Object.keys(opponentRoster).length, [opponentRoster]);
+  const isMyRosterFull = myFilledCount >= CATEGORIES.length;
+  const isOpponentRosterFull = opponentFilledCount >= CATEGORIES.length;
+  const isBothRostersFull = isMyRosterFull && isOpponentRosterFull;
+  const fullPool = reactExports.useMemo(() => {
+    if (isMultiplayer) {
+      if (!room?.poolSeed) return [];
+      return seededShuffle$1([...COUNTRIES], room.poolSeed);
+    }
+    return spPool;
+  }, [isMultiplayer, room?.poolSeed, spPool]);
+  const lowerRankedPool = reactExports.useMemo(() => {
+    if (!fullPool.length) return [];
+    return fullPool.filter((c) => c.tier === "third" || c.tier === "fourth");
+  }, [fullPool]);
+  const currentRound = isMultiplayer ? room?.currentRound ?? 0 : spRound;
+  const currentCountry = reactExports.useMemo(() => {
+    if (!fullPool.length) return null;
+    if (isBothRostersFull) return null;
+    if (isMyRosterFull && opponentMoney === 0) {
+      if (!lowerRankedPool.length) return fullPool[currentRound % fullPool.length];
+      return lowerRankedPool[currentRound % lowerRankedPool.length];
+    }
+    if (isOpponentRosterFull && myMoney === 0) {
+      if (!lowerRankedPool.length) return fullPool[currentRound % fullPool.length];
+      return lowerRankedPool[currentRound % lowerRankedPool.length];
+    }
+    return fullPool[currentRound % fullPool.length];
+  }, [fullPool, lowerRankedPool, currentRound, isBothRostersFull, isMyRosterFull, isOpponentRosterFull, myMoney, opponentMoney]);
+  const mpFirstBidderId = reactExports.useMemo(() => {
+    if (!room) return "";
+    if (isOpponentRosterFull && !isMyRosterFull) return firebaseUser?.uid ?? "";
+    if (isMyRosterFull && !isOpponentRosterFull) return mpOpponent?.uid ?? "";
+    return currentRound % 2 === 0 ? room.hostId : mpOpponent?.uid || room.hostId;
+  }, [room, currentRound, isMyRosterFull, isOpponentRosterFull, firebaseUser, mpOpponent]);
+  const spFirstBidderId = reactExports.useMemo(() => {
+    if (isOpponentRosterFull && !isMyRosterFull) return "me";
+    if (isMyRosterFull && !isOpponentRosterFull) return "bot";
+    return currentRound % 2 === 0 ? "me" : "bot";
+  }, [currentRound, isMyRosterFull, isOpponentRosterFull]);
+  const firstBidderId = isMultiplayer ? mpFirstBidderId : spAuctionState.firstBidderId;
+  const amIFirstBidder = isMultiplayer ? firebaseUser?.uid === firstBidderId : firstBidderId === "me";
+  const mpAuctionState = room?.auctionState;
+  const currentStatus = isMultiplayer ? mpAuctionState?.status || "bidding" : spAuctionState.status;
+  const firstBid = isMultiplayer ? mpAuctionState?.firstBid ?? null : spAuctionState.firstBid;
+  const winnerId = isMultiplayer ? mpAuctionState?.winnerId ?? null : spAuctionState.winnerId;
+  const winningBid = isMultiplayer ? mpAuctionState?.winningBid ?? null : spAuctionState.winningBid;
+  const amIWinner = isMultiplayer ? firebaseUser?.uid === winnerId : winnerId === "me";
+  reactExports.useEffect(() => {
+    setBidInput("");
+    setOutbidInput("");
+    setInputError(null);
+  }, [currentRound]);
+  const calculateCountryValue = reactExports.useCallback((country, roster) => {
+    let maxVal = 0;
+    CATEGORIES.forEach((cat) => {
+      if (!roster[cat] && !BONUS_CATEGORIES$3.includes(cat)) {
+        const key = getCategoryKey(cat);
+        const score = country.stats[key]?.score ?? 0;
+        if (score > maxVal) maxVal = score;
+      }
+    });
+    return maxVal;
+  }, []);
+  reactExports.useEffect(() => {
+    if (isMultiplayer || isBothRostersFull || !currentCountry) return;
+    if (currentStatus === "bidding" && (isMyRosterFull || isOpponentRosterFull)) {
+      const soloIsMe = !isMyRosterFull;
+      const soloMoney = soloIsMe ? spMyMoney : spBotMoney;
+      const soloBid = soloMoney > 0 ? 1 : 0;
+      const soloId = soloIsMe ? "me" : "bot";
+      setSpAuctionState({
+        firstBidderId: soloId,
+        firstBid: soloBid,
+        winnerId: soloId,
+        winningBid: soloBid,
+        status: "drafting"
+      });
+      if (!soloIsMe) {
+        const bestCat = CATEGORIES.find((cat) => !spBotRoster[cat]) || CATEGORIES[0];
+        setSpBotRoster((prev) => ({ ...prev, [bestCat]: currentCountry.name }));
+        setSpBotMoney((prev) => Math.max(0, prev - soloBid));
+        setTimeout(() => {
+          setSpRound((r2) => r2 + 1);
+          setSpAuctionState({ firstBidderId: "me", firstBid: null, winnerId: null, winningBid: null, status: "bidding" });
+        }, 500);
+      }
+      return;
+    }
+    let timer2 = null;
+    if (spFirstBidderId === "bot" && currentStatus === "bidding") {
+      timer2 = setTimeout(() => {
+        const bestVal = calculateCountryValue(currentCountry, spBotRoster);
+        let botBid = 0;
+        if (bestVal >= 8) botBid = Math.min(spBotMoney, Math.floor(Math.random() * 25) + 15);
+        else if (bestVal >= 5) botBid = Math.min(spBotMoney, Math.floor(Math.random() * 10) + 5);
+        else botBid = Math.min(spBotMoney, Math.floor(Math.random() * 3));
+        setSpAuctionState({
+          firstBidderId: "bot",
+          firstBid: botBid,
+          winnerId: null,
+          winningBid: null,
+          status: "responding"
+        });
+      }, 700);
+    }
+    if (spFirstBidderId === "me" && currentStatus === "responding" && firstBid !== null && !winnerId) {
+      if (spBotMoney <= firstBid) {
+        setSpAuctionState((prev) => ({
+          ...prev,
+          status: "drafting",
+          winnerId: "me",
+          winningBid: firstBid
+        }));
+      } else {
+        timer2 = setTimeout(() => {
+          const bestVal = calculateCountryValue(currentCountry, spBotRoster);
+          const botMaxWilling = Math.min(spBotMoney, Math.round(bestVal * 4.5));
+          if (botMaxWilling > firstBid && spBotMoney > firstBid) {
+            const outbidVal = firstBid + 1 + Math.floor(Math.random() * Math.min(5, spBotMoney - firstBid));
+            const finalOutbid = Math.min(spBotMoney, outbidVal);
+            const bestCat = CATEGORIES.find((cat) => !spBotRoster[cat]) || CATEGORIES[0];
+            setSpBotRoster((prev) => ({ ...prev, [bestCat]: currentCountry.name }));
+            setSpBotMoney((prev) => Math.max(0, prev - finalOutbid));
+            setSpAuctionState({
+              firstBidderId: "me",
+              firstBid,
+              winnerId: "bot",
+              winningBid: finalOutbid,
+              status: "drafting"
+            });
+            setTimeout(() => {
+              setSpRound((r2) => r2 + 1);
+              setSpAuctionState({ firstBidderId: (spRound + 1) % 2 === 0 ? "me" : "bot", firstBid: null, winnerId: null, winningBid: null, status: "bidding" });
+            }, 1200);
+          } else {
+            setSpAuctionState((prev) => ({
+              ...prev,
+              status: "drafting",
+              winnerId: "me",
+              winningBid: firstBid
+            }));
+          }
+        }, 800);
+      }
+    }
+    return () => {
+      if (timer2) clearTimeout(timer2);
+    };
+  }, [isMultiplayer, isBothRostersFull, currentCountry, currentStatus, spFirstBidderId, firstBid, winnerId, spBotMoney, spMyRoster, spBotRoster, calculateCountryValue, spMyMoney, spRound, isMyRosterFull, isOpponentRosterFull]);
+  reactExports.useEffect(() => {
+    if (!isMultiplayer || !room || !mpMe || !mpOpponent || room.status !== "playing") return;
+    if (currentStatus === "responding" && firstBid !== null && firstBid !== void 0 && !winnerId) {
+      const respondingPlayer = players.find((p) => p.uid !== firstBidderId);
+      if (respondingPlayer && (respondingPlayer.money ?? 200) <= firstBid) {
+        if (firebaseUser?.uid === room.hostId) {
+          updateRoom(room.code, {
+            auctionState: {
+              ...mpAuctionState,
+              status: "drafting",
+              winnerId: firstBidderId,
+              winningBid: firstBid
+            }
+          });
+        }
+      }
+    }
+  }, [isMultiplayer, room, mpMe, mpOpponent, currentStatus, firstBid, winnerId, firstBidderId, players, firebaseUser, mpAuctionState]);
+  const handleFirstBid = reactExports.useCallback(() => {
+    if (!currentCountry) return;
+    const cleanDigits = bidInput.replace(/\D/g, "");
+    if (!cleanDigits) {
+      setInputError("Please enter a valid amount");
+      return;
+    }
+    const val = parseInt(cleanDigits, 10);
+    if (isNaN(val) || val < 0) {
+      setInputError("Bid cannot be negative");
+      return;
+    }
+    if (val > myMoney) {
+      setInputError(`Cannot bid more than your total money ($${myMoney})`);
+      return;
+    }
+    setInputError(null);
+    if (isMultiplayer && room) {
+      updateRoom(room.code, {
+        auctionState: {
+          firstBid: val,
+          status: "responding",
+          winnerId: null,
+          winningBid: null
+        }
+      });
+    } else {
+      setSpAuctionState({
+        firstBidderId: "me",
+        firstBid: val,
+        winnerId: null,
+        winningBid: null,
+        status: "responding"
+      });
+    }
+  }, [isMultiplayer, room, currentCountry, bidInput, myMoney]);
+  const handleOutbid = reactExports.useCallback(() => {
+    if (firstBid === null) return;
+    const cleanDigits = outbidInput.replace(/\D/g, "");
+    if (!cleanDigits) {
+      setInputError("Please enter an outbid amount");
+      return;
+    }
+    const val = parseInt(cleanDigits, 10);
+    if (isNaN(val) || val <= firstBid) {
+      setInputError(`Outbid must be higher than current bid ($${firstBid})`);
+      return;
+    }
+    if (val > myMoney) {
+      setInputError(`Cannot bid more than your total money ($${myMoney})`);
+      return;
+    }
+    setInputError(null);
+    if (isMultiplayer && room && mpMe) {
+      updateRoom(room.code, {
+        auctionState: {
+          ...mpAuctionState,
+          status: "drafting",
+          winnerId: mpMe.uid,
+          winningBid: val
+        }
+      });
+    } else {
+      setSpAuctionState({
+        firstBidderId: spAuctionState.firstBidderId,
+        firstBid,
+        winnerId: "me",
+        winningBid: val,
+        status: "drafting"
+      });
+    }
+  }, [isMultiplayer, room, mpMe, firstBid, outbidInput, myMoney, mpAuctionState, spAuctionState.firstBidderId]);
+  const handleGiveOpponent = reactExports.useCallback(() => {
+    if (firstBid === null) return;
+    if (isMultiplayer && room) {
+      updateRoom(room.code, {
+        auctionState: {
+          ...mpAuctionState,
+          status: "drafting",
+          winnerId: firstBidderId,
+          winningBid: firstBid
+        }
+      });
+    } else {
+      if (currentCountry) {
+        const bestCat = CATEGORIES.find((cat) => !spBotRoster[cat]) || CATEGORIES[0];
+        setSpBotRoster((prev) => ({ ...prev, [bestCat]: currentCountry.name }));
+        setSpBotMoney((prev) => Math.max(0, prev - firstBid));
+      }
+      setSpAuctionState({
+        firstBidderId: "bot",
+        firstBid,
+        winnerId: "bot",
+        winningBid: firstBid,
+        status: "drafting"
+      });
+      setTimeout(() => {
+        setSpRound((r2) => r2 + 1);
+        setSpAuctionState({ firstBidderId: (spRound + 1) % 2 === 0 ? "me" : "bot", firstBid: null, winnerId: null, winningBid: null, status: "bidding" });
+      }, 1e3);
+    }
+  }, [isMultiplayer, room, firstBid, firstBidderId, mpAuctionState, currentCountry, spBotRoster, spRound]);
+  const handleAssignCategory = reactExports.useCallback(
+    (cat) => {
+      if (!currentCountry || !amIWinner || myRoster[cat]) return;
+      const price = winningBid ?? 0;
+      if (isMultiplayer && room && mpMe) {
+        const newMoney = Math.max(0, myMoney - price);
+        const newRoster = { ...myRoster, [cat]: currentCountry.name };
+        updatePlayer(room.code, mpMe.uid, {
+          roster: newRoster,
+          money: newMoney,
+          finishedRound: true
+        });
+        if (mpOpponent) {
+          updatePlayer(room.code, mpOpponent.uid, { finishedRound: true });
+        }
+      } else {
+        setSpMyMoney((m) => Math.max(0, m - price));
+        setSpMyRoster((prev) => ({ ...prev, [cat]: currentCountry.name }));
+        setTimeout(() => {
+          setSpRound((r2) => r2 + 1);
+          setSpAuctionState({
+            firstBidderId: (spRound + 1) % 2 === 0 ? "me" : "bot",
+            firstBid: null,
+            winnerId: null,
+            winningBid: null,
+            status: "bidding"
+          });
+        }, 300);
+      }
+    },
+    [currentCountry, amIWinner, myRoster, winningBid, isMultiplayer, room, mpMe, myMoney, mpOpponent, spRound]
+  );
+  reactExports.useEffect(() => {
+    if (!isMultiplayer || !room || room.status !== "playing") return;
+    if (mpMe?.finishedRound && mpOpponent?.finishedRound) {
+      if (firebaseUser?.uid === room.hostId) {
+        updatePlayer(room.code, room.hostId, { finishedRound: false });
+        if (mpOpponent) updatePlayer(room.code, mpOpponent.uid, { finishedRound: false });
+        updateRoom(room.code, {
+          currentRound: room.currentRound + 1,
+          auctionState: null
+        });
+      }
+    }
+  }, [isMultiplayer, room, mpMe, mpOpponent, firebaseUser]);
+  const calculateScore = reactExports.useCallback((roster) => {
+    let base = 0;
+    const fullRosterObj = {};
+    CATEGORIES.forEach((cat) => {
+      const countryName = roster[cat];
+      if (countryName) {
+        const country = COUNTRIES.find((c) => c.name === countryName);
+        if (country) {
+          fullRosterObj[cat] = country;
+          if (!BONUS_CATEGORIES$3.includes(cat)) {
+            const key = getCategoryKey(cat);
+            base += country.stats[key]?.score ?? 0;
+          }
+        }
+      }
+    });
+    const bonus = computeSizePopBonus(fullRosterObj);
+    return { base, bonus, total: base + bonus };
+  }, []);
+  const myScores = reactExports.useMemo(() => calculateScore(myRoster), [myRoster, calculateScore]);
+  const opponentScores = reactExports.useMemo(() => calculateScore(opponentRoster), [opponentRoster, calculateScore]);
+  const isGameOver = isBothRostersFull || isMultiplayer && room?.status === "finished";
+  const winnerInfo = reactExports.useMemo(() => {
+    if (!isGameOver) return null;
+    if (myScores.total > opponentScores.total) return { isMe: true, reason: "Higher Total Points" };
+    if (opponentScores.total > myScores.total) return { isMe: false, reason: "Higher Total Points" };
+    if (myMoney > opponentMoney) return { isMe: true, reason: "Tiebreaker: Remaining Money" };
+    if (opponentMoney > myMoney) return { isMe: false, reason: "Tiebreaker: Remaining Money" };
+    return { isMe: null, reason: "Exact Tie!" };
+  }, [isGameOver, myScores.total, opponentScores.total, myMoney, opponentMoney]);
+  if (isGameOver) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-background text-foreground flex flex-col p-6 md:p-12 font-sans max-w-6xl mx-auto selection:bg-foreground/20", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "flex items-center justify-between mb-8", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => navigate2("/"), className: "font-black text-2xl tracking-tighter flex items-center gap-3 hover:opacity-80", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Logo, { className: "w-6 h-6 opacity-90" }),
+          " GeoDrafts"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsButton, {}) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "flex-1 flex flex-col items-center justify-center space-y-8", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { scale: 0.8, opacity: 0 }, animate: { scale: 1, opacity: 1 }, className: "text-center space-y-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-400 font-black text-sm uppercase tracking-widest", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-4 h-4" }),
+            " Auction Concluded"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-5xl md:text-7xl font-black tracking-tight", children: winnerInfo?.isMe === true ? "🏆 VICTORY!" : winnerInfo?.isMe === false ? "DEFEAT" : "IT'S A TIE!" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-lg text-muted-foreground font-medium", children: winnerInfo?.reason })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid md:grid-cols-2 gap-6 w-full", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { x: -20, opacity: 0 }, animate: { x: 0, opacity: 1 }, className: "bg-card p-6 rounded-3xl border border-border space-y-4 shadow-xl", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between border-b border-border/50 pb-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black text-xl", children: [
+                  myName,
+                  " (You)"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-bold text-amber-400 uppercase tracking-widest flex items-center gap-1.5 mt-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Coins, { className: "w-3.5 h-3.5" }),
+                  " $",
+                  myMoney,
+                  " Remaining"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-right", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-3xl font-black text-emerald-400", children: [
+                  myScores.total,
+                  " pts"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-muted-foreground font-bold", children: [
+                  "Base: ",
+                  myScores.base,
+                  " + Bonus: ",
+                  myScores.bonus
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2 text-xs", children: CATEGORIES.map((cat) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2.5 rounded-xl bg-foreground/5 border border-border/40 flex items-center justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-muted-foreground", children: cat }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-black text-foreground truncate max-w-[100px]", children: myRoster[cat] || "-" })
+            ] }, cat)) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { x: 20, opacity: 0 }, animate: { x: 0, opacity: 1 }, className: "bg-card p-6 rounded-3xl border border-border space-y-4 shadow-xl", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between border-b border-border/50 pb-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-xl", children: opponentName }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-bold text-amber-400 uppercase tracking-widest flex items-center gap-1.5 mt-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Coins, { className: "w-3.5 h-3.5" }),
+                  " $",
+                  opponentMoney,
+                  " Remaining"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-right", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-3xl font-black text-emerald-400", children: [
+                  opponentScores.total,
+                  " pts"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-muted-foreground font-bold", children: [
+                  "Base: ",
+                  opponentScores.base,
+                  " + Bonus: ",
+                  opponentScores.bonus
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2 text-xs", children: CATEGORIES.map((cat) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-2.5 rounded-xl bg-foreground/5 border border-border/40 flex items-center justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-muted-foreground", children: cat }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-black text-foreground truncate max-w-[100px]", children: opponentRoster[cat] || "-" })
+            ] }, cat)) })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => navigate2("/"), className: "px-8 py-4 rounded-2xl bg-foreground text-background font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-xl uppercase tracking-widest", children: "Return to Home" })
+      ] })
+    ] });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col min-h-screen bg-background text-foreground font-sans selection:bg-foreground/20", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "h-20 shrink-0 px-6 md:px-8 flex items-center justify-between z-20 bg-background/80 backdrop-blur-md border-b border-border/50 sticky top-0", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => navigate2("/"), className: "font-black text-xl md:text-2xl tracking-tighter flex items-center gap-3 hover:opacity-80", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Logo, { className: "w-6 h-6 opacity-90" }),
+          " GeoDrafts"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-6 w-px bg-foreground/10 hidden md:block" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-bold flex items-center gap-2 uppercase tracking-widest", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-3.5 h-3.5" }),
+          " ",
+          isMultiplayer ? "Auction Multiplayer" : "Auction VS AI Bot"
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-6", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4 bg-card px-4 py-2 rounded-2xl border border-border", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-black text-sm", children: myName[0].toUpperCase() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs font-bold text-muted-foreground", children: [
+                myName,
+                " (You)"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm font-black text-emerald-400 flex items-center gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Coins, { className: "w-3.5 h-3.5" }),
+                " $",
+                myMoney
+              ] })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-8 w-px bg-border" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-8 h-8 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center font-black text-sm", children: !isMultiplayer ? /* @__PURE__ */ jsxRuntimeExports.jsx(Bot, { className: "w-4 h-4" }) : opponentName[0].toUpperCase() }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs font-bold text-muted-foreground", children: opponentName }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm font-black text-blue-400 flex items-center gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Coins, { className: "w-3.5 h-3.5" }),
+                " $",
+                opponentMoney
+              ] })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsButton, {})
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("main", { className: "flex-1 p-6 md:p-8 max-w-7xl mx-auto w-full grid md:grid-cols-12 gap-8 items-start", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "md:col-span-7 space-y-6", children: [
+        currentCountry && /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, className: "bg-card p-8 rounded-[2rem] border border-border shadow-2xl space-y-6 relative overflow-hidden", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-6xl drop-shadow-md", children: currentCountry.flag }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-3xl md:text-4xl font-black tracking-tight", children: currentCountry.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm font-medium text-muted-foreground", children: [
+                  currentCountry.capital,
+                  " • ",
+                  currentCountry.region
+                ] })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-3 py-1.5 rounded-full bg-foreground/5 border border-border text-xs font-bold uppercase tracking-widest text-muted-foreground", children: [
+              "Round ",
+              currentRound + 1
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2", children: CATEGORIES.map((cat) => {
+            const key = getCategoryKey(cat);
+            const stat = currentCountry.stats[key];
+            const score = stat?.score;
+            if (score === void 0) return null;
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 rounded-2xl bg-foreground/[0.03] border border-border/40 flex items-center justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: CATEGORY_ICONS$3[cat] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-bold text-muted-foreground truncate max-w-[80px]", children: cat })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm font-black text-foreground", children: [
+                score,
+                " pts"
+              ] })
+            ] }, cat);
+          }) })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { delay: 0.1 }, className: "bg-card p-8 rounded-[2rem] border border-border shadow-2xl space-y-6", children: [
+          !isMyRosterFull && !isOpponentRosterFull && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            currentStatus === "bidding" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: amIFirstBidder ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black text-xl tracking-tight flex items-center gap-2 text-amber-400", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-5 h-5" }),
+                  " Your Turn to Bid First"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground font-bold uppercase tracking-widest", children: [
+                  "Available: $",
+                  myMoney
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Enter your opening bid in whole dollars. Your opponent must outbid you or let you keep the country for this price." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-muted-foreground font-bold", children: "$" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "input",
+                    {
+                      type: "text",
+                      inputMode: "numeric",
+                      pattern: "[0-9]*",
+                      value: bidInput,
+                      onChange: (e) => {
+                        const val = e.target.value.replace(/\D/g, "");
+                        setBidInput(val);
+                        setInputError(null);
+                      },
+                      placeholder: "0",
+                      className: "w-full pl-9 pr-4 py-4 rounded-2xl bg-background border border-border text-foreground font-mono font-black text-xl focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+                  [0, 10, 25, 50, 100].map((amt) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "button",
+                    {
+                      onClick: () => {
+                        if (amt <= myMoney) {
+                          setBidInput(String(amt));
+                          setInputError(null);
+                        }
+                      },
+                      disabled: amt > myMoney,
+                      className: "flex-1 py-2 rounded-xl bg-foreground/5 hover:bg-foreground/10 disabled:opacity-30 border border-border text-xs font-bold transition-all",
+                      children: [
+                        "$",
+                        amt
+                      ]
+                    },
+                    amt
+                  )),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      onClick: () => {
+                        setBidInput(String(myMoney));
+                        setInputError(null);
+                      },
+                      className: "px-3 py-2 rounded-xl bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 border border-amber-500/30 text-xs font-black uppercase tracking-wider",
+                      children: "All In"
+                    }
+                  )
+                ] }),
+                inputError && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-red-400 font-bold", children: inputError }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "button",
+                  {
+                    onClick: handleFirstBid,
+                    className: "w-full py-4 rounded-2xl bg-amber-500 text-black font-black text-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg uppercase tracking-widest flex items-center justify-center gap-2",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-5 h-5" }),
+                      " Submit Bid ($",
+                      bidInput || "0",
+                      ")"
+                    ]
+                  }
+                )
+              ] })
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "py-8 text-center space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { animate: { scale: [1, 1.1, 1] }, transition: { repeat: Infinity, duration: 1.5 }, className: "w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-6 h-6" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-black text-xl", children: [
+                opponentName,
+                " is placing a bid..."
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Waiting for opening bid" })
+            ] }) }),
+            currentStatus === "responding" && firstBid !== null && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: !amIFirstBidder ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                  opponentName,
+                  " bid first:"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-2xl font-black", children: [
+                  "$",
+                  firstBid
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-xl tracking-tight", children: "Your Decision" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                "Outbid ",
+                opponentName,
+                " to take this country, or give it to ",
+                opponentName,
+                " for $",
+                firstBid,
+                "."
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid sm:grid-cols-2 gap-4 pt-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-5 rounded-2xl bg-foreground/5 border border-border space-y-3", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-emerald-400 text-sm uppercase tracking-widest", children: "Outbid" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted-foreground font-bold", children: "$" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "input",
+                      {
+                        type: "text",
+                        inputMode: "numeric",
+                        pattern: "[0-9]*",
+                        value: outbidInput,
+                        onChange: (e) => {
+                          const val = e.target.value.replace(/\D/g, "");
+                          setOutbidInput(val);
+                          setInputError(null);
+                        },
+                        placeholder: String(firstBid + 1),
+                        className: "w-full pl-8 pr-3 py-3 rounded-xl bg-background border border-border text-foreground font-mono font-bold text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                      }
+                    )
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "button",
+                    {
+                      onClick: handleOutbid,
+                      className: "w-full py-3.5 rounded-xl bg-emerald-500 text-black font-black text-sm hover:scale-[1.02] active:scale-[0.98] transition-all uppercase tracking-wider",
+                      children: [
+                        "Outbid ($",
+                        outbidInput || firstBid + 1,
+                        ")"
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-5 rounded-2xl bg-foreground/5 border border-border space-y-3 flex flex-col justify-between", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-red-400 text-sm uppercase tracking-widest mb-1", children: "Pass" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+                      "Let ",
+                      opponentName,
+                      " buy ",
+                      currentCountry?.name,
+                      " for $",
+                      firstBid,
+                      "."
+                    ] })
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      onClick: handleGiveOpponent,
+                      className: "w-full py-3.5 rounded-xl bg-foreground/10 hover:bg-foreground/20 text-foreground font-black text-sm transition-all uppercase tracking-wider border border-border",
+                      children: "Give Opponent Country"
+                    }
+                  )
+                ] })
+              ] }),
+              inputError && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-red-400 font-bold mt-2", children: inputError })
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "py-8 text-center space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { animate: { opacity: [0.3, 1, 0.3] }, transition: { repeat: Infinity, duration: 1.5 }, className: "w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center mx-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-6 h-6" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "font-black text-xl", children: [
+                "You bid $",
+                firstBid
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                "Waiting for ",
+                opponentName,
+                " to outbid or give you the country..."
+              ] })
+            ] }) }),
+            currentStatus === "drafting" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: amIWinner ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Sparkles, { className: "w-6 h-6 text-emerald-400" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black text-xl text-emerald-400", children: [
+                  "You Won ",
+                  currentCountry?.name,
+                  "!"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                "Winning price: ",
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { className: "text-foreground", children: [
+                  "$",
+                  winningBid
+                ] }),
+                ". Select an available roster category on the right to assign this country."
+              ] })
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 rounded-2xl bg-blue-500/10 border border-blue-500/30 space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Coins, { className: "w-6 h-6 text-blue-400" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-black text-xl text-blue-400", children: [
+                  opponentName,
+                  " Won ",
+                  currentCountry?.name,
+                  "!"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                "Paid: ",
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { className: "text-foreground", children: [
+                  "$",
+                  winningBid
+                ] }),
+                ". Waiting for ",
+                opponentName,
+                " to choose a roster slot..."
+              ] })
+            ] }) })
+          ] }),
+          (isMyRosterFull || isOpponentRosterFull) && !isBothRostersFull && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+            isOpponentRosterFull && !isMyRosterFull && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 rounded-2xl bg-amber-500/10 border border-amber-500/30 space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-6 h-6 text-amber-400" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-xl text-amber-400", children: "Completing Your Roster" })
+              ] }),
+              myMoney > 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                opponentName,
+                "'s roster is complete! You have money left, so you must bid ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "$1 per country" }),
+                ". Select a slot on your roster below."
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                opponentName,
+                "'s roster is complete! Since you have $0 money, you are awarded lower-ranked countries for ",
+                /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "text-foreground", children: "FREE ($0)" }),
+                ". Select a slot on your roster below."
+              ] })
+            ] }),
+            isMyRosterFull && !isOpponentRosterFull && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-6 rounded-2xl bg-foreground/5 border border-border space-y-3 text-center py-8", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "w-8 h-8 text-emerald-400 mx-auto" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-xl", children: "Your Roster is Complete!" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+                "Waiting for ",
+                opponentName,
+                " to finish drafting remaining roster slots..."
+              ] })
+            ] })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "md:col-span-5 space-y-6", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card p-6 rounded-[2rem] border border-border shadow-2xl space-y-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between border-b border-border/50 pb-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-black text-xl", children: "Your Roster" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground font-bold", children: [
+              myFilledCount,
+              " / ",
+              CATEGORIES.length,
+              " Slots Filled"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-right", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-2xl font-black text-emerald-400", children: [
+              myScores.total,
+              " pts"
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-[10px] text-muted-foreground font-bold", children: [
+              "Base: ",
+              myScores.base,
+              " + Bonus: ",
+              myScores.bonus
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-2 max-h-[600px] overflow-y-auto pr-1", children: CATEGORIES.map((cat) => {
+          const assignedCountryName = myRoster[cat];
+          const isOccupied = Boolean(assignedCountryName);
+          const isDraftingMeWinner = currentStatus === "drafting" && amIWinner && !isOccupied;
+          const isSoloActive = isOpponentRosterFull && !isMyRosterFull && !isOccupied;
+          const canSelect = isDraftingMeWinner || isSoloActive;
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            motion.button,
+            {
+              whileHover: canSelect ? { scale: 1.02 } : {},
+              whileTap: canSelect ? { scale: 0.98 } : {},
+              disabled: !canSelect,
+              onClick: () => handleAssignCategory(cat),
+              className: `w-full p-3.5 rounded-2xl border transition-all text-left flex items-center justify-between ${isOccupied ? "bg-foreground/5 border-border/50 opacity-90 cursor-default" : canSelect ? "bg-emerald-500/10 border-emerald-500/50 hover:bg-emerald-500/20 shadow-md cursor-pointer animate-pulse" : "bg-background border-border/30 opacity-60 cursor-not-allowed"}`,
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: canSelect ? "text-emerald-400" : "text-muted-foreground", children: CATEGORY_ICONS$3[cat] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-sm", children: cat }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground", children: isOccupied ? assignedCountryName : canSelect ? "Click to Assign Won Country" : "Empty Slot" })
+                  ] })
+                ] }),
+                isOccupied ? /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "w-4 h-4 text-emerald-400" }) : canSelect ? /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { className: "w-4 h-4 text-emerald-400" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-3.5 h-3.5 text-muted-foreground/50" })
+              ]
+            },
+            cat
+          );
+        }) })
+      ] }) })
+    ] })
+  ] });
+}
 function UsernamePrompt({ user, onComplete }) {
   const suggested = (user.displayName || "").replace(/[^a-zA-Z0-9_]/g, "").slice(0, 20);
   const [username, setUsername] = reactExports.useState(suggested);
@@ -64950,7 +70238,7 @@ function UsernamePrompt({ user, onComplete }) {
         setError("Username is already taken.");
         return;
       }
-      await createUserProfile(user.uid, trimmed);
+      await createUserProfile(user.uid, trimmed, user.email);
       onComplete();
     } catch {
       setError("Failed to save. Please try again.");
@@ -65017,95 +70305,102 @@ function UsernamePrompt({ user, onComplete }) {
     }
   );
 }
-function AuthModal({ onClose, title = "Sign In" }) {
-  const { signInWithGoogle, signInWithEmail } = useFirebaseAuth();
-  const [loading, setLoading] = reactExports.useState(false);
-  const [error, setError] = reactExports.useState(null);
-  const [showEmail, setShowEmail] = reactExports.useState(false);
-  const [isSignUp, setIsSignUp] = reactExports.useState(false);
-  const [email, setEmail] = reactExports.useState("");
-  const [password, setPassword] = reactExports.useState("");
-  async function handleGoogleSignIn() {
-    setError(null);
-    try {
-      await signInWithGoogle();
-      onClose();
-    } catch {
-      setError("Google sign-in failed. Please try again.");
-    }
-  }
-  async function handleEmailAuth() {
-    setError(null);
-    if (!email.trim() || !password) {
-      setError("Enter your email and password.");
+function TempUsernameModal({
+  isOpen,
+  onClose,
+  onConfirm,
+  title = "Multiplayer Username",
+  description = "Choose a temporary username to display in the multiplayer lobby."
+}) {
+  const [username, setUsername] = reactExports.useState("");
+  const [error, setError] = reactExports.useState("");
+  if (!isOpen) return null;
+  function handleSubmit(e) {
+    e.preventDefault();
+    const trimmed = username.trim();
+    if (!trimmed) {
+      setError("Please enter a username.");
       return;
     }
-    setLoading(true);
-    try {
-      await signInWithEmail(email.trim(), password, isSignUp);
-      onClose();
-    } catch (e) {
-      const code = e?.code ?? "";
-      setError(
-        code.includes("wrong-password") || code.includes("invalid-credential") ? "Wrong email or password." : code.includes("user-not-found") ? "No account with that email." : code.includes("email-already-in-use") ? "Email already in use — try signing in." : code.includes("weak-password") ? "Password must be at least 6 characters." : "Authentication failed. Please try again."
-      );
-    } finally {
-      setLoading(false);
+    if (trimmed.length < 2) {
+      setError("Username must be at least 2 characters.");
+      return;
     }
+    setError("");
+    onConfirm(trimmed);
   }
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, className: "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4", onClick: onClose, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { scale: 0.92, y: 16 }, animate: { scale: 1, y: 0 }, exit: { scale: 0.92, y: 16 }, className: "bg-background border border-border w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden", onClick: (e) => e.stopPropagation(), children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-4 border-b border-border flex items-center justify-between bg-foreground/5", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-4 h-4 text-primary" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-lg font-bold text-foreground", children: title })
-      ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: onClose, className: "p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-foreground/10 transition-colors", children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { className: "w-4 h-4" }) })
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-foreground/10 w-fit mx-auto mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-6 h-6 text-muted-foreground" }) }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-foreground", children: "Sign in to continue" })
-      ] }),
-      !showEmail ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleGoogleSignIn, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/10 text-foreground border border-border font-semibold text-sm hover:bg-foreground/20 transition-colors", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("svg", { className: "w-4 h-4", viewBox: "0 0 48 48", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#EA4335", d: "M24 9.5c3.5 0 6.5 1.2 8.9 3.2l6.6-6.6C35.5 2.5 30.1 0 24 0 14.7 0 6.7 5.4 2.7 13.3l7.7 6C12.2 13.3 17.7 9.5 24 9.5z" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#4285F4", d: "M46.1 24.6c0-1.5-.1-3-.4-4.4H24v8.4h12.4c-.5 2.8-2.1 5.2-4.5 6.8l7 5.4c4.1-3.8 6.5-9.4 6.5-16.2z" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#FBBC05", d: "M10.4 28.7A14.6 14.6 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.7-6A24 24 0 0 0 0 24c0 3.9.9 7.5 2.7 10.7l7.7-6z" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("path", { fill: "#34A853", d: "M24 48c6.1 0 11.3-2 15-5.5l-7-5.4c-2 1.3-4.5 2.1-8 2.1-6.3 0-11.7-4.3-13.6-10l-7.7 6C6.7 42.6 14.7 48 24 48z" })
-          ] }),
-          "Continue with Google"
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-px flex-1 bg-border" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: "or" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-px flex-1 bg-border" })
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => {
-          setShowEmail(true);
-          setIsSignUp(false);
-        }, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/5 text-foreground border border-border font-semibold text-sm hover:bg-foreground/10 transition-colors", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
-          "Sign in with Email"
-        ] })
-      ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "email", value: email, onChange: (e) => setEmail(e.target.value), placeholder: "Email", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "password", value: password, onChange: (e) => setPassword(e.target.value), onKeyDown: (e) => e.key === "Enter" && handleEmailAuth(), placeholder: "Password", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400", children: error }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleEmailAuth, disabled: loading, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }),
-          loading ? "…" : isSignUp ? "Create Account" : "Sign In"
-        ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-xs", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => setShowEmail(false), className: "text-muted-foreground hover:text-foreground", children: "← Back" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: () => {
-            setIsSignUp(!isSignUp);
-            setError(null);
-          }, className: "text-primary hover:underline", children: isSignUp ? "Have an account? Sign in" : "New here? Create account" })
-        ] })
-      ] })
-    ] })
-  ] }) });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(AnimatePresence, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+    motion.div,
+    {
+      initial: { opacity: 0 },
+      animate: { opacity: 1 },
+      exit: { opacity: 0 },
+      className: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm",
+      onClick: onClose,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        motion.div,
+        {
+          initial: { scale: 0.95, opacity: 0, y: 20 },
+          animate: { scale: 1, opacity: 1, y: 0 },
+          exit: { scale: 0.95, opacity: 0, y: 20 },
+          className: "bg-card border border-border w-full max-w-md rounded-3xl p-6 shadow-2xl relative overflow-hidden",
+          onClick: (e) => e.stopPropagation(),
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                onClick: onClose,
+                className: "absolute top-4 right-4 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { className: "w-5 h-5" })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3 mb-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 bg-primary/10 rounded-2xl text-primary border border-primary/20", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "w-6 h-6" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-sans text-xl font-bold text-foreground", children: title }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: description })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "space-y-4 pt-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("label", { className: "block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2", children: "Temporary Username" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(User2, { className: "w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "input",
+                    {
+                      type: "text",
+                      autoFocus: true,
+                      maxLength: 18,
+                      value: username,
+                      onChange: (e) => {
+                        setUsername(e.target.value);
+                        if (error) setError("");
+                      },
+                      placeholder: "e.g. GuestDrafter",
+                      className: "w-full bg-background border border-border rounded-xl pl-11 pr-4 py-3 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                    }
+                  )
+                ] }),
+                error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400 font-medium mt-1.5", children: error })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  type: "submit",
+                  className: "w-full py-3.5 px-4 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:scale-[1.01] active:scale-[0.99] transition-all shadow-md shadow-primary/20 flex items-center justify-center gap-2",
+                  children: [
+                    "Continue to Game ",
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { className: "w-4 h-4" })
+                  ]
+                }
+              )
+            ] })
+          ]
+        }
+      )
+    }
+  ) });
 }
 function ContactModal({ onClose }) {
   const [loading, setLoading] = reactExports.useState(false);
@@ -65564,7 +70859,7 @@ function GuidebookModal({ onClose }) {
                     activeTab === "basics" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "text-3xl font-black tracking-tight text-foreground mb-4", children: "How to Play" }),
-                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-lg text-muted-foreground leading-relaxed", children: "GeoDraft is a strategic geography game where you build a hypothetical nation by drafting real-world countries into specialized roles." })
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-lg text-muted-foreground leading-relaxed", children: "GeoDrafts is a strategic geography game where you build a hypothetical nation by drafting real-world countries into specialized roles." })
                       ] }),
                       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4", children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-5 rounded-2xl border border-border bg-muted/10 space-y-2", children: [
@@ -65737,6 +71032,13 @@ function GuidebookModal({ onClose }) {
                           ] }),
                           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Test your knowledge! Guess the real-world country based purely on its stats." })
                         ] }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 rounded-xl border border-amber-500/20 bg-amber-500/5", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsxs("h4", { className: "font-bold text-amber-400 mb-1 flex items-center gap-2", children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-4 h-4" }),
+                            "Auction"
+                          ] }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "2-Player bidding mode! Bid from your $200 pool, outbid your opponent, or force them to pay." })
+                        ] }),
                         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-4 rounded-xl border border-red-500/20 bg-red-500/5", children: [
                           /* @__PURE__ */ jsxRuntimeExports.jsxs("h4", { className: "font-bold text-red-400 mb-1 flex items-center gap-2", children: [
                             /* @__PURE__ */ jsxRuntimeExports.jsx(Swords, { className: "w-4 h-4" }),
@@ -65842,7 +71144,7 @@ function DailyCard() {
     }
   ) });
 }
-function LoginScreen({ onSignIn, onShowGuidebook }) {
+function LoginScreen({ onSignIn, onPlayAsGuest, onShowGuidebook }) {
   const [, setLocation] = useLocation();
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex flex-col items-center justify-center px-6 py-24 max-w-4xl mx-auto w-full text-center", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 }, transition: { type: "spring", stiffness: 300, damping: 30 }, className: "space-y-12 w-full", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col items-center", children: [
@@ -65851,17 +71153,30 @@ function LoginScreen({ onSignIn, onShowGuidebook }) {
       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed font-medium", children: "The premier strategic geography game. Draft real countries, maximize your stats, and build the ultimate nation." })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-md mx-auto w-full space-y-4 pt-4", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "button",
-        {
-          onClick: onSignIn,
-          className: "w-full flex items-center justify-center gap-3 px-8 py-6 rounded-3xl bg-primary text-primary-foreground font-bold text-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20 group",
-          children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-6 h-6 group-hover:translate-x-1 transition-transform" }),
-            "Sign In"
-          ]
-        }
-      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-2 gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: onSignIn,
+            className: "w-full flex items-center justify-center gap-3 px-6 py-5 rounded-3xl bg-primary text-primary-foreground font-bold text-lg hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-primary/20 group",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-5 h-5 group-hover:translate-x-1 transition-transform" }),
+              "Sign In"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            onClick: onPlayAsGuest,
+            className: "w-full flex items-center justify-center gap-3 px-6 py-5 rounded-3xl bg-card border-2 border-border text-foreground font-bold text-lg hover:bg-muted hover:scale-[1.02] active:scale-[0.98] transition-all shadow-md group",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Gamepad2, { className: "w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" }),
+              "Play as Guest"
+            ]
+          }
+        )
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => setLocation("/leaderboard"), className: "flex items-center justify-center gap-2 px-6 py-4 rounded-2xl bg-card border border-border text-card-foreground hover:bg-muted active:scale-[0.98] transition-all font-bold shadow-sm", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-5 h-5 text-yellow-400" }),
@@ -65893,7 +71208,10 @@ function Home() {
   const [showContactModal, setShowContactModal] = reactExports.useState(false);
   const [showAboutModal, setShowAboutModal] = reactExports.useState(false);
   const [showSettings, setShowSettings] = reactExports.useState(false);
-  const { firebaseUser, profile, needsUsername, refreshProfile, isLoading } = useFirebaseAuth();
+  const [showTempUsernameModal, setShowTempUsernameModal] = reactExports.useState(false);
+  const [tempUsernameAction, setTempUsernameAction] = reactExports.useState(null);
+  const [pendingRoomCode, setPendingRoomCode] = reactExports.useState("");
+  const { firebaseUser, profile, needsUsername, refreshProfile, isLoading, isGuest, startGuestMode, signInGuestAnonymously } = useFirebaseAuth();
   const [joinCode, setJoinCode] = reactExports.useState("");
   const [isJoining, setIsJoining] = reactExports.useState(false);
   const [isHosting, setIsHosting] = reactExports.useState(false);
@@ -65913,38 +71231,78 @@ function Home() {
     if (firebaseUser) refreshProfile();
   }, [firebaseUser, refreshProfile]);
   async function handleHost() {
-    if (!firebaseUser || !profile) {
-      if (!firebaseUser) setShowAuthModal(true);
+    if (firebaseUser && profile && !firebaseUser.isAnonymous) {
+      setIsHosting(true);
+      try {
+        const code = await createRoom(firebaseUser.uid, profile.username, "party", "easy");
+        navigate2(`/lobby?room=${code}`);
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Failed to create room");
+      } finally {
+        setIsHosting(false);
+      }
       return;
     }
-    setIsHosting(true);
-    try {
-      const code = await createRoom(firebaseUser.uid, profile.username, "party", "easy");
-      navigate2(`/lobby?room=${code}`);
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : "Failed to create room");
-    } finally {
-      setIsHosting(false);
-    }
+    setTempUsernameAction("host");
+    setShowTempUsernameModal(true);
   }
   async function handleJoin(e) {
     if (e) e.preventDefault();
-    if (!firebaseUser || !profile) {
-      if (!firebaseUser) setShowAuthModal(true);
-      return;
-    }
     if (joinCode.length !== 6) {
       toast.error("Room code must be 6 characters");
       return;
     }
-    setIsJoining(true);
-    try {
-      await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username);
-      navigate2(`/lobby?room=${joinCode.toUpperCase()}`);
-    } catch (e2) {
-      toast.error(e2 instanceof Error ? e2.message : "Failed to join room");
-    } finally {
-      setIsJoining(false);
+    if (firebaseUser && profile && !firebaseUser.isAnonymous) {
+      setIsJoining(true);
+      try {
+        await joinRoom(joinCode.toUpperCase(), firebaseUser.uid, profile.username);
+        navigate2(`/lobby?room=${joinCode.toUpperCase()}`);
+      } catch (e2) {
+        toast.error(e2 instanceof Error ? e2.message : "Failed to join room");
+      } finally {
+        setIsJoining(false);
+      }
+      return;
+    }
+    setPendingRoomCode(joinCode.toUpperCase());
+    setTempUsernameAction("join");
+    setShowTempUsernameModal(true);
+  }
+  async function handleConfirmTempUsername(tempUsername) {
+    setShowTempUsernameModal(false);
+    let currentUid = firebaseUser?.uid;
+    if (!currentUid) {
+      try {
+        const user = await signInGuestAnonymously();
+        currentUid = user.uid;
+      } catch (err) {
+        toast.error("Failed to initialize session");
+        return;
+      }
+    }
+    if (tempUsernameAction === "host") {
+      setIsHosting(true);
+      try {
+        const code = await createRoom(currentUid, tempUsername, "party", "easy");
+        navigate2(`/lobby?room=${code}`);
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Failed to create room");
+      } finally {
+        setIsHosting(false);
+        setTempUsernameAction(null);
+      }
+    } else if (tempUsernameAction === "join" && pendingRoomCode) {
+      setIsJoining(true);
+      try {
+        await joinRoom(pendingRoomCode, currentUid, tempUsername);
+        navigate2(`/lobby?room=${pendingRoomCode}`);
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : "Failed to join room");
+      } finally {
+        setIsJoining(false);
+        setTempUsernameAction(null);
+        setPendingRoomCode("");
+      }
     }
   }
   function startGame(mode, hardMode) {
@@ -65957,6 +71315,7 @@ function Home() {
     if (mode === "normal") navigate2("/game/normal");
     else if (mode === "double") navigate2("/game/double");
     else if (mode === "guess") navigate2("/game/guess");
+    else if (mode === "auction") navigate2("/game/auction");
     else navigate2(`/game/${mode}`);
   }
   if (isLoading) {
@@ -65964,7 +71323,7 @@ function Home() {
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-h-screen bg-background flex flex-col", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("header", { className: "px-6 py-3 flex items-center justify-end bg-transparent sticky top-0 z-40", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsButton, {}) }),
-    !firebaseUser ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoginScreen, { onSignIn: () => setShowAuthModal(true), onShowGuidebook: () => setShowGuidebook(true) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex flex-col items-center justify-start px-4 md:px-8 py-16 max-w-6xl mx-auto w-full", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 }, transition: { type: "spring", stiffness: 300, damping: 30 }, className: "flex flex-col w-full", children: [
+    !firebaseUser && !isGuest ? /* @__PURE__ */ jsxRuntimeExports.jsx(LoginScreen, { onSignIn: () => setShowAuthModal(true), onPlayAsGuest: startGuestMode, onShowGuidebook: () => setShowGuidebook(true) }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex-1 flex flex-col items-center justify-start px-4 md:px-8 py-16 max-w-6xl mx-auto w-full", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(motion.div, { initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 }, transition: { type: "spring", stiffness: 300, damping: 30 }, className: "flex flex-col w-full", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col md:flex-row items-center justify-between mb-8 gap-8 text-center md:text-left", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-6", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("img", { src: "/logo.svg", alt: "GeoDrafts Logo", className: "w-20 h-20 rounded-full object-cover" }),
@@ -66034,16 +71393,21 @@ function Home() {
             " Play Tasks Mode"
           ] }) })
         ] }),
-        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 border-b border-border", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 border-b border-border", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => startGame("guess", false), className: "col-span-1 bg-card border-b md:border-b-0 md:border-r border-border p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mb-5 group-hover:scale-110 transition-transform duration-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Search, { className: "w-6 h-6" }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-sans text-2xl font-bold mb-2 text-card-foreground", children: "Guess the Country" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground leading-relaxed", children: "Identify a mystery nation by looking solely at its stats." })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => navigate2("/game/associations/setup"), className: "col-span-1 bg-card p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => navigate2("/game/associations/setup"), className: "col-span-1 bg-card border-b md:border-b-0 md:border-r border-border p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-500 mb-5 group-hover:scale-110 transition-transform duration-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Brain, { className: "w-6 h-6" }) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-sans text-2xl font-bold mb-2 text-card-foreground", children: "Associations" }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground leading-relaxed", children: "Test your knowledge by mapping flags, capitals, and countries together." })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => startGame("auction", false), className: "col-span-1 bg-card p-8 hover:bg-muted transition-colors group text-left active:scale-[0.99] duration-300", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400 mb-5 group-hover:scale-110 transition-transform duration-500", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-6 h-6" }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-sans text-2xl font-bold mb-2 text-card-foreground", children: "Auction" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground leading-relaxed", children: "Bid & outbid from your $200 pool in high-stakes country auctions (Single Player or Multiplayer)." })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "col-span-1 md:col-span-2 bg-muted/30 border-t border-border p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8", children: [
@@ -66110,6 +71474,17 @@ function Home() {
       showGuidebook && /* @__PURE__ */ jsxRuntimeExports.jsx(GuidebookModal, { onClose: () => setShowGuidebook(false) }),
       showSettings && /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsModal, { onClose: () => setShowSettings(false) }),
       showAboutModal && /* @__PURE__ */ jsxRuntimeExports.jsx(AboutModal, { onClose: () => setShowAboutModal(false) }),
+      showTempUsernameModal && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        TempUsernameModal,
+        {
+          isOpen: showTempUsernameModal,
+          onClose: () => {
+            setShowTempUsernameModal(false);
+            setTempUsernameAction(null);
+          },
+          onConfirm: handleConfirmTempUsername
+        }
+      ),
       needsUsername && firebaseUser && /* @__PURE__ */ jsxRuntimeExports.jsx(UsernamePrompt, { user: firebaseUser, onComplete: refreshProfile }),
       showContactModal && /* @__PURE__ */ jsxRuntimeExports.jsx(ContactModal, { onClose: () => setShowContactModal(false) })
     ] })
@@ -66131,22 +71506,21 @@ function SubmitToGlobalDialog({ entry, mode, onClose, onSuccess }) {
     setError(null);
     try {
       await signInWithGoogle();
-    } catch {
-      setError("Google sign-in failed. Please try again.");
+    } catch (e) {
+      setError(formatAuthError(e));
     }
   }
   async function handleEmailAuth() {
     setError(null);
     if (!email.trim() || !password) {
-      setError("Enter your email and password.");
+      setError(isSignUp ? "Enter your email and password." : "Enter your email or username and password.");
       return;
     }
     setLoading(true);
     try {
       await signInWithEmail(email.trim(), password, isSignUp);
     } catch (e) {
-      const code = e?.code ?? "";
-      setError(code.includes("wrong-password") || code.includes("invalid-credential") ? "Wrong email or password." : code.includes("user-not-found") ? "No account with that email." : code.includes("email-already-in-use") ? "Email already in use — try signing in." : code.includes("weak-password") ? "Password must be at least 6 characters." : "Authentication failed. Please try again.");
+      setError(formatAuthError(e));
     } finally {
       setLoading(false);
     }
@@ -66194,7 +71568,7 @@ function SubmitToGlobalDialog({ entry, mode, onClose, onSuccess }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Trophy, { className: "w-4 h-4" }),
         "Done"
       ] })
-    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
+    ] }) : authLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "px-5 py-8 text-center text-sm text-muted-foreground animate-pulse", children: "Checking account…" }) : !firebaseUser || firebaseUser.isAnonymous || !profile ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-5 space-y-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center mb-2", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-foreground/10 w-fit mx-auto mb-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lock, { className: "w-6 h-6 text-muted-foreground" }) }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-foreground", children: "Sign in to submit" }),
@@ -66229,12 +71603,12 @@ function SubmitToGlobalDialog({ entry, mode, onClose, onSuccess }) {
           setIsSignUp(false);
         }, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground/5 text-foreground border border-border font-semibold text-sm hover:bg-foreground/10 transition-colors", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(LogIn, { className: "w-4 h-4" }),
-          "Sign in with Email"
+          "Sign in with Email or Username"
         ] })
       ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "email", value: email, onChange: (e) => setEmail(e.target.value), placeholder: "Email", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "text", autoCapitalize: "none", autoCorrect: "off", spellCheck: false, value: email, onChange: (e) => setEmail(e.target.value), placeholder: isSignUp ? "Email address" : "Email or Username", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("input", { type: "password", value: password, onChange: (e) => setPassword(e.target.value), onKeyDown: (e) => e.key === "Enter" && handleEmailAuth(), placeholder: "Password", className: "w-full px-3 py-2 rounded-lg border border-border bg-foreground/5 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm" }),
-        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400", children: error }),
+        error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-red-400 font-medium", children: error }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: handleEmailAuth, disabled: loading, className: "w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary/20 text-primary border border-primary/40 font-semibold text-sm hover:bg-primary/30 transition-colors disabled:opacity-50", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { className: "w-4 h-4" }),
           loading ? "…" : isSignUp ? "Create Account" : "Sign In"
@@ -68356,6 +73730,9 @@ function Lobby() {
   const { firebaseUser } = useFirebaseAuth();
   const [room, setRoom] = reactExports.useState(null);
   const [players, setPlayers] = reactExports.useState([]);
+  const [editingNickname, setEditingNickname] = reactExports.useState(false);
+  const [nicknameInput, setNicknameInput] = reactExports.useState("");
+  const [isSavingNickname, setIsSavingNickname] = reactExports.useState(false);
   const roomCode = new URLSearchParams(window.location.search).get("room") || null;
   reactExports.useEffect(() => {
     if (!roomCode) {
@@ -68370,7 +73747,13 @@ function Lobby() {
     };
   }, [roomCode, navigate2]);
   reactExports.useEffect(() => {
+    if (roomCode) {
+      localStorage.setItem("countryDraftRoomCode", roomCode);
+    }
+  }, [roomCode]);
+  reactExports.useEffect(() => {
     if (room && room.status === "playing") {
+      localStorage.setItem("countryDraftRoomCode", room.code);
       navigate2(`/game/${room.mode}?room=${room.code}`);
     }
   }, [room, navigate2]);
@@ -68386,6 +73769,8 @@ function Lobby() {
     ) });
   }
   const isHost = firebaseUser.uid === room.hostId;
+  const is2PlayerOnlyMode = room.mode === "sabotage" || room.mode === "auction";
+  const isOverPlayerLimit = is2PlayerOnlyMode && players.length > 2;
   const handleDifficultyChange = (diff) => {
     if (isHost && room.difficulty !== diff) {
       updateRoom(room.code, { difficulty: diff });
@@ -68393,6 +73778,9 @@ function Lobby() {
   };
   const handleModeChange = (mode) => {
     if (isHost && room.mode !== mode) {
+      if ((mode === "sabotage" || mode === "auction") && players.length > 2) {
+        return;
+      }
       if (mode === "associations_race") {
         updateRoom(room.code, { mode, associationsSettings: { tasks: ["identify_from_flag", "identify_from_map", "click_on_map", "find_flag", "identify_capital", "identify_country_from_capital"], countries: [] } });
       } else {
@@ -68401,8 +73789,21 @@ function Lobby() {
     }
   };
   const handlePlay = () => {
-    if (isHost) {
+    if (isHost && !isOverPlayerLimit && players.length >= 2) {
       updateRoom(room.code, { status: "playing" });
+    }
+  };
+  const handleSaveNickname = async () => {
+    if (!roomCode || !firebaseUser || !nicknameInput.trim()) return;
+    setIsSavingNickname(true);
+    try {
+      await updatePlayer(roomCode, firebaseUser.uid, { username: nicknameInput.trim() });
+      setEditingNickname(false);
+      toast.success("Nickname updated");
+    } catch (err) {
+      toast.error("Failed to update nickname");
+    } finally {
+      setIsSavingNickname(false);
     }
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col min-h-screen bg-background text-foreground overflow-hidden font-sans selection:bg-foreground/20", children: [
@@ -68458,23 +73859,79 @@ function Lobby() {
                 players.length,
                 ")"
               ] }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-3 p-1 bg-foreground/5 rounded-3xl border border-border", children: players.map((p, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-                motion.div,
-                {
-                  initial: { opacity: 0, x: -20 },
-                  animate: { opacity: 1, x: 0 },
-                  transition: { duration: 0.3, delay: i * 0.05 },
-                  className: "flex items-center justify-between p-4 rounded-[1.25rem] bg-card border border-border/50",
-                  children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 rounded-2xl bg-foreground/10 flex items-center justify-center text-foreground font-black text-2xl", children: p.username[0].toUpperCase() }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-xl tracking-tight", children: p.username })
-                    ] }),
-                    p.uid === room.hostId && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs bg-yellow-500 text-black px-4 py-1.5 rounded-full font-black uppercase tracking-widest", children: "Host" })
-                  ]
-                },
-                p.uid
-              )) })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-3 p-1 bg-foreground/5 rounded-3xl border border-border", children: players.map((p, i) => {
+                const isMe = p.uid === firebaseUser.uid;
+                return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  motion.div,
+                  {
+                    initial: { opacity: 0, x: -20 },
+                    animate: { opacity: 1, x: 0 },
+                    transition: { duration: 0.3, delay: i * 0.05 },
+                    className: "flex items-center justify-between p-4 rounded-[1.25rem] bg-card border border-border/50",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4 flex-1", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-14 h-14 rounded-2xl bg-foreground/10 flex items-center justify-center text-foreground font-black text-2xl shrink-0", children: (editingNickname && isMe ? nicknameInput[0] || p.username[0] : p.username[0]).toUpperCase() }),
+                        editingNickname && isMe ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 flex-1 max-w-xs", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "input",
+                            {
+                              type: "text",
+                              autoFocus: true,
+                              maxLength: 18,
+                              value: nicknameInput,
+                              onChange: (e) => setNicknameInput(e.target.value),
+                              onKeyDown: (e) => {
+                                if (e.key === "Enter") handleSaveNickname();
+                                if (e.key === "Escape") setEditingNickname(false);
+                              },
+                              className: "bg-background border border-border rounded-xl px-3 py-1 font-bold text-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 w-full",
+                              placeholder: "New nickname"
+                            }
+                          ),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "button",
+                            {
+                              onClick: handleSaveNickname,
+                              disabled: isSavingNickname || !nicknameInput.trim(),
+                              className: "p-2 rounded-xl bg-primary text-primary-foreground font-bold hover:opacity-90 transition-opacity shrink-0",
+                              title: "Save Nickname",
+                              children: /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "w-4 h-4" })
+                            }
+                          ),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "button",
+                            {
+                              onClick: () => setEditingNickname(false),
+                              className: "p-2 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0",
+                              title: "Cancel",
+                              children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { className: "w-4 h-4" })
+                            }
+                          )
+                        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-xl tracking-tight", children: p.username }),
+                          isMe && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                            "button",
+                            {
+                              onClick: () => {
+                                setNicknameInput(p.username);
+                                setEditingNickname(true);
+                              },
+                              className: "p-1.5 rounded-xl bg-foreground/5 hover:bg-foreground/10 text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 text-xs font-semibold",
+                              title: "Change nickname in lobby",
+                              children: [
+                                /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { className: "w-3.5 h-3.5" }),
+                                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: "Nickname" })
+                              ]
+                            }
+                          )
+                        ] })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-2", children: p.uid === room.hostId && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs bg-yellow-500 text-black px-4 py-1.5 rounded-full font-black uppercase tracking-widest", children: "Host" }) })
+                    ]
+                  },
+                  p.uid
+                );
+              }) })
             ]
           }
         )
@@ -68519,19 +73976,44 @@ function Lobby() {
               }
             ) }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+              (isHost || room.mode === "auction") && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                motion.button,
+                {
+                  whileHover: isHost && players.length <= 2 ? { scale: 1.02 } : {},
+                  whileTap: isHost && players.length <= 2 ? { scale: 0.98 } : {},
+                  transition: { type: "spring", stiffness: 400, damping: 30 },
+                  onClick: () => handleModeChange("auction"),
+                  disabled: !isHost || players.length > 2,
+                  className: `w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${room.mode === "auction" ? "border-amber-500/50 bg-amber-500/10" : "border-border bg-background hover:bg-foreground/5"} ${(!isHost || players.length > 2) && "opacity-50 cursor-not-allowed"}`,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "auction" ? "bg-amber-500/20 text-amber-500" : "bg-foreground/10 text-muted-foreground"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Gavel, { className: "w-7 h-7" }) }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `font-black text-xl tracking-tight ${room.mode === "auction" ? "text-foreground" : "text-foreground/80"}`, children: "Auction" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400", children: "2 Players Max" })
+                      ] }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-muted-foreground mt-1", children: "Bid & outbid for countries" })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "auction" ? "border-amber-500" : "border-border"} ${!isHost ? "hidden" : ""}`, children: room.mode === "auction" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { layoutId: "mode-dot", className: "w-3 h-3 rounded-full bg-amber-500" }) })
+                  ]
+                }
+              ),
               (isHost || room.mode === "sabotage") && /* @__PURE__ */ jsxRuntimeExports.jsxs(
                 motion.button,
                 {
-                  whileHover: isHost ? { scale: 1.02 } : {},
-                  whileTap: isHost ? { scale: 0.98 } : {},
+                  whileHover: isHost && players.length <= 2 ? { scale: 1.02 } : {},
+                  whileTap: isHost && players.length <= 2 ? { scale: 0.98 } : {},
                   transition: { type: "spring", stiffness: 400, damping: 30 },
                   onClick: () => handleModeChange("sabotage"),
-                  disabled: !isHost,
-                  className: `w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${room.mode === "sabotage" ? "border-red-500/50 bg-red-500/10" : "border-border bg-background hover:bg-foreground/5"} ${!isHost && "cursor-default"}`,
+                  disabled: !isHost || players.length > 2,
+                  className: `w-full flex items-center gap-5 p-5 rounded-2xl border transition-colors text-left ${room.mode === "sabotage" ? "border-red-500/50 bg-red-500/10" : "border-border bg-background hover:bg-foreground/5"} ${(!isHost || players.length > 2) && "opacity-50 cursor-not-allowed"}`,
                   children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "bg-red-500/20 text-red-500" : "bg-foreground/10 text-muted-foreground"}`, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Swords, { className: "w-7 h-7" }) }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-foreground" : "text-foreground/80"}`, children: "Sabotage" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `font-black text-xl tracking-tight ${room.mode === "sabotage" ? "text-foreground" : "text-foreground/80"}`, children: "Sabotage" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-red-500/20 text-red-400", children: "2 Players Max" })
+                      ] }),
                       /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-muted-foreground mt-1", children: "Pick for your opponent" })
                     ] }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `ml-auto w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${room.mode === "sabotage" ? "border-red-500" : "border-border"} ${!isHost ? "hidden" : ""}`, children: room.mode === "sabotage" && /* @__PURE__ */ jsxRuntimeExports.jsx(motion.div, { layoutId: "mode-dot", className: "w-3 h-3 rounded-full bg-red-500" }) })
@@ -68617,18 +74099,26 @@ function Lobby() {
                 ) })
               }
             ) }),
-            isHost ? /* @__PURE__ */ jsxRuntimeExports.jsx(
-              motion.button,
-              {
-                whileHover: players.length >= 2 ? { scale: 1.02, backgroundColor: "#ffffff" } : {},
-                whileTap: players.length >= 2 ? { scale: 0.98 } : {},
-                transition: { type: "spring", stiffness: 400, damping: 30 },
-                onClick: handlePlay,
-                disabled: players.length < 2,
-                className: "w-full py-5 rounded-2xl bg-white/90 text-black font-black text-xl transition-all shadow-[0_0_40px_rgba(255,255,255,0.1)] disabled:opacity-30 disabled:shadow-none uppercase tracking-widest mt-8",
-                children: "Start Game"
-              }
-            ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full py-5 rounded-2xl bg-foreground/5 text-muted-foreground font-black text-center uppercase tracking-widest mt-8", children: "Waiting for host..." })
+            isHost ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2 mt-8", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                motion.button,
+                {
+                  whileHover: players.length >= 2 && !isOverPlayerLimit ? { scale: 1.02, backgroundColor: "#ffffff" } : {},
+                  whileTap: players.length >= 2 && !isOverPlayerLimit ? { scale: 0.98 } : {},
+                  transition: { type: "spring", stiffness: 400, damping: 30 },
+                  onClick: handlePlay,
+                  disabled: players.length < 2 || isOverPlayerLimit,
+                  className: "w-full py-5 rounded-2xl bg-white/90 text-black font-black text-xl transition-all shadow-[0_0_40px_rgba(255,255,255,0.1)] disabled:opacity-30 disabled:shadow-none uppercase tracking-widest",
+                  children: "Start Game"
+                }
+              ),
+              isOverPlayerLimit && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-red-400 font-bold text-center", children: [
+                room.mode === "auction" ? "Auction" : "Sabotage",
+                " mode requires 2 players max (current: ",
+                players.length,
+                ")."
+              ] })
+            ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-full py-5 rounded-2xl bg-foreground/5 text-muted-foreground font-black text-center uppercase tracking-widest mt-8", children: "Waiting for host..." })
           ] })
         }
       )
@@ -74882,12 +80372,12 @@ function WorldMap({
                 const geoIso = geo.id;
                 const isHighlighted = !!highlightedCountryIso && !!geoIso && geoIso === highlightedCountryIso;
                 const country = countryByIso.get(geoIso);
-                const isValid = validIsos ? validIsos.includes(geoIso) : !!country;
-                const isClickable = interactive && isValid;
+                const isValid2 = validIsos ? validIsos.includes(geoIso) : !!country;
+                const isClickable = interactive && isValid2;
                 let fill = "#3f3f46";
                 if (isHighlighted) {
                   fill = "#f59e0b";
-                } else if (isValid) {
+                } else if (isValid2) {
                   fill = "#71717a";
                 }
                 return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -74922,9 +80412,9 @@ function WorldMap({
                 if (!country.area || country.area >= 6e4 || !country.coordinates) return null;
                 const geoIso = country.isoNumeric;
                 const isHighlighted = !!highlightedCountryIso && !!geoIso && geoIso === highlightedCountryIso;
-                const isValid = validIsos ? validIsos.includes(geoIso) : true;
-                const isClickable = interactive && isValid;
-                if (!isHighlighted && !isValid) return null;
+                const isValid2 = validIsos ? validIsos.includes(geoIso) : true;
+                const isClickable = interactive && isValid2;
+                if (!isHighlighted && !isValid2) return null;
                 let fill = "#71717a";
                 if (isHighlighted) fill = "#f59e0b";
                 return /* @__PURE__ */ jsxRuntimeExports.jsx(Marker, { coordinates: country.coordinates, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -75758,17 +81248,17 @@ function AssociationsRace() {
   ] });
 }
 function ProtectedRoute({ children: children2 }) {
-  const { firebaseUser, isLoading } = useFirebaseAuth();
+  const { firebaseUser, isLoading, isGuest } = useFirebaseAuth();
   const [, setLocation] = useLocation();
   reactExports.useEffect(() => {
-    if (!isLoading && !firebaseUser) {
+    if (!isLoading && !firebaseUser && !isGuest) {
       setLocation("/");
     }
-  }, [isLoading, firebaseUser, setLocation]);
+  }, [isLoading, firebaseUser, isGuest, setLocation]);
   if (isLoading) {
     return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "min-h-screen bg-background flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { className: "w-10 h-10 text-primary animate-spin" }) });
   }
-  if (!firebaseUser) {
+  if (!firebaseUser && !isGuest) {
     return null;
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: children2 });
@@ -76648,19 +82138,20 @@ function Router() {
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/", component: Home }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/leaderboard", component: Leaderboard }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/about", component: About }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/lobby", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lobby, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/normal", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(NormalGame, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/beta-normal", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(NormalGame, { isBetaMode: true }) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/double", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleDraftGame, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/guess", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(GuessGame, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/tasks", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TasksGame, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/daily", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DailyGame, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/party", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(PartyGame, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/sabotage", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SabotageGame, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/associations/setup", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AssociationsSetup, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/associations", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AssociationsGame, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/double_draft", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleDraftMultiplayer, {}) }) }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/associations_race", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AssociationsRace, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/lobby*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Lobby, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/normal*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(NormalGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/beta-normal*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(NormalGame, { isBetaMode: true }) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/double*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleDraftGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/guess*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(GuessGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/tasks*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(TasksGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/daily*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DailyGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/party*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(PartyGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/sabotage*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(SabotageGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/auction*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AuctionGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/associations/setup*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AssociationsSetup, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/associations*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AssociationsGame, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/double_draft*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DoubleDraftMultiplayer, {}) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { path: "/game/associations_race*", children: /* @__PURE__ */ jsxRuntimeExports.jsx(ProtectedRoute, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(AssociationsRace, {}) }) }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Route, { component: NotFound })
   ] });
 }
