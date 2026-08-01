@@ -69418,7 +69418,12 @@ function AuctionGame() {
     return fullPool.filter((c) => c.tier === "third" || c.tier === "fourth");
   }, [fullPool]);
   const currentRound = isMultiplayer ? room?.currentRound ?? 0 : spRound;
+  const mpAuctionState = room?.auctionState;
   const currentCountry = reactExports.useMemo(() => {
+    if (isMultiplayer && mpAuctionState?.countryName) {
+      const found = COUNTRIES.find((c) => c.name === mpAuctionState.countryName);
+      if (found) return found;
+    }
     if (!fullPool.length) return null;
     if (isBothRostersFull) return null;
     if (isMyRosterFull && opponentMoney === 0) {
@@ -69430,7 +69435,7 @@ function AuctionGame() {
       return lowerRankedPool[currentRound % lowerRankedPool.length];
     }
     return fullPool[currentRound % fullPool.length];
-  }, [fullPool, lowerRankedPool, currentRound, isBothRostersFull, isMyRosterFull, isOpponentRosterFull, myMoney, opponentMoney]);
+  }, [isMultiplayer, mpAuctionState?.countryName, fullPool, lowerRankedPool, currentRound, isBothRostersFull, isMyRosterFull, isOpponentRosterFull, myMoney, opponentMoney]);
   const mpFirstBidderId = reactExports.useMemo(() => {
     if (!room || !hostId) return "";
     if (isOpponentRosterFull && !isMyRosterFull) return firebaseUser?.uid ?? "";
@@ -69442,7 +69447,6 @@ function AuctionGame() {
     if (isMyRosterFull && !isOpponentRosterFull) return "bot";
     return currentRound % 2 === 0 ? "me" : "bot";
   }, [currentRound, isMyRosterFull, isOpponentRosterFull]);
-  const mpAuctionState = room?.auctionState;
   const firstBidderId = isMultiplayer ? mpAuctionState?.firstBidderId || mpFirstBidderId : spAuctionState.firstBidderId;
   const amIFirstBidder = isMultiplayer ? firebaseUser?.uid === firstBidderId : firstBidderId === "me";
   const currentStatus = isMultiplayer ? mpAuctionState?.status || "bidding" : spAuctionState.status;
@@ -69568,6 +69572,7 @@ function AuctionGame() {
           updateRoom(room.code, {
             auctionState: {
               ...mpAuctionState,
+              countryName: mpAuctionState?.countryName || currentCountry?.name,
               firstBidderId,
               status: "drafting",
               winnerId: firstBidderId,
@@ -69577,7 +69582,7 @@ function AuctionGame() {
         }
       }
     }
-  }, [isMultiplayer, room, mpMe, mpOpponent, currentStatus, firstBid, winnerId, firstBidderId, players, firebaseUser, mpAuctionState]);
+  }, [isMultiplayer, room, mpMe, mpOpponent, currentStatus, firstBid, winnerId, firstBidderId, players, firebaseUser, mpAuctionState, currentCountry]);
   const handleFirstBid = reactExports.useCallback(() => {
     if (!currentCountry) return;
     const cleanDigits = bidInput.replace(/\D/g, "");
@@ -69598,6 +69603,7 @@ function AuctionGame() {
     if (isMultiplayer && room) {
       updateRoom(room.code, {
         auctionState: {
+          countryName: currentCountry.name,
           firstBidderId: firebaseUser?.uid || firstBidderId,
           firstBid: val,
           status: "responding",
@@ -69636,6 +69642,7 @@ function AuctionGame() {
       updateRoom(room.code, {
         auctionState: {
           ...mpAuctionState,
+          countryName: mpAuctionState?.countryName || currentCountry?.name,
           status: "drafting",
           winnerId: mpMe.uid,
           winningBid: val
@@ -69650,13 +69657,14 @@ function AuctionGame() {
         status: "drafting"
       });
     }
-  }, [isMultiplayer, room, mpMe, firstBid, outbidInput, myMoney, mpAuctionState, spAuctionState.firstBidderId]);
+  }, [isMultiplayer, room, mpMe, firstBid, outbidInput, myMoney, mpAuctionState, spAuctionState.firstBidderId, currentCountry]);
   const handleGiveOpponent = reactExports.useCallback(() => {
     if (firstBid === null) return;
     if (isMultiplayer && room) {
       updateRoom(room.code, {
         auctionState: {
           ...mpAuctionState,
+          countryName: mpAuctionState?.countryName || currentCountry?.name,
           status: "drafting",
           winnerId: firstBidderId,
           winningBid: firstBid
@@ -69685,9 +69693,10 @@ function AuctionGame() {
     (cat) => {
       if (!currentCountry || !amIWinner || myRoster[cat]) return;
       const price = winningBid ?? 0;
+      const assignedCountryName = isMultiplayer && mpAuctionState?.countryName || currentCountry.name;
       if (isMultiplayer && room && mpMe) {
         const newMoney = Math.max(0, myMoney - price);
-        const newRoster = { ...myRoster, [cat]: currentCountry.name };
+        const newRoster = { ...myRoster, [cat]: assignedCountryName };
         updatePlayer(room.code, mpMe.uid, {
           roster: newRoster,
           money: newMoney
@@ -69711,7 +69720,7 @@ function AuctionGame() {
         }, 300);
       }
     },
-    [currentCountry, amIWinner, myRoster, winningBid, isMultiplayer, room, mpMe, myMoney]
+    [currentCountry, amIWinner, myRoster, winningBid, isMultiplayer, room, mpMe, myMoney, mpAuctionState?.countryName]
   );
   const calculateScore = reactExports.useCallback((roster) => {
     let base = 0;
